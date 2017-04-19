@@ -1,0 +1,16 @@
+{
+    "name": "illuminate/database",
+    "require": {
+        "php": "~7.1",
+        "illuminate/database": "^5.4",
+        "noahbuscher/macaw": "dev-master",
+        "justinrainbow/json-schema": "^5.2",
+        "phpoffice/phpexcel": "1.8.*"
+    },
+    "authors": [
+        {
+            "name": "liyong",
+            "email": "yong.li@szypwl.com"
+        }
+    ]
+}

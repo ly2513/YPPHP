@@ -1,11 +1,12 @@
 {
-    "name": "illuminate/database",
+    "name": "ly2513/ypwl",
     "require": {
         "php": "~7.1",
-        "illuminate/database": "^5.4",
-        "noahbuscher/macaw": "dev-master",
+        "illuminate/database": "*",
         "justinrainbow/json-schema": "^5.2",
-        "phpoffice/phpexcel": "1.8.*"
+        "twig/twig": "*",
+        "phpoffice/phpexcel": "1.8.*",
+        "raveren/kint": "*"
     },
     "authors": [
         {

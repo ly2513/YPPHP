@@ -8,6 +8,8 @@
  */
 namespace YP;
 
+use YP\Core\YP_RouterCollection as RouterCollection;
+
 class YP
 {
     /**
@@ -105,9 +107,86 @@ class YP
         }
     }
 
-    public function run()
+
+    /**
+     * 启动应用程序
+     *
+     * @param RouterCollection|null $routes
+     */
+    public function run(RouterCollection $routes = null)
     {
-        
+        $this->startBenchmark();
+
+        $this->getRequestObject();
+        $this->getResponseObject();
+
+        $this->forceSecureAccess();
+
+        // Check for a cached page. Execution will stop
+        // if the page has been cached.
+        $cacheConfig = new Cache();
+        $this->displayCache($cacheConfig);
+
+        $this->spoofRequestMethod();
+
+        try {
+            $this->handleRequest($routes, $cacheConfig);
+        }
+        catch (\Exception $e)
+        {
+            $logger = Config\Services::log();
+            $logger->info('REDIRECTED ROUTE at '.$e->getMessage());
+
+            // If the route is a 'redirect' route, it throws
+            // the exception with the $to as the message
+            $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
+            $this->callExit(EXIT_SUCCESS);
+        }
+            // Catch Response::redirect()
+        catch (\Exception $e)
+        {
+            $this->callExit(EXIT_SUCCESS);
+        }
+        catch (\RuntimeException $e)
+        {
+            $this->display404errors($e);
+        }
     }
+
+    /**
+     * 计时器用于显示总脚本执行时间,并将在调试工具栏的页面中显示
+     */
+    protected function startBenchmark()
+    {
+        $this->startTime = microtime(true);
+
+        $this->benchmark = Config\Services::timer();
+        $this->benchmark->start('total_execution', $this->startTime);
+        $this->benchmark->start('bootstrap');
+    }
+
+    /**
+     * Get our Request object, (either IncomingRequest or CLIRequest)
+     * and set the server protocol based on the information provided
+     * by the server.
+     */
+    /**
+     * 
+     */
+    protected function getRequestObject()
+    {
+        if (is_cli())
+        {
+            $this->request = Config\Services::clirequest($this->config);
+        }
+        else
+        {
+            $this->request = Config\Services::request($this->config);
+            $this->request->setProtocolVersion($_SERVER['SERVER_PROTOCOL']);
+        }
+    }
+
+
+
 
 }

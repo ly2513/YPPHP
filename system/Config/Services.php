@@ -85,6 +85,20 @@ class Services
     }
 
     /**
+     * The Logger class is a PSR-3 compatible Logging class that supports
+     * multiple handlers that process the actual logging.
+     */
+    public static function log($getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('log');
+        }
+
+        return new \YP\Core\YP_Log(new \Config\Log());
+    }
+
+    /**
      * 获得已加载的类的映射数组
      * 将已加载的类的类名作为key存放到$instances中
      *
@@ -102,6 +116,33 @@ class Services
         }
 
         return static::$instances[$key];
+    }
+
+    /**
+     * The Request class models an HTTP request.
+     */
+    /**
+     * @param \Config\App|null $config
+     * @param bool             $getShared
+     *
+     * @return \CodeIgniter\HTTP\IncomingRequest|mixed
+     */
+    public static function request(\Config\App $config = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('request', $config);
+        }
+
+        if (! is_object($config))
+        {
+            $config = new \Config\App();
+        }
+
+        return new \YP\HTTP\IncomingRequest(
+            $config,
+            new \CodeIgniter\HTTP\URI()
+        );
     }
 
 }

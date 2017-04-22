@@ -43,4 +43,11 @@ class Paths
      */
     public $publicDirectory = '../public';
 
+    /**
+     * 可写的目录
+     *
+     * @var string
+     */
+    public $writeDirectory =  '../writable';
+
 }

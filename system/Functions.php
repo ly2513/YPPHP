@@ -1,6 +1,4 @@
 <?php
-use YP\Config\Services;
-
 /**
  * User: yongli
  * Date: 17/4/20
@@ -8,6 +6,11 @@ use YP\Config\Services;
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+use YP\Core\YP_Request as Request;
+use YP\Core\YP_Response as Response;
+//use CodeIgniter\HTTP\RedirectException;
+use YP\Config\Services;
+
 if (!function_exists('P')) {
     /**
      * 打印函数
@@ -34,7 +37,6 @@ if (!function_exists('P')) {
         }
     }
 }
-
 if (!function_exists('is_cli')) {
     /**
      * 判断是否为cli模式
@@ -46,17 +48,7 @@ if (!function_exists('is_cli')) {
         return (PHP_SAPI === 'cli' || defined('STDIN'));
     }
 }
-
-if (! function_exists('helper'))
-{
-    /**
-     * Loads a helper file into memory. Supports namespaced helpers,
-     * both in and out of the 'helpers' directory of a namespaced directory.
-     *
-     * @param string|array $filenames
-     *
-     * @return string
-     */
+if (!function_exists('helper')) {
     /**
      * 加载帮助类
      *
@@ -65,27 +57,99 @@ if (! function_exists('helper'))
     function helper($filenames)//: string
     {
         $loader = Services::locator(true);
-        P($loader);
-
-        if (! is_array($filenames))
-        {
+        if (!is_array($filenames)) {
             $filenames = [$filenames];
         }
-
-        foreach ($filenames as $filename)
-        {
-            if (strpos($filename, '_helper') === false)
-            {
+        foreach ($filenames as $filename) {
+            if (strpos($filename, '_helper') === false) {
                 $filename .= '_helper';
             }
-
             $path = $loader->locateFile($filename, 'Helpers');
-
-            if (! empty($path))
-            {
+            if (!empty($path)) {
                 include $path;
             }
         }
+    }
+}
+if (!function_exists('force_https')) {
+    /**
+     * Used to force a page to be accessed in via HTTPS.
+     * Uses a standard redirect, plus will set the HSTS header
+     * for modern browsers that support, which gives best
+     * protection against man-in-the-middle attacks.
+     *
+     * @see https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
+     *
+     * @param int               $duration How long should the SSL header be set for? (in seconds)
+     *                                    Defaults to 1 year.
+     * @param RequestInterface  $request
+     * @param ResponseInterface $response
+     */
+    /**
+     * @param int           $duration
+     * @param Request|null  $request
+     * @param Response|null $response
+     */
+    function force_https(int $duration = 31536000, Request $request = null, Response $response = null)
+    {
+        if (is_null($request)) {
+            $request = Services::request(null, true);
+        }
+        if (is_null($response)) {
+            $response = Services::response(null, true);
+        }
+        if ($request->isSecure()) {
+            return;
+        }
+        // If the session library is loaded, we should regenerate
+        // the session ID for safety sake.
+        if (class_exists('Session', false)) {
+            Services::session(null, true)->regenerate();
+        }
+        $uri = $request->uri;
+        $uri->setScheme('https');
+        $uri = \YP\Core\YP_Uri::createURIString($uri->getScheme(), $uri->getAuthority(true), $uri->getPath(),
+            // Absolute URIs should use a "/" for an empty path
+            $uri->getQuery(), $uri->getFragment());
+        // Set an HSTS header
+        $response->setHeader('Strict-Transport-Security', 'max-age=' . $duration);
+        $response->redirect($uri);
+        exit();
+    }
+}
+if (!function_exists('log_message')) {
+    /**
+     * A convenience/compatibility method for logging events through
+     * the Log system.
+     *
+     * Allowed log levels are:
+     *  - emergency
+     *  - alert
+     *  - critical
+     *  - error
+     *  - warning
+     *  - notice
+     *  - info
+     *  - debug
+     *
+     * @param string     $level
+     * @param string     $message
+     * @param array|null $context
+     *
+     * @return mixed
+     */
+    function log_message(string $level, string $message, array $context = [])
+    {
+        // When running tests, we want to always ensure that the
+        // TestLogger is running, which provides utilities for
+        // for asserting that logs were called in the test code.
+        if (ENVIRONMENT == 'testing') {
+            $logger = new \YP\Core\YP_Log(new \Config\Log());
+
+            return $logger->log($level, $message, $context);
+        }
+
+        return Services::log(true)->log($level, $message, $context);
     }
 }
 

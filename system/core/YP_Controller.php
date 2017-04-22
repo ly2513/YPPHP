@@ -12,8 +12,8 @@ use YP\YP_Request as Request;
 use YP\YP_Response as Response;
 use YP\YP_Log as Log;
 use YP\Config\Services;
+use YP\YP_Validation as Validation;
 
-//use YP\YP_Validation;
 /**
  * Class Controller
  *
@@ -21,31 +21,25 @@ use YP\Config\Services;
  */
 class Controller
 {
+
     /**
-     * An array of helpers to be automatically loaded
-     * upon class instantiation.
+     * 用于加载帮助函数
      *
      * @var array
      */
     protected $helpers = [];
 
-    //--------------------------------------------------------------------
     /**
-     * Instance of the main Request object.
+     * 请求对象
      *
-     * @var RequestInterface
+     * @var Request
      */
     protected $request;
 
     /**
-     * Instance of the main response object.
+     * 响应对象
      *
-     * @var ResponseInterface
-     */
-    /**
-     *
-     *
-     * @var ResponseInterface
+     * @var Response
      */
     protected $response;
 
@@ -65,10 +59,9 @@ class Controller
     protected $forceHTTPS = 0;
 
     /**
-     * Once validation has been run,
-     * will hold the Validation instance.
+     * 校验对象
      *
-     * @var Validation
+     * @var
      */
     protected $validator;
 
@@ -106,7 +99,7 @@ class Controller
     {
         force_https($duration, $this->request, $this->response);
     }
-    
+
     /**
      * 缓存当前页码
      *

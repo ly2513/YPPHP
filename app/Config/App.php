@@ -38,6 +38,8 @@ class App extends Config
      */
     public $defaultLocale = 'en';
 
+    public $negotiateLocale = false;
+
     /**
      * 支持的语言环境
      *
@@ -131,6 +133,7 @@ class App extends Config
     public $CSRFCookieName = 'csrf_cookie_name';
     public $CSRFExpire     = 7200;
     public $CSRFRegenerate = true;
+    public $CSPEnabled = false;
 
     /**
      * 调试工具栏

@@ -191,12 +191,12 @@ class YP_Exceptions
      */
     public static function cleanPath($file)
     {
-        if (strpos($file, APPPATH) === 0) {
-            $file = APP_PATH . DIRECTORY_SEPARATOR . substr($file, strlen(APPPATH));
-        } elseif (strpos($file, BASEPATH) === 0) {
-            $file = SYSTEM_PATH. DIRECTORY_SEPARATOR . substr($file, strlen(BASEPATH));
-        } elseif (strpos($file, FCPATH) === 0) {
-            $file = FRONT_PATH. DIRECTORY_SEPARATOR . substr($file, strlen(FCPATH));
+        if (strpos($file, APP_PATH) === 0) {
+            $file = APP_PATH . DIRECTORY_SEPARATOR . substr($file, strlen(APP_PATH));
+        } elseif (strpos($file, SYSTEM_PATH) === 0) {
+            $file = SYSTEM_PATH . DIRECTORY_SEPARATOR . substr($file, strlen(SYSTEM_PATH));
+        } elseif (strpos($file, FRONT_PATH) === 0) {
+            $file = FRONT_PATH . DIRECTORY_SEPARATOR . substr($file, strlen(FRONT_PATH));
         }
 
         return $file;

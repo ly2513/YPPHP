@@ -10,13 +10,16 @@
 define('ROOT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 // 定义应用路径
-define('APP_PATH', realpath($paths->appDirectory) . DIRECTORY_SEPARATOR);
+define('APP_PATH', rtrim(realpath($paths->appDirectory), '/') . DIRECTORY_SEPARATOR);
 
 // 定义框架路径
-define('SYSTEM_PATH', realpath($paths->systemDirectory) . DIRECTORY_SEPARATOR);
+define('SYSTEM_PATH', rtrim(realpath($paths->systemDirectory), '/') . DIRECTORY_SEPARATOR);
 
 // 定义测试路径
-define('TEST_PATH', realpath($paths->testsDirectory) . DIRECTORY_SEPARATOR);
+define('TEST_PATH', rtrim(realpath($paths->testsDirectory), '/') . DIRECTORY_SEPARATOR);
+
+// 重写目录
+define('WRITE_PATH', rtrim(realpath($paths->writeDirectory), '/') . DIRECTORY_SEPARATOR);
 
 // 定义应用的命名空间
 define('APP_NAMESPACE', 'App');

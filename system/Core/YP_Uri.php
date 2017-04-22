@@ -538,17 +538,8 @@ class YP_Uri
         return $this->setQuery($query);
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Adds a single new element to the query vars.
-     *
-     * @param string $key
-     * @param null   $value
-     *
-     * @return $this
-     */
-    /**
-     *
+     * 添加查询字符串
      *
      * @param string $key
      * @param null   $value
@@ -562,9 +553,8 @@ class YP_Uri
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Removes one or more query vars from the URI.
+     * 删除一个或多个查询变量的URI。
      *
      * @param array ...$params
      *
@@ -579,16 +569,14 @@ class YP_Uri
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Filters the query variables so that only the keys passed in
-     * are kept. The rest are removed from the object.
+     * 过滤查询变量，以便只保留传入的键。其余的从对象中移除
      *
      * @param array ...$params
      *
-     * @return $this
+     * @return YP_Uri
      */
-    public function keepQuery(...$params)
+    public function keepQuery(...$params): self
     {
         $temp = [];
         foreach ($this->query as $key => $value) {
@@ -602,30 +590,24 @@ class YP_Uri
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Sets the fragment portion of the URI.
-     *
-     * @see https://tools.ietf.org/html/rfc3986#section-3.5
+     * 设置URI的片段部分
      *
      * @param string $string
      *
-     * @return $this
+     * @return YP_Uri
      */
-    public function setFragment(string $string)
+    public function setFragment(string $string): self
     {
         $this->fragment = trim($string, '# ');
 
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Encodes any dangerous characters, and removes dot segments.
-     * While dot segments have valid uses according to the spec,
-     * this URI class does not allow them.
+     * 过滤uri路径
      *
-     * @param $path
+     * @param string|null $path
      *
      * @return mixed|string
      */
@@ -653,9 +635,8 @@ class YP_Uri
         return $path;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Saves our parts from a parse_url call.
+     * 保存parse_url的以下
      *
      * @param $parts
      */
@@ -676,13 +657,13 @@ class YP_Uri
         if (!empty($parts['fragment'])) {
             $this->fragment = $this->filterQuery($parts['fragment']);
         }
-        // Scheme
+        //
         if (isset($parts['scheme'])) {
             $this->setScheme(rtrim(strtolower($parts['scheme']), ':/'));
         } else {
             $this->setScheme('http');
         }
-        // Port
+        // 端口
         if (isset($parts['port'])) {
             if (!is_null($parts['port'])) {
                 $port = (int)$parts['port'];
@@ -695,7 +676,7 @@ class YP_Uri
         if (isset($parts['pass'])) {
             $this->password = $parts['pass'];
         }
-        // Populate our segments array
+        // 对路径进行拆分
         if (!empty($parts['path'])) {
             $this->segments = explode('/', trim($parts['path'], '/'));
         }
@@ -711,6 +692,12 @@ class YP_Uri
      * @param string $uri
      *
      * @return \CodeIgniter\HTTP\URI
+     */
+    /**
+     * 
+     * @param string $uri
+     *
+     * @return URI
      */
     public function resolveRelativeURI(string $uri)
     {
@@ -830,5 +817,4 @@ class YP_Uri
         return $output;
     }
 
-    //--------------------------------------------------------------------
 }

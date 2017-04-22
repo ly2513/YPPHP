@@ -50,13 +50,10 @@ class Services
      */
     public static function exceptions(\Config\App $config = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('exceptions', $config);
         }
-
-        if (empty($config))
-        {
+        if (empty($config)) {
             $config = new \Config\App();
         }
 
@@ -69,15 +66,14 @@ class Services
      * loading 'helpers', and 'libraries'.
      */
     /**
-     * 
+     *
      * @param bool $getShared
      *
      * @return mixed|\YP\FileLocator
      */
     public static function locator($getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('locator');
         }
 
@@ -88,14 +84,129 @@ class Services
      * The Logger class is a PSR-3 compatible Logging class that supports
      * multiple handlers that process the actual logging.
      */
+    /**
+     * @param bool $getShared
+     *
+     * @return mixed|\YP\Core\YP_Log
+     */
     public static function log($getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('log');
         }
 
         return new \YP\Core\YP_Log(new \Config\Log());
+    }
+
+    /**
+     * The Request class models an HTTP request.
+     */
+    /**
+     * @param \Config\App|null $config
+     * @param bool             $getShared
+     *
+     * @return \CodeIgniter\HTTP\IncomingRequest|mixed
+     */
+    /**
+     *
+     *
+     * @param \Config\App|null $config
+     * @param bool             $getShared
+     *
+     * @return mixed|\YP\Core\YP_IncomingRequest
+     */
+    public static function request(\Config\App $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('request', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\App();
+        }
+
+        return new \YP\Core\YP_IncomingRequest($config, new \YP\Core\YP_Uri());
+    }
+
+    /**
+     * The Response class models an HTTP response.
+     */
+    /**
+     * @param \Config\App|null $config
+     * @param bool             $getShared
+     *
+     * @return mixed|\YP\Core\YP_Response
+     */
+    public static function response(\Config\App $config = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('response', $config);
+        }
+
+        if (! is_object($config))
+        {
+            $config = new \Config\App();
+        }
+
+        return new \YP\Core\YP_Response($config);
+    }
+
+    /**
+     * The Timer class provides a simple way to Benchmark portions of your
+     * application.
+     */
+    /**
+     * @param bool $getShared
+     *
+     * @return mixed|\YP\Debug\Timer
+     */
+    public static function timer($getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('timer');
+        }
+
+        return new \YP\Debug\Timer();
+    }
+
+    /**
+     * The Routes service is a class that allows for easily building
+     * a collection of routes.
+     */
+    public static function routes($getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('routes');
+        }
+
+        return new \YP\Core\YP_RouterCollection();
+    }
+
+    /**
+     * The Router class uses a RouteCollection's array of routes, and determines
+     * the correct Controller and Method to execute.
+     */
+    /**
+     * @param \YP\Core\YP_RouterCollection|null $routes
+     * @param bool                              $getShared
+     *
+     * @return mixed|\YP\Core\YP_Router
+     */
+    public static function router(\YP\Core\YP_RouterCollection $routes = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('router', $routes);
+        }
+
+        if (empty($routes))
+        {
+            $routes = self::routes(true);
+        }
+
+        return new \YP\Core\YP_Router($routes);
     }
 
     /**
@@ -116,33 +227,6 @@ class Services
         }
 
         return static::$instances[$key];
-    }
-
-    /**
-     * The Request class models an HTTP request.
-     */
-    /**
-     * @param \Config\App|null $config
-     * @param bool             $getShared
-     *
-     * @return \CodeIgniter\HTTP\IncomingRequest|mixed
-     */
-    public static function request(\Config\App $config = null, $getShared = true)
-    {
-        if ($getShared)
-        {
-            return self::getSharedInstance('request', $config);
-        }
-
-        if (! is_object($config))
-        {
-            $config = new \Config\App();
-        }
-
-        return new \YP\HTTP\IncomingRequest(
-            $config,
-            new \CodeIgniter\HTTP\URI()
-        );
     }
 
 }

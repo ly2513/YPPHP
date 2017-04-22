@@ -13,31 +13,26 @@ use Config\Autoload;
 class FileLocator
 {
     /**
-     * Stores our namespaces
+     * 命名空间
      *
      * @var array
      */
     protected $namespaces;
 
-    //--------------------------------------------------------------------
-
     /**
-     * Constructor
+     * FileLocator constructor.
      *
      * @param Autoload $autoload
      */
     public function __construct(Autoload $autoload)
     {
         $this->namespaces = $autoload->namespaceMap;
-
         unset($autoload);
-
         // Always keep the Application directory as a "package".
         array_unshift($this->namespaces, APP_PATH);
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Attempts to locate a file by examining the name for a namespace
      * and looking through the PSR-4 namespaced files that we know about.
@@ -48,80 +43,63 @@ class FileLocator
      *
      * @return string       The path to the file if found, or an empty string.
      */
-    public function locateFile(string $file, string $folder=null, string $ext = 'php'): string
+    /**
+     * 加载文件
+     *
+     * @param string      $file
+     * @param string|null $folder
+     * @param string      $ext
+     *
+     * @return string
+     */
+    public function locateFile(string $file, string $folder = null, string $ext = 'php'): string
     {
         // Ensure the extension is on the filename
-        $file = strpos($file, '.'.$ext) !== false
-            ? $file
-            : $file.'.'.$ext;
-
+        $file = strpos($file, '.' . $ext) !== false ? $file : $file . '.' . $ext;
         // Clean the folder name from the filename
-        if (! empty($folder))
-        {
-            $file = str_replace($folder.'/', '', $file);
+        if (!empty($folder)) {
+            $file = str_replace($folder . '/', '', $file);
         }
-
         // No namespaceing? Try the application folder.
-        if (strpos($file, '\\') === false)
-        {
+        if (strpos($file, '\\') === false) {
             return $this->legacyLocate($file, $folder);
         }
-
         // Standardize slashes to handle nested directories.
-        $file = str_replace('/', '\\', $file);
-
+        $file     = str_replace('/', '\\', $file);
         $segments = explode('\\', $file);
-
         // The first segment will be empty if a slash started the filename.
-        if (empty($segments[0])) unset($segments[0]);
-
-        $path     = '';
-        $prefix   = '';
-        $filename = '';
-
-        while (! empty($segments))
-        {
-            $prefix .= empty($prefix)
-                ? ucfirst(array_shift($segments))
-                : '\\'. ucfirst(array_shift($segments));
-
-            if (! array_key_exists($prefix, $this->namespaces))
-            {
+        if (empty($segments[0])) {
+            unset($segments[0]);
+        }
+        $path = $prefix = $filename = '';
+        while (!empty($segments)) {
+            $prefix .= empty($prefix) ? ucfirst(array_shift($segments)) : '\\' . ucfirst(array_shift($segments));
+            if (!array_key_exists($prefix, $this->namespaces)) {
                 continue;
             }
-
-            $path = $this->namespaces[$prefix].'/';
+            $path     = $this->namespaces[$prefix] . '/';
             $filename = implode('/', $segments);
             break;
         }
-
         // IF we have a folder name, then the calling function
         // expects this file to be within that folder, like 'Views',
         // or 'libraries'.
         // @todo Allow it to check with and without the nested folder.
-        if (! empty($folder) && strpos($filename, $folder) === false)
-        {
-            $filename = $folder.'/'.$filename;
+        if (!empty($folder) && strpos($filename, $folder) === false) {
+            $filename = $folder . '/' . $filename;
         }
-
         $path .= $filename;
-
-        if (! $this->requireFile($path))
-        {
+        if (!$this->requireFile($path)) {
             $path = '';
         }
 
         return $path;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Searches through all of the defined namespaces looking for a file.
-     * Returns an array of all found locations for the defined file.
+     * 搜索查找文件
      *
      * Example:
-     *
      *  $locator->search('Config/Routes.php');
      *  // Assuming PSR4 namespaces include foo and bar, might return:
      *  [
@@ -137,34 +115,22 @@ class FileLocator
     public function search(string $path, string $ext = 'php'): array
     {
         $foundPaths = [];
-
         // Ensure the extension is on the filename
-        $path = strpos($path, '.'.$ext) !== false
-            ? $path
-            : $path.'.'.$ext;
-
-        foreach ($this->namespaces as $name => $folder)
-        {
-            $folder = rtrim($folder, '/').'/';
-
-            if (file_exists($folder.$path))
-            {
-                $foundPaths[] = $folder.$path;
+        $path = strpos($path, '.' . $ext) !== false ? $path : $path . '.' . $ext;
+        foreach ($this->namespaces as $name => $folder) {
+            $folder = rtrim($folder, '/') . '/';
+            if (file_exists($folder . $path)) {
+                $foundPaths[] = $folder . $path;
             }
         }
-
         // Remove any duplicates
         $foundPaths = array_unique($foundPaths);
 
         return $foundPaths;
     }
-
-    //--------------------------------------------------------------------
-
+    
     /**
-     * Attempts to load a file and instantiate a new class by looking
-     * at its full path and comparing that to our existing psr4 namespaces
-     * in Autoloader config file.
+     * 获得文件的域名空间
      *
      * @param string $path
      *
@@ -173,22 +139,19 @@ class FileLocator
     public function findQualifiedNameFromPath(string $path)
     {
         $path = realpath($path);
-
-        if (! $path)
-        {
+        if (!$path) {
             return;
         }
-
-        foreach ($this->namespaces as $namespace => $nsPath)
-        {
+        foreach ($this->namespaces as $namespace => $nsPath) {
             $nsPath = realpath($nsPath);
-            if (is_numeric($namespace)) continue;
-
-            if (mb_strpos($path,$nsPath) === 0)
-            {
-                $className = '\\'.$namespace.'\\'.
-                    ltrim(str_replace('/', '\\', mb_substr($path, mb_strlen($nsPath))), '\\');
+            if (is_numeric($namespace)) {
+                continue;
+            }
+            if (mb_strpos($path, $nsPath) === 0) {
+                $className = '\\' . $namespace . '\\' . ltrim(str_replace('/', '\\',
+                        mb_substr($path, mb_strlen($nsPath))), '\\');
                 // Remove the file extension (.php)
+                // 去除文件的扩展名
                 $className = mb_substr($className, 0, -4);
 
                 return $className;
@@ -196,11 +159,8 @@ class FileLocator
         }
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Scans the defined namespaces, returning a list of all files
-     * that are contained within the subpath specifed by $path.
+     * 文件列表
      *
      * @param string $path
      *
@@ -208,25 +168,21 @@ class FileLocator
      */
     public function listFiles(string $path): array
     {
-        if (empty($path)) return [];
-
+        if (empty($path)) {
+            return [];
+        }
         $files = [];
         helper('filesystem');
-
-        foreach ($this->namespaces as $namespace => $nsPath)
-        {
-            $fullPath = realpath(rtrim($nsPath, '/') .'/'. $path);
-
-            if (! is_dir($fullPath)) continue;
-
-            $tempFiles = get_filenames($fullPath, true);
-            //CLI::newLine($tempFiles);
-
-            if (! count($tempFiles))
-            {
+        foreach ($this->namespaces as $namespace => $nsPath) {
+            $fullPath = realpath(rtrim($nsPath, '/') . '/' . $path);
+            if (!is_dir($fullPath)) {
                 continue;
             }
-
+            $tempFiles = get_filenames($fullPath, true);
+            //CLI::newLine($tempFiles);
+            if (!count($tempFiles)) {
+                continue;
+            }
             $files = array_merge($files, $tempFiles);
         }
 
@@ -244,18 +200,12 @@ class FileLocator
      * @internal param string $ext
      *
      */
-    protected function legacyLocate(string $file, string $folder=null): string
+    protected function legacyLocate(string $file, string $folder = null): string
     {
         $paths = [APPPATH, BASEPATH];
-
-        foreach ($paths as $path)
-        {
-            $path .= empty($folder)
-                ? $file
-                : $folder.'/'.$file;
-
-            if ($this->requireFile($path) === true)
-            {
+        foreach ($paths as $path) {
+            $path .= empty($folder) ? $file : $folder . '/' . $file;
+            if ($this->requireFile($path) === true) {
                 return $path;
             }
         }
@@ -263,13 +213,10 @@ class FileLocator
         return '';
     }
 
-    //--------------------------------------------------------------------
 
     /**
-     * Checks to see if a file exists on the file system. This is split
-     * out to it's own method to make testing simpler.
+     * 判断加载文件的是否存在
      *
-     * @codeCoverageIgnore
      * @param string $path
      *
      * @return bool

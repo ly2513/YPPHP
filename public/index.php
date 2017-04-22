@@ -16,8 +16,6 @@ $paths = new Config\Paths();
 
 // 加载启动框架文件
 $app = require $paths->systemDirectory . DIRECTORY_SEPARATOR . 'Bootstrap.php';
-//require $paths->systemDirectory . DIRECTORY_SEPARATOR . 'Bootstrap.php';
-print_r($app);
 
 // 运行框架
 $app->run();

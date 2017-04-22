@@ -235,7 +235,7 @@ class YP_Log
                 'msg'   => $message
             ];
         }
-        P($this->handlerConfig );
+        //        P($this->handlerConfig );
         foreach ($this->handlerConfig as $className => $config) {
             /**
              * @var \CodeIgniter\Log\Handlers\HandlerInterface

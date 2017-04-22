@@ -13,7 +13,7 @@ namespace YP\Core;
 //use CodeIgniter\HTTP\Files\UploadedFile;
 use Config\Services;
 
-class IncomingRequest extends YP_Request
+class YP_IncomingRequest extends YP_Request
 {
     /**
      * CSRF 标志
@@ -77,18 +77,16 @@ class IncomingRequest extends YP_Request
      */
     protected $oldInput = [];
 
-    //--------------------------------------------------------------------
-
     /**
-     * Constructor
+     * YP_IncomingRequest constructor.
      *
-     * @param type $config
-     * @param type $uri
-     * @param type $body
+     * @param        $config
+     * @param null   $uri
+     * @param string $body
      */
     public function __construct($config, $uri = null, $body = 'php://input')
     {
-        // Get our body from php://input
+        // 获得输入流
         if ($body == 'php://input')
         {
             $body = file_get_contents('php://input');
@@ -190,22 +188,8 @@ class IncomingRequest extends YP_Request
         return $this;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Determines if this request was made from the command line (CLI).
-     *
-     * @return bool
-     */
-    public function isCLI(): bool
-    {
-        return (PHP_SAPI === 'cli' || defined('STDIN'));
-    }
-
-    //--------------------------------------------------------------------
-
-    /**
-     * Test to see if a request contains the HTTP_X_REQUESTED_WITH header.
+     * 判断是否为ajax请求
      *
      * @return bool
      */
@@ -258,20 +242,12 @@ class IncomingRequest extends YP_Request
         return $this->fetchGlobal(INPUT_REQUEST, $index, $filter);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * A convenience method that grabs the raw input stream and decodes
-     * the JSON into an array.
+     * 获得json数据
      *
-     * If $assoc == true, then all objects in the response will be converted
-     * to associative arrays.
-     *
-     * @param bool $assoc   Whether to return objects as associative arrays
-     * @param int  $depth   How many levels deep to decode
-     * @param int  $options Bitmask of options
-     *
-     * @see http://php.net/manual/en/function.json-decode.php
+     * @param bool $assoc true: 转化为数组;false: 转化为对象
+     * @param int  $depth
+     * @param int  $options
      *
      * @return mixed
      */
@@ -295,51 +271,42 @@ class IncomingRequest extends YP_Request
         return $output;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Fetch an item from GET data.
+     * 遍历GET方法的数据
      *
-     * @param null $index  Index for item to fetch from $_GET.
-     * @param null $filter A filter name to apply.
+     * @param null $index null: 表示遍历整个数组; not null: 获取具体的$index的值
+     * @param null $filter
      *
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getGet($index = null, $filter = null)
     {
         return $this->fetchGlobal(INPUT_GET, $index, $filter);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Fetch an item from POST.
+     * 遍历POST方法的数据
      *
-     * @param null $index  Index for item to fetch from $_POST.
-     * @param null $filter A filter name to apply
+     * @param null $index null: 表示遍历整个数组; not null: 获取具体的$index的值
+     * @param null $filter
      *
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getPost($index = null, $filter = null)
     {
         return $this->fetchGlobal(INPUT_POST, $index, $filter);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Fetch an item from POST data with fallback to GET.
+     * 遍历GET、POST方法的数据
      *
-     * @param null $index  Index for item to fetch from $_POST or $_GET
-     * @param null $filter A filter name to apply
+     * @param null $index null: 表示遍历整个数组; not null: 获取具体的$index的值
+     * @param null $filter
      *
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getPostGet($index = null, $filter = null)
     {
-        // Use $_POST directly here, since filter_has_var only
-        // checks the initial POST data, not anything that might
-        // have been added since.
         return isset($_POST[$index])
             ? $this->getPost($index, $filter)
             : $this->getGet($index, $filter);
@@ -355,6 +322,14 @@ class IncomingRequest extends YP_Request
      *
      * @return mixed
      */
+    /**
+     *
+     *
+     * @param null $index null: 表示遍历整个数组; not null: 获取具体的$index的值
+     * @param null $filter
+     *
+     * @return array|mixed|null
+     */
     public function getGetPost($index = null, $filter = null)
     {
         // Use $_GET directly here, since filter_has_var only
@@ -365,29 +340,25 @@ class IncomingRequest extends YP_Request
             : $this->getPost($index, $filter);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Fetch an item from the COOKIE array.
+     * 遍历Cookie数据
      *
-     * @param null $index  Index for item to be fetched from $_COOKIE
-     * @param null $filter A filter name to be applied
+     * @param null $index null: 表示遍历整个数组; not null: 获取具体的$index的值
+     * @param null $filter
      *
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getCookie($index = null, $filter = null)
     {
         return $this->fetchGlobal(INPUT_COOKIE, $index, $filter);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Fetch the user agent string
+     * 获取用户代理信息
      *
      * @param null $filter
      *
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getUserAgent($filter = null)
     {
@@ -401,28 +372,32 @@ class IncomingRequest extends YP_Request
      * with redirect_with_input(). It first checks for the data in the old
      * POST data, then the old GET data.
      */
+    /**
+     *
+     *
+     * @param string $key
+     */
     public function getOldInput(string $key)
     {
         // If the session hasn't been started, or no
         // data was previously saved, we're done.
-        if (empty($_SESSION['_ci_old_input'])) return;
+        if (empty($_SESSION['_yp_old_input'])) return;
 
         // Check for the value in the POST array first.
-        if (isset($_SESSION['_ci_old_input']['post'][$key]))
+        if (isset($_SESSION['_yp_old_input']['post'][$key]))
         {
-            return $_SESSION['_ci_old_input']['post'][$key];
+            return $_SESSION['_yp_old_input']['post'][$key];
         }
 
         // Next check in the GET array.
-        if (isset($_SESSION['_ci_old_input']['get'][$key]))
+        if (isset($_SESSION['_yp_old_input']['get'][$key]))
         {
-            return $_SESSION['_ci_old_input']['get'][$key];
+            return $_SESSION['_yp_old_input']['get'][$key];
         }
     }
-
+    
     /**
-     * Returns an array of all files that have been uploaded with this
-     * request. Each file is represented by an UploadedFile instance.
+     * 获得所有上传的文件
      *
      * @return array
      */

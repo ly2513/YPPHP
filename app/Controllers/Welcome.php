@@ -6,5 +6,14 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace APP\Controller;
+namespace APP\Controllers;
 
+use YP\Core\YP_Controller as Controller;
+
+class Welcome extends Controller
+{
+    public function index()
+    {
+        p($_SERVER);
+    }
+}

@@ -8,10 +8,14 @@
  */
 namespace YP;
 
-use YP\Core\YP_RouterCollection as RouterCollection;
-use YP\Core\YP_Request as Request;
 use Config\Cache;
 use YP\Core\YP_Uri as Uri;
+use YP\Core\YP_Hooks as Hooks;
+use YP\Core\YP_Request as Request;
+use YP\Core\YP_Response as Response;
+use YP\Cli\YP_CliRequest as CliRequest;
+use YP\Core\YP_RouterCollection as RouterCollection;
+
 
 class YP
 {
@@ -48,6 +52,11 @@ class YP
      */
     protected $config;
 
+    /**
+     *
+     *
+     * @var
+     */
     protected $benchmark;
 
     /**
@@ -137,12 +146,13 @@ class YP
      */
     public function run(RouterCollection $routes = null)
     {
-        // 记录开始
+        // 记录开始时间
         $this->startBenchmark();
         // 获得请求对象
         $this->getRequestObject();
         // 获得响应对象
         $this->getResponseObject();
+        // 是否安全访问站点
         $this->forceSecureAccess();
         // 检查缓存页,如果页面已被缓存，执行将停止
         $cacheConfig = new Cache();
@@ -155,7 +165,7 @@ class YP
             // 日志记录异常错误
             $logger = Config\Services::log();
             $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
-            //            P($this->response);
+//            P($this->response);
             // 如果该路由是重定向路由，则以$to作为消息抛出异常
             $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
             $this->callExit(EXIT_SUCCESS);
@@ -204,9 +214,10 @@ class YP
     }
 
     /**
+     * 强制安全站点访问？如果配置'forceGlobalSecureRequests”的值为true，
+     * 将执行所有请求该网站是通过HTTPS。将用户重定向到当前页面与HTTPS，以及为那些支持它的浏览器设置HTTP严格的传输安全头，
      *
-     *
-     * @param int $duration
+     * @param int $duration 时间,严格安全传输应该多久执行这个网址
      */
     protected function forceSecureAccess($duration = 31536000)
     {
@@ -227,14 +238,14 @@ class YP
         $this->tryToRouteIt($routes);
         // 运行 "before" 过滤器
         $filters = Config\Services::filters();
-        $uri     = $this->request instanceof Request ? $this->request->getPath() : $this->request->uri->getPath();
+        $uri     = $this->request instanceof CliRequest ? $this->request->getPath() : $this->request->uri->getPath();
         $filters->run($uri, 'before');
         $returned = $this->startController();
         // 关闭已经运行在startController()的控制器
         if (!is_callable($this->controller)) {
             $controller = $this->createController();
             // 是否有'post_controller_constructor'钩子
-            Events::trigger('post_controller_constructor');
+            Hooks::trigger('post_controller_constructor');
             $returned = $this->runController($controller);
         } else {
             $this->benchmark->stop('controller_constructor');
@@ -252,7 +263,7 @@ class YP
         unset($uri);
         $this->sendResponse();
         // 是否有'post-system'钩子
-        //        Events::trigger('post_system');
+        Hooks::trigger('post_system');
     }
 
     /**
@@ -265,7 +276,6 @@ class YP
         if (is_cli()) {
             return;
         }
-        // Only works with POSTED forms
         if ($this->request->getMethod() !== 'post') {
             return;
         }
@@ -275,17 +285,10 @@ class YP
         }
         $this->request = $this->request->setMethod($method);
     }
-
+    
     /**
-     * You can load different configurations depending on your
-     * current environment. Setting the environment also influences
-     * things like logging and error reporting.
-     *
-     * This can be set to anything, but default usage is:
-     *
-     *     development
-     *     testing
-     *     production
+     * 可以根据当前环境加载不同的配置,设置环境变量也会影响日志记录和错误报告
+     * 环境变量的值为:dev、test、prod
      */
     protected function detectEnvironment()
     {
@@ -324,14 +327,8 @@ class YP
     }
 
     /**
-     * Try to Route It - As it sounds like, works with the router to
-     * match a route against the current URI. If the route is a
-     * "redirect route", will also handle the redirect.
+     * 执行一个路由去匹配当前Uri中的路由,如果当前是重定向路由,将处理这重定向路由
      *
-     * @param RouteCollectionInterface $routes  An collection interface to use in place
-     *                                          of the config file.
-     */
-    /**
      * @param RouteCollection|null $routes
      */
     protected function tryToRouteIt(RouteCollection $routes = null)
@@ -339,7 +336,7 @@ class YP
         if (empty($routes) || !$routes instanceof RouteCollection) {
             require APP_PATH . 'Config/Routes.php';
         }
-        // $routes is defined in Config/Routes.php
+        // $routes 已在Config/Routes.php定义
         $this->router = Config\Services::router($routes);
         $path         = $this->determinePath();
         $this->benchmark->stop('bootstrap');
@@ -347,8 +344,7 @@ class YP
         ob_start();
         $this->controller = $this->router->handle($path);
         $this->method     = $this->router->methodName();
-        // If a {locale} segment was matched in the final route,
-        // then we need to set the correct locale on our Request.
+        // 如果在本地路由被匹配到,将设置当前请求
         if ($this->router->hasLocale()) {
             $this->request->setLocale($this->router->getLocale());
         }
@@ -403,6 +399,19 @@ class YP
     }
 
     /**
+     * 实例化一个当前控制器类对象
+     *
+     * @return mixed
+     */
+    protected function createController()
+    {
+        $class = new $this->controller($this->request, $this->response);
+        $this->benchmark->stop('controller_constructor');
+
+        return $class;
+    }
+
+    /**
      * 确定给定的URI是否已缓存响应
      *
      * @param $config 配置
@@ -433,7 +442,7 @@ class YP
     }
 
     /**
-     * Generates the cache name to use for our full-page caching.
+     * 生成缓存名称用于我们全页缓存
      *
      * @param $config
      *

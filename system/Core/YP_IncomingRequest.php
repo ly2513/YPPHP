@@ -10,9 +10,10 @@ namespace YP\Core;
 
     //use CodeIgniter\HTTP\Files\FileCollection;
 //use CodeIgniter\HTTP\Files\UploadedFile;
+use YP\Core\YP_Request as Request;
 use Config\Services;
 
-class YP_IncomingRequest extends YP_Request
+class YP_IncomingRequest extends Request
 {
     /**
      * CSRF 标志

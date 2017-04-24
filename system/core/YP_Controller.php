@@ -8,18 +8,19 @@
  */
 namespace YP\Core;
 
-use YP\YP_Request as Request;
-use YP\YP_Response as Response;
-use YP\YP_Log as Log;
+use YP\YP;
+use YP\Core\YP_IncomingRequest as IncomingRequest;
+use YP\Core\YP_Response as Response;
+use YP\Libraries\YP_Validation as Validation;
+use YP\Core\YP_Log as Log;
 use YP\Config\Services;
-use YP\YP_Validation as Validation;
 
 /**
  * Class Controller
  *
  * @package CodeIgniter
  */
-class Controller
+class YP_Controller
 {
 
     /**
@@ -51,10 +52,10 @@ class Controller
     protected $logger;
 
     /**
-     * Whether HTTPS access should be enforced
-     * for all methods in this controller.
+     * 该控制器中的所有方法是否应强制HTTPS访问
+     * 设置HSTS报头的秒数
      *
-     * @var int  Number of seconds to set HSTS header
+     * @var int
      */
     protected $forceHTTPS = 0;
 
@@ -66,17 +67,17 @@ class Controller
     protected $validator;
 
     /**
-     * Controller constructor.
+     * YP_Controller constructor.
      *
-     * @param Request  $request
-     * @param Response $response
-     * @param Log|null $logger
+     * @param IncomingRequest $request
+     * @param Response        $response
+     * @param Log|null        $logger
      */
-    public function __construct(Request $request, Response $response, Log $logger = null)
+    public function __construct(IncomingRequest $request, Response $response, Log $logger = null)
     {
         $this->request  = $request;
         $this->response = $response;
-        $this->logger   = is_null($logger) ? Services::logger(true) : $logger;
+        $this->logger   = is_null($logger) ? Services::log(true) : $logger;
         $this->logger->info('Controller "' . get_class($this) . '" loaded.');
         if ($this->forceHTTPS > 0) {
             $this->forceHTTPS($this->forceHTTPS);
@@ -107,7 +108,7 @@ class Controller
      */
     public function cachePage(int $time)
     {
-        CodeIgniter::cache($time);
+        YP::cache($time);
     }
 
     /**
@@ -122,18 +123,18 @@ class Controller
             helper($helper);
         }
     }
-    
+
     /**
      * 校验请求的参数
      * 如果校验失败,将错误存放到类的$error的属性上
      *
-     * @param Request    $request
-     * @param            $rules
-     * @param array|null $messages
+     * @param IncomingRequest $request
+     * @param                 $rules
+     * @param array|null      $messages
      *
      * @return bool
      */
-    public function validate(Request $request, $rules, array $messages = null): bool
+    public function validate(IncomingRequest $request, $rules, array $messages = null): bool
     {
         $this->validator = Services::validation();
         // 校验路由

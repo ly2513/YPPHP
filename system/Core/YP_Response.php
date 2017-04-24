@@ -195,7 +195,7 @@ class YP_Response extends Message
      *
      * @return YP_Response
      */
-    public function setStatusCode(int $code, string $reason = ''): self
+    public function setStatusCode(int $code, string $reason = '')
     {
         // 状态码的有效范围
         if ($code < 100 || $code > 599) {
@@ -236,7 +236,7 @@ class YP_Response extends Message
      *
      * @return YP_Response
      */
-    public function setDate(\DateTime $date): self
+    public function setDate(\DateTime $date)
     {
         $date->setTimezone(new \DateTimeZone('UTC'));
         $this->setHeader('Date', $date->format('D, d M Y H:i:s') . ' GMT');
@@ -252,7 +252,7 @@ class YP_Response extends Message
      *
      * @return YP_Response
      */
-    public function setContentType(string $mime, string $charset = 'UTF-8'): self
+    public function setContentType(string $mime, string $charset = 'UTF-8')
     {
         if (!empty($charset)) {
             $mime .= '; charset=' . $charset;
@@ -267,7 +267,7 @@ class YP_Response extends Message
      *
      * @return YP_Response
      */
-    public function noCache(): self
+    public function noCache()
     {
         $this->removeHeader('Cache-control');
         $this->setHeader('Cache-control', ['no-store', 'max-age=0', 'no-cache']);
@@ -298,7 +298,7 @@ class YP_Response extends Message
      *
      * @return YP_Response
      */
-    public function setCache(array $options = []): self
+    public function setCache(array $options = [])
     {
         if (empty($options)) {
             return $this;
@@ -325,9 +325,9 @@ class YP_Response extends Message
      *
      * @param $date
      *
-     * @return YP_Response
+     * @return $this
      */
-    public function setLastModified($date): self
+    public function setLastModified($date)
     {
         if ($date instanceof \DateTime) {
             $date->setTimezone(new \DateTimeZone('UTC'));
@@ -342,9 +342,9 @@ class YP_Response extends Message
     /**
      * 将输出的信息发送到浏览器
      *
-     * @return YP_Response
+     * @return $this
      */
-    public function send(): self
+    public function send()
     {
         // 如果正在执行内容安全策略，需要构建它的头文件
         if ($this->CSPEnabled === true) {
@@ -405,6 +405,7 @@ class YP_Response extends Message
      */
     public function redirect(string $uri, string $method = 'auto', int $code = null)
     {
+        P(111);
         // 如果是IIS服务器,用refresh做最好的兼容
         if ($method === 'auto' && isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],
                 'Microsoft-IIS') !== false

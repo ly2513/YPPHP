@@ -418,11 +418,11 @@ class YP
             }
             $headers = $cachedResponse['headers'];
             $output  = $cachedResponse['output'];
-            // Clear all default headers
+            //  清除所有的某人头部设置
             foreach ($this->response->getHeaders() as $key => $val) {
                 $this->response->removeHeader($key);
             }
-            // Set cached headers
+            // 设置缓存头
             foreach ($headers as $name => $value) {
                 $this->response->setHeader($name, $value);
             }

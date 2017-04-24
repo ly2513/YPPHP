@@ -8,30 +8,25 @@
  */
 namespace YP\Debug;
 
+/**
+ * Class Timer 定时器
+ *
+ * @package YP\Debug
+ */
 class Timer
 {
     /**
-     * List of all timers.
+     * 存放所有的定时器
      *
      * @var array
      */
     protected $timers = [];
 
-    //--------------------------------------------------------------------
-
     /**
-     * Starts a timer running.
+     * 启动计时器运行
+     * 可以对该方法进行多个调用，以便可以测量多个执行点
      *
-     * Multiple calls can be made to this method so that several
-     * execution points can be measured.
-     *
-     * @param string $name  The name of this timer.
-     * @param float  $time  Allows user to provide time.
-     */
-    /**
-     * 开始时间运行
-     *
-     * @param string     $name
+     * @param string     $name 定时器的名称
      * @param float|null $time
      *
      * @return Timer
@@ -39,24 +34,17 @@ class Timer
     public function start(string $name, float $time = null): self
     {
         $this->timers[strtolower($name)] = [
-            'start' => ! empty($time) ? $time : microtime(true),
+            'start' => !empty($time) ? $time : microtime(true),
             'end'   => null,
         ];
 
         return $this;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Stops a running timer.
+     * 停止一个运行的定时器
+     * 如果在调用timers()方法之前没有停止该定时器，它将会在这自动停止。
      *
-     * If the timer is not stopped before the timers() method is called,
-     * it will be automatically stopped at that point.
-     *
-     * @param string $name   The name of this timer.
-     */
-    /**
      * @param string $name
      *
      * @return Timer
@@ -64,86 +52,59 @@ class Timer
     public function stop(string $name):self
     {
         $name = strtolower($name);
-
-        if (empty($this->timers[$name]))
-        {
+        if (empty($this->timers[$name])) {
             throw new \RuntimeException('Cannot stop timer: invalid name given.');
         }
-
         $this->timers[$name]['end'] = microtime(true);
 
         return $this;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the duration of a recorded timer.
+     * 返回记录计时器的持续时间
      *
-     * @param     $name         The name of the timer.
-     * @param int $decimals     Number of decimal places.
-     *
-     * @return null|float       Returns null if timer exists by that name.
-     *                          Returns a float representing the number of
-     *                          seconds elapsed while that timer was running.
-     */
-    /**
-     *
-     * 
-     * @param string $name
-     * @param int    $decimals
+     * @param string $name     定时器名称
+     * @param int    $decimals 小数点位数
      *
      * @return float|null
      */
     public function getElapsedTime(string $name, int $decimals = 4)
     {
         $name = strtolower($name);
-
-        if (empty($this->timers[$name]))
-        {
+        if (empty($this->timers[$name])) {
             return null;
         }
-
         $timer = $this->timers[$name];
-
-        if (empty($timer['end']))
-        {
+        if (empty($timer['end'])) {
             $timer['end'] = microtime(true);
         }
 
         return (float)number_format($timer['end'] - $timer['start'], $decimals);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the array of timers, with the duration pre-calculated for you.
+     * 获得所有的定时器
+     * 返回定时器的数组，并为你预先计算时间
      *
-     * @param int $decimals     Number of decimal places
+     * @param int $decimals 小数点位数
      *
      * @return array
      */
     public function getTimers(int $decimals = 4)
     {
         $timers = $this->timers;
-
-        foreach ($timers as &$timer)
-        {
-            if (empty($timer['end']))
-            {
+        foreach ($timers as &$timer) {
+            if (empty($timer['end'])) {
                 $timer['end'] = microtime(true);
             }
-
             $timer['duration'] = (float)number_format($timer['end'] - $timer['start'], $decimals);
         }
 
         return $timers;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Checks whether or not a timer with the specified name exists.
+     * 检测是否存在指定的定时器
      *
      * @param string $name
      *

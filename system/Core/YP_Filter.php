@@ -94,8 +94,7 @@ class YP_Filter
                     $this->request = $result;
                     continue;
                 }
-                // If the response object was sent back,
-                // then send it and quit.
+                // 如果响应对象被发送回来，然后发送并退出
                 if ($result instanceof Response) {
                     $result->send();
                     exit(EXIT_ERROR);

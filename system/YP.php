@@ -137,8 +137,11 @@ class YP
      */
     public function run(RouterCollection $routes = null)
     {
+        // 记录开始
         $this->startBenchmark();
+        // 获得请求对象
         $this->getRequestObject();
+        // 获得响应对象
         $this->getResponseObject();
         $this->forceSecureAccess();
         // 检查缓存页,如果页面已被缓存，执行将停止
@@ -183,7 +186,6 @@ class YP
             $this->request = Config\Services::cliRequest($this->config);
         } else {
             $this->request = Config\Services::request($this->config);
-            P($this->request);
             $this->request->setProtocolVersion($_SERVER['SERVER_PROTOCOL']);
         }
     }
@@ -315,8 +317,6 @@ class YP
      */
     protected function loadEnvironment()
     {
-        // Load environment settings from .env files
-        // into $_SERVER and $_ENV
         // 通过.env 文件,加载环境配置
         require SYSTEM_PATH . 'Config/DotEnv.php';
         $env = new DotEnv(ROOT_PATH);

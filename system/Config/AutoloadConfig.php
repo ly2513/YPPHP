@@ -37,12 +37,10 @@ class AutoloadConfig
     {
         // 设置框架的命名空间
         $this->namespaceMap = ['YP' => realpath(SYSTEM_PATH)];
-
         // 当环境变量为test时,设置测试的命名空间
         if (isset($_SERVER['YP_ENV']) && $_SERVER['YP_ENV'] == 'test') {
             $this->namespaceMap['Tests\Support'] = ROOT_PATH . 'tests/_support/';
         }
-        
         // 设置框架初始化需自动加载的类
         $this->classMap = [
             'YP\YP'                                => SYSTEM_PATH . 'YP.php',
@@ -54,6 +52,7 @@ class AutoloadConfig
             'YP\Config\Database'                   => SYSTEM_PATH . 'Config/Database.php',
             'YP\Config\Database\Connection'        => SYSTEM_PATH . 'Config/Database/Connection.php',
             'YP\Config\Database\Connection\MySQLi' => SYSTEM_PATH . 'Config/Database/Connection/MySQLi.php',
+            'Zend\Escaper\Escaper'                 => SYSTEM_PATH . 'ThirdParty/ZendEscaper/Escaper.php',
         ];
     }
 

@@ -61,11 +61,7 @@ class Services
     }
 
     /**
-     * The file locator provides utility methods for looking for non-classes
-     * within namespaced folders, as well as convenience methods for
-     * loading 'helpers', and 'libraries'.
-     */
-    /**
+     * 文件定位为寻找非类的命名空间文件夹内的实用方法，加载“help”和“Libraries”等
      *
      * @param bool $getShared
      *
@@ -81,10 +77,8 @@ class Services
     }
 
     /**
-     * The Logger class is a PSR-3 compatible Logging class that supports
-     * multiple handlers that process the actual logging.
-     */
-    /**
+     * 加载日志类
+     *
      * @param bool $getShared
      *
      * @return mixed|\YP\Core\YP_Log
@@ -99,18 +93,9 @@ class Services
     }
 
     /**
-     * The Request class models an HTTP request.
-     */
-    /**
-     * @param \Config\App|null $config
-     * @param bool             $getShared
+     * 加载http请求类
      *
-     * @return \CodeIgniter\HTTP\IncomingRequest|mixed
-     */
-    /**
-     *
-     *
-     * @param \Config\App|null $config
+     * @param \Config\App|null $config 配置
      * @param bool             $getShared
      *
      * @return mixed|\YP\Core\YP_IncomingRequest
@@ -128,9 +113,8 @@ class Services
     }
 
     /**
-     * The Response class models an HTTP response.
-     */
-    /**
+     * 加载http响应类
+     *
      * @param \Config\App|null $config
      * @param bool             $getShared
      *
@@ -142,7 +126,6 @@ class Services
         {
             return self::getSharedInstance('response', $config);
         }
-
         if (! is_object($config))
         {
             $config = new \Config\App();
@@ -152,10 +135,8 @@ class Services
     }
 
     /**
-     * The Timer class provides a simple way to Benchmark portions of your
-     * application.
-     */
-    /**
+     * 加载定时器类
+     *
      * @param bool $getShared
      *
      * @return mixed|\YP\Debug\Timer
@@ -171,8 +152,11 @@ class Services
     }
 
     /**
-     * The Routes service is a class that allows for easily building
-     * a collection of routes.
+     * 加载路由收集类
+     *
+     * @param bool $getShared
+     *
+     * @return mixed|\YP\Core\YP_RouterCollection
      */
     public static function routes($getShared = true)
     {
@@ -185,10 +169,8 @@ class Services
     }
 
     /**
-     * The Router class uses a RouteCollection's array of routes, and determines
-     * the correct Controller and Method to execute.
-     */
-    /**
+     * 加载路由类
+     *
      * @param \YP\Core\YP_RouterCollection|null $routes
      * @param bool                              $getShared
      *
@@ -207,6 +189,98 @@ class Services
         }
 
         return new \YP\Core\YP_Router($routes);
+    }
+
+    /**
+     * 过滤器允许您在执行控制器之前和/或之后运行任务。在过滤器之前，
+     * 请求可以被修改，并且基于请求执行的操作，而在过滤器被发送到客户端之前，它可以对响应本身进行修改或修改
+     *
+     * @param null $config
+     * @param bool $getShared
+     *
+     * @return mixed|\YP\Core\YP_Filter
+     */
+    public static function filters($config = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('filters', $config);
+        }
+
+        if (empty($config))
+        {
+            $config = new \Config\Filters();
+        }
+
+        return new \YP\Core\YP_Filter($config, self::request(), self::response());
+    }
+
+    /**
+     * 实例化一个缓存操作对象
+     *
+     * @param \Config\Cache|null $config
+     * @param bool               $getShared
+     *
+     * @return mixed
+     */
+    public static function cache(\Config\Cache $config = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('cache', $config);
+        }
+
+        if (! is_object($config))
+        {
+            $config = new \Config\Cache();
+        }
+        return \YP\Core\YP_CacheFactory::getHandler($config);
+    }
+
+    /**
+     * 负责加载语言字符串翻译
+     *
+     * @param string|null $locale
+     * @param bool        $getShared
+     *
+     * @return mixed|\YP\Core\YP_Language
+     */
+    public static function language(string $locale = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('language', $locale);
+        }
+
+        $locale = ! empty($locale) ? $locale : self::request()->getLocale();
+
+        return new \YP\Core\YP_Language($locale);
+    }
+
+    /**
+     * 实例化命令行的请求对象
+     *
+     * @param \Config\App|null $config
+     * @param bool             $getShared
+     *
+     * @return mixed|\YP\Cli\YP_CLIRequest
+     */
+    public static function cliRequest(\Config\App $config=null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('cliRequest', $config);
+        }
+
+        if (! is_object($config))
+        {
+            $config = new \Config\App();
+        }
+
+        return new \YP\Cli\YP_CLIRequest(
+            $config,
+            new \YP\Core\YP_Uri()
+        );
     }
 
     /**

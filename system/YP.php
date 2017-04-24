@@ -9,6 +9,9 @@
 namespace YP;
 
 use YP\Core\YP_RouterCollection as RouterCollection;
+use YP\Core\YP_Request as Request;
+use Config\Cache;
+use YP\Core\YP_Uri as Uri;
 
 class YP
 {
@@ -47,10 +50,25 @@ class YP
 
     protected $benchmark;
 
+    /**
+     * 请求对象
+     *
+     * @var
+     */
     protected $request;
 
+    /**
+     * 响应对象
+     *
+     * @var
+     */
     protected $response;
 
+    /**
+     * 路由对象
+     *
+     * @var
+     */
     protected $router;
 
     /**
@@ -74,6 +92,9 @@ class YP
      */
     protected static $cacheTTL = 0;
 
+    /**
+     * @var
+     */
     protected $path;
 
     /**
@@ -120,23 +141,22 @@ class YP
         $this->getRequestObject();
         $this->getResponseObject();
         $this->forceSecureAccess();
-        // Check for a cached page. Execution will stop
-        // if the page has been cached.
-        //        $cacheConfig = new Cache();
-        //        $this->displayCache($cacheConfig);
+        // 检查缓存页,如果页面已被缓存，执行将停止
+        $cacheConfig = new Cache();
+        $this->displayCache($cacheConfig);
         $this->spoofRequestMethod();
         try {
-            // $this->handleRequest($routes, $cacheConfig);
-            $this->handleRequest($routes);
+            // 处理请求
+            $this->handleRequest($routes, $cacheConfig);
         } catch (\Exception $e) {
+            // 日志记录异常错误
             $logger = Config\Services::log();
             $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
-            // If the route is a 'redirect' route, it throws
-            // the exception with the $to as the message
+            //            P($this->response);
+            // 如果该路由是重定向路由，则以$to作为消息抛出异常
             $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
             $this->callExit(EXIT_SUCCESS);
-        } // Catch Response::redirect()
-        catch (\Exception $e) {
+        } catch (\Exception $e) {// 捕获响应的重定向错误
             $this->callExit(EXIT_SUCCESS);
         } catch (\RuntimeException $e) {
             $this->display404errors($e);
@@ -155,26 +175,21 @@ class YP
     }
 
     /**
-     * Get our Request object, (either IncomingRequest or CLIRequest)
-     * and set the server protocol based on the information provided
-     * by the server.
-     */
-    /**
-     *
+     * 获取对象请求,基于服务器提供的信息服务器协议。
      */
     protected function getRequestObject()
     {
         if (is_cli()) {
-            $this->request = Config\Services::clirequest($this->config);
+            $this->request = Config\Services::cliRequest($this->config);
         } else {
             $this->request = Config\Services::request($this->config);
+            P($this->request);
             $this->request->setProtocolVersion($_SERVER['SERVER_PROTOCOL']);
         }
     }
 
     /**
-     * Get our Response object, and set some default values, including
-     * the HTTP protocol version and a default successful response.
+     * 获取响应对象，并设置一些默认值，包括HTTP协议版本和默认的成功响应
      */
     protected function getResponseObject()
     {
@@ -182,10 +197,15 @@ class YP
         if (!is_cli()) {
             $this->response->setProtocolVersion($this->request->getProtocolVersion());
         }
-        // Assume success until proven otherwise.
+        // 设置状响应态
         $this->response->setStatusCode(200);
     }
 
+    /**
+     *
+     *
+     * @param int $duration
+     */
     protected function forceSecureAccess($duration = 31536000)
     {
         if ($this->config->forceGlobalSecureRequests !== true) {
@@ -195,58 +215,48 @@ class YP
     }
 
     /**
-     * Handles the main request logic and fires the controller.
+     * 处理请求逻辑并触发控制器
      *
-     * @param \CodeIgniter\Router\RouteCollectionInterface $routes
-     * @param                                              $cacheConfig
-     */
-    /**
      * @param RouterCollection|null $routes
+     * @param                       $cacheConfig
      */
-    protected function handleRequest(RouterCollection $routes = null)
+    protected function handleRequest(RouterCollection $routes = null, $cacheConfig)
     {
         $this->tryToRouteIt($routes);
-        // Run "before" filters
+        // 运行 "before" 过滤器
         $filters = Config\Services::filters();
-        $uri     = $this->request instanceof CLIRequest ? $this->request->getPath() : $this->request->uri->getPath();
+        $uri     = $this->request instanceof Request ? $this->request->getPath() : $this->request->uri->getPath();
         $filters->run($uri, 'before');
         $returned = $this->startController();
-        // Closure controller has run in startController().
+        // 关闭已经运行在startController()的控制器
         if (!is_callable($this->controller)) {
             $controller = $this->createController();
-            // Is there a "post_controller_constructor" hook?
+            // 是否有'post_controller_constructor'钩子
             Events::trigger('post_controller_constructor');
             $returned = $this->runController($controller);
-            P($returned);
         } else {
             $this->benchmark->stop('controller_constructor');
             $this->benchmark->stop('controller');
         }
-        // If $returned is a string, then the controller output something,
-        // probably a view, instead of echoing it directly. Send it along
-        // so it can be used with the output.
-        //        $this->gatherOutput($cacheConfig, $returned);
-        // Run "after" filters
+        // 如果返回的是一个字符串，那么控制器输出的东西，可能是一个视图，而不是直接输出。可以单独发送所以可能用于输出。
+        $this->gatherOutput($cacheConfig, $returned);
+        // 运行 "after" 过滤器
         $response = $filters->run($uri, 'after');
         if ($response instanceof Response) {
             $this->response = $response;
         }
-        // Save our current URI as the previous URI in the session
-        // for safer, more accurate use with `previous_url()` helper function.
+        // 将当前URI保存为会话中的前一个URI，以便更安全
         $this->storePreviousURL($this->request->uri ?? $uri);
         unset($uri);
         $this->sendResponse();
-        //--------------------------------------------------------------------
-        // Is there a post-system hook?
-        //--------------------------------------------------------------------
+        // 是否有'post-system'钩子
         //        Events::trigger('post_system');
     }
 
     /**
-     * Modifies the Request Object to use a different method if a POST
-     * variable called _method is found.
+     * 用不同的方法去修改请求对象
      *
-     * Does not work on CLI commands.
+     * 在命令行下失效
      */
     public function spoofRequestMethod()
     {
@@ -301,12 +311,13 @@ class YP
     }
 
     /**
-     * Loads any custom server config values from the .env file.
+     * 加载当前常量的服务器配置
      */
     protected function loadEnvironment()
     {
         // Load environment settings from .env files
         // into $_SERVER and $_ENV
+        // 通过.env 文件,加载环境配置
         require SYSTEM_PATH . 'Config/DotEnv.php';
         $env = new DotEnv(ROOT_PATH);
         $env->load();
@@ -330,7 +341,7 @@ class YP
         }
         // $routes is defined in Config/Routes.php
         $this->router = Config\Services::router($routes);
-        $path = $this->determinePath();
+        $path         = $this->determinePath();
         $this->benchmark->stop('bootstrap');
         $this->benchmark->start('routing');
         ob_start();
@@ -342,6 +353,105 @@ class YP
             $this->request->setLocale($this->router->getLocale());
         }
         $this->benchmark->stop('routing');
+    }
+
+    /**
+     * 根据用户的输入(setPath)，或CLI / incomingrequest路径,路由到确定的路由。
+     *
+     * @return mixed
+     */
+    protected function determinePath()
+    {
+        if (!empty($this->path)) {
+            return $this->path;
+        }
+
+        return is_cli() ? $this->request->getPath() : $this->request->uri->getPath();
+    }
+
+    /**
+     * 现在一切都已安装，此方法试图运行控制器方法，使应用运行起来。如果不能，将显示适当的页面没有发现错误。
+     *
+     * @return mixed
+     */
+    protected function startController()
+    {
+        $this->benchmark->start('controller');
+        $this->benchmark->start('controller_constructor');
+        // Is it routed to a Closure?
+        if (is_object($this->controller) && (get_class($this->controller) == 'Closure')) {
+            $controller = $this->controller;
+
+            return $controller(...$this->router->params());
+        } else {
+            // 没有指定控制器
+            if (empty($this->controller)) {
+                throw new \RuntimeException('Controller is empty.');
+            } else {
+                // 尝试自动加载当前这个类
+                if (!class_exists($this->controller, true) || $this->method[0] === '_') {
+                    throw new \RuntimeException('Controller or its method is not found.');
+                } else if (!method_exists($this->controller, '_remap') && !is_callable([
+                        $this->controller,
+                        $this->method
+                    ], false)
+                ) {
+                    throw new \RuntimeException('Controller method is not found.');
+                }
+            }
+        }
+    }
+
+    /**
+     * 确定给定的URI是否已缓存响应
+     *
+     * @param $config 配置
+     *
+     * @throws \Exception
+     */
+    public function displayCache($config)
+    {
+        if ($cachedResponse = cache()->get($this->generateCacheName($config))) {
+            $cachedResponse = unserialize($cachedResponse);
+            if (!is_array($cachedResponse) || !isset($cachedResponse['output']) || !isset($cachedResponse['headers'])) {
+                throw new \Exception("Error unserializing page cache");
+            }
+            $headers = $cachedResponse['headers'];
+            $output  = $cachedResponse['output'];
+            // Clear all default headers
+            foreach ($this->response->getHeaders() as $key => $val) {
+                $this->response->removeHeader($key);
+            }
+            // Set cached headers
+            foreach ($headers as $name => $value) {
+                $this->response->setHeader($name, $value);
+            }
+            $output = $this->displayPerformanceMetrics($output);
+            $this->response->setBody($output)->send();
+            $this->callExit(EXIT_SUCCESS);
+        };
+    }
+
+    /**
+     * Generates the cache name to use for our full-page caching.
+     *
+     * @param $config
+     *
+     * @return string
+     */
+    protected function generateCacheName($config): string
+    {
+        if (is_cli()) {
+            return md5($this->request->getPath());
+        }
+        $uri = $this->request->uri;
+        if ($config->cacheQueryString) {
+            $name = Uri::createURIString($uri->getScheme(), $uri->getAuthority(), $uri->getPath(), $uri->getQuery());
+        } else {
+            $name = Uri::createURIString($uri->getScheme(), $uri->getAuthority(), $uri->getPath());
+        }
+
+        return md5($name);
     }
 
 }

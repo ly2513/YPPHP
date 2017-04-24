@@ -11,7 +11,7 @@ namespace YP\Cli;
 use YP\Core\YP_Request as Request;
 use Config\App;
 
-class CliRequest extends Request
+class YP_CliRequest extends Request
 {
     /**
      * Stores the segments of our cli "URI" command.

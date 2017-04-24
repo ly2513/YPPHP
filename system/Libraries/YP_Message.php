@@ -68,13 +68,13 @@ class YP_Message
 
         return $this;
     }
-
+    
     /**
      * 将数据追加到当前消息体
      *
      * @param $data
      *
-     * @return YP_Request
+     * @return YP_Message
      */
     public function appendBody($data): self
     {

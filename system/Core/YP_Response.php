@@ -14,7 +14,7 @@ use YP\Config\Mimes;
 
 class YP_Response extends Message
 {
-    /**
+    /** 
      * HTTP 状态码
      *
      * @var type
@@ -65,7 +65,6 @@ class YP_Response extends Message
         416 => 'Requested Range Not Satisfiable',
         417 => 'Expectation Failed',
         418 => "I'm a teapot",
-        // 419 (Authentication Timeout) is a non-standard status code with unknown origin
         421 => 'Misdirected Request',
         422 => 'Unprocessable Entity',
         423 => 'Locked',
@@ -406,7 +405,7 @@ class YP_Response extends Message
      */
     public function redirect(string $uri, string $method = 'auto', int $code = null)
     {
-        // IIS environment likely? Use 'refresh' for better compatibility
+        // 如果是IIS服务器,用refresh做最好的兼容
         if ($method === 'auto' && isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],
                 'Microsoft-IIS') !== false
         ) {
@@ -551,5 +550,6 @@ class YP_Response extends Message
         fclose($fp);
         exit;
     }
+
 
 }

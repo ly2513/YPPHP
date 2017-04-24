@@ -187,7 +187,7 @@
 
         <!-- Request -->
         <div class="content" id="request">
-            <?php $request = \CodeIgniter\Services::request(null, true); ?>
+            <?php $request = \Config\Services::request(null, true); ?>
 
             <table>
                 <tbody>
@@ -209,7 +209,7 @@
                 </tr>
                 <tr>
                     <td>Is CLI Request?</td>
-                    <td><?= $request->isCLI() ? 'yes' : 'no' ?></td>
+                    <td><?= is_cli() ? 'yes' : 'no' ?></td>
                 </tr>
                 <tr>
                     <td>Is Secure Request?</td>
@@ -296,7 +296,7 @@
 
         <!-- Response -->
         <?php
-				$response = \CodeIgniter\Services::response(null, true);
+				$response = Config\Services::response(null, true);
 				$response->setStatusCode(http_response_code());
         ?>
         <div class="content" id="response">
@@ -376,7 +376,7 @@
         <p>
             Displayed at <?= date('H:i:sa') ?> &mdash;
             PHP: <?= phpversion() ?>  &mdash;
-            CodeIgniter: <?= \CodeIgniter\CodeIgniter::CI_VERSION ?>
+            YP: <?= \YP\YP::YP_VERSION ?>
         </p>
 
     </div>

@@ -6,10 +6,9 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-
 namespace YP\Core;
 
-//use CodeIgniter\HTTP\Files\FileCollection;
+    //use CodeIgniter\HTTP\Files\FileCollection;
 //use CodeIgniter\HTTP\Files\UploadedFile;
 use Config\Services;
 
@@ -87,51 +86,42 @@ class YP_IncomingRequest extends YP_Request
     public function __construct($config, $uri = null, $body = 'php://input')
     {
         // 获得输入流
-        if ($body == 'php://input')
-        {
+        if ($body == 'php://input') {
             $body = file_get_contents('php://input');
         }
-
         $this->body   = $body;
         $this->config = $config;
-
         parent::__construct($config);
-
         $this->populateHeaders();
-
         $this->uri = $uri;
-
         $this->detectURI($config->uriProtocol, $config->baseURL);
-
         $this->validLocales = $config->supportedLocales;
-
         $this->detectLocale($config);
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Handles setting up the locale, perhaps auto-detecting through
      * content negotiation.
      *
      * @param $config
      */
+    /**
+     * 设置当前操作配置
+     *
+     * @param $config
+     */
     public function detectLocale($config)
     {
         $this->locale = $this->defaultLocale = $config->defaultLocale;
-
-        if (! $config->negotiateLocale)
-        {
+        if (!$config->negotiateLocale) {
             return;
         }
-
         $this->setLocale($this->negotiate('language', $config->supportedLocales));
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the default locale as set in Config\App.php
+     * 获得默认的配置信息
      *
      * @return string
      */
@@ -140,11 +130,8 @@ class YP_IncomingRequest extends YP_Request
         return $this->defaultLocale;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Gets the current locale, with a fallback to the default
-     * locale if none is set.
+     * 获得当前的配置信息
      *
      * @return string
      */
@@ -153,10 +140,8 @@ class YP_IncomingRequest extends YP_Request
         return $this->locale ?? $this->defaultLocale;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Sets the locale string for this request.
+     * 设置请求的区域的字符串。
      *
      * @param string $locale
      *
@@ -164,26 +149,17 @@ class YP_IncomingRequest extends YP_Request
      */
     public function setLocale(string $locale)
     {
-        // If it's not a valid locale, set it
-        // to the default locale for the site.
-        if (! in_array($locale, $this->validLocales))
-        {
+        // 如果不是有效的区域设置，请将其设置为站点的默认区域设置
+        if (!in_array($locale, $this->validLocales)) {
             $locale = $this->defaultLocale;
         }
-
         $this->locale = $locale;
-
-        // If the intl extension is loaded, make sure
-        // that we set the locale for it... if not, though,
-        // don't worry about it.
         try {
-            if (class_exists('\Locale', false))
-            {
+            if (class_exists('\Locale', false)) {
                 \Locale::setDefault($locale);
             }
+        } catch (\Exception $e) {
         }
-        catch (\Exception $e)
-        {}
 
         return $this;
     }
@@ -195,47 +171,35 @@ class YP_IncomingRequest extends YP_Request
      */
     public function isAJAX(): bool
     {
-        return ( ! empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
-            strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+        return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Attempts to detect if the current connection is secure through
-     * a few different methods.
+     * 监测连接是否安全
+     * 试图通过几种不同的方法检测当前连接是否安全
      *
      * @return bool
      */
     public function isSecure(): bool
     {
-        if ( ! empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off')
-        {
+        if (!empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
             return true;
-        }
-        elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
-        {
+        } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
             return true;
-        }
-        elseif ( ! empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off')
-        {
+        } elseif (!empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off') {
             return true;
         }
 
         return false;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Fetch an item from the $_REQUEST object. This is the simplest way
-     * to grab data from the request object and can be used in lieu of the
-     * other get* methods in most cases.
+     * 遍历$_REQUEST数组中的值
      *
      * @param null $index
      * @param null $filter
      *
-     * @return mixed
+     * @return array|mixed|null
      */
     public function getVar($index = null, $filter = null)
     {
@@ -256,11 +220,8 @@ class YP_IncomingRequest extends YP_Request
         return json_decode($this->body, $assoc, $depth, $options);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * A convenience method that grabs the raw input stream(send method in PUT, PATCH, DELETE) and decodes
-     * the String into an array.
+     * 获取输入流并解码字符串成数组
      *
      * @return mixed
      */
@@ -307,37 +268,7 @@ class YP_IncomingRequest extends YP_Request
      */
     public function getPostGet($index = null, $filter = null)
     {
-        return isset($_POST[$index])
-            ? $this->getPost($index, $filter)
-            : $this->getGet($index, $filter);
-    }
-
-    //--------------------------------------------------------------------
-
-    /**
-     * Fetch an item from GET data with fallback to POST.
-     *
-     * @param null $index  Index for item to be fetched from $_GET or $_POST
-     * @param null $filter A filter name to apply
-     *
-     * @return mixed
-     */
-    /**
-     *
-     *
-     * @param null $index null: 表示遍历整个数组; not null: 获取具体的$index的值
-     * @param null $filter
-     *
-     * @return array|mixed|null
-     */
-    public function getGetPost($index = null, $filter = null)
-    {
-        // Use $_GET directly here, since filter_has_var only
-        // checks the initial GET data, not anything that might
-        // have been added since.
-        return isset($_GET[$index])
-            ? $this->getGet($index, $filter)
-            : $this->getPost($index, $filter);
+        return isset($_POST[$index]) ? $this->getPost($index, $filter) : $this->getGet($index, $filter);
     }
 
     /**
@@ -365,37 +296,28 @@ class YP_IncomingRequest extends YP_Request
         return $this->fetchGlobal(INPUT_SERVER, 'HTTP_USER_AGENT', $filter);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Attempts to get old Input data that has been flashed to the session
-     * with redirect_with_input(). It first checks for the data in the old
-     * POST data, then the old GET data.
-     */
-    /**
-     *
+     * 获得旧的输出
+     * 通过redirect_with_input()方法刷新会话,试图获得旧的输入数据。它首先检查旧的POST数据，然后在检查旧的GET数据。
      *
      * @param string $key
      */
     public function getOldInput(string $key)
     {
-        // If the session hasn't been started, or no
-        // data was previously saved, we're done.
-        if (empty($_SESSION['_yp_old_input'])) return;
-
-        // Check for the value in the POST array first.
-        if (isset($_SESSION['_yp_old_input']['post'][$key]))
-        {
+        // 如果会话还没开始，或者以前没有保存数据
+        if (empty($_SESSION['_yp_old_input'])) {
+            return;
+        }
+        // 首先检查POST数组
+        if (isset($_SESSION['_yp_old_input']['post'][$key])) {
             return $_SESSION['_yp_old_input']['post'][$key];
         }
-
-        // Next check in the GET array.
-        if (isset($_SESSION['_yp_old_input']['get'][$key]))
-        {
+        // 再检查GET数组
+        if (isset($_SESSION['_yp_old_input']['get'][$key])) {
             return $_SESSION['_yp_old_input']['get'][$key];
         }
     }
-    
+
     /**
      * 获得所有上传的文件
      *
@@ -403,8 +325,7 @@ class YP_IncomingRequest extends YP_Request
      */
     public function getFiles(): array
     {
-        if (is_null($this->files))
-        {
+        if (is_null($this->files)) {
             // @todo modify to use Services, at the very least.
             $this->files = new FileCollection();
         }
@@ -412,20 +333,16 @@ class YP_IncomingRequest extends YP_Request
         return $this->files->all();
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Retrieves a single file by the name of the input field used
-     * to upload it.
+     * 通过输出文件的名称去检索文件,用于下载
      *
      * @param string $fileID
      *
-     * @return UploadedFile|null
+     * @return mixed
      */
     public function getFile(string $fileID)
     {
-        if (is_null($this->files))
-        {
+        if (is_null($this->files)) {
             // @todo modify to use Services, at the very least.
             $this->files = new FileCollection();
         }
@@ -433,12 +350,9 @@ class YP_IncomingRequest extends YP_Request
         return $this->files->getFile($fileID);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Sets up our URI object based on the information we have. This is
-     * either provided by the user in the baseURL Config setting, or
-     * determined from the environment as needed.
+     * 基于相关配置来设置Uri对象
+     * 相关配置指用户配置的baseURL或者由当前的环境决定
      *
      * @param $protocol
      * @param $baseURL
@@ -446,56 +360,36 @@ class YP_IncomingRequest extends YP_Request
     protected function detectURI($protocol, $baseURL)
     {
         $this->uri->setPath($this->detectPath($protocol));
-
-        // Based on our baseURL provided by the developer (if set)
-        // set our current domain name, scheme
-        if ( ! empty($baseURL))
-        {
-            // We cannot add the path here, otherwise it's possible
-            // that the routing will not work correctly if we are
-            // within a sub-folder scheme. So it's modified in
-            // the
+        // 基于开发者设置baseURL来设置当前域名的
+        if (!empty($baseURL)) {
+            // 如果我们在子文件夹中,不能在这里添加路径,否则路由可能无法正常工作。所以在这里进行修改
             $this->uri->setScheme(parse_url($baseURL, PHP_URL_SCHEME));
             $this->uri->setHost(parse_url($baseURL, PHP_URL_HOST));
             $this->uri->setPort(parse_url($baseURL, PHP_URL_PORT));
             $this->uri->resolveRelativeURI(parse_url($baseURL, PHP_URL_PATH));
-        }
-        else
-        {
+        } else {
             $this->isSecure() ? $this->uri->setScheme('https') : $this->uri->setScheme('http');
-
-            // While both SERVER_NAME and HTTP_HOST are open to security issues,
-            // if we have to choose, we will go with the server-controlled version first.
-            ! empty($_SERVER['SERVER_NAME'])
-                ? (isset($_SERVER['SERVER_NAME']) ? $this->uri->setHost($_SERVER['SERVER_NAME']) : null)
-                : (isset($_SERVER['HTTP_HOST']) ? $this->uri->setHost($_SERVER['HTTP_HOST']) : null);
-
-            if ( ! empty($_SERVER['SERVER_PORT']))
-            {
+            //当SERVER_NAME和HTTP_HOST都开放安全的,如果必须选择的话,首先用server-controlled 版本
+            !empty($_SERVER['SERVER_NAME']) ? (isset($_SERVER['SERVER_NAME']) ? $this->uri->setHost($_SERVER['SERVER_NAME']) : null) : (isset($_SERVER['HTTP_HOST']) ? $this->uri->setHost($_SERVER['HTTP_HOST']) : null);
+            if (!empty($_SERVER['SERVER_PORT'])) {
                 $this->uri->setPort($_SERVER['SERVER_PORT']);
             }
         }
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Based on the URIProtocol Config setting, will attempt to
-     * detect the path portion of the current URI.
+     * 基于URI协议配置设置，将检测当前URI的路径部分
      *
      * @param $protocol
      *
-     * @return string|string
+     * @return string
      */
     public function detectPath($protocol)
     {
-        if (empty($protocol))
-        {
+        if (empty($protocol)) {
             $protocol = 'REQUEST_URI';
         }
-
-        switch ($protocol)
-        {
+        switch ($protocol) {
             case 'REQUEST_URI':
                 $path = $this->parseRequestURI();
                 break;
@@ -504,9 +398,7 @@ class YP_IncomingRequest extends YP_Request
                 break;
             case 'PATH_INFO':
             default:
-                $path = isset($_SERVER[$protocol])
-                    ? $_SERVER[$protocol]
-                    : $this->parseRequestURI();
+                $path = isset($_SERVER[$protocol]) ? $_SERVER[$protocol] : $this->parseRequestURI();
                 break;
         }
 
@@ -514,7 +406,6 @@ class YP_IncomingRequest extends YP_Request
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Provides a convenient way to work with the Negotiate class
      * for content negotiation.
@@ -525,15 +416,21 @@ class YP_IncomingRequest extends YP_Request
      *
      * @return mixed
      */
+    /**
+     * 使用Negotiate类来处理
+     *
+     * @param string $type
+     * @param array  $supported
+     * @param bool   $strictMatch
+     *
+     * @return mixed
+     */
     public function negotiate(string $type, array $supported, bool $strictMatch = false)
     {
-        if (is_null($this->negotiate))
-        {
+        if (is_null($this->negotiate)) {
             $this->negotiate = Services::negotiator($this, true);
         }
-
-        switch (strtolower($type))
-        {
+        switch (strtolower($type)) {
             case 'media':
                 return $this->negotiate->media($supported, $strictMatch);
                 break;
@@ -547,12 +444,10 @@ class YP_IncomingRequest extends YP_Request
                 return $this->negotiate->language($supported);
                 break;
         }
-
-        throw new \InvalidArgumentException($type.' is not a valid negotiation type.');
+        throw new \InvalidArgumentException($type . ' is not a valid negotiation type.');
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Will parse the REQUEST_URI and automatically detect the URI from it,
      * fixing the query string if necessary.
@@ -561,46 +456,32 @@ class YP_IncomingRequest extends YP_Request
      */
     protected function parseRequestURI(): string
     {
-        if ( ! isset($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME']))
-        {
+        if (!isset($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME'])) {
             return '';
         }
-
         // parse_url() returns false if no host is present, but the path or query string
         // contains a colon followed by a number
-        $parts = parse_url('http://dummy'.$_SERVER['REQUEST_URI']);
+        $parts = parse_url('http://dummy' . $_SERVER['REQUEST_URI']);
         $query = isset($parts['query']) ? $parts['query'] : '';
         $uri   = isset($parts['path']) ? $parts['path'] : '';
-
-        if (isset($_SERVER['SCRIPT_NAME'][0]))
-        {
-            if (strpos($uri, $_SERVER['SCRIPT_NAME']) === 0)
-            {
+        if (isset($_SERVER['SCRIPT_NAME'][0])) {
+            if (strpos($uri, $_SERVER['SCRIPT_NAME']) === 0) {
                 $uri = (string)substr($uri, strlen($_SERVER['SCRIPT_NAME']));
-            }
-            elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0)
-            {
+            } elseif (strpos($uri, dirname($_SERVER['SCRIPT_NAME'])) === 0) {
                 $uri = (string)substr($uri, strlen(dirname($_SERVER['SCRIPT_NAME'])));
             }
         }
-
         // This section ensures that even on servers that require the URI to be in the query string (Nginx) a correct
         // URI is found, and also fixes the QUERY_STRING getServer var and $_GET array.
-        if (trim($uri, '/') === '' && strncmp($query, '/', 1) === 0)
-        {
+        if (trim($uri, '/') === '' && strncmp($query, '/', 1) === 0) {
             $query                   = explode('?', $query, 2);
             $uri                     = $query[0];
             $_SERVER['QUERY_STRING'] = isset($query[1]) ? $query[1] : '';
-        }
-        else
-        {
+        } else {
             $_SERVER['QUERY_STRING'] = $query;
         }
-
         parse_str($_SERVER['QUERY_STRING'], $_GET);
-
-        if ($uri === '/' || $uri === '')
-        {
+        if ($uri === '/' || $uri === '') {
             return '/';
         }
 
@@ -608,7 +489,6 @@ class YP_IncomingRequest extends YP_Request
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Parse QUERY_STRING
      *
@@ -619,25 +499,19 @@ class YP_IncomingRequest extends YP_Request
     protected function parseQueryString(): string
     {
         $uri = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : @getenv('QUERY_STRING');
-
-        if (trim($uri, '/') === '')
-        {
+        if (trim($uri, '/') === '') {
             return '';
-        }
-        elseif (strncmp($uri, '/', 1) === 0)
-        {
+        } elseif (strncmp($uri, '/', 1) === 0) {
             $uri                     = explode('?', $uri, 2);
             $_SERVER['QUERY_STRING'] = isset($uri[1]) ? $uri[1] : '';
             $uri                     = $uri[0];
         }
-
         parse_str($_SERVER['QUERY_STRING'], $_GET);
 
         return $this->removeRelativeDirectory($uri);
     }
 
     //--------------------------------------------------------------------
-
     /**
      * Remove relative directory (../) and multi slashes (///)
      *
@@ -651,10 +525,8 @@ class YP_IncomingRequest extends YP_Request
     {
         $uris = [];
         $tok  = strtok($uri, '/');
-        while ($tok !== false)
-        {
-            if (( ! empty($tok) || $tok === '0') && $tok !== '..')
-            {
+        while ($tok !== false) {
+            if ((!empty($tok) || $tok === '0') && $tok !== '..') {
                 $uris[] = $tok;
             }
             $tok = strtok('/');
@@ -662,6 +534,4 @@ class YP_IncomingRequest extends YP_Request
 
         return implode('/', $uris);
     }
-
-    // --------------------------------------------------------------------
 }

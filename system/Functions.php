@@ -119,37 +119,157 @@ if (!function_exists('force_https')) {
 }
 if (!function_exists('log_message')) {
     /**
-     * A convenience/compatibility method for logging events through
-     * the Log system.
+     * 记录日志信息
      *
-     * Allowed log levels are:
-     *  - emergency
-     *  - alert
-     *  - critical
-     *  - error
-     *  - warning
-     *  - notice
-     *  - info
-     *  - debug
+     * @param string $level 日志级别:emergency、critical、error、warning、notice、info、debug
+     * @param string $message
+     * @param array  $context
      *
-     * @param string     $level
-     * @param string     $message
-     * @param array|null $context
-     *
-     * @return mixed
+     * @return bool
      */
     function log_message(string $level, string $message, array $context = [])
     {
-        // When running tests, we want to always ensure that the
-        // TestLogger is running, which provides utilities for
-        // for asserting that logs were called in the test code.
-        if (ENVIRONMENT == 'testing') {
+        // 在进行测试时，我们要始终确保testLogger运行
+        if (ENVIRONMENT == 'test') {
             $logger = new \YP\Core\YP_Log(new \Config\Log());
 
             return $logger->log($level, $message, $context);
         }
 
         return Services::log(true)->log($level, $message, $context);
+    }
+}
+if (!function_exists('esc')) {
+    /**
+     * Performs simple auto-escaping of data for security reasons.
+     * Might consider making this more complex at a later date.
+     *
+     * If $data is a string, then it simply escapes and returns it.
+     * If $data is an array, then it loops over it, escaping each
+     * 'value' of the key/value pairs.
+     *
+     * Valid context values: html, js, css, url, attr, raw, null
+     *
+     * @param string|array $data
+     * @param string       $context
+     * @param string       $encoding
+     *
+     * @return $data
+     */
+    /**
+     * @param        $data
+     * @param string $context
+     * @param null   $encoding
+     *
+     * @return mixed
+     */
+    function esc($data, $context = 'html', $encoding = null)
+    {
+        if (is_array($data)) {
+            foreach ($data as $key => &$value) {
+                $value = esc($value, $context);
+            }
+        }
+        if (is_string($data)) {
+            $context = strtolower($context);
+            // Provide a way to NOT escape data since
+            // this could be called automatically by
+            // the View library.
+            if (empty($context) || $context == 'raw') {
+                return $data;
+            }
+            if (!in_array($context, ['html', 'js', 'css', 'url', 'attr'])) {
+                throw new \InvalidArgumentException('Invalid escape context provided.');
+            }
+            if ($context == 'attr') {
+                $method = 'escapeHtmlAttr';
+            } else {
+                $method = 'escape' . ucfirst($context);
+            }
+            // @todo Optimize this to only load a single instance during page request.
+            $escaper = new \Zend\Escaper\Escaper($encoding);
+            $data    = $escaper->$method($data);
+        }
+
+        return $data;
+    }
+}
+if (!function_exists('cache')) {
+    /**
+     * 提供对缓存对象的访问的便利方法
+     * 如果没有提供参数，则返回该对象，否则将尝试返回缓存值
+     *
+     * 例如:
+     *    cache()->save('foo', 'bar');
+     *    $foo = cache('bar');
+     *
+     * @param string|null $key
+     *
+     * @return mixed
+     */
+    function cache(string $key = null)
+    {
+        $cache = \Config\Services::cache();
+        // 参数为空,直接返回缓存对象
+        if (is_null($key)) {
+            return $cache;
+        }
+
+        return $cache->get($key);
+    }
+
+}
+if (!function_exists('lang')) {
+    /**
+     * 翻译字符串,并使用国际推广的MessageFormatter对象对字符串进行格式化
+     *
+     * @param string      $line
+     * @param array       $args
+     * @param string|null $locale
+     *
+     * @return array|string
+     */
+    function lang(string $line, array $args = [], string $locale = null)
+    {
+        return \Config\Services::language($locale)->getLine($line, $args);
+    }
+
+}
+if (!function_exists('get_rand')) {
+    /**
+     * 经典的概率算法，
+     * $proArr是一个预先设置的数组，
+     * 假设数组为：array(100,200,300，400)，
+     * 开始是从1,1000 这个概率范围内筛选第一个数是否在他的出现概率范围之内，
+     * 如果不在，则将概率空间，也就是k的值减去刚刚的那个数字的概率空间，
+     * 在本例当中就是减去100，也就是说第二个数是在1，900这个范围内筛选的。
+     * 这样 筛选到最终，总会有一个数满足要求。
+     * 就相当于去一个箱子里摸东西，
+     * 第一个不是，第二个不是，第三个还不是，那最后一个一定是。
+     * 这个算法简单，而且效率非常 高，
+     *
+     * @param $proArr
+     *
+     * @return int|string
+     */
+    function get_rand($proArr)
+    {
+        $result = '';
+        //概率数组的总概率精度
+        $proSum = array_sum($proArr);
+        //概率数组循环
+        foreach ($proArr as $key => $proCur) {
+            $randNum = mt_rand(1, $proSum);
+            if ($randNum <= $proCur) {
+                $result = $key;
+                break;
+            } else {
+                $proSum -= $proCur;
+            }
+        }
+        unset ($proArr);
+
+        return $result;
     }
 }
 

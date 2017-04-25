@@ -8,6 +8,13 @@
  */
 namespace Config;
 
+/**
+ * 数据路配置
+ *
+ * Class Database
+ *
+ * @package Config
+ */
 class Database
 {
     /**
@@ -15,7 +22,7 @@ class Database
      *
      * @var string
      */
-    public $driver = 'mysqli';
+    public $driver = 'mysql';
 
     /**
      * 数据库主机
@@ -29,7 +36,7 @@ class Database
      *
      * @var string
      */
-    public $database = 'zhiying_dev';
+    public $database = 'rmos_dev';
 
     /**
      * 用户名

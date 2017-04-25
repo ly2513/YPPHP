@@ -6,6 +6,8 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+// 设置内存
+//ini_set('memory_limit','300M');
 // 定义根路径
 define('ROOT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
@@ -62,8 +64,11 @@ if (file_exists(COMPOSER_PATH)) {
 // 加载url
 //helper('url');
 // 加载Eloquent
-use YP\Libraries\YP_Eloquent as Eloquent;
-new Eloquent();
+//use YP\Libraries\YP_Eloquent as Eloquent;
+//new Eloquent();
+if(!class_exists('YP_Eloquent')){
+//    Config\Services::model();
+}
 
 // 启动应用加载框架
 $app = new  \YP\YP(new \Config\App());

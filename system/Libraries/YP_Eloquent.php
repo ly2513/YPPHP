@@ -41,6 +41,11 @@ class YP_Eloquent
         $this->capsule->bootEloquent();
     }
 
+    public function initDB()
+    {
+        $config = (array)Services::model();
+    }
+
     public function getCapsule()
     {
         return $this->capsule;

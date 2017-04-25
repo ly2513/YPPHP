@@ -120,6 +120,8 @@ class YP
     public function __construct($config)
     {
         $this->startTime = microtime(true) * 1000;
+        define('START_TIME', $this->startTime);
+        define('VERSION', self::YP_VERSION);
         // 系统分配给PHP的内存
         $this->startMemory = memory_get_usage(true);
         // 应用配置
@@ -261,11 +263,14 @@ class YP
         if (!is_callable($this->controller)) {
             // 创建控制器
             $controller = $this->createController();
-
             // 是否有'post_controller_constructor'钩子
             Hooks::trigger('post_controller_constructor');
-            // 运行控制器
-            $returned = $this->runController($controller);
+            try{
+                // 运行控制器
+                $returned = $this->runController($controller);
+            }catch (\Exception $e){
+                $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
+            }
         } else {
             $this->benchmark->stop('controller_constructor');
             $this->benchmark->stop('controller');

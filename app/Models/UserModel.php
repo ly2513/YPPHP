@@ -12,5 +12,6 @@ use YP\Core\YP_Model as Model;
 
 class UserModel extends Model
 {
-    
+    protected $table = 'rmos_user';
+
 }

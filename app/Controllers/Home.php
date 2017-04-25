@@ -15,6 +15,14 @@ class Home extends Controller
 
     public function index()
     {
-        $this->display('index',['title'=>'你好,Twig模板引擎']);
+        $time         = microtime(true) * 1000;
+        $elapsed_time = number_format(($time - START_TIME), 0);
+        $this->assign('title', '你好,Twig模板引擎');
+        $this->assign('view_path', 'app/Views/Home/' . $this->method . $this->extension);
+        $this->assign('controller_path', 'app/Controller/Home.php');
+        $this->assign('evn', ENVIRONMENT);
+        $this->assign('elapsed_time', $elapsed_time);
+        $this->assign('version', VERSION);
+        $this->display();
     }
 }

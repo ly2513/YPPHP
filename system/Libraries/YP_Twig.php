@@ -47,7 +47,6 @@ class YP_Twig
      */
     public function __construct($config)
     {
-        $this->request = Services::router();
         // 合并用户配置
         $this->config = array_merge($this->config, (array)$config);
         is_dir($this->config['cache_dir']) or mkdir($this->config['cache_dir'], 0777, true);

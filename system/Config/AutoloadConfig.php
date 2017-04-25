@@ -49,9 +49,6 @@ class AutoloadConfig
             'YP\Controller'                        => SYSTEM_PATH . 'Controller.php',
             'YP\Config\AutoloadConfig'             => SYSTEM_PATH . 'Config/Autoload.php',
             'YP\Config\Config'                     => SYSTEM_PATH . 'Config/Config.php',
-            'YP\Config\Database'                   => SYSTEM_PATH . 'Config/Database.php',
-            'YP\Config\Database\Connection'        => SYSTEM_PATH . 'Config/Database/Connection.php',
-            'YP\Config\Database\Connection\MySQLi' => SYSTEM_PATH . 'Config/Database/Connection/MySQLi.php',
             'Zend\Escaper\Escaper'                 => SYSTEM_PATH . 'ThirdParty/ZendEscaper/Escaper.php',
         ];
     }

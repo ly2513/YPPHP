@@ -302,7 +302,7 @@ class Services
 
         return new \YP\Libraries\YP_Twig($config);
     }
-
+    
     public static function model(\Config\Database $config = null, $getShared = true)
     {
         if ($getShared) {
@@ -333,6 +333,23 @@ class Services
         }
 
         return static::$instances[$key];
+    }
+
+    /**
+     * Provides the ability to perform case-insensitive calling of service
+     * names.
+     *
+     * @param string $name
+     * @param array  $arguments
+     */
+    public static function __callStatic(string $name, array $arguments)
+    {
+        $name = strtolower($name);
+
+        if (method_exists(__CLASS__, $name))
+        {
+            return Services::$name(...$arguments);
+        }
     }
 
 }

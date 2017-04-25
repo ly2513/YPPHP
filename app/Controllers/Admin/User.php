@@ -9,6 +9,7 @@
 namespace APP\Controllers\Admin;
 
 use YP\Core\YP_Controller as Controller;
+//use APP\Models\UserModel;
 
 class User extends Controller
 {
@@ -17,6 +18,7 @@ class User extends Controller
         $this->assign('company', '优品未来');
         $this->assign('title', 'Admin下的User');
         $this->display();
-
+//        $userInfo = UserModel::select('id','username','email','photo_url')->get()->toArray();
+//        P($userInfo);
     }
 }

@@ -2,3 +2,4 @@
 vendor/
 composer.lock
 cache/Twig/
+app/Views/Twig/

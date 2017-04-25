@@ -23,7 +23,7 @@ class Twig
      *
      * @var string
      */
-    public $template_dir = APP_PATH . 'Views/';
+    public $template_dir = APP_PATH . 'Views/Twig/';
 
     /**
      * 模板缓存目录

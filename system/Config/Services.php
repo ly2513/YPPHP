@@ -122,12 +122,10 @@ class Services
      */
     public static function response(\Config\App $config = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('response', $config);
         }
-        if (! is_object($config))
-        {
+        if (!is_object($config)) {
             $config = new \Config\App();
         }
 
@@ -143,12 +141,11 @@ class Services
      */
     public static function timer($getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('timer');
         }
 
-        return new \YP\Debug\Timer();
+        return new \YP\Debug\YP_Timer();
     }
 
     /**
@@ -160,8 +157,7 @@ class Services
      */
     public static function routes($getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('routes');
         }
 
@@ -178,13 +174,10 @@ class Services
      */
     public static function router(\YP\Core\YP_RouterCollection $routes = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('router', $routes);
         }
-
-        if (empty($routes))
-        {
+        if (empty($routes)) {
             $routes = self::routes(true);
         }
 
@@ -202,13 +195,10 @@ class Services
      */
     public static function filters($config = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('filters', $config);
         }
-
-        if (empty($config))
-        {
+        if (empty($config)) {
             $config = new \Config\Filters();
         }
 
@@ -225,15 +215,13 @@ class Services
      */
     public static function cache(\Config\Cache $config = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('cache', $config);
         }
-
-        if (! is_object($config))
-        {
+        if (!is_object($config)) {
             $config = new \Config\Cache();
         }
+
         return \YP\Core\YP_CacheFactory::getHandler($config);
     }
 
@@ -247,12 +235,10 @@ class Services
      */
     public static function language(string $locale = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('language', $locale);
         }
-
-        $locale = ! empty($locale) ? $locale : self::request()->getLocale();
+        $locale = !empty($locale) ? $locale : self::request()->getLocale();
 
         return new \YP\Core\YP_Language($locale);
     }
@@ -265,22 +251,56 @@ class Services
      *
      * @return mixed|\YP\Cli\YP_CLIRequest
      */
-    public static function cliRequest(\Config\App $config=null, $getShared = true)
+    public static function cliRequest(\Config\App $config = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('cliRequest', $config);
         }
-
-        if (! is_object($config))
-        {
+        if (!is_object($config)) {
             $config = new \Config\App();
         }
 
-        return new \YP\Cli\YP_CLIRequest(
-            $config,
-            new \YP\Core\YP_Uri()
-        );
+        return new \YP\Cli\YP_CLIRequest($config, new \YP\Core\YP_Uri());
+    }
+
+    /**
+     * 加载工具栏
+     *
+     * @param \Config\App|null $config
+     * @param bool             $getShared
+     *
+     * @return mixed|\YP\Debug\Toolbar
+     */
+    public static function toolbar(\Config\App $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('toolbar', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\App();
+        }
+
+        return new \YP\Debug\YP_Toolbar($config);
+    }
+
+    /**
+     * 加载Twig模板引擎
+     *
+     * @param \Config\Twig|null $config
+     * @param bool              $getShared
+     *
+     * @return mixed|\YP\Libraries\YP_Twig
+     */
+    public static function twig(\Config\Twig $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('twig', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\Twig();
+        }
+
+        return new \YP\Libraries\YP_Twig($config);
     }
 
     /**

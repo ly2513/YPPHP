@@ -9,11 +9,11 @@
 namespace YP\Core;
 
 use YP\YP;
-use YP\Core\YP_IncomingRequest as IncomingRequest;
+use YP\Config\Services;
+use YP\Core\YP_Log as Log;
 use YP\Core\YP_Response as Response;
 use YP\Libraries\YP_Validation as Validation;
-use YP\Core\YP_Log as Log;
-use YP\Config\Services;
+use YP\Core\YP_IncomingRequest as IncomingRequest;
 
 /**
  * Class Controller
@@ -142,4 +142,12 @@ class YP_Controller
 
         return $success;
     }
+
+    public function view($htmlFile, $data)
+    {
+        $twig = Services::twig();
+        echo $twig->render($htmlFile, $data);
+//        P($twig);
+    }
+
 }

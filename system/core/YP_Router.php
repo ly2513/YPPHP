@@ -10,12 +10,17 @@ namespace YP\Core;
 
 use YP\Core\YP_RouterCollection as RouterCollection;
 
+/**
+ * Class YP_Router 路由类
+ *
+ * @package YP\Core
+ */
 class YP_Router
 {
     /**
      * 路由收集器对象
      *
-     * @var RouteCollectionInterface
+     * @var YP_RouterCollection
      */
     protected $collection;
 
@@ -64,8 +69,9 @@ class YP_Router
     protected $translateURIDashes = false;
 
     /**
-     * The route that was matched for this request.
-     * @var array|null
+     * 这路由已匹配当前的请求
+     *
+     * @var null
      */
     protected $matchedRoute = null;
 
@@ -75,11 +81,6 @@ class YP_Router
      */
     protected $detectedLocale = null;
 
-    /**
-     * Stores a reference to the RouteCollection object.
-     *
-     * @param RouteCollectionInterface $routes
-     */
     /**
      * Router constructor.
      *
@@ -231,7 +232,7 @@ class YP_Router
     /**
      * @param $page
      *
-     * @return Router
+     * @return YP_Router
      */
     public function setIndexPage($page): self
     {
@@ -252,7 +253,7 @@ class YP_Router
     /**
      * @param bool $val
      *
-     * @return Router
+     * @return YP_Router
      */
     public function setTranslateURIDashes($val = false): self
     {
@@ -296,6 +297,8 @@ class YP_Router
      * @throws \CodeIgniter\Router\RedirectException
      */
     /**
+     * 检测路由
+     *
      * @param string $uri
      *
      * @return bool
@@ -334,7 +337,7 @@ class YP_Router
                     $this->controller = $val;
                     // Remove the original string from the matches array
                     array_shift($matches);
-                    $this->params = $matches;
+                    $this->params       = $matches;
                     $this->matchedRoute = [$key, $val];
 
                     return true;
@@ -370,6 +373,11 @@ class YP_Router
     /**
      * Attempts to match a URI path against Controllers and directories
      * found in APPPATH/Controllers, to find a matching route.
+     *
+     * @param string $uri
+     */
+    /**
+     * 自动路由
      *
      * @param string $uri
      */
@@ -415,6 +423,13 @@ class YP_Router
      *
      * @return array URI segments
      */
+    /**
+     * 对请求的URI进行校验并且
+     *
+     * @param array $segments
+     *
+     * @return array
+     */
     protected function validateRequest(array $segments)
     {
         $c                  = count($segments);
@@ -424,7 +439,7 @@ class YP_Router
         while ($c-- > 0) {
             $test = $this->directory . ucfirst($this->translateURIDashes === true ? str_replace('-', '_',
                     $segments[0]) : $segments[0]);
-            if (!file_exists(APPPATH . 'Controllers/' . $test . '.php') && $directory_override === false && is_dir(APPPATH . 'Controllers/' . $this->directory . ucfirst($segments[0]))) {
+            if (!file_exists(APP_PATH . 'Controllers/' . $test . '.php') && $directory_override === false && is_dir(APP_PATH . 'Controllers/' . $this->directory . ucfirst($segments[0]))) {
                 $this->setDirectory(array_shift($segments), true);
                 continue;
             }
@@ -462,6 +477,11 @@ class YP_Router
      *
      * @param    array $segments URI segments
      */
+    /**
+     * 设置请求路由
+     *
+     * @param array $segments
+     */
     protected function setRequest(array $segments = [])
     {
         // If we don't have any segments - try the default controller;
@@ -487,9 +507,8 @@ class YP_Router
         $this->params = $segments;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Sets the default controller based on the info set in the RouteCollection.
+     * 基于路由收集器的的信息设置默认控制器
      */
     protected function setDefaultController()
     {
@@ -500,7 +519,7 @@ class YP_Router
         if (sscanf($this->controller, '%[^/]/%s', $class, $this->method) !== 2) {
             $this->method = 'index';
         }
-        if (!file_exists(APPPATH . 'Controllers/' . $this->directory . ucfirst($class) . '.php')) {
+        if (!file_exists(APP_PATH . 'Controllers/' . $this->directory . ucfirst($class) . '.php')) {
             return;
         }
         $this->controller = ucfirst($class);

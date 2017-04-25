@@ -16,7 +16,6 @@ use YP\Core\YP_Response as Response;
 use YP\Cli\YP_CliRequest as CliRequest;
 use YP\Core\YP_RouterCollection as RouterCollection;
 
-
 class YP
 {
     /**
@@ -95,6 +94,13 @@ class YP
     protected $method;
 
     /**
+     * 用于输出操作
+     *
+     * @var string
+     */
+    protected $output;
+
+    /**
      * 缓存时间
      *
      * @var int
@@ -165,7 +171,7 @@ class YP
             // 日志记录异常错误
             $logger = Config\Services::log();
             $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
-//            P($this->response);
+            //                        P($this->response);
             // 如果该路由是重定向路由，则以$to作为消息抛出异常
             $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
             $this->callExit(EXIT_SUCCESS);
@@ -246,6 +252,7 @@ class YP
             $controller = $this->createController();
             // 是否有'post_controller_constructor'钩子
             Hooks::trigger('post_controller_constructor');
+            // 运行控制器
             $returned = $this->runController($controller);
         } else {
             $this->benchmark->stop('controller_constructor');
@@ -285,7 +292,7 @@ class YP
         }
         $this->request = $this->request->setMethod($method);
     }
-    
+
     /**
      * 可以根据当前环境加载不同的配置,设置环境变量也会影响日志记录和错误报告
      * 环境变量的值为:dev、test、prod
@@ -412,6 +419,68 @@ class YP
     }
 
     /**
+     * 运行控制器
+     *
+     * @param mixed $class
+     *
+     * @return mixed
+     */
+    protected function runController($class)
+    {
+        if (method_exists($class, '_remap')) {
+            $output = $class->_remap($this->method, ...$this->router->params());
+        } else {
+            $output = $class->{$this->method}(...$this->router->params());
+        }
+        $this->benchmark->stop('controller');
+
+        return $output;
+    }
+
+    /**
+     * 从缓冲区中收集脚本输出，替换输出中的一些执行时间标记，如果需要则显示调试工具
+     *
+     * @param null $cacheConfig
+     * @param null $returned
+     */
+    protected function gatherOutput($cacheConfig = null, $returned = null)
+    {
+        $this->output = ob_get_contents();
+        ob_end_clean();
+        // 如果控制器返回了一个响应对象，我们需要从它那抓取响应的主体，所以它可以被添加到任何其他可能已经被输出的地方。
+        // 我们还需要在本地保存实例，以使任何状态代码更改等发生。
+        if ($returned instanceof Response) {
+            $this->response = $returned;
+            $returned       = $returned->getBody();
+        }
+        if (is_string($returned)) {
+            $this->output .= $returned;
+        }
+        // 缓存它没有性能指标取代，以便我们可以快速更新
+        if (self::$cacheTTL > 0) {
+            $this->cachePage($cacheConfig);
+        }
+        // 替换输出内容的memory_usage和elapsed_time标签
+        $this->output = $this->displayPerformanceMetrics($this->output);
+        $this->response->setBody($this->output);
+    }
+
+    /**
+     * 替换memory_usage和elapsed_time标签
+     *
+     * @param string $output
+     *
+     * @return string
+     */
+    public function displayPerformanceMetrics(string $output): string
+    {
+        $this->totalTime = $this->benchmark->getElapsedTime('total_execution');
+        $output          = str_replace('{elapsed_time}', $this->totalTime, $output);
+
+        return $output;
+    }
+
+    /**
      * 确定给定的URI是否已缓存响应
      *
      * @param $config 配置
@@ -442,6 +511,20 @@ class YP
     }
 
     /**
+     * 返回具有基本性能统计数据的数组
+     *
+     * @return array
+     */
+    public function getPerformanceStats()
+    {
+        return [
+            'startTime'   => $this->startTime,
+            'totalTime'   => $this->totalTime,
+            'startMemory' => $this->startMemory
+        ];
+    }
+
+    /**
      * 生成缓存名称用于我们全页缓存
      *
      * @param $config
@@ -461,6 +544,41 @@ class YP
         }
 
         return md5($name);
+    }
+
+    /**
+     * 如果要使用会话对象，请将当前URI存储为上一个URI
+     * 这在发送给客户端的响应之前调用，并将在下一个请求时启用
+     * 这有助于提供更安全、更可靠的previous_url()检测
+     *
+     * @param $uri
+     */
+    public function storePreviousURL($uri)
+    {
+        // 这主要是在测试过程中需要
+        if (is_string($uri)) {
+            $uri = new Uri($uri);
+        }
+        if (isset($_SESSION)) {
+            $_SESSION['_yp_previous_url'] = (string)$uri;
+        }
+    }
+
+    /**
+     * 发送响应
+     */
+    protected function sendResponse()
+    {
+        $this->response->send();
+    }
+
+    /**
+     * 退出
+     * @param $code
+     */
+    protected function callExit($code)
+    {
+        exit($code);
     }
 
 }

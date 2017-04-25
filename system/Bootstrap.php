@@ -21,6 +21,9 @@ define('TEST_PATH', rtrim(realpath($paths->testsDirectory), '/') . DIRECTORY_SEP
 // 重写目录
 define('WRITE_PATH', rtrim(realpath($paths->writeDirectory), '/') . DIRECTORY_SEPARATOR);
 
+// 缓存目录
+define('CACHE_PATH', rtrim(realpath($paths->cacheDirectory), '/') . DIRECTORY_SEPARATOR);
+
 // 定义应用的命名空间
 define('APP_NAMESPACE', 'App');
 // 定义退出的常量的状态码

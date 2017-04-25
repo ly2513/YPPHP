@@ -272,4 +272,131 @@ if (!function_exists('get_rand')) {
         return $result;
     }
 }
+if ( ! function_exists('view'))
+{
+    /**
+     * 渲染视图
+     *
+     * @param string $name
+     * @param array  $data
+     * @param array  $options
+     *
+     * @return mixed
+     */
+    function view(string $name, array $data = [], array $options = [])
+    {
+        /**
+         * @var CodeIgniter\View\View $renderer
+         */
+        $renderer = Services::renderer();
 
+        $saveData = null;
+        if (array_key_exists('saveData', $options) && $options['saveData'] === true)
+        {
+            $saveData = (bool)$options['saveData'];
+            unset($options['saveData']);
+        }
+
+        return $renderer->setData($data, 'raw')
+            ->render($name, $options, $saveData);
+    }
+}
+if ( ! function_exists('site_url'))
+{
+    /**
+     * 获得一个网站的URL用于视图
+     *
+     * @param string           $path
+     * @param string|null      $scheme
+     * @param \Config\App|null $altConfig
+     *
+     * @return string
+     */
+    function site_url($path = '', string $scheme = null, \Config\App $altConfig = null): string
+    {
+        // convert segment array to string
+        if (is_array($path))
+        {
+            $path = implode('/', $path);
+        }
+
+        // use alternate config if provided, else default one
+        $config = empty($altConfig) ? new \Config\App() : $altConfig;
+
+        $base = base_url();
+
+        // Add index page, if so configured
+        if ( ! empty($config->indexPage))
+        {
+            $path = rtrim($base, '/').'/'.rtrim($config->indexPage, '/').'/'.$path;
+        }
+        else
+        {
+            $path = rtrim($base, '/').'/'.$path;
+        }
+
+        $url = new \YP\Core\YP_Uri($path);
+
+        // allow the scheme to be over-ridden; else, use default
+        if ( ! empty($scheme))
+        {
+            $url->setScheme($scheme);
+        }
+
+        return (string) $url;
+    }
+
+}
+
+//--------------------------------------------------------------------
+
+if ( ! function_exists('base_url'))
+{
+    /**
+     * 获得用于视图的最基本URL
+     *
+     * @param string      $path
+     * @param string|null $scheme
+     *
+     * @return string
+     */
+    function base_url($path = '', string $scheme = null): string
+    {
+        // convert segment array to string
+        if (is_array($path))
+        {
+            $path = implode('/', $path);
+        }
+
+        // We should be using the set baseURL the user set
+        // otherwise get rid of the path because we have
+        // no way of knowing the intent...
+        $config = \Config\Services::request()->config;
+
+        if (! empty($config->baseURL))
+        {
+            $url = new \YP\Core\YP_Uri($config->baseURL);
+        }
+        else
+        {
+            $url = \Config\Services::request()->uri;
+            $url->setPath('/');
+        }
+
+        unset($config);
+
+        // Merge in the path set by the user, if any
+        if ( ! empty($path))
+        {
+            $url = $url->resolveRelativeURI($path);
+        }
+
+        if ( ! empty($scheme))
+        {
+            $url->setScheme($scheme);
+        }
+
+        return (string) $url;
+    }
+
+}

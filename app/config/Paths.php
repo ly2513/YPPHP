@@ -50,4 +50,11 @@ class Paths
      */
     public $writeDirectory =  '../writable';
 
+    /**
+     * 所有缓存目录
+     *
+     * @var string
+     */
+    public $cacheDirectory = '../cache';
+
 }

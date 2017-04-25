@@ -12,12 +12,9 @@ use YP\Core\YP_Controller as Controller;
 
 class Home extends Controller
 {
-    //    public function __construct(Request $request, Response $response, $logger)
-    //    {
-    //        parent::__construct($request, $response, $logger);
-    //    }
+
     public function index()
     {
-        echo 2222;
+        $this->view('index',['title'=>'你好,Twig模板引擎']);
     }
 }

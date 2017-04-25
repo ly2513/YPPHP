@@ -8,8 +8,9 @@
  */
 namespace YP\Core;
 
-use YP\Core\YP_Request as Request;
+use YP\Core\YP_IncomingRequest as IncomingRequest;
 use YP\Core\YP_Response as Response;
+use YP\Core\YP_FilterInterface as FilterInterface;
 
 class YP_Filter
 {
@@ -55,11 +56,11 @@ class YP_Filter
     /**
      * YP_Filter constructor.
      *
-     * @param             $config
-     * @param YP_Request  $request
-     * @param YP_Response $response
+     * @param                    $config
+     * @param YP_IncomingRequest $request
+     * @param YP_Response        $response
      */
-    public function __construct($config, Request $request, Response $response)
+    public function __construct($config, IncomingRequest $request, Response $response)
     {
         $this->config   = $config;
         $this->request  =& $request;
@@ -85,8 +86,8 @@ class YP_Filter
                 throw new \InvalidArgumentException("'{$alias}' filter must have a matching alias defined.");
             }
             $class = new $this->config->aliases[$alias]();
-            if (!$class instanceof self) {
-                throw new \RuntimeException(get_class($class) . ' must implement YP\Core\YP_Filters.');
+            if (!$class instanceof FilterInterface) {
+                throw new \RuntimeException(get_class($class) . ' must implement YP\Core\YP_FilterInterface.');
             }
             if ($position == 'before') {
                 $result = $class->before($this->request);
@@ -233,7 +234,7 @@ class YP_Filter
         if (!isset($this->config->filters) || !count($this->config->filters)) {
             return;
         }
-        $uri = trim($uri, '/ ');
+        $uri     = trim($uri, '/ ');
         $matches = [];
         foreach ($this->config->filters as $alias => $settings) {
             // 处理前

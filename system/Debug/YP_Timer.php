@@ -13,7 +13,7 @@ namespace YP\Debug;
  *
  * @package YP\Debug
  */
-class Timer
+class YP_Timer
 {
     /**
      * 存放所有的定时器
@@ -29,7 +29,7 @@ class Timer
      * @param string     $name 定时器的名称
      * @param float|null $time
      *
-     * @return Timer
+     * @return YP_Timer
      */
     public function start(string $name, float $time = null): self
     {
@@ -47,7 +47,7 @@ class Timer
      *
      * @param string $name
      *
-     * @return Timer
+     * @return YP_Timer
      */
     public function stop(string $name):self
     {

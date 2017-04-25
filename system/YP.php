@@ -133,15 +133,20 @@ class YP
     {
         // 设置服务器时区
         date_default_timezone_set($this->config->appTimezone ?? 'UTC');
+
         // 设置异常处理
         Config\Services::exceptions($this->config, true)->initialize();
+
         // 定义环境常量
         $this->detectEnvironment();
+
         // 加载环境配置信息
         $this->bootstrapEnvironment();
+
+        // 加载环境变量
         // $this->loadEnvironment();
         if (YP_DEBUG) {
-            //            require_once BASEPATH . 'ThirdParty/Kint/Kint.class.php';
+            // require_once SYSTRM_PATH . 'ThirdParty/Kint/Kint.class.php';
         }
     }
 
@@ -154,15 +159,21 @@ class YP
     {
         // 记录开始时间
         $this->startBenchmark();
+
         // 获得请求对象
         $this->getRequestObject();
+
         // 获得响应对象
         $this->getResponseObject();
+
         // 是否安全访问站点
         $this->forceSecureAccess();
+
         // 检查缓存页,如果页面已被缓存，执行将停止
         $cacheConfig = new Cache();
         $this->displayCache($cacheConfig);
+
+        // 用不同的方法去修改请求对象
         $this->spoofRequestMethod();
         try {
             // 处理请求
@@ -171,7 +182,6 @@ class YP
             // 日志记录异常错误
             $logger = Config\Services::log();
             $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
-            //                        P($this->response);
             // 如果该路由是重定向路由，则以$to作为消息抛出异常
             $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
             $this->callExit(EXIT_SUCCESS);
@@ -249,7 +259,9 @@ class YP
         $returned = $this->startController();
         // 关闭已经运行在startController()的控制器
         if (!is_callable($this->controller)) {
+            // 创建控制器
             $controller = $this->createController();
+
             // 是否有'post_controller_constructor'钩子
             Hooks::trigger('post_controller_constructor');
             // 运行控制器
@@ -258,6 +270,7 @@ class YP
             $this->benchmark->stop('controller_constructor');
             $this->benchmark->stop('controller');
         }
+
         // 如果返回的是一个字符串，那么控制器输出的东西，可能是一个视图，而不是直接输出。可以单独发送所以可能用于输出。
         $this->gatherOutput($cacheConfig, $returned);
         // 运行 "after" 过滤器
@@ -265,6 +278,7 @@ class YP
         if ($response instanceof Response) {
             $this->response = $response;
         }
+
         // 将当前URI保存为会话中的前一个URI，以便更安全
         $this->storePreviousURL($this->request->uri ?? $uri);
         unset($uri);
@@ -275,7 +289,6 @@ class YP
 
     /**
      * 用不同的方法去修改请求对象
-     *
      * 在命令行下失效
      */
     public function spoofRequestMethod()
@@ -447,7 +460,7 @@ class YP
     {
         $this->output = ob_get_contents();
         ob_end_clean();
-        // 如果控制器返回了一个响应对象，我们需要从它那抓取响应的主体，所以它可以被添加到任何其他可能已经被输出的地方。
+        // 如果控制器返回了一个响应对象，我们需要从它那抓取响应的主体，所以它可以被添加到任何其他可能已经被输出的地方
         // 我们还需要在本地保存实例，以使任何状态代码更改等发生。
         if ($returned instanceof Response) {
             $this->response = $returned;
@@ -574,6 +587,7 @@ class YP
 
     /**
      * 退出
+     *
      * @param $code
      */
     protected function callExit($code)

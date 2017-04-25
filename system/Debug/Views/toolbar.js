@@ -1,15 +1,13 @@
 /*
- * Functionality for the CodeIgniter Debug Toolbar.
+ * 调试工具栏.
  */
 
 var ciDebugBar = {
 
-    toolbar : null,
+    toolbar: null,
 
-    //--------------------------------------------------------------------
-
-    init : function()
-    {
+    // 初始化需要加载的函数
+    init: function () {
         this.toolbar = document.getElementById('debug-bar');
 
         ciDebugBar.createListeners();
@@ -17,190 +15,151 @@ var ciDebugBar = {
         ciDebugBar.setIcoTop();
     },
 
-    //--------------------------------------------------------------------
-
-    createListeners : function()
-    {
+    // 创建监听事件
+    createListeners: function () {
         var buttons = [].slice.call(document.querySelectorAll('#debug-bar .ci-label a'));
 
-        for (var i=0; i < buttons.length; i++)
-        {
+        for (var i = 0; i < buttons.length; i++) {
             buttons[i].addEventListener('click', ciDebugBar.showTab, true);
         }
     },
 
-    //--------------------------------------------------------------------
-
-    showTab: function()
-    {
-        // Get the target tab, if any
+    // 显示tab
+    showTab: function () {
+        // 获取目标tab
         var tab = this.getAttribute('data-tab');
 
-        // Check our current state.
+        // 获取当前tab的显隐性
         var state = document.getElementById(tab).style.display;
 
         if (tab == undefined) return true;
 
-        // Hide all tabs
+        // 隐藏所有的tab
         var tabs = document.querySelectorAll('#debug-bar .tab');
 
-        for (var i=0; i < tabs.length; i++)
-        {
+        for (var i = 0; i < tabs.length; i++) {
             tabs[i].style.display = 'none';
         }
 
-        // Mark all labels as inactive
+        // 标记所有标签为无效
         var labels = document.querySelectorAll('#debug-bar .ci-label');
 
-        for (var i=0; i < labels.length; i++)
-        {
+        for (var i = 0; i < labels.length; i++) {
             ciDebugBar.removeClass(labels[i], 'active');
         }
 
-        // Show/hide the selected tab
-        if (state != 'block')
-        {
+        // 显示/隐藏选中的tab
+        if (state != 'block') {
             document.getElementById(tab).style.display = 'block';
             ciDebugBar.addClass(this.parentNode, 'active');
         }
     },
 
-    //--------------------------------------------------------------------
-
-    addClass : function(el, className)
-    {
-        if (el.classList)
-        {
+    // 添加class
+    addClass: function (el, className) {
+        if (el.classList) {
             el.classList.add(className);
         }
-        else
-        {
+        else {
             el.className += ' ' + className;
         }
     },
 
-    //--------------------------------------------------------------------
-
-    removeClass : function(el, className)
-    {
-        if (el.classList)
-        {
+    // 移除class
+    removeClass: function (el, className) {
+        if (el.classList) {
             el.classList.remove(className);
         }
-        else
-        {
+        else {
             el.className = el.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
         }
 
     },
 
-    //--------------------------------------------------------------------
-
     /**
-     * Toggle display of a data table
+     * 切换数据表的显示
      * @param obj
      */
-    toggleDataTable : function(obj)
-    {
-        if (typeof obj == 'string')
-        {
+    toggleDataTable: function (obj) {
+        if (typeof obj == 'string') {
             obj = document.getElementById(obj + '_table');
         }
 
-        if (obj)
-        {
+        if (obj) {
             obj.style.display = obj.style.display == 'none' ? 'block' : 'none';
         }
     },
 
-    //--------------------------------------------------------------------
-
-    /**
-     *   Toggle tool bar from full to icon and icon to full
-     */
-    toggleToolbar : function()
-    {
+    // 切换工具条到图标
+    toggleToolbar: function () {
         var ciIcon = document.getElementById('debug-icon');
         var ciBar = document.getElementById('debug-bar');
         var open = ciBar.style.display != 'none';
 
         ciIcon.style.display = open == true ? 'inline-block' : 'none';
-        ciBar.style.display  = open == false ? 'inline-block' : 'none';
+        ciBar.style.display = open == false ? 'inline-block' : 'none';
 
-        // Remember it for other page loads on this site
+        // 记住这个网站的其他页面加载
         ciDebugBar.createCookie('debug-bar-state', '', -1);
-        ciDebugBar.createCookie('debug-bar-state', open == true ? 'minimized' : 'open' , 365);
+        ciDebugBar.createCookie('debug-bar-state', open == true ? 'minimized' : 'open', 365);
     },
 
-    //--------------------------------------------------------------------
-
-    /**
-     * Sets the initial state of the toolbar (open or minimized) when
-     * the page is first loaded to allow it to remember the state between refreshes.
-     */
-    setToolbarState: function()
-    {
+    // 设置页面的初始状态（打开或最小化）
+    setToolbarState: function () {
         var open = ciDebugBar.readCookie('debug-bar-state');
         var ciIcon = document.getElementById('debug-icon');
         var ciBar = document.getElementById('debug-bar');
 
         ciIcon.style.display = open != 'open' ? 'inline-block' : 'none';
-        ciBar.style.display  = open == 'open' ? 'inline-block' : 'none';
+        ciBar.style.display = open == 'open' ? 'inline-block' : 'none';
     },
 
-    //--------------------------------------------------------------------
-
     /**
-     * Helper to create a cookie.
+     * 创建Cookie
      *
      * @param name
      * @param value
      * @param days
      */
-    createCookie : function(name,value,days)
-    {
-        if (days)
-        {
+    createCookie: function (name, value, days) {
+        if (days) {
             var date = new Date();
 
-            date.setTime(date.getTime()+(days*24*60*60*1000));
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
 
-            var expires = "; expires="+date.toGMTString();
+            var expires = "; expires=" + date.toGMTString();
         }
-        else
-        {
+        else {
             var expires = "";
         }
 
-        document.cookie = name+"="+value+expires+"; path=/";
+        document.cookie = name + "=" + value + expires + "; path=/";
     },
 
-    //--------------------------------------------------------------------
 
-    readCookie : function(name)
-    {
+    // 读取cookie
+    readCookie: function (name) {
         var nameEQ = name + "=";
         var ca = document.cookie.split(';');
 
-        for(var i=0;i < ca.length;i++)
-        {
+        for (var i = 0; i < ca.length; i++) {
             var c = ca[i];
-            while (c.charAt(0)==' ')
-            {
-                c = c.substring(1,c.length);
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1, c.length);
             }
-            if (c.indexOf(nameEQ) == 0)
-            {
-                return c.substring(nameEQ.length,c.length);
+            if (c.indexOf(nameEQ) == 0) {
+                return c.substring(nameEQ.length, c.length);
             }
         }
         return null;
+    },
+    // 修改图表的top值
+    setIcoTop: function () {
+        var top = window.screen.availHeight;
+
+        document.getElementById('debug-icon').style.top = top / 2 + 'px';
+
     }
 
-    setIcoTop : function () {
-        var top = window.screen.availHeight;
-        console.log(top);
-    }
-    
-    
+
 };

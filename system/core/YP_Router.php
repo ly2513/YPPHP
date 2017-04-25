@@ -51,6 +51,11 @@ class YP_Router
      *
      * @var array
      */
+    /**
+     * 收集的绑定数组，以便它们可以被发送到关闭路由
+     *
+     * @var array
+     */
     protected $params = [];
 
     /**
@@ -61,8 +66,9 @@ class YP_Router
     protected $indexPage = 'index.php';
 
     /**
-     * Whether dashes in URI's should be converted
-     * to underscores when determining method names.
+     * 是否将扩折号转换为下划线
+     * 在确定方法名称时，是否应将URI中的破折号转换为下划线
+     * TRUE: 替换 ;FALSE: 不替换
      *
      * @var bool
      */
@@ -76,7 +82,8 @@ class YP_Router
     protected $matchedRoute = null;
 
     /**
-     * The locale that was detected in a route.
+     * 在路由中检测到的区域设置
+     *
      * @var string
      */
     protected $detectedLocale = null;
@@ -93,28 +100,17 @@ class YP_Router
         $this->method     = $this->collection->getDefaultMethod();
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Scans the URI and attempts to match the current URI to the
-     * one of the defined routes in the RouteCollection.
+     * 扫描URL并试图匹配被路由收集器收集当前URL的路由
      *
-     * This is the main entry point when using the Router.
-     *
-     * @param null $uri
-     *
-     * @return mixed
-     */
-    /**
      * @param string|null $uri
      *
      * @return string
-     * @throws PageNotFoundException
-     * @throws RedirectException
+     * @throws \Exception
      */
     public function handle(string $uri = null)
     {
-        // If we cannot find a URI to match against, then
-        // everything runs off of it's default settings.
+        // 如果找不到一个匹配的URI，那么一切使用默认配置
         if (empty($uri)) {
             return strpos($this->controller,
                 '\\') === false ? $this->collection->getDefaultNamespace() . $this->controller : $this->controller;
@@ -122,9 +118,7 @@ class YP_Router
         if ($this->checkRoutes($uri)) {
             return $this->controller;
         }
-        // Still here? Then we can try to match the URI against
-        // Controllers/directories, but the application may not
-        // want this, like in the case of API's.
+        // 尝试对Controller/目录下进行URI匹配,但是在API的情况下,应用程序不希望这样去匹配URL
         if (!$this->collection->shouldAutoRoute()) {
             throw new \RuntimeException("Can't find a route for '{$uri}'.");
         }
@@ -133,33 +127,30 @@ class YP_Router
         return $this->controller;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Returns the name of the matched controller.
+     * 返回已匹配到的控制器名称
      *
-     * @return mixed
+     * @return string
      */
     public function controllerName()
     {
         return $this->controller;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Returns the name of the method to run in the
-     * chosen container.
+     * 返回当前调用的方法名称
      *
-     * @return mixed
+     * @return string
      */
     public function methodName(): string
     {
         return $this->method;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Returns the 404 Override settings from the Collection.
-     * If the override is a string, will split to controller/index array.
+     * 从收集器中返回404个重写设置。如果重写是一个字符串，将拆分为控制器/方法
+     *
+     * @return array|\Closure|null|string
      */
     public function get404Override()
     {
@@ -168,8 +159,8 @@ class YP_Router
             $routeArray = explode('::', $route);
 
             return [
-                $routeArray[0],             // Controller
-                $routeArray[1] ?? 'index'   // Method
+                $routeArray[0],             // 控制器
+                $routeArray[1] ?? 'index'   // 方法
             ];
         }
         if (is_callable($route)) {
@@ -179,25 +170,19 @@ class YP_Router
         return null;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Returns the binds that have been matched and collected
-     * during the parsing process as an array, ready to send to
-     * call_user_func_array().
+     * 获得所有的URI参数
      *
-     * @return mixed
+     * @return array
      */
     public function params(): array
     {
         return $this->params;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Returns the name of the sub-directory the controller is in,
-     * if any. Relative to APPPATH.'Controllers'.
-     *
-     * Only used when auto-routing is turned on.
+     * 获得控制器所在的子目录
+     * 子目录,是相对于APP_PATH . 'Controller/'目录来说的,也只有开启自动路由的时候才有效
      *
      * @return string
      */
@@ -206,30 +191,19 @@ class YP_Router
         return !empty($this->directory) ? $this->directory : '';
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Returns the routing information that was matched for this
-     * request, if a route was defined.
+     * 返回匹配已定义的请求路由
      *
-     * @return array|null
+     * @return null
      */
     public function getMatchedRoute()
     {
         return $this->matchedRoute;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Sets the value that should be used to match the index.php file. Defaults
-     * to index.php but this allows you to modify it in case your are using
-     * something like mod_rewrite to remove the page. This allows you to set
-     * it a blank.
+     * 设置首页,默认匹配是index.php文件,也可以通过mod_rewrite 重写路由修改这个值,也可以设置为空
      *
-     * @param $page
-     *
-     * @return mixed
-     */
-    /**
      * @param $page
      *
      * @return YP_Router
@@ -241,16 +215,9 @@ class YP_Router
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Tells the system whether we should translate URI dashes or not
-     * in the URI from a dash to an underscore.
+     * 是否将URL中的扩折号转换成下划线
      *
-     * @param bool|false $val
-     *
-     * @return $this
-     */
-    /**
      * @param bool $val
      *
      * @return YP_Router
@@ -262,10 +229,8 @@ class YP_Router
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Returns true/false based on whether the current route contained
-     * a {locale} placeholder.
+     * 返回TRUE/FALSE, 根据当前路由是否包含一个{locale}占位符
      *
      * @return bool
      */
@@ -274,9 +239,8 @@ class YP_Router
         return (bool)$this->detectedLocale;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Returns the detected locale, if any, or null.
+     * 返回已检测到的locale
      *
      * @return string
      */
@@ -285,66 +249,48 @@ class YP_Router
         return $this->detectedLocale;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Compares the uri string against the routes that the
-     * RouteCollection class defined for us, attempting to find a match.
-     * This method will modify $this->controller, etal as needed.
+     * 当前的URL字符串与路由收集器中的已定义的路由进行比较匹配
+     * 一旦匹配成功,该方法将会修改$this->controller
      *
-     * @param string $uri The URI path to compare against the routes
+     * @param string $uri 被匹配的URL字符串
      *
-     * @return bool Whether the route was matched or not.
-     * @throws \CodeIgniter\Router\RedirectException
-     */
-    /**
-     * 检测路由
-     *
-     * @param string $uri
-     *
-     * @return bool
+     * @return bool   是否匹配成功
      * @throws \Exception
      */
     protected function checkRoutes(string $uri): bool
     {
+        // 获取路由收集器中的所有路由
         $routes = $this->collection->getRoutes();
-        // Don't waste any time
         if (empty($routes)) {
             return false;
         }
-        // Loop through the route array looking for wildcards
+        // 通过遍历路由进行相应的通配符匹配
         foreach ($routes as $key => $val) {
-            // Are we dealing with a locale?
             if (strpos($key, '{locale}') !== false) {
+                // 搜索占位符
                 $localeSegment = array_search('{locale}', explode('/', $key));
-                // Replace it with a regex so it
-                // will actually match.
+                // 使用正则表达式进行匹配
                 $key = str_replace('{locale}', '[^/]+', $key);
             }
-            // Does the RegEx match?
             if (preg_match('#^' . $key . '$#', $uri, $matches)) {
-                // Store our locale so CodeIgniter object can
-                // assign it to the Request.
                 if (isset($localeSegment)) {
-                    // The following may be inefficient, but doesn't upset NetBeans :-/
+                    // 将URL进行拆分
                     $temp                 = (explode('/', $uri));
                     $this->detectedLocale = $temp[$localeSegment];
                     unset($localeSegment);
                 }
-                // Are we using Closures? If so, then we need
-                // to collect the params into an array
-                // so it can be passed to the controller method later.
+                // 如果使用闭包,需要将收集params数组传递给控制器的方法
                 if (!is_string($val) && is_callable($val)) {
                     $this->controller = $val;
-                    // Remove the original string from the matches array
+                    // 从匹配的数组中删除原始字符串
                     array_shift($matches);
                     $this->params       = $matches;
                     $this->matchedRoute = [$key, $val];
 
                     return true;
-                } // Are we using the default method for back-references?
-                else {
-                    // Support resource route when function with subdirectory
-                    // ex: $routes->resource('Admin/Admins');
+                } else { // 使用默认的方法来引用
+                    // 支持子目录功能资源路由,如$routes->resource('Admin/Admins');
                     if (strpos($val, '$') !== false && strpos($key, '(') !== false && strpos($key, '/') !== false) {
                         $replacekey = str_replace('/(.*)', '', $key);
                         $val        = preg_replace('#^' . $key . '$#', $val, $uri);
@@ -355,7 +301,7 @@ class YP_Router
                         $val = str_replace('/', '\\', $val);
                     }
                 }
-                // Is this route supposed to redirect to another?
+                // 支持重定向路由,如果是重定向路由,将重定向另一个路由
                 if ($this->collection->isRedirect($key)) {
                     throw new \Exception($val, $this->collection->getRedirectCode($key));
                 }
@@ -369,15 +315,9 @@ class YP_Router
         return false;
     }
 
-    //--------------------------------------------------------------------
-    /**
-     * Attempts to match a URI path against Controllers and directories
-     * found in APPPATH/Controllers, to find a matching route.
-     *
-     * @param string $uri
-     */
     /**
      * 自动路由
+     * 为了试图在目录APP_PATH . 'Controller/'下匹配一个URL路径,
      *
      * @param string $uri
      */
@@ -385,46 +325,34 @@ class YP_Router
     {
         $segments = explode('/', $uri);
         $segments = $this->validateRequest($segments);
-        // If we don't have any segments left - try the default controller;
-        // WARNING: Directories get shifted out of the segments array.
+        // 如果$segments为空,将设置默认控制器
         if (empty($segments)) {
             $this->setDefaultController();
-        } // If not empty, then the first segment should be the controller
-        else {
+        } else {
+            // 如果不为空,$segment的第一个值应该是控制器
             $this->controller = ucfirst(array_shift($segments));
         }
-        // Use the method name if it exists.
-        // If it doesn't, no biggie - the default method name
-        // has already been set.
+        // 使用的方法名称存在,如果不存在,就是用默认的方法名称
         if (!empty($segments)) {
             $this->method = array_shift($segments);
         }
         if (!empty($segments)) {
             $this->params = $segments;
         }
-        // Load the file so that it's available for CodeIgniter.
+        // 加载控制器文件
         $file = APP_PATH . 'Controllers/' . $this->directory . $this->controller . '.php';
         if (file_exists($file)) {
             include_once $file;
         }
-        // Ensure the controller stores the fully-qualified class name
-        // We have to check for a length over 1, since by default it will be '\'
+        // 必须检测长度是否超过1,由于默认情况下是'\',确保控制器存储的是限定的类名
         if (strpos($this->controller, '\\') === false && strlen($this->collection->getDefaultNamespace()) > 1) {
             $this->controller = str_replace('/', '\\',
                 $this->collection->getDefaultNamespace() . $this->directory . $this->controller);
         }
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Attempts to validate the URI request and determine the controller path.
-     *
-     * @param array $segments URI segments
-     *
-     * @return array URI segments
-     */
-    /**
-     * 对请求的URI进行校验并且
+     * 试图验证URI请求并确定控制器路径
      *
      * @param array $segments
      *
@@ -432,10 +360,11 @@ class YP_Router
      */
     protected function validateRequest(array $segments)
     {
-        $c                  = count($segments);
+        // 参数的个数
+        $c = count($segments);
+        // 判读是否有子目录
         $directory_override = isset($this->directory);
-        // Loop through our segments and return as soon as a controller
-        // is found or when such a directory doesn't exist
+        // 循环遍历$segments,将返回找到控制器或者目录不存在
         while ($c-- > 0) {
             $test = $this->directory . ucfirst($this->translateURIDashes === true ? str_replace('-', '_',
                     $segments[0]) : $segments[0]);
@@ -447,16 +376,15 @@ class YP_Router
             return $segments;
         }
 
-        // This means that all segments were actually directories
+        // 这意味着所有的$segments实际上是目录
         return $segments;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Sets the sub-directory that the controller is in.
+     * 设置控制器所在的子目录
      *
      * @param string|null $dir
-     * @param bool|false  $append
+     * @param bool        $append
      */
     protected function setDirectory(string $dir = null, $append = false)
     {
@@ -468,15 +396,6 @@ class YP_Router
         }
     }
 
-    //--------------------------------------------------------------------
-    /**
-     * Set request route
-     *
-     * Takes an array of URI segments as input and sets the class/method
-     * to be called.
-     *
-     * @param    array $segments URI segments
-     */
     /**
      * 设置请求路由
      *
@@ -484,7 +403,7 @@ class YP_Router
      */
     protected function setRequest(array $segments = [])
     {
-        // If we don't have any segments - try the default controller;
+        // 如果不存在,就使用默认控制器
         if (empty($segments)) {
             $this->setDefaultController();
 
@@ -498,8 +417,7 @@ class YP_Router
         }
         list($controller, $method) = array_pad(explode('::', $segments[0]), 2, null);
         $this->controller = $controller;
-        // $this->method already contains the default method name,
-        // so don't overwrite it with emptiness.
+        // $this->method 已经设置了默认值,所以不要用空值来覆盖默认值
         if (!empty($method)) {
             $this->method = $method;
         }
@@ -515,7 +433,7 @@ class YP_Router
         if (empty($this->controller)) {
             throw new \RuntimeException('Unable to determine what should be displayed. A default route has not been specified in the routing file.');
         }
-        // Is the method being specified?
+        // 是否指定了方法
         if (sscanf($this->controller, '%[^/]/%s', $class, $this->method) !== 2) {
             $this->method = 'index';
         }

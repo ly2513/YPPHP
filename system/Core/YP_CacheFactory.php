@@ -11,11 +11,11 @@ namespace YP\Core;
 class YP_CacheFactory
 {
     /**
-     * Attempts to create the desired cache handler, based upon the
+     * 创建缓存处理程序
      *
-     * @param        $config
-     * @param string $handler
-     * @param string $backup
+     * @param             $config
+     * @param string|null $handler
+     * @param string|null $backup
      *
      * @return mixed
      */
@@ -32,16 +32,15 @@ class YP_CacheFactory
         if (!array_key_exists($handler, $config->validHandlers) || !array_key_exists($backup, $config->validHandlers)) {
             throw new \InvalidArgumentException(lang('Cache.cacheHandlerNotFound'));
         }
-        // Get an instance of our handler.
+        // 实例化一个处理缓存对象
         $adapter = new $config->validHandlers[$handler]($config);
         if (!$adapter->isSupported()) {
             $adapter = new $config->validHandlers[$backup]($config);
             if (!$adapter->isSupported()) {
-                // Log stuff here, don't throw exception. No need to raise a fuss.
-                // Fall back to the dummy adapter.
                 $adapter = new $config->validHandler['dummy']();
             }
         }
+        // 初始化
         $adapter->initialize();
 
         return $adapter;

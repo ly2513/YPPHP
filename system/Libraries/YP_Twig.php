@@ -13,10 +13,18 @@ use Config\Services;
 class YP_Twig
 {
     /**
+     * 模板对象
      *
-     * @var Twig_Environment
+     * @var \Twig_Environment
      */
     public $twig;
+
+    /**
+     * 请求对象
+     *
+     * @var
+     */
+    public $request;
 
     /**
      * Twig配置信息
@@ -39,15 +47,12 @@ class YP_Twig
      */
     public function __construct($config)
     {
-        $this->config   = array_merge($this->config, (array)$config);
-//        P($this->config);
-        $router = Services::router();
-        $directory = $router->directory();
-        $controller = $router->controllerName();
-        $method = $router->methodName();
-//        P($directory);
-//        P($controller);
-//        P($method);
+        $this->request = Services::router();
+        // 合并用户配置
+        $this->config = array_merge($this->config, (array)$config);
+        is_dir($this->config['cache_dir']) or mkdir($this->config['cache_dir'], 0777, true);
+        is_dir($this->config['template_dir']) or mkdir($this->config['template_dir'], 0777, true);
+        // 实例化一个文件加载系统
         $loader     = new \Twig_Loader_Filesystem ($this->config['template_dir']);
         $this->twig = new \Twig_Environment ($loader, [
             'cache'       => $this->config['cache_dir'],
@@ -108,7 +113,7 @@ class YP_Twig
         if (substr($template, -$default_ext_len) != $this->config['extension']) {
             $template .= $this->config['extension'];
         }
-
+        
         return $template;
     }
 

@@ -43,7 +43,7 @@ define('COMPOSER_PATH', ROOT_PATH . 'vendor/autoload.php');
 
 // 加载函数库
 require SYSTEM_PATH . 'Functions.php';
-//P($_SERVER);
+
 // 加载框架的自动加载
 require SYSTEM_PATH . 'Autoload.php';
 require APP_PATH . 'Config/Autoload.php';
@@ -61,6 +61,10 @@ if (file_exists(COMPOSER_PATH)) {
 
 // 加载url
 //helper('url');
+// 加载Eloquent
+use YP\Libraries\YP_Eloquent as Eloquent;
+new Eloquent();
+
 // 启动应用加载框架
 $app = new  \YP\YP(new \Config\App());
 //

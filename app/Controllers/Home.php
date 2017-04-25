@@ -15,6 +15,6 @@ class Home extends Controller
 
     public function index()
     {
-        $this->view('index',['title'=>'你好,Twig模板引擎']);
+        $this->display('index',['title'=>'你好,Twig模板引擎']);
     }
 }

@@ -6,3 +6,11 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+namespace YP\Core;
+
+use Illuminate\Database\Eloquent\Model;
+
+class YP_Model extends Model
+{
+  
+}

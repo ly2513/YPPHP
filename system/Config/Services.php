@@ -303,6 +303,18 @@ class Services
         return new \YP\Libraries\YP_Twig($config);
     }
 
+    public static function model(\Config\Database $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('model', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\Database();
+        }
+
+        return new \YP\Libraries\YP_Eloquent($config);
+    }
+
     /**
      * 获得已加载的类的映射数组
      * 将已加载的类的类名作为key存放到$instances中

@@ -433,6 +433,7 @@ class YP
         if (method_exists($class, '_remap')) {
             $output = $class->_remap($this->method, ...$this->router->params());
         } else {
+
             $output = $class->{$this->method}(...$this->router->params());
         }
         $this->benchmark->stop('controller');

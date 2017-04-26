@@ -4,14 +4,21 @@
         "php": "~7.1",
         "illuminate/database": "*",
         "justinrainbow/json-schema": "^5.2",
-        "twig/twig": "*",
+        "twig/twig": "2.3.*",
         "phpoffice/phpexcel": "1.8.*",
-        "raveren/kint": "*"
+        "kint-php/kint": "*",
+        "phpmailer/phpmailer": "*"
     },
     "authors": [
         {
             "name": "liyong",
             "email": "yong.li@szypwl.com"
         }
-    ]
+    ],
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
 }

@@ -18,59 +18,30 @@ namespace Config;
 class Database
 {
     /**
-     * 数据库驱动类型
+     * 数据库数组
      *
-     * @var string
+     * @var array
      */
-    public $driver = 'mysql';
+    public $db = [];
 
-    /**
-     * 数据库主机
-     *
-     * @var string
-     */
-    public $host  = '127.0.0.1';
+    public function getDB()
+    {
+        // 主数据库
+        $this->db['default'] = [
+            'driver'    => 'mysql',             // 数据库驱动
+            'host'      => '127.0.0.1',         // 数据库主机
+            'database'  => 'rmos_dev',          // 数据库名称
+            'username'  => 'root',              // 用户名
+            'password'  => 'root',              // 密码
+            'charset'   => 'utf8',              // 字符编码
+            'collation' => 'utf8_general_ci',   // 排序规则
+            'prefix'    => '',                  // 表的前缀
+        ];
 
-    /**
-     * 数据库名称
-     *
-     * @var string
-     */
-    public $database = 'rmos_dev';
+        // TODO 后续如果对多个数据库操作,可在此添加数据库信息,eg: $this->db['数据库名称'] = [参数同default];
 
-    /**
-     * 用户名
-     *
-     * @var string
-     */
-    public $username = 'root';
 
-    /**
-     * 密码
-     *
-     * @var string
-     */
-    public $password = 'root';
-
-    /**
-     * 数据库编码
-     *
-     * @var string
-     */
-    public $charset = 'utf8';
-
-    /**
-     * 排序规则
-     *
-     * @var string
-     */
-    public $collation = 'utf8_general_ci';
-
-    /**
-     * 表的前缀
-     *
-     * @var string
-     */
-    public $prefix = '';
+        return $this->db;
+    }
 
 }

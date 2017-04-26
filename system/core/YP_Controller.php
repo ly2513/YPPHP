@@ -121,17 +121,12 @@ class YP_Controller
     {
 
     }
-
-    //--------------------------------------------------------------------
+    
     /**
-     * A convenience method to use when you need to ensure that a single
-     * method is reached only via HTTPS. If it isn't, then a redirect
-     * will happen back to this method and HSTS header will be sent
-     * to have modern browsers transform requests automatically.
      *
-     * @param int $duration The number of seconds this link should be
-     *                      considered secure for. Only with HSTS header.
-     *                      Default value is 1 year.
+     * 该方法确保某个方法只通过https请求过来,如果不需要，那么一个重定向会回到这个方法并且HSTS报头将被发送到浏览器的请求会自动发生变换
+     *
+     * @param int $duration 这个链接的秒数应该被认为是安全的。只有用HSTS报头。默认值为1年
      */
     public function forceHTTPS(int $duration = 31536000)
     {

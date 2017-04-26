@@ -304,28 +304,24 @@ class Services
     }
 
     /**
-     * 加载model
+     * 加载email
      *
-     * @param      $modelPath
-     * @param bool $getShared
+     * @param \Config\Email $config
+     * @param bool          $getShared
      *
-     * @return mixed
+     * @return mixed|\YP\Libraries\YP_Twig
      */
-    public static function model($modelPath, $getShared = true)
-    {
-        $class = $modelPath;
-        if ($len = strpos($modelPath, '/')) {
-            $modelPath = str_replace('/', '\\', $modelPath);
-            $class     = end(explode('\\', $modelPath));
-        }
-        if ($getShared) {
-            return self::getSharedInstance($modelPath);
-        }
-        $namespace = '\\APP\\Models\\' . $modelPath;
-
-        return new $namespace();
-        //        return $class;
-    }
+//    public static function email(\Config\Email $config = null, $getShared = true)
+//    {
+//        if ($getShared) {
+//            return self::getSharedInstance('email', $config);
+//        }
+//        if (!is_object($config)) {
+//            $config = new \Config\Email();
+//        }
+//
+//        return new YP_Email($config);
+//    }
 
     /**
      * 获得已加载的类的映射数组
@@ -346,6 +342,8 @@ class Services
 
         return static::$instances[$key];
     }
+
+
 
     /**
      * Provides the ability to perform case-insensitive calling of service

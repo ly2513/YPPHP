@@ -18,34 +18,28 @@ class YP_Upload
     protected $path;
 
     /**
-     * The original filename as provided by the client.
-     *
-     * @var string
-     */
-    /**
-     *
+     * 上传文件的原始文件名
      *
      * @var string
      */
     protected $originalName;
 
     /**
-     * The filename given to a file during a move.
+     * 在移动文件期间给文件的文件名
      *
      * @var string
      */
     protected $name;
 
     /**
-     * The type of file as provided by PHP
+     * PHP提供的文件类型
      *
      * @var string
      */
     protected $originalMimeType;
 
     /**
-     * The type of file based on
-     * our inspections.
+     * 根据我们的检查文件类型
      *
      * @var string
      */
@@ -72,28 +66,22 @@ class YP_Upload
      */
     protected $hasMoved = false;
 
-    //--------------------------------------------------------------------
-
-    /**
-     * Accepts the file information as would be filled in from the $_FILES array.
-     *
-     * @param string $path         The temporary location of the uploaded file.
-     * @param string $originalName The client-provided filename.
-     * @param string $mimeType     The type of file as provided by PHP
-     * @param int    $size         The size of the file, in bytes
-     * @param int    $error        The error constant of the upload (one of PHP's UPLOADERRXXX constants)
-     */
     /**
      * YP_Upload constructor.
      *
-     * @param string      $path  本地临时上传文件
+     * @param string      $path         本地临时上传文件
      * @param string      $originalName 客户端提供的文件名称
      * @param string|null $mimeType
-     * @param int|null    $size  文件大小(字节)
-     * @param int|null    $error 上传的错误码
+     * @param int|null    $size         文件大小(字节)
+     * @param int|null    $error        上传的错误码
      */
-    public function __construct(string $path, string $originalName, string $mimeType = null, int $size = null, int $error = null)
-    {
+    public function __construct(
+        string $path,
+        string $originalName,
+        string $mimeType = null,
+        int $size = null,
+        int $error = null
+    ) {
         $this->path             = $path;
         $this->name             = $originalName;
         $this->originalName     = $originalName;
@@ -113,31 +101,24 @@ class YP_Upload
      */
     public function move(string $targetPath, string $name = null, bool $overwrite = false)
     {
-        if ($this->hasMoved)
-        {
+        if ($this->hasMoved) {
             throw new \RuntimeException('The file has already been moved.');
         }
-
-        if (! $this->isValid())
-        {
+        if (!$this->isValid()) {
             throw new \RuntimeException('The original file is not a valid file.');
         }
-
-        $targetPath = rtrim($targetPath, '/').'/';
-        $name = is_null($name) ? $this->getName() : $name;
-        $destination = $overwrite ? $this->getDestination($targetPath. $name) : $targetPath.$name;
-
-        if (! @move_uploaded_file($this->path, $destination))
-        {
+        $targetPath  = rtrim($targetPath, '/') . '/';
+        $name        = is_null($name) ? $this->getName() : $name;
+        $destination = $overwrite ? $this->getDestination($targetPath . $name) : $targetPath . $name;
+        if (!@move_uploaded_file($this->path, $destination)) {
             $error = error_get_last();
-            throw new \RuntimeException(sprintf('Could not move file %s to %s (%s)', basename($this->path), $targetPath, strip_tags($error['message'])));
+            throw new \RuntimeException(sprintf('Could not move file %s to %s (%s)', basename($this->path), $targetPath,
+                strip_tags($error['message'])));
         }
-
         @chmod($targetPath, 0777 & ~umask());
-
-        // Success, so store our new information
-        $this->path = $targetPath;
-        $this->name = $name;
+        // 上传成功,将相关信息存储起来
+        $this->path     = $targetPath;
+        $this->name     = $name;
         $this->hasMoved = true;
 
         return true;
@@ -160,15 +141,12 @@ class YP_Upload
      *
      * @return int
      */
-    public function getSize(string $unit='b'): int
+    public function getSize(string $unit = 'b'): int
     {
-        if (is_null($this->size))
-        {
+        if (is_null($this->size)) {
             $this->size = filesize($this->path);
         }
-
-        switch (strtolower($unit))
-        {
+        switch (strtolower($unit)) {
             case 'kb':
                 return number_format($this->size / 1024, 3);
                 break;
@@ -187,14 +165,13 @@ class YP_Upload
      */
     public function getError(): int
     {
-        if (is_null($this->error))
-        {
+        if (is_null($this->error)) {
             return UPLOAD_ERR_OK;
         }
 
         return $this->error;
     }
-    
+
     /**
      * 获取错误提示信息
      *
@@ -211,12 +188,10 @@ class YP_Upload
             UPLOAD_ERR_NO_TMP_DIR => 'File could not be uploaded: missing temporary directory.',
             UPLOAD_ERR_EXTENSION  => 'File upload was stopped by a PHP extension.',
         ];
-
         $error = is_null($this->error) ? UPLOAD_ERR_OK : $this->error;
 
-        return isset($errors[$error])
-            ? sprintf($errors[$error], $this->getName())
-            : sprintf('The file "%s" was not uploaded due to an unknown error.', $this->getName());
+        return isset($errors[$error]) ? sprintf($errors[$error],
+            $this->getName()) : sprintf('The file "%s" was not uploaded due to an unknown error.', $this->getName());
     }
 
     /**
@@ -229,13 +204,6 @@ class YP_Upload
         return $this->name;
     }
 
-    //--------------------------------------------------------------------
-
-    /**
-     * Gets the temporary filename where the file was uploaded to.
-     *
-     * @return string
-     */
     /**
      * 获得上传文件的临时文件
      *
@@ -246,17 +214,14 @@ class YP_Upload
         return $this->path;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Generates a random names based on a simple hash and the time, with
-     * the correct file extension attached.
+     * 根据简单哈希和时间生成随机文件名称，附加正确的文件扩展名
      *
      * @return string
      */
     public function getRandomName(): string
     {
-        return time().'_'. bin2hex(random_bytes(10)).'.'.$this->getExtension();
+        return time() . '_' . bin2hex(random_bytes(10)) . '.' . $this->getExtension();
     }
 
     /**
@@ -269,29 +234,16 @@ class YP_Upload
         return \Config\Mimes::guessExtensionFromType($this->getType());
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the original file extension, based on the file name that
-     * was uploaded. This is NOT a trusted source.
-     * For a trusted version, use guessExtension() instead.
+     * 根据上传的文件名返回原始文件扩展名
      *
-     * @return string|null
+     * @return string
      */
     public function getClientExtension(): string
     {
         return pathinfo($this->path, PATHINFO_EXTENSION);
     }
 
-    //--------------------------------------------------------------------
-
-    /**
-     * Retrieve the media type of the file. SHOULD not use information from
-     * the $_FILES array, but should use other methods to more accurately
-     * determine the type of file, like finfo, or mime_content_type().
-     *
-     * @return string|null The media type we determined it to be.
-     */
     /**
      * 获得文件的类型
      *
@@ -299,45 +251,32 @@ class YP_Upload
      */
     public function getType(): string
     {
-        if (! is_null($this->mimeType))
-        {
+        if (!is_null($this->mimeType)) {
             return $this->mimeType;
         }
-
-        if (function_exists('finfo_file'))
-        {
+        if (function_exists('finfo_file')) {
             $finfo          = finfo_open(FILEINFO_MIME_TYPE);
             $this->mimeType = finfo_file($finfo, $this->path);
             finfo_close($finfo);
-        }
-        else
-        {
+        } else {
             $this->mimeType = mime_content_type($this->path);
         }
 
         return $this->mimeType;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the mime type as provided by the client.
-     * This is NOT a trusted value.
-     * For a trusted version, use getMimeType() instead.
+     * 返回由客户端提供的MIME类型。
      *
-     * @return string|null The media type sent by the client or null if none
-     *                     was provided.
+     * @return string
      */
     public function getClientType(): string
     {
         return $this->originalMimeType;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns whether the file was uploaded successfully, based on whether
-     * it was uploaded via HTTP and has no errors.
+     * 返回文件是否成功上传，基于它是否通过HTTP上传并且没有错误。
      *
      * @return bool
      */
@@ -345,15 +284,11 @@ class YP_Upload
     {
         return is_uploaded_file($this->path) && $this->error === UPLOAD_ERR_OK;
     }
-
-    //--------------------------------------------------------------------
-
+    
     /**
-     * Returns the destination path for the move operation where overwriting is not expected.
-     *
-     * First, it checks whether the delimiter is present in the filename, if it is, then it checks whether the
-     * last element is an integer as there may be cases that the delimiter may be present in the filename.
-     * For the all other cases, it appends an integer starting from zero before the file's extension.
+     * 返回进行移动操作之后的目标的路径，期望不能覆盖。
+     * 首先，它检查分隔符是否存在于文件名中，如果存在，那么检查最后一个元素是否是整数，
+     * 因为可能有分隔符可能存在于文件名中。在所有其他情况下，文件的扩展名之前,它将一个从零开始的整数。
      *
      * @param string $destination
      * @param string $delimiter
@@ -363,29 +298,23 @@ class YP_Upload
      */
     public function getDestination(string $destination, string $delimiter = '_', int $i = 0): string
     {
-        while (file_exists($destination))
-        {
+        while (file_exists($destination)) {
             $info = pathinfo($destination);
-            if (strpos($info['filename'], $delimiter) !== false)
-            {
+            if (strpos($info['filename'], $delimiter) !== false) {
                 $parts = explode($delimiter, $info['filename']);
-                if (is_numeric(end($parts)))
-                {
+                if (is_numeric(end($parts))) {
                     $i = end($parts);
                     array_pop($parts);
                     array_push($parts, ++$i);
-                    $destination = $info['dirname'] . '/' . implode($delimiter, $parts) . '.' .  $info['extension'];
+                    $destination = $info['dirname'] . '/' . implode($delimiter, $parts) . '.' . $info['extension'];
+                } else {
+                    $destination = $info['dirname'] . '/' . $info['filename'] . $delimiter . ++$i . '.' . $info['extension'];
                 }
-                else
-                {
-                    $destination = $info['dirname'] . '/' . $info['filename'] . $delimiter . ++$i . '.' .  $info['extension'];
-                }
-            }
-            else
-            {
-                $destination = $info['dirname'] . '/' . $info['filename'] . $delimiter . ++$i . '.' .  $info['extension'];
+            } else {
+                $destination = $info['dirname'] . '/' . $info['filename'] . $delimiter . ++$i . '.' . $info['extension'];
             }
         }
+
         return $destination;
     }
 }

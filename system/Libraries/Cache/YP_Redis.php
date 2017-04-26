@@ -10,13 +10,57 @@ namespace YP\Libraries\Cache;
 
 class YP_Redis
 {
+
+    protected      $_options  = [];
+
+    /**
+     * redis数据库下标
+     *
+     * @var int
+     */
     private static $_db       = 0;
+
+    /**
+     * 主redis库
+     *
+     * @var int
+     */
     private static $_master   = 0;
+
+    /**
+     * 从redis库
+     *
+     * @var int
+     */
     private static $_multi    = 0;
+
+    /**
+     * redis前缀
+     *
+     * @var string
+     */
     private static $_prefix   = "wj_";
+    /**
+     * redis 写对象
+     *
+     * @var
+     */
     private static $_redis_w;
+
+    /**
+     * redis 读对象
+     *
+     * @var
+     */
     private static $_redis_r;
-    private        $_arrayKey = 'default';
+
+    /**
+     * redis对象
+     *
+     * @var
+     */
+    public $redis;
+
     /**
      * redis 配置
      *
@@ -32,61 +76,64 @@ class YP_Redis
     /**
      * YP_Redis constructor.
      *
-     * @param $config
+     * @param \Config\Cache|null $config
      */
-    public function __construct($config)
+    public function __construct(\Config\Cache $config = null)
     {
+        // redis前缀
+        self::$_prefix = $config->prefix ? : '';
         // 初始化redis配置
         if (isset($config->redis)) {
             $this->config = array_merge($this->config, $config->redis);
         }
-        P($this->config );
-        if (!extension_loaded('redis')) {
-            throw new \Exception('redis failed to load');
+    }
+
+    /**
+     * 初始化redis
+     *
+     * @return \Redis
+     * @throws \Exception
+     */
+    public function initialize()
+    {
+        if (!isset($this->config['host']) || !isset($this->config['port']) || !isset($this->config['persistent'])) {
+            throw new \Exception('Unexpected inconsistency in options');
         }
+        $redis = new \Redis();
+        if ($this->config['persistent']) {
+            $success = $redis->pconnect($this->config['host'], intval($this->config['port']));
+        } else {
+            $success = $redis->connect($this->config['host'], intval($this->config['port']));
+        }
+        if (!$success) {
+            throw new \Exception('Could not connect to the Redis server ' . $this->config['host'] . ':' . $this->config['port']);
+        }
+        // redis权限认证
+        if (isset($this->config['auth'])) {
+            $success = $redis->auth($this->config['auth']);
+            if (!$success) {
+                throw new \Exception('Failed to authenticate with the Redis server');
+            }
+        }
+        // 选择redis数据库
+        if (isset($this->config['index'])) {
+            $redis->select(intval($this->config['index']));
+        } else {
+            $redis->select(self::$_db);
+        }
+        $this->redis = $redis;
+
+        return $this->redis;
     }
 
     /**
      * 获取redis对象
      *
-     * @param $options 操作方法
-     *
-     * @return \Redis
-     * @throws \Exception
+     * @return mixed
      */
-    public function getRedis($options)
+    public function getRedis()
     {
-        if (!isset($options["host"]) || !isset($options["port"]) || !isset($options["persistent"])) {
-            throw new \Exception('Unexpected inconsistency in options');
-        }
-        // redis前缀
-        if (isset($options['prefix'])) {
-            self::$_prefix = $options['prefix'];
-        }
-        $redis = new \Redis();
-        if ($options["persistent"]) {
-            $success = $redis->pconnect($options['host'], intval($options['port']));
-        } else {
-            $success = $redis->connect($options['host'], intval($options['port']));
-        }
-        if (!$success) {
-            throw new \Exception("Could not connect to the Redisd server " . $options["host"] . ":" . $options["port"]);
-        }
-        // redis权限认证
-        if (isset($options["auth"])) {
-            $success = $redis->auth($options["auth"]);
-            if (!$success) {
-                throw new \Exception("Failed to authenticate with the Redisd server");
-            }
-        }
-        // 选择redis数据库
-        if (isset($options["index"])) {
-            $redis->select(intval($options["index"]));
-        } else {
-            $redis->select(self::$_db);
-        }
-
-        return $redis;
+        return $this->redis;
     }
 
     /**
@@ -97,7 +144,7 @@ class YP_Redis
     public function getWriteRedis()
     {
         if (!is_object(self::$_redis_w)) {
-            self::$_redis_w = $this->getRedis($this->config);
+            self::$_redis_w = $this->getRedis();
         }
 
         return self::$_redis_w;
@@ -120,12 +167,13 @@ class YP_Redis
             if (array_key_exists('cacheSlave', $this->_options)) {
                 $options = $this->_options['cacheSlave'];
             }
-            $options[] = $this->_options['cache'];
+            $options[] = $this->config;
             $arr       = [];
             foreach ($options as $i => $option) {
                 $arr[] = isset($option['weight']) ? intval($option['weight']) : 1;
             }
-            self::$_redis_r = $this->getRedis($options[get_rand($arr)]);
+            $this->config   = $options[get_rand($arr)];
+            self::$_redis_r = $this->initialize();
         }
 
         return self::$_redis_r;
@@ -395,5 +443,15 @@ class YP_Redis
     private function _key($key, $id = '')
     {
         return self::$_prefix . $key . (($id !== '') ? (':' . $id) : '');
+    }
+
+    /**
+     * 是否支持
+     *
+     * @return bool
+     */
+    public function isSupported(): bool
+    {
+        return extension_loaded('redis');
     }
 }

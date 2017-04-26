@@ -21,6 +21,7 @@ class YP_CacheFactory
      */
     public static function getHandler($config, string $handler = null, string $backup = null)
     {
+        // 判断是否存在相应的处理程序
         if (!isset($config->validHandlers) || !is_array($config->validHandlers)) {
             throw new \InvalidArgumentException(lang('Cache.cacheInvalidHandlers'));
         }

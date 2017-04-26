@@ -12,6 +12,7 @@ class Cache
 {
     /**
      * 缓存处理类型
+     * 可能的值: file,redis,dummy
      *
      * @var string
      */
@@ -73,7 +74,6 @@ class Cache
         'host'     => '127.0.0.1',
         'password' => null,
         'port'     => 6379,
-        'prefix'   => '',
         'index'    => '0',
         'persistent' => false,
     ];

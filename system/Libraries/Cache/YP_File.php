@@ -24,74 +24,55 @@ class YP_File
      */
     protected $path;
 
-    //--------------------------------------------------------------------
-
     public function __construct($config)
     {
-        $this->prefix = $config->prefix ?: '';
-        $this->path   = ! empty($config->path)
-            ? $config->path
-            : WRITEPATH.'cache';
-
-        $this->path = rtrim($this->path, '/').'/';
+        $this->prefix = $config->prefix ? : '';
+        $this->path   = !empty($config->path) ? $config->path : WRITEPATH . 'cache';
+        $this->path   = rtrim($this->path, '/') . '/';
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Takes care of any handler-specific setup that must be done.
+     * 初始化file缓存,除file缓存驱动外,redis、memcached在此方法中初始化
      */
     public function initialize()
     {
-        // Not to see here...
+
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Attempts to fetch an item from the cache store.
+     * 获取某个缓存key的值
      *
-     * @param string $key Cache item name
+     * @param string $key
      *
-     * @return mixed
+     * @return bool|mixed
      */
     public function get(string $key)
     {
-        $key = $this->prefix.$key;
-
+        $key  = $this->prefix . $key;
         $data = $this->getItem($key);
 
         return is_array($data) ? $data['data'] : false;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Saves an item to the cache store.
+     * 保存缓存
      *
-     * The $raw parameter is only utilized by Mamcache in order to
-     * allow usage of increment() and decrement().
+     * @param string $key   缓存键名
+     * @param        $value 缓存值
+     * @param int    $ttl   过期时间
      *
-     * @param string $key    Cache item name
-     * @param        $value  the data to save
-     * @param null   $ttl    Time To Live, in seconds (default 60)
-     * @param bool   $raw    Whether to store the raw value.
-     *
-     * @return mixed
+     * @return bool
      */
-    public function save(string $key, $value, int $ttl = 60, bool $raw = false)
+    public function save(string $key, $value, int $ttl = 60)
     {
-        $key = $this->prefix.$key;
-
+        $key      = $this->prefix . $key;
         $contents = [
             'time' => time(),
             'ttl'  => $ttl,
             'data' => $value,
         ];
-
-        if ($this->writeFile($this->path.$key, serialize($contents)))
-        {
-            chmod($this->path.$key, 0640);
+        if ($this->writeFile($this->path . $key, serialize($contents))) {
+            chmod($this->path . $key, 0640);
 
             return true;
         }
@@ -99,187 +80,138 @@ class YP_File
         return false;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Deletes a specific item from the cache store.
+     * 删除某个指定键的值
      *
-     * @param string $key Cache item name
+     * @param string $key
      *
-     * @return mixed
+     * @return bool
      */
     public function delete(string $key)
     {
-        $key = $this->prefix.$key;
+        $key = $this->prefix . $key;
 
-        return file_exists($this->path.$key)
-            ? unlink($this->path.$key)
-            : false;
+        return file_exists($this->path . $key) ? unlink($this->path . $key) : false;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Performs atomic incrementation of a raw stored value.
+     * 递增一行的最小单位(列)存储值
      *
-     * @param string $key    Cache ID
-     * @param int    $offset Step/value to increase by
+     * @param string $key 缓存ID
+     * @param int    $offset 步长
      *
-     * @return mixed
+     * @return bool|int
      */
     public function increment(string $key, int $offset = 1)
     {
-        $key = $this->prefix.$key;
-
+        $key  = $this->prefix . $key;
         $data = $this->getItem($key);
-
-        if ($data === false)
-        {
+        if ($data === false) {
             $data = ['data' => 0, 'ttl' => 60];
-        }
-        elseif (! is_int($data['data']))
-        {
+        } elseif (!is_int($data['data'])) {
             return false;
         }
+        $new_value = $data['data'] + $offset;
 
-        $new_value = $data['data']+$offset;
-
-        return $this->save($key, $new_value, $data['ttl'])
-            ? $new_value
-            : false;
+        return $this->save($key, $new_value, $data['ttl']) ? $new_value : false;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Performs atomic decrementation of a raw stored value.
+     * 递减一行的最小单位(列)存储值
      *
-     * @param string $key    Cache ID
-     * @param int    $offset Step/value to increase by
+     * @param string $key    缓存ID
+     * @param int    $offset 步长
      *
      * @return mixed
      */
     public function decrement(string $key, int $offset = 1)
     {
-        $key = $this->prefix.$key;
-
+        $key  = $this->prefix . $key;
         $data = $this->getItem($key);
-
-        if ($data === false)
-        {
+        if ($data === false) {
             $data = ['data' => 0, 'ttl' => 60];
-        }
-        elseif (! is_int($data['data']))
-        {
+        } elseif (!is_int($data['data'])) {
             return false;
         }
+        $new_value = $data['data'] - $offset;
 
-        $new_value = $data['data']-$offset;
-
-        return $this->save($key, $new_value, $data['ttl'])
-            ? $new_value
-            : false;
+        return $this->save($key, $new_value, $data['ttl']) ? $new_value : false;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Will delete all items in the entire cache.
+     * 清除缓存
      *
-     * @return mixed
+     * @return bool
      */
     public function clean()
     {
         return $this->deleteFiles($this->path, false, true);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns information on the entire cache.
+     * 获取缓存信息
      *
-     * The information returned and the structure of the data
-     * varies depending on the handler.
-     *
-     * @return mixed
+     * @return array
      */
     public function getCacheInfo()
     {
         return $this->getDirFileInfo($this->path);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns detailed information about the specific item in the cache.
+     * 返回缓存中特定项的详细信息
      *
-     * @param string $key Cache item name.
+     * @param string $key  缓存的键名
      *
-     * @return mixed
+     * @return array|bool
      */
     public function getMetaData(string $key)
     {
-        $key = $this->prefix.$key;
-
-        if ( ! file_exists($this->path.$key))
-        {
-            return FALSE;
+        $key = $this->prefix . $key;
+        if (!file_exists($this->path . $key)) {
+            return false;
         }
-
-        $data = unserialize(file_get_contents($this->path.$key));
-
-        if (is_array($data))
-        {
-            $mtime = filemtime($this->path.$key);
-
-            if ( ! isset($data['ttl']))
-            {
-                return FALSE;
+        $data = unserialize(file_get_contents($this->path . $key));
+        if (is_array($data)) {
+            $mtime = filemtime($this->path . $key);
+            if (!isset($data['ttl'])) {
+                return false;
             }
 
-            return array(
+            return [
                 'expire' => $mtime + $data['ttl'],
-                'mtime'	 => $mtime
-            );
+                'mtime'  => $mtime
+            ];
         }
 
-        return FALSE;
+        return false;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Determines if the driver is supported on this system.
+     * 检测文件是否可以写,其他处理缓存对象在此方法中会判断该驱动是否加载
      *
-     * @return boolean
+     * @return bool
      */
     public function isSupported(): bool
     {
         return is_writable($this->path);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Does the heavy lifting of actually retrieving the file and
-     * verifying it's age.
+     * 是否重重检索文件并验证其存放时间
      *
      * @param string $key
      *
-     * @return bool|mixed
+     * @return mixed|null
      */
     protected function getItem(string $key)
     {
-        if (! is_file($this->path.$key))
-        {
+        if (!is_file($this->path . $key)) {
             return null;
         }
-
-        $data = unserialize(file_get_contents($this->path.$key));
-
-        if ($data['ttl'] > 0 && time() > $data['time']+$data['ttl'])
-        {
-            unlink($this->path.$key);
+        $data = unserialize(file_get_contents($this->path . $key));
+        if ($data['ttl'] > 0 && time() > $data['time'] + $data['ttl']) {
+            unlink($this->path . $key);
 
             return null;
         }
@@ -287,14 +219,8 @@ class YP_File
         return $data;
     }
 
-    //--------------------------------------------------------------------
-
-    //--------------------------------------------------------------------
-    // SUPPORT METHODS FOR FILES
-    //--------------------------------------------------------------------
-
     /**
-     * Writes a file to disk, or returns false if not successful.
+     * 将缓存写入文件中 如果写入失败,返回FALSE
      *
      * @param        $path
      * @param        $data
@@ -304,186 +230,135 @@ class YP_File
      */
     protected function writeFile($path, $data, $mode = 'wb')
     {
-        if (! $fp = @fopen($path, $mode))
-        {
+        if (!$fp = @fopen($path, $mode)) {
             return false;
         }
-
         flock($fp, LOCK_EX);
-
-        for ($result = $written = 0, $length = strlen($data); $written < $length; $written += $result)
-        {
-            if (($result = fwrite($fp, substr($data, $written))) === false)
-            {
+        for ($result = $written = 0, $length = strlen($data); $written < $length; $written += $result) {
+            if (($result = fwrite($fp, substr($data, $written))) === false) {
                 break;
             }
         }
-
         flock($fp, LOCK_UN);
         fclose($fp);
 
         return is_int($result);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Delete Files
+     * 删除缓存文件
      *
-     * Deletes all files contained in the supplied directory path.
-     * Files must be writable or owned by the system in order to be deleted.
-     * If the second parameter is set to TRUE, any directories contained
-     * within the supplied base directory will be nuked as well.
+     * @param      $path     文件目录
+     * @param bool $del_dir  删除的目录
+     * @param bool $htdocs   如果存在.htaccess and index page files 直接跳过
+     * @param int  $_level   当前目录的深度
      *
-     * @param    string $path    File path
-     * @param    bool   $del_dir Whether to delete any directories found in the path
-     * @param    bool   $htdocs  Whether to skip deleting .htaccess and index page files
-     * @param    int    $_level  Current directory depth level (default: 0; internal use only)
-     *
-     * @return    bool
+     * @return bool
      */
     protected function deleteFiles($path, $del_dir = false, $htdocs = false, $_level = 0)
     {
         // Trim the trailing slash
         $path = rtrim($path, '/\\');
-
-        if (! $current_dir = @opendir($path))
-        {
+        if (!$current_dir = @opendir($path)) {
             return false;
         }
-
-        while (false !== ($filename = @readdir($current_dir)))
-        {
-            if ($filename !== '.' && $filename !== '..')
-            {
-                if (is_dir($path.DIRECTORY_SEPARATOR.$filename) && $filename[0] !== '.')
-                {
-                    $this->deleteFiles($path.DIRECTORY_SEPARATOR.$filename, $del_dir, $htdocs, $_level+1);
-                }
-                elseif ($htdocs !== true || ! preg_match('/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i', $filename))
-                {
-                    @unlink($path.DIRECTORY_SEPARATOR.$filename);
+        while (false !== ($filename = @readdir($current_dir))) {
+            if ($filename !== '.' && $filename !== '..') {
+                if (is_dir($path . DIRECTORY_SEPARATOR . $filename) && $filename[0] !== '.') {
+                    $this->deleteFiles($path . DIRECTORY_SEPARATOR . $filename, $del_dir, $htdocs, $_level + 1);
+                } elseif ($htdocs !== true || !preg_match('/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i',
+                        $filename)
+                ) {
+                    @unlink($path . DIRECTORY_SEPARATOR . $filename);
                 }
             }
         }
-
         closedir($current_dir);
 
-        return ($del_dir === true && $_level > 0)
-            ? @rmdir($path)
-            : true;
+        return ($del_dir === true && $_level > 0) ? @rmdir($path) : true;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Get Directory File Information
+     * 获得目录下的文件信息
      *
-     * Reads the specified directory and builds an array containing the filenames,
-     * filesize, dates, and permissions
+     * @param      $source_dir    原路径
+     * @param bool $top_level_only 目录的深度
+     * @param bool $_recursion
      *
-     * Any sub-folders contained within the specified path are read as well.
-     *
-     * @param    string    path to source
-     * @param    bool      Look only at the top level directory specified?
-     * @param    bool      internal variable to determine recursion status - do not use in calls
-     *
-     * @return    array
+     * @return array|bool
      */
     protected function getDirFileInfo($source_dir, $top_level_only = true, $_recursion = false)
     {
-        static $_filedata = [];
+        static $_fileData = [];
         $relative_path = $source_dir;
-
-        if ($fp = @opendir($source_dir))
-        {
+        if ($fp = @opendir($source_dir)) {
             // reset the array and make sure $source_dir has a trailing slash on the initial call
-            if ($_recursion === false)
-            {
-                $_filedata  = [];
-                $source_dir = rtrim(realpath($source_dir), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+            if ($_recursion === false) {
+                $_fileData  = [];
+                $source_dir = rtrim(realpath($source_dir), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
             }
-
             // Used to be foreach (scandir($source_dir, 1) as $file), but scandir() is simply not as fast
-            while (false !== ($file = readdir($fp)))
-            {
-                if (is_dir($source_dir.$file) && $file[0] !== '.' && $top_level_only === false)
-                {
-                    $this->getDirFileInfo($source_dir.$file.DIRECTORY_SEPARATOR, $top_level_only, true);
-                }
-                elseif ($file[0] !== '.')
-                {
-                    $_filedata[$file]                  = $this->getFileInfo($source_dir.$file);
-                    $_filedata[$file]['relative_path'] = $relative_path;
+            while (false !== ($file = readdir($fp))) {
+                if (is_dir($source_dir . $file) && $file[0] !== '.' && $top_level_only === false) {
+                    $this->getDirFileInfo($source_dir . $file . DIRECTORY_SEPARATOR, $top_level_only, true);
+                } elseif ($file[0] !== '.') {
+                    $_fileData[$file]                  = $this->getFileInfo($source_dir . $file);
+                    $_fileData[$file]['relative_path'] = $relative_path;
                 }
             }
-
             closedir($fp);
 
-            return $_filedata;
+            return $_fileData;
         }
 
         return false;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Get File Info
+     * 获得文件信息
      *
-     * Given a file and path, returns the name, path, size, date modified
-     * Second parameter allows you to explicitly declare what information you want returned
-     * Options are: name, server_path, size, date, readable, writable, executable, fileperms
-     * Returns FALSE if the file cannot be found.
+     * @param       $file   缓存文件路径
+     * @param array $returned_values
      *
-     * @param    string    path to file
-     * @param    mixed     array or comma separated string of information returned
-     *
-     * @return    array
+     * @return bool
      */
     protected function getFileInfo($file, $returned_values = ['name', 'server_path', 'size', 'date'])
     {
-        if (! file_exists($file))
-        {
+        if (!file_exists($file)) {
             return false;
         }
-
-        if (is_string($returned_values))
-        {
+        if (is_string($returned_values)) {
             $returned_values = explode(',', $returned_values);
         }
-
-        foreach ($returned_values as $key)
-        {
-            switch ($key)
-            {
+        foreach ($returned_values as $key) {
+            switch ($key) {
                 case 'name':
-                    $fileinfo['name'] = basename($file);
+                    $fileInfo['name'] = basename($file);
                     break;
                 case 'server_path':
-                    $fileinfo['server_path'] = $file;
+                    $fileInfo['server_path'] = $file;
                     break;
                 case 'size':
-                    $fileinfo['size'] = filesize($file);
+                    $fileInfo['size'] = filesize($file);
                     break;
                 case 'date':
-                    $fileinfo['date'] = filemtime($file);
+                    $fileInfo['date'] = filemtime($file);
                     break;
                 case 'readable':
-                    $fileinfo['readable'] = is_readable($file);
+                    $fileInfo['readable'] = is_readable($file);
                     break;
                 case 'writable':
-                    $fileinfo['writable'] = is_writable($file);
+                    $fileInfo['writable'] = is_writable($file);
                     break;
                 case 'executable':
-                    $fileinfo['executable'] = is_executable($file);
+                    $fileInfo['executable'] = is_executable($file);
                     break;
                 case 'fileperms':
-                    $fileinfo['fileperms'] = fileperms($file);
+                    $fileInfo['file_perms'] = fileperms($file);
                     break;
             }
         }
 
-        return $fileinfo;
+        return $fileInfo;
     }
 }

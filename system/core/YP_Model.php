@@ -10,6 +10,11 @@ namespace YP\Core;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * Class YP_Model 基类控制器
+ *
+ * @package YP\Core
+ */
 class YP_Model extends Model
 {
   

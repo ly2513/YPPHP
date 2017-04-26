@@ -302,17 +302,29 @@ class Services
 
         return new \YP\Libraries\YP_Twig($config);
     }
-    
-    public static function model(\Config\Database $config = null, $getShared = true)
-    {
-        if ($getShared) {
-            return self::getSharedInstance('model', $config);
-        }
-        if (!is_object($config)) {
-            $config = new \Config\Database();
-        }
 
-        return new \YP\Libraries\YP_Eloquent($config);
+    /**
+     * 加载model
+     *
+     * @param      $modelPath
+     * @param bool $getShared
+     *
+     * @return mixed
+     */
+    public static function model($modelPath, $getShared = true)
+    {
+        $class = $modelPath;
+        if ($len = strpos($modelPath, '/')) {
+            $modelPath = str_replace('/', '\\', $modelPath);
+            $class     = end(explode('\\', $modelPath));
+        }
+        if ($getShared) {
+            return self::getSharedInstance($modelPath);
+        }
+        $namespace = '\\APP\\Models\\' . $modelPath;
+
+        return new $namespace();
+        //        return $class;
     }
 
     /**
@@ -327,7 +339,7 @@ class Services
     protected static function getSharedInstance(string $key, ...$params)
     {
         if (!isset(static::$instances[$key])) {
-            // Make sure $getShared is false
+            // 确保$getShared为false;
             array_push($params, false);
             static::$instances[$key] = static::$key(...$params);
         }
@@ -345,9 +357,7 @@ class Services
     public static function __callStatic(string $name, array $arguments)
     {
         $name = strtolower($name);
-
-        if (method_exists(__CLASS__, $name))
-        {
+        if (method_exists(__CLASS__, $name)) {
             return Services::$name(...$arguments);
         }
     }

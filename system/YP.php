@@ -135,16 +135,12 @@ class YP
     {
         // 设置服务器时区
         date_default_timezone_set($this->config->appTimezone ?? 'UTC');
-
         // 设置异常处理
         Config\Services::exceptions($this->config, true)->initialize();
-
         // 定义环境常量
         $this->detectEnvironment();
-
         // 加载环境配置信息
         $this->bootstrapEnvironment();
-
         // 加载环境变量
         // $this->loadEnvironment();
         if (YP_DEBUG) {
@@ -161,20 +157,15 @@ class YP
     {
         // 记录开始时间
         $this->startBenchmark();
-
         // 获得请求对象
         $this->getRequestObject();
-
         // 获得响应对象
         $this->getResponseObject();
-
         // 是否安全访问站点
         $this->forceSecureAccess();
-
         // 检查缓存页,如果页面已被缓存，执行将停止
         $cacheConfig = new Cache();
         $this->displayCache($cacheConfig);
-
         // 用不同的方法去修改请求对象
         $this->spoofRequestMethod();
         try {
@@ -265,17 +256,12 @@ class YP
             $controller = $this->createController();
             // 是否有'post_controller_constructor'钩子
             Hooks::trigger('post_controller_constructor');
-            try{
-                // 运行控制器
-                $returned = $this->runController($controller);
-            }catch (\Exception $e){
-                $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
-            }
+            // 运行控制器
+            $returned = $this->runController($controller);
         } else {
             $this->benchmark->stop('controller_constructor');
             $this->benchmark->stop('controller');
         }
-
         // 如果返回的是一个字符串，那么控制器输出的东西，可能是一个视图，而不是直接输出。可以单独发送所以可能用于输出。
         $this->gatherOutput($cacheConfig, $returned);
         // 运行 "after" 过滤器
@@ -283,7 +269,6 @@ class YP
         if ($response instanceof Response) {
             $this->response = $response;
         }
-
         // 将当前URI保存为会话中的前一个URI，以便更安全
         $this->storePreviousURL($this->request->uri ?? $uri);
         unset($uri);

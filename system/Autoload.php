@@ -58,9 +58,7 @@ class Autoload
                 return false;
             }
             include_once $config[$class];
-        }, true,
-            true
-        );
+        }, true, true);
     }
 
     /**
@@ -132,6 +130,7 @@ class Autoload
             APP_PATH . 'Models/',
         ];
         $class = str_replace('\\', '/', $class) . '.php';
+
         foreach ($paths as $path) {
             if ($file = $this->requireFile($path . $class)) {
                 return $file;
@@ -161,27 +160,16 @@ class Autoload
     }
 
     /**
-     * Sanitizes a filename, replacing spaces with dashes.
-     *
-     * Removes special characters that are illegal in filenames on certain
-     * operating systems and special characters requiring special escaping
-     * to manipulate at the command line. Replaces spaces and consecutive
-     * dashes with a single dash. Trim period, dash and underscore from beginning
-     * and end of filename.
+     * 规范化文件名，移除非法字符使用破折号代替。
      *
      * @param string $filename
      *
-     * @return string       The sanitized filename
+     * @return string       需要规范的文件
      */
     public function sanitizeFilename(string $filename): string
     {
-        // Only allow characters deemed safe for POSIX portable filenames.
-        // Plus the forward slash for directory separators since this might
-        // be a path.
-        // http://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap03.html#tag_03_278
-        // Modified to allow backslash and colons for on Windows machines.
         $filename = preg_replace('/[^a-zA-Z0-9\s\/\-\_\.\:\\\\]/', '', $filename);
-        // Clean up our filename edges.
+        // 清理我们的文件名扩展
         $filename = trim($filename, '.-_');
 
         return $filename;

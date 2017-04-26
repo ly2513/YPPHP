@@ -43,13 +43,14 @@ class AutoloadConfig
         }
         // 设置框架初始化需自动加载的类
         $this->classMap = [
-            'YP\YP'                                => SYSTEM_PATH . 'YP.php',
-            'YP\CLI\CLI'                           => SYSTEM_PATH . 'CLI/CLI.php',
-            'YP\Loader'                            => SYSTEM_PATH . 'Loader.php',
-            'YP\Controller'                        => SYSTEM_PATH . 'Controller.php',
-            'YP\Config\AutoloadConfig'             => SYSTEM_PATH . 'Config/Autoload.php',
-            'YP\Config\Config'                     => SYSTEM_PATH . 'Config/Config.php',
-            'Zend\Escaper\Escaper'                 => SYSTEM_PATH . 'ThirdParty/ZendEscaper/Escaper.php',
+            'YP\YP'                    => SYSTEM_PATH . 'YP.php',
+            'YP\CLI\CLI'               => SYSTEM_PATH . 'CLI/CLI.php',
+            'YP\Loader'                => SYSTEM_PATH . 'Loader.php',
+            'YP\Controller'            => SYSTEM_PATH . 'Controller.php',
+            'YP\Config\AutoloadConfig' => SYSTEM_PATH . 'Config/Autoload.php',
+            'YP\Config\Config'         => SYSTEM_PATH . 'Config/Config.php',
+            'Zend\Escaper\Escaper'     => SYSTEM_PATH . 'ThirdParty/ZendEscaper/Escaper.php',
+            'YP\Libraries\YP_Eloquent' => SYSTEM_PATH . 'Libraries/YP_Eloquent.php',
         ];
     }
 

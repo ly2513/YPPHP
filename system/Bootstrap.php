@@ -64,11 +64,8 @@ if (file_exists(COMPOSER_PATH)) {
 // 加载url
 //helper('url');
 // 加载Eloquent
-//use YP\Libraries\YP_Eloquent as Eloquent;
-//new Eloquent();
-if(!class_exists('YP_Eloquent')){
-//    Config\Services::model();
-}
+new \YP\Libraries\YP_Eloquent();
+
 
 // 启动应用加载框架
 $app = new  \YP\YP(new \Config\App());

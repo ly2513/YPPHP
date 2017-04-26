@@ -1,17 +1,15 @@
 <?php
 /**
  * User: yongli
- * Date: 17/4/25
- * Time: 17:24
+ * Date: 17/4/26
+ * Time: 10:10
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace APP\Models;
 
 use YP\Core\YP_Model as Model;
 
-class UserModel extends Model
+class HomeModel extends Model
 {
-    protected $table = 'rmos_user';
-
+        protected $table = 'rmos_user';
 }

@@ -66,11 +66,11 @@
  ```
  框架采用以下第三方组件
 
- [ x ] ORM数据库工具 Eloquent
-  [ ] Doctrine2
-  [ ] Symfony2 Console
-  [ ] Json-schema Json 请求字符串验证
- [ x ] Twig 模板工具
-  [ ] PHPMailer 邮件工具
-  [ ] PHPExcel Excel工具
+ - [ x ] ORM数据库工具 Eloquent
+ - [ ] Doctrine2
+ - [ ] Symfony2 Console
+ - [ ] Json-schema Json 请求字符串验证
+ - [ x ] Twig 模板工具
+ - [ ] PHPMailer 邮件工具
+ - [ ] PHPExcel Excel工具
 

@@ -57,7 +57,7 @@ class Database
      *
      * @var string
      */
-    public $charset = 'utf-8';
+    public $charset = 'utf8';
 
     /**
      * 排序规则

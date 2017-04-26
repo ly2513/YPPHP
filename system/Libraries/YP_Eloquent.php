@@ -10,7 +10,7 @@ namespace YP\Libraries;
 
 use Illuminate\Database\Capsule\Manager as Capsule;
 use Illuminate\Database\Eloquent\SoftDelete;
-use Config\Services;
+use Config\Database;
 
 /**
  * Class YP_Eloquent
@@ -35,15 +35,22 @@ class YP_Eloquent
     public function initEloquent()
     {
         $this->capsule = new Capsule;
-        // 数据库配置
-        $config = (array)Services::model();
+        $config        = $this->_initDB();
         $this->capsule->addConnection($config);
         $this->capsule->bootEloquent();
+
     }
 
-    public function initDB()
+    /**
+     * 初始化数据
+     *
+     * @return array|Database
+     */
+    private function _initDB()
     {
-        $config = (array)Services::model();
+        $db = new Database();
+        $db = (array)$db;
+        return $db;
     }
 
     public function getCapsule()

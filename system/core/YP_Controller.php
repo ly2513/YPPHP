@@ -98,9 +98,6 @@ class YP_Controller
     /**
      * YP_Controller constructor.
      *
-     * @param IncomingRequest $request
-     * @param Response        $response
-     * @param Log|null        $logger
      */
     public function __construct(IncomingRequest $request, Response $response, Log $logger = null)
     {
@@ -113,6 +110,16 @@ class YP_Controller
         }
         $this->loadHelpers();
         $this->initTwig();
+        $this->initialization();
+    }
+
+    /**
+     * 初始化控制器
+     *
+     */
+    public function initialization()
+    {
+
     }
 
     //--------------------------------------------------------------------
@@ -213,7 +220,7 @@ class YP_Controller
         $tempFilePath = $this->tempPath . $tempFile;
         is_file($tempFilePath) or touch($tempFilePath);
         echo $this->twig->render($tempFile, $data);
-        die;
+        //        die;
     }
 
     /**

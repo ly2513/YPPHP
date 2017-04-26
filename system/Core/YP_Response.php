@@ -202,21 +202,21 @@ class YP_Response extends Message
      */
     public function setStatusCode(int $code, string $reason = ''): self
     {
+        $codeLen = count($code);
+
         // 状态码的有效范围
-        if ($code < 100 || $code > 599) {
+        if ($codeLen == 3 && ($code < 100 || $code > 599)) {
+            // http 报错
             throw new \InvalidArgumentException($code . ' is not a valid HTTP return status code');
-        }
-        // 状态码不存在且原因短语为空,抛出异常说明
-        if (!array_key_exists($code, static::$statusCodes) && empty($reason)) {
-            throw new \InvalidArgumentException('Unknown HTTP status code provided with no message');
         }
         $this->statusCode = $code;
         if (!empty($reason)) {
             $this->reason = $reason;
         } else {
-            $this->reason = static::$statusCodes[$code];
+            if ($codeLen == 3 && ($code > 100 || $code < 599)) {
+                $this->reason = static::$statusCodes[$code] ?? '';
+            }
         }
-
         return $this;
     }
 

@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  * User: yongli
@@ -6,3 +7,69 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+/**
+ * YP框架的系统工具包,注意此工具包需要 Symfony2/Console、Doctrine2支持
+ *
+ */
+// 拒绝运行时调用php-cgi
+if (substr(php_sapi_name(), 0, 3) == 'cgi') {
+    die('运行php-cgi时不支持CLI工具。它需要php-cli函数！' . "\n\n");
+}
+
+// 本地路径目录配置文件
+$pathsPath = 'app/Config/Paths.php';
+require $pathsPath;
+$paths = new Config\Paths();
+
+// 定义环境常量
+define('ENVIRONMENT', isset($_SERVER['YP_ENV']) ? $_SERVER['YP_ENV'] : 'prod');
+
+// 定义根目录
+define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
+
+// 定义应用路径
+define('APP_PATH', rtrim(ROOT_PATH . 'app', '/') . DIRECTORY_SEPARATOR);
+
+// 加载 Illuminate\Console Doctrine Eloquent
+require ROOT_PATH . 'vendor/autoload.php';
+
+// 注册 Doctrine2 类库自动加载
+function do_doctrine_load($className)
+{
+    $path = APP_PATH . 'ThirdParty/Doctrine/Entity/' . $className . '.php';
+    if (file_exists($path)) {
+        require $path;
+    }
+}
+
+spl_autoload_register('do_doctrine_load');
+
+// 加载 YP 命令行工具
+require APP_PATH . 'Cli/autoload.php';
+
+// 加载命令行工具
+$app = new \Symfony\Component\Console\Application('YP框架命令行工具', 'v1.0(stable)');
+$app->setCatchExceptions(true);
+$app->setHelperSet($helperSet);
+
+// 开始注册所需命令
+$artisans = [
+    // Doctrine 命令
+    new \YP\Console\Doctrine\ConvertMappingCommand(),
+    new \YP\Console\Doctrine\GenerateEntitiesCommand(),
+    new \YP\Console\Doctrine\UpdateCommand(),
+    //    #队列命令
+    //    new \TradingMax\Console\Queue\CreateJobCommand(),
+    //    new \TradingMax\Console\Queue\WorkQueueCommand(),
+    //    #new \TradingMax\Console\Queue\ListenCommand(),
+    //    new \TradingMax\Console\Queue\ListFailedCommand(),
+    //    #定时任务区域
+    //    new \TradingMax\Console\Crond\CollectJobCommand(),
+    //    new \TradingMax\Console\Crond\SyncRMBasicDataCommand(), // 同步ReachMax基础数据到TradingMax
+    //    #系统活动提醒消息
+    //    new \TradingMax\Console\Crond\SystemMessageCommand(),
+    //    #查询短信剩余条数
+    //    new \TradingMax\Console\Crond\ShortMessageServiceCommand(),
+];
+$app->addCommands($artisans);
+$app->run();

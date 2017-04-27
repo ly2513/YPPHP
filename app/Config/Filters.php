@@ -25,16 +25,23 @@ class Filters
             'toolbar'
         ]
     ];
-
-    // Works on all of a particular HTTP method
-    // (GET, POST, etc) as BEFORE filters only
-    //     like: 'post' => ['CSRF', 'throttle'],
-    // 给特定的http 方法进行before 过滤
+    
+    /**
+     * 给特定的http 方法进行before 过滤
+     *
+     * 例如:
+     * 'post' => ['CSRF', 'throttle'],
+     *
+     * @var array
+     */
     public $methods = [];
 
-    // List filter aliases and any before/after uri patterns
-    // that they should run on, like:
-    //    'isLoggedIn' => ['before' => ['account/*', 'profiles/*']],
-    //
+    /**
+     * 过滤器别名及before/after的URI参数列表
+     * 例如:
+     * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']],
+     *
+     * @var array
+     */
     public $filters = [];
 }

@@ -61,15 +61,13 @@ if (file_exists(COMPOSER_PATH)) {
     require COMPOSER_PATH;
 }
 
-// 加载url
-//helper('url');
 // 加载Eloquent
 new \YP\Libraries\YP_Eloquent();
 
 
 // 启动应用加载框架
 $app = new  \YP\YP(new \Config\App());
-//
+// 初始化
 $app->initialize();
 
 return $app;

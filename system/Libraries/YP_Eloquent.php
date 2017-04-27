@@ -37,7 +37,6 @@ class YP_Eloquent
     {
         // 加载软删除设置
         require SYSTEM_PATH . 'Libraries/YP_SoftDelete.php';
-        
         $this->capsule = new Capsule;
 
     }
@@ -52,7 +51,9 @@ class YP_Eloquent
         $db = new Database();
         $db = $db->getDB();
         foreach ($db as $key => $dbConfig) {
-            $this->capsule->addConnection($dbConfig, $key);
+            if ($key != 'doctrine') {
+                $this->capsule->addConnection($dbConfig, $key);
+            }
         }
         $this->capsule->bootEloquent();
 

@@ -37,9 +37,26 @@ class Database
             'collation' => 'utf8_general_ci',   // 排序规则
             'prefix'    => '',                  // 表的前缀
         ];
-
         // TODO 后续如果对多个数据库操作,可在此添加数据库信息,eg: $this->db['数据库名称'] = [参数同default];
 
+        // doctrine 配置
+        $this->db['doctrine'] = [
+            'hostname' => '127.0.0.1',
+            'username' => 'root',
+            'password' => 'root',
+            'database' => 'rmos_dev',
+            'dbdriver' => 'mysqli',
+            'dbprefix' => '',
+            'pconnect' => false,
+            'db_debug' => true,
+            'cache_on' => false,
+            'cachedir' => '',
+            'char_set' => 'utf8',
+            'dbcollat' => 'utf8_general_ci',
+            'swap_pre' => '',
+            'autoinit' => false,
+            'stricton' => false,
+        ];
 
         return $this->db;
     }

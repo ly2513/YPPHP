@@ -46,7 +46,7 @@ class YP_Validation
      * @var array
      */
     protected $errors = [];
-    
+
     /**
      * 在验证期间存储自定义错误消息
      *
@@ -87,10 +87,9 @@ class YP_Validation
         $data = $data ?? $this->data;
         $this->loadRuleSets();
         $this->loadRuleGroup($group);
-        // Run through each rule. If we have any field set for
-        // this rule, then we need to run them through!
+        // 如果有些字段设置的验证规则,需要通过运行每一个规则进行相关校验
         foreach ($this->rules as $rField => $ruleString) {
-            // Blast $ruleString apart, unless it's already an array.
+            // 将规则是字符串,将进行拆分数组
             $rules = $ruleString;
             if (is_string($rules)) {
                 $rules = explode('|', $rules);

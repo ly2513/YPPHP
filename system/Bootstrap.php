@@ -61,6 +61,9 @@ if (file_exists(COMPOSER_PATH)) {
     require COMPOSER_PATH;
 }
 
+// 加载自定义函数
+require APP_PATH . 'Functions/Function.php';
+
 // 加载Eloquent
 new \YP\Libraries\YP_Eloquent();
 

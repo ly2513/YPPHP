@@ -11,6 +11,9 @@ date_default_timezone_set('Asia/Shanghai');
 // 前端资源目录
 define('FRONT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
 
+// 设置编码
+header("Content-type:text/html;charset=utf-8");
+
 // 加载目录类
 require '../app/Config/Paths.php';
 

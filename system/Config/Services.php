@@ -304,6 +304,54 @@ class Services
     }
 
     /**
+     * 加载输入处理类
+     *
+     * @param bool $getShared
+     *
+     * @return mixed|\YP\Libraries\YP_Input
+     */
+    public static function input($getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('input');
+        }
+
+        return new \YP\Libraries\YP_Input();
+    }
+
+    /**
+     * 加载jsonSchema类
+     *
+     * @param bool $getShared
+     *
+     * @return mixed|\YP\Libraries\YP_JsonSchema
+     */
+    public static function schema($getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('schema');
+        }
+
+        return new \YP\Libraries\YP_JsonSchema();
+    }
+
+    /**
+     * 加载错误信息
+     *
+     * @param bool $getShared
+     *
+     * @return \Config\Error|mixed
+     */
+    protected static function error($getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('error');
+        }
+
+        return new \Config\Error();
+    }
+
+    /**
      * 加载email
      *
      * @param \Config\Email $config
@@ -311,18 +359,17 @@ class Services
      *
      * @return mixed|\YP\Libraries\YP_Twig
      */
-//    public static function email(\Config\Email $config = null, $getShared = true)
-//    {
-//        if ($getShared) {
-//            return self::getSharedInstance('email', $config);
-//        }
-//        if (!is_object($config)) {
-//            $config = new \Config\Email();
-//        }
-//
-//        return new YP_Email($config);
-//    }
-
+    //    public static function email(\Config\Email $config = null, $getShared = true)
+    //    {
+    //        if ($getShared) {
+    //            return self::getSharedInstance('email', $config);
+    //        }
+    //        if (!is_object($config)) {
+    //            $config = new \Config\Email();
+    //        }
+    //
+    //        return new YP_Email($config);
+    //    }
     /**
      * 获得已加载的类的映射数组
      * 将已加载的类的类名作为key存放到$instances中
@@ -345,6 +392,7 @@ class Services
 
 
 
+
     /**
      * Provides the ability to perform case-insensitive calling of service
      * names.
@@ -358,6 +406,11 @@ class Services
         if (method_exists(__CLASS__, $name)) {
             return Services::$name(...$arguments);
         }
+    }
+
+    public static function getObject()
+    {
+        return static::$instances;
     }
 
 }

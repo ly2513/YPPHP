@@ -81,7 +81,7 @@ class YP_RouterCollection
     protected $routes = [];
 
     /**
-     * 当前脚本被调用的方法
+     * 当前使用的方法
      *
      * @var
      */
@@ -120,7 +120,7 @@ class YP_RouterCollection
      */
     public function __construct()
     {
-        // Get HTTP verb
+        // 获取请求方法
         $this->HTTPVerb = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : 'cli';
     }
 
@@ -394,7 +394,7 @@ class YP_RouterCollection
     public function isRedirect(string $from): bool
     {
         foreach ($this->routes as $name => $route) {
-            // Named route?
+            // 判断路由是否被收集
             if ($name == $from || key($route['route']) == $from) {
                 return isset($route['redirect']) && is_numeric($route['redirect']);
             }
@@ -451,47 +451,6 @@ class YP_RouterCollection
         $this->currentOptions = $oldOptions;
     }
 
-    //--------------------------------------------------------------------
-    //--------------------------------------------------------------------
-    // HTTP Verb-based routing
-    //--------------------------------------------------------------------
-    // Routing works here because, as the routes Config file is read in,
-    // the various HTTP verb-based routes will only be added to the in-memory
-    // routes if it is a call that should respond to that verb.
-    //
-    // The options array is typically used to pass in an 'as' or var, but may
-    // be expanded in the future. See the docblock for 'add' method above for
-    // current list of globally available options.
-    //
-    /**
-     * Creates a collections of HTTP-verb based routes for a controller.
-     *
-     * Possible Options:
-     *      'controller'    - Customize the name of the controller used in the 'to' route
-     *      'placeholder'   - The regex used by the Router. Defaults to '(:any)'
-     *
-     * Example:
-     *      $route->resources('photos');
-     *
-     *      // Generates the following routes:
-     *      HTTP Verb | Path        | Action        | Used for...
-     *      ----------+-------------+---------------+-----------------
-     *      GET         /photos             listAll         display a list of photos
-     *      GET         /photos/{id}        show            display a specific photo
-     *      POST        /photos             create          create a new photo
-     *      PUT         /photos/{id}        update          update an existing photo
-     *      DELETE      /photos/{id}        delete          delete an existing photo
-     *
-     *  If 'websafe' option is present, the following paths are also available:
-     *
-     *      POST        /photos/{id}        update
-     *      DELETE      /photos/{id}/delete delete
-     *
-     * @param  string $name    The name of the controller to route to.
-     * @param  array  $options An list of possible ways to customize the routing.
-     *
-     * @return RouteCollectionInterface
-     */
     /**
      * 创建控制器的基于HTTP谓词的路由集合。
      *
@@ -507,29 +466,25 @@ class YP_RouterCollection
      *      PUT         /photos/{id}        update          update an existing photo
      *      DELETE      /photos/{id}        delete          delete an existing photo
      *
-     * @param string     $name   路由中控制器名称
+     * @param string     $name    路由中控制器名称
      * @param array|null $options 可能的值为controller/placeholder
      *
      * @return YP_RouterCollection
      */
     public function resource(string $name, array $options = null): self
     {
-        // In order to allow customization of the route the
-        // resources are sent to, we need to have a new name
-        // to store the values in.
+        // 为了允许资源的路由被定制，我们需要用新的名字来存储
         $new_name = ucfirst($name);
-        // If a new controller is specified, then we replace the
-        // $name value with the name of the new controller.
+        // 如果指定一个新的控制器, 将存储这控制器的名称
         if (isset($options['controller'])) {
             $new_name = ucfirst(filter_var($options['controller'], FILTER_SANITIZE_STRING));
         }
-        // In order to allow customization of allowed id values
-        // we need someplace to store them.
+        // 为了允许定制ID的值,需要存储这些
         $id = isset($this->placeholders[$this->defaultPlaceholder]) ? $this->placeholders[$this->defaultPlaceholder] : '(:segment)';
         if (isset($options['placeholder'])) {
             $id = $options['placeholder'];
         }
-        // Make sure we capture back-references
+        // 确保 捕获的参数来回引用
         $id      = '(' . trim($id, '()') . ')';
         $methods = isset($options['only']) ? is_string($options['only']) ? explode(',',
             $options['only']) : $options['only'] : ['listAll', 'show', 'create', 'update', 'delete'];
@@ -548,7 +503,7 @@ class YP_RouterCollection
         if (in_array('delete', $methods)) {
             $this->delete($name . '/' . $id, $new_name . '::delete/$1', $options);
         }
-        // Web Safe?
+        // 网站安全
         if (isset($options['websafe'])) {
             if (in_array('update', $methods)) {
                 $this->post($name . '/' . $id, $new_name . '::update/$1', $options);
@@ -561,21 +516,12 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Specifies a single route to match for multiple HTTP Verbs.
+     * 指定与多个HTTP谓词匹配的单个路由
      *
-     * Example:
-     *  $route->match( ['get', 'post'], 'users/(:num)', 'users/$1);
+     * 例如:
+     * $route->match( ['get', 'post'], 'users/(:num)', 'users/$1);
      *
-     * @param array $verbs
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param array      $verbs
      * @param string     $from
      * @param            $to
@@ -593,17 +539,9 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
-    /**
-     * Specifies a route that is only available to GET requests.
+    /**'
+     * 仅用于获取GET请求的路由
      *
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param string     $from
      * @param            $to
      * @param array|null $options
@@ -619,17 +557,9 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Specifies a route that is only available to POST requests.
+     * 仅用于获取POST请求的路由
      *
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param string     $from
      * @param            $to
      * @param array|null $options
@@ -645,17 +575,9 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Specifies a route that is only available to PUT requests.
+     * 仅用于获取PUT请求的路由
      *
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param string     $from
      * @param            $to
      * @param array|null $options
@@ -671,17 +593,9 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Specifies a route that is only available to DELETE requests.
+     * 仅用于获取DELETE请求的路由
      *
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param string     $from
      * @param            $to
      * @param array|null $options
@@ -697,17 +611,9 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Specifies a route that is only available to HEAD requests.
+     * 仅用于获取HEAD请求的路由
      *
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param string     $from
      * @param            $to
      * @param array|null $options
@@ -723,17 +629,9 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Specifies a route that is only available to PATCH requests.
+     * 仅用于获取PATCH请求的路由
      *
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param string     $from
      * @param            $to
      * @param array|null $options
@@ -749,17 +647,9 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Specifies a route that is only available to OPTIONS requests.
+     * 仅用于获取OPTIONS请求的路由
      *
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param string     $from
      * @param            $to
      * @param array|null $options
@@ -774,18 +664,10 @@ class YP_RouterCollection
 
         return $this;
     }
-
-    //--------------------------------------------------------------------
+    
     /**
-     * Specifies a route that is only available to command-line requests.
+     * 仅用于获取命令行请求的路由
      *
-     * @param       $from
-     * @param       $to
-     * @param array $options
-     *
-     * @return \CodeIgniter\Router\RouteCollectionInterface
-     */
-    /**
      * @param string     $from
      * @param            $to
      * @param array|null $options
@@ -794,21 +676,21 @@ class YP_RouterCollection
      */
     public function cli(string $from, $to, array $options = null): self
     {
-        if ($this->HTTPVerb == 'cli') {
+        if ($this->HTTPVerb == 'cli')
+        {
             $this->create($from, $to, $options);
         }
 
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Limits the routes to a specified ENVIRONMENT or they won't run.
+     * 将路由限制到指定的环境中，否则它们将无法运行
      *
-     * @param          $env
-     * @param callable $callback
+     * @param string   $env
+     * @param \Closure $callback
      *
-     * @return $this
+     * @return YP_RouterCollection
      */
     public function environment(string $env, \Closure $callback): self
     {
@@ -819,47 +701,36 @@ class YP_RouterCollection
         return $this;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Attempts to look up a route based on it's destination.
+     * 寻找目标路由
+     * 如果存在这样的路由: 'path/(:any)/(:any)' => 'Controller::method/$1/$2'
+     * 通过这方法可以知道控制器和方法
+     * reverseRoute('Controller::method', $param1, $param2);
      *
-     * If a route exists:
-     *
-     *      'path/(:any)/(:any)' => 'Controller::method/$1/$2'
-     *
-     * This method allows you to know the Controller and method
-     * and get the route that leads to it.
-     *
-     *      // Equals 'path/$param1/$param2'
-     *      reverseRoute('Controller::method', $param1, $param2);
      *
      * @param string $search
-     * @param        ...$params
+     * @param array  ...$params
      *
-     * @return string|false
+     * @return bool|string
      */
     public function reverseRoute(string $search, ...$params)
     {
-        // Named routes get higher priority.
+        // 首先去已收藏的路由数组中查找
         if (array_key_exists($search, $this->routes)) {
             return $this->fillRouteParams(key($this->routes[$search]['route']), $params);
         }
-        // If it's not a named route, then loop over
-        // all routes to find a match.
+        // 如果不是已收藏的路由,在全局的路由逐一匹配
         foreach ($this->routes as $route) {
             $from = key($route['route']);
             $to   = $route['route'][$from];
-            // Lose any namespace slash at beginning of strings
-            // to ensure more consistent match.
+            // 去除命名空间的反斜杠,确保更精确查找匹配目标路由
             $to     = ltrim($to, '\\');
             $search = ltrim($search, '\\');
-            // If there's any chance of a match, then it will
-            // be with $search at the beginning of the $to string.
+            // 一旦匹配上,$search的值将出现在$to参数的开始位置
             if (strpos($to, $search) !== 0) {
                 continue;
             }
-            // Ensure that the number of $params given here
-            // matches the number of back-references in the route
+            // 确定$params的数量匹配指定的引用参数的数量一样
             if (substr_count($to, '$') != count($params)) {
                 continue;
             }
@@ -867,31 +738,28 @@ class YP_RouterCollection
             return $this->fillRouteParams($from, $params);
         }
 
-        // If we're still here, then we did not find a match.
+        // 说明没找到目标路由
         return false;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Given a
      *
-     * @param array      $from
+     *
+     * @param string     $from
      * @param array|null $params
      *
      * @return string
      */
     protected function fillRouteParams(string $from, array $params = null): string
     {
-        // Find all of our back-references in the original route
+        // 在原路由中找到所有的返回引用
         preg_match_all('/\(([^)]+)\)/', $from, $matches);
         if (empty($matches[0])) {
             return '/' . ltrim($from, '/');
         }
-        // Build our resulting string, inserting the $params in
-        // the appropriate places.
+        // 建立我们的结果字符串，在适当的地方插入$params。
         foreach ($matches[0] as $index => $pattern) {
-            // Ensure that the param we're inserting matches
-            // the expected param type.
+            // 确保插入参数匹配预期的参数类型
             if (preg_match("|{$pattern}|", $params[$index])) {
                 $from = str_replace($pattern, $params[$index], $from);
             } else {
@@ -902,47 +770,38 @@ class YP_RouterCollection
         return '/' . ltrim($from, '/');
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Does the heavy lifting of creating an actual route. You must specify
-     * the request method(s) that this route will work for. They can be separated
-     * by a pipe character "|" if there is more than one.
+     * 做实际路由的重载。必须指定此路由将用于的请求方法,如果有一个以上方法,可以通过“|”的分离。
      *
-     * @param  string $from
-     * @param  array  $to
-     * @param array   $options
+     * @param string     $from
+     * @param            $to
+     * @param array|null $options
      */
     protected function create(string $from, $to, array $options = null)
     {
         $prefix = is_null($this->group) ? '' : $this->group . '/';
         $from   = filter_var($prefix . $from, FILTER_SANITIZE_STRING);
-        // While we want to add a route within a group of '/',
-        // it doens't work with matching, so remove them...
+        // 如果使用路由组中的'/'添加路由,需去除 '/',否则无法匹配
         if ($from != '/') {
             $from = trim($from, '/');
         }
         if (is_null($options)) {
             $options = $this->currentOptions;
         }
-        // Hostname limiting?
+        // 主机名限制
         if (isset($options['hostname']) && !empty($options['hostname'])) {
-            // @todo determine if there's a way to whitelist hosts?
             if (strtolower($_SERVER['HTTP_HOST']) != strtolower($options['hostname'])) {
                 return;
             }
-        } // Limiting to subdomains?
-        else if (isset($options['subdomain']) && !empty($options['subdomain'])) {
-            // If we don't match the current subdomain, then
-            // we don't need to add the route.
-            if (!$this->checkSubdomains($options['subdomain'])) {
+        } else if (isset($options['subdomain']) && !empty($options['subdomain'])) {
+            // 限制子域名
+            // 如果不匹配当前子域，那么没必要添加路由
+            if (!$this->checkSubDomains($options['subdomain'])) {
                 return;
             }
         }
-        // Are we offsetting the binds?
-        // If so, take care of them here in one
-        // fell swoop.
         if (isset($options['offset']) && is_string($to)) {
-            // Get a constant string to work with.
+            // 得到一个常量字符串
             $to = preg_replace('/(\$\d+)/', '$X', $to);
             for ($i = (int)$options['offset'] + 1; $i < (int)$options['offset'] + 7; $i++) {
                 $to = preg_replace_callback('/\$X/', function ($m) use ($i) {
@@ -950,18 +809,16 @@ class YP_RouterCollection
                 }, $to, 1);
             }
         }
-        // Replace our regex pattern placeholders with the actual thing
-        // so that the Router doesn't need to know about any of this.
+        // 用实际的来替代正则表达式,路由器没必要知道这些
         foreach ($this->placeholders as $tag => $pattern) {
             $from = str_ireplace(':' . $tag, $pattern, $from);
         }
-        // If no namespace found, add the default namespace
+        // 如果没有找到相应的命名空间，请添加默认命名空间
         if (is_string($to) && strpos($to, '\\') === false) {
             $namespace = $options['namespace'] ?? $this->defaultNamespace;
             $to        = trim($namespace, '\\') . '\\' . $to;
         }
-        // Always ensure that we escape our namespace so we're not pointing to
-        // \CodeIgniter\Routes\Controller::method.
+        // 始终确保脱离命名空间以至于不能指向\YP\Routes\Controller::method
         if (is_string($to)) {
             $to = '\\' . ltrim($to, '\\');
         }
@@ -969,36 +826,33 @@ class YP_RouterCollection
         $this->routes[$name] = [
             'route' => [$from => $to]
         ];
-        // Is this a redirect?
+        // 是否是个重定向路由
         if (isset($options['redirect']) && is_numeric($options['redirect'])) {
             $this->routes[$name]['redirect'] = $options['redirect'];
         }
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Compares the subdomain(s) passed in against the current subdomain
-     * on this page request.
+     * 通过当前页面传递的子域比较多个子域
      *
-     * @param $subdomains
+     * @param $sub_domains
      *
      * @return bool
      */
-    private function checkSubdomains($subdomains)
+    private function checkSubDomains($sub_domains)
     {
         if (is_null($this->currentSubdomain)) {
-            $this->currentSubdomain = $this->determineCurrentSubdomain();
+            $this->currentSubdomain = $this->determineCurrentSubDomain();
         }
-        if (!is_array($subdomains)) {
-            $subdomains = [$subdomains];
+        if (!is_array($sub_domains)) {
+            $sub_domains = [$sub_domains];
         }
-        // Routes can be limited to any sub-domain. In that case, though,
-        // it does require a sub-domain to be present.
-        if (!empty($this->currentSubdomain) && in_array('*', $subdomains)) {
+        // 路由可以被限制到任何子域。在这种情况下，确实需要一个子域存在。
+        if (!empty($this->currentSubdomain) && in_array('*', $sub_domains)) {
             return true;
         }
-        foreach ($subdomains as $subdomain) {
-            if ($subdomain == $this->currentSubdomain) {
+        foreach ($sub_domains as $sub_domain) {
+            if ($sub_domain == $this->currentSubdomain) {
                 return true;
             }
         }
@@ -1006,30 +860,27 @@ class YP_RouterCollection
         return false;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Examines the HTTP_HOST to get a best match for the subdomain. It
-     * won't be perfect, but should work for our needs.
+     * 获取子域名,该方法只是简单做了处理
      *
-     * It's especially not perfect since it's possible to register a domain
-     * with a period (.) as part of the domain name.
+     * @return bool|mixed
      */
-    private function determineCurrentSubdomain()
+    private function determineCurrentSubDomain()
     {
         $parsedUrl = parse_url($_SERVER['HTTP_HOST']);
         $host      = explode('.', $parsedUrl['host']);
         if ($host[0] == 'www') {
             unset($host[0]);
         }
-        // Get rid of any domains, which will be the last
+        // 去除任何域名
         unset($host[count($host)]);
         // Account for .co.uk, .co.nz, etc. domains
         if (end($host) == 'co') {
             $host = array_slice($host, 0, -1);
         }
-        // If we only have 1 part left, then we don't have a sub-domain.
+        // 如果最左边只有一个参数,那么就没有子域名了
         if (count($host) == 1) {
-            // Set it to false so we don't make it back here again.
+            // 返回FALSE,表示没有子域名
             return false;
         }
 

@@ -19,6 +19,18 @@ class YP_Dummy
     }
 
     /**
+     * 获取值
+     *
+     * @param string $key
+     *
+     * @return null
+     */
+    public function get(string $key)
+    {
+        return null;
+    }
+
+    /**
      * 检测文件是否可以写,其他处理缓存对象在此方法中会判断该驱动是否加载
      *
      * @return bool

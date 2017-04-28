@@ -96,6 +96,22 @@ class YP_Controller
     protected $tempPath;
 
     /**
+     * json_schema 请求参数对象
+     *
+     * @var
+     */
+    protected $input;
+
+    /**
+     * jsonSchema对象
+     *
+     * @var
+     */
+    protected $jsonSchema;
+
+    protected $serverObject;
+
+    /**
      * YP_Controller constructor.
      *
      */
@@ -109,19 +125,21 @@ class YP_Controller
             $this->forceHTTPS($this->forceHTTPS);
         }
         $this->loadHelpers();
-        $this->initTwig();
+        $this->setJsonSchema();
+        $this->setInput();
         $this->initialization();
+        $this->initTwig();
     }
 
     /**
-     * 初始化控制器
+     * 初始化控制器,用于子类使用
      *
      */
     public function initialization()
     {
 
     }
-    
+
     /**
      *
      * 该方法确保某个方法只通过https请求过来,如果不需要，那么一个重定向会回到这个方法并且HSTS报头将被发送到浏览器的请求会自动发生变换
@@ -227,6 +245,51 @@ class YP_Controller
     public function assign($var, $value = null)
     {
         $this->twig->assign($var, $value);
+    }
+
+    /**
+     * json_schema 参数验证
+     */
+    public function setInput()
+    {
+        if (!is_object($this->input)) {
+            $this->input = Services::input();
+        }
+    }
+
+    /**
+     * 初始化json_schema对象
+     */
+    public function setJsonSchema()
+    {
+        if(!is_object($this->jsonSchema)){
+            $this->jsonSchema = Services::schema();
+        }
+    }
+
+    /**
+     * 检查 API 请求参数
+     */
+    public function checkSchema()
+    {
+        \Config\Services::getObject()['schema']->check(\Config\Services::getObject()['input']->json);
+        if (!$this->jsonSchema->isValid()) {
+            $error = $this->jsonSchema->error();
+            $this->callBackWithParamError($error);
+        }
+
+        return true;
+    }
+
+    /**
+     * 参数异常返回
+     *
+     * @param string $msg 异常信息, 可以不传,默认按照错误码信息返回
+     */
+    public function callBackWithParamError($msg = '')
+    {
+        // set_status_header(400);
+        callBack(4, $msg);
     }
 
 }

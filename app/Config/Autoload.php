@@ -23,16 +23,16 @@ class Autoload extends \YP\Config\AutoloadConfig
         //
         $namespaceMap = [
             'Config'      => APP_PATH . 'Config',
+            'Core'        => APP_PATH . 'Core',
+            'Function'    => APP_PATH . 'Function',
             'App'         => APP_PATH,
             APP_NAMESPACE => APP_PATH,
         ];
-
-        $classMap = [];
+        $classMap     = [];
         // 将用户设置的命名空间与系统设置的命名空间进行合并
         $this->namespaceMap = array_merge($this->namespaceMap, $namespaceMap);
         // 将用户设置的类的映射关系与系统类的映射关系进行合并
         $this->classMap = array_merge($this->classMap, $classMap);
-
         unset($namespaceMap, $classMap);
     }
 

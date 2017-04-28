@@ -1,0 +1,30 @@
+{
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "pattern": "^[\u4e00-\uFA290-9A-Za-z @（）(),._+，-]+|[^\\f\\n\\r\\t\\v]*$"
+    },
+    "age": {
+      "type": "integer",
+      "required": true,
+      "maximum" : 100
+    },
+    "info": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "adrr": {
+          "type": "string",
+          "required": true,
+          "pattern": "^[\u4e00-\uFA290-9A-Za-z @（）(),._+，-]+|[^\\f\\n\\r\\t\\v]*$"
+        },
+        "scholl": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
+  }
+}

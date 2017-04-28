@@ -39,11 +39,15 @@ class Home extends Controller
 
     public function getUserInfo()
     {
+        //        $this->checkSchema();
+        //        $this->setJsonSchema();
+        //        P($this->getJsonSchema()->checkSchema());
+        //        P($this->getRequest()->socket());
+        //        P($this->request);
+        //        die;
         //        P($_POST);
         //        P($_GET);
         //        P($userInfo);
-
-
     }
 
     /**

@@ -26,11 +26,7 @@ class User extends Controller
     public function getUserInfo()
     {
         $this->checkSchema();
-//            P(Services::getObject()['input']->socket);
-//        P($a->);
-//        P($this);
-//        P($this->getRequest()->getRequestParam());
-//        json_encode($this->getRequest()->getRequestParam());
+//        P($this->input->json);
         die;
     }
 }

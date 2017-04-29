@@ -245,6 +245,7 @@ class YP_Controller
     public function assign($var, $value = null)
     {
         $this->twig->assign($var, $value);
+        //        $this->twig->assign('FRONT_PATH', FRONT_PATH);
     }
 
     /**
@@ -262,7 +263,7 @@ class YP_Controller
      */
     public function setJsonSchema()
     {
-        if(!is_object($this->jsonSchema)){
+        if (!is_object($this->jsonSchema)) {
             $this->jsonSchema = Services::schema();
         }
     }
@@ -272,7 +273,7 @@ class YP_Controller
      */
     public function checkSchema()
     {
-        \Config\Services::getObject()['schema']->check(\Config\Services::getObject()['input']->json);
+        \Config\Services::getObject()['schema']->check($this->input->json);
         if (!$this->jsonSchema->isValid()) {
             $error = $this->jsonSchema->error();
             $this->callBackWithParamError($error);

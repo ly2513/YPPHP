@@ -245,7 +245,7 @@ class YP_Controller
     public function assign($var, $value = null)
     {
         $this->twig->assign($var, $value);
-        //        $this->twig->assign('FRONT_PATH', FRONT_PATH);
+                $this->twig->assign('FRONT_PATH', FRONT_PATH);
     }
 
     /**

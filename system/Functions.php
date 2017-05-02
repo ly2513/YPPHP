@@ -73,20 +73,10 @@ if (!function_exists('helper')) {
 }
 if (!function_exists('force_https')) {
     /**
-     * Used to force a page to be accessed in via HTTPS.
-     * Uses a standard redirect, plus will set the HSTS header
-     * for modern browsers that support, which gives best
-     * protection against man-in-the-middle attacks.
+     * 用于强制页通过HTTPS访问
+     * 使用一个标准的重定向，并将现代浏览器支持HSTS报头进行设置，这在中间攻击时提供了最好的保护
      *
-     * @see https://en.wikipedia.org/wiki/HTTP_Strict_Transport_Security
-     *
-     * @param int               $duration How long should the SSL header be set for? (in seconds)
-     *                                    Defaults to 1 year.
-     * @param RequestInterface  $request
-     * @param ResponseInterface $response
-     */
-    /**
-     * @param int           $duration
+     * @param int           $duration SSL头应该设置多长时间?(秒) 默认为1年。
      * @param Request|null  $request
      * @param Response|null $response
      */
@@ -101,17 +91,16 @@ if (!function_exists('force_https')) {
         if ($request->isSecure()) {
             return;
         }
-        // If the session library is loaded, we should regenerate
-        // the session ID for safety sake.
+        // 如果会话库已加载，为安全起见,则应重新生成会话ID
         if (class_exists('Session', false)) {
             Services::session(null, true)->regenerate();
         }
         $uri = $request->uri;
         $uri->setScheme('https');
+        // 绝对的URI应该用“/”为一个空的路径
         $uri = \YP\Core\YP_Uri::createURIString($uri->getScheme(), $uri->getAuthority(true), $uri->getPath(),
-            // Absolute URIs should use a "/" for an empty path
             $uri->getQuery(), $uri->getFragment());
-        // Set an HSTS header
+        // 设置一个HSTS报头
         $response->setHeader('Strict-Transport-Security', 'max-age=' . $duration);
         $response->redirect($uri);
         exit();
@@ -141,24 +130,11 @@ if (!function_exists('log_message')) {
 }
 if (!function_exists('esc')) {
     /**
-     * Performs simple auto-escaping of data for security reasons.
-     * Might consider making this more complex at a later date.
+     * 出于安全原因执行数据的简单自动转义。可能会考虑在以后的日子更复杂
+     * 如果$data是一个字符串，那么它只是转义并返回它。如果$data是一个数组，那么它循环过来，转义每个键值/值对的“值”。
      *
-     * If $data is a string, then it simply escapes and returns it.
-     * If $data is an array, then it loops over it, escaping each
-     * 'value' of the key/value pairs.
-     *
-     * Valid context values: html, js, css, url, attr, raw, null
-     *
-     * @param string|array $data
-     * @param string       $context
-     * @param string       $encoding
-     *
-     * @return $data
-     */
-    /**
      * @param        $data
-     * @param string $context
+     * @param string $context  有效的值为:html, js, css, url, attr, raw, null
      * @param null   $encoding
      *
      * @return mixed
@@ -172,9 +148,7 @@ if (!function_exists('esc')) {
         }
         if (is_string($data)) {
             $context = strtolower($context);
-            // Provide a way to NOT escape data since
-            // this could be called automatically by
-            // the View library.
+            // 提供一种方法来避免数据的逃避，因为这可以由视图库自动调用
             if (empty($context) || $context == 'raw') {
                 return $data;
             }
@@ -186,9 +160,9 @@ if (!function_exists('esc')) {
             } else {
                 $method = 'escape' . ucfirst($context);
             }
-            // @todo Optimize this to only load a single instance during page request.
-            $escaper = new \Zend\Escaper\Escaper($encoding);
-            $data    = $escaper->$method($data);
+            // TODO 仅在页面请求时加载单个实例
+            $esCaper = new \Zend\Escaper\Escaper($encoding);
+            $data    = $esCaper->$method($data);
         }
 
         return $data;
@@ -272,37 +246,32 @@ if (!function_exists('get_rand')) {
         return $result;
     }
 }
-if ( ! function_exists('view'))
-{
-    /**
-     * 渲染视图
-     *
-     * @param string $name
-     * @param array  $data
-     * @param array  $options
-     *
-     * @return mixed
-     */
-    function view(string $name, array $data = [], array $options = [])
-    {
-        /**
-         * @var CodeIgniter\View\View $renderer
-         */
-        $renderer = Services::renderer();
-
-        $saveData = null;
-        if (array_key_exists('saveData', $options) && $options['saveData'] === true)
-        {
-            $saveData = (bool)$options['saveData'];
-            unset($options['saveData']);
-        }
-
-        return $renderer->setData($data, 'raw')
-            ->render($name, $options, $saveData);
-    }
-}
-if ( ! function_exists('site_url'))
-{
+//if (!function_exists('view')) {
+//    /**
+//     * 渲染视图
+//     *
+//     * @param string $name
+//     * @param array  $data
+//     * @param array  $options
+//     *
+//     * @return mixed
+//     */
+//    function view(string $name, array $data = [], array $options = [])
+//    {
+//        /**
+//         * @var CodeIgniter\View\View $renderer
+//         */
+//        $renderer = Services::renderer();
+//        $saveData = null;
+//        if (array_key_exists('saveData', $options) && $options['saveData'] === true) {
+//            $saveData = (bool)$options['saveData'];
+//            unset($options['saveData']);
+//        }
+//
+//        return $renderer->setData($data, 'raw')->render($name, $options, $saveData);
+//    }
+//}
+if (!function_exists('site_url')) {
     /**
      * 获得一个网站的URL用于视图
      *
@@ -314,44 +283,30 @@ if ( ! function_exists('site_url'))
      */
     function site_url($path = '', string $scheme = null, \Config\App $altConfig = null): string
     {
-        // convert segment array to string
-        if (is_array($path))
-        {
+        // 通过"/"将$path数组的参数拼接起来
+        if (is_array($path)) {
             $path = implode('/', $path);
         }
-
-        // use alternate config if provided, else default one
+        // 如果提供配置使用提供的配置,否则使用默认配置
         $config = empty($altConfig) ? new \Config\App() : $altConfig;
-
         $base = base_url();
-
-        // Add index page, if so configured
-        if ( ! empty($config->indexPage))
-        {
-            $path = rtrim($base, '/').'/'.rtrim($config->indexPage, '/').'/'.$path;
+        // 如果没有配置indexPage,将添加indexPage
+        if (!empty($config->indexPage)) {
+            $path = rtrim($base, '/') . '/' . rtrim($config->indexPage, '/') . '/' . $path;
+        } else {
+            $path = rtrim($base, '/') . '/' . $path;
         }
-        else
-        {
-            $path = rtrim($base, '/').'/'.$path;
-        }
-
         $url = new \YP\Core\YP_Uri($path);
-
-        // allow the scheme to be over-ridden; else, use default
-        if ( ! empty($scheme))
-        {
+        // 设置$scheme
+        if (!empty($scheme)) {
             $url->setScheme($scheme);
         }
 
-        return (string) $url;
+        return (string)$url;
     }
 
 }
-
-//--------------------------------------------------------------------
-
-if ( ! function_exists('base_url'))
-{
+if (!function_exists('base_url')) {
     /**
      * 获得用于视图的最基本URL
      *
@@ -362,41 +317,28 @@ if ( ! function_exists('base_url'))
      */
     function base_url($path = '', string $scheme = null): string
     {
-        // convert segment array to string
-        if (is_array($path))
-        {
+        // 通过"/"将$path数组的参数拼接起来
+        if (is_array($path)) {
             $path = implode('/', $path);
         }
-
-        // We should be using the set baseURL the user set
-        // otherwise get rid of the path because we have
-        // no way of knowing the intent...
+        // 我们应该使用被用户设置的URL地址否则摆脱的路径，因为我们没有办法知道的意图…
         $config = \Config\Services::request()->config;
-
-        if (! empty($config->baseURL))
-        {
+        if (!empty($config->baseURL)) {
             $url = new \YP\Core\YP_Uri($config->baseURL);
-        }
-        else
-        {
+        } else {
             $url = \Config\Services::request()->uri;
             $url->setPath('/');
         }
-
         unset($config);
-
-        // Merge in the path set by the user, if any
-        if ( ! empty($path))
-        {
+        // 合并用户设置的路径
+        if (!empty($path)) {
             $url = $url->resolveRelativeURI($path);
         }
-
-        if ( ! empty($scheme))
-        {
+        if (!empty($scheme)) {
             $url->setScheme($scheme);
         }
 
-        return (string) $url;
+        return (string)$url;
     }
 
 }

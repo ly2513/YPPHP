@@ -59,7 +59,19 @@ class YP_Validation
      */
     protected $config;
 
-    protected $view;
+    /**
+     * 保存视图数据
+     *
+     * @var
+     */
+    protected $saveData;
+
+    /**
+     * 视图数据
+     *
+     * @var
+     */
+    protected $viewData;
 
     /**
      * YP_Validation constructor.
@@ -70,8 +82,8 @@ class YP_Validation
     public function __construct($config, IncomingRequest $view)
     {
         $this->ruleSetFiles = $config->ruleSets;
-        $this->config = $config;
-        $this->view = $view;
+        $this->config       = $config;
+        $this->view         = $view;
     }
 
     /**
@@ -153,7 +165,7 @@ class YP_Validation
                     if (!method_exists($set, $rule)) {
                         continue;
                     }
-                    $found = true;
+                    $found  = true;
                     $passed = $param === false ? $set->$rule($value, $error) : $set->$rule($value, $param, $data,
                         $error);
                     break;
@@ -291,7 +303,7 @@ class YP_Validation
     {
         $rules       = $this->getRuleGroup($group);
         $this->rules = $rules;
-        $errorName = $group . '_errors';
+        $errorName   = $group . '_errors';
         if (isset($this->config->$errorName)) {
             $this->customErrors = $this->config->$errorName;
         }
@@ -310,7 +322,7 @@ class YP_Validation
             throw new \InvalidArgumentException($template . ' is not a valid Validation template.');
         }
 
-        return $this->view->setVar('errors', $this->getErrors())->render($this->config->templates[$template]);
+        return $this->setVar('errors', $this->getErrors())->render($this->config->templates[$template]);
     }
 
     /**
@@ -330,7 +342,7 @@ class YP_Validation
             throw new \InvalidArgumentException($template . ' is not a valid Validation template.');
         }
 
-        return $this->view->setVar('error', $this->getError($field))->render($this->config->templates[$template]);
+        return $this->setVar('error', $this->getError($field))->render($this->config->templates[$template]);
     }
 
     /**
@@ -467,6 +479,59 @@ class YP_Validation
         $this->rules        = [];
         $this->errors       = [];
         $this->customErrors = [];
+
+        return $this;
+    }
+
+    /**
+     * 根据文件名和已设置的数据生成输出
+     *
+     * @param string     $view
+     * @param null       $saveData
+     *
+     * @return string
+     */
+    public function render(string $view, $saveData = null): string
+    {
+        $start = microtime(true);
+        // 将结果存储在这里，即使在视图中调用多个视图，它也不会清除，除非我们自己来清除
+        if ($saveData !== null) {
+            $this->saveData = $saveData;
+        }
+        $view = str_replace('.html', '', $view) . '.html';
+        if (!file_exists($view)) {
+            // 视图文件不存在
+            throw new \InvalidArgumentException('View file not found: ' . $view);
+        }
+        extract($this->viewData);
+        if (!$this->saveData) {
+            $this->viewData = [];
+        }
+        ob_start();
+        include($view);
+        $output = ob_get_contents();
+        @ob_end_clean();
+        $this->setVar('start_time', $start);
+        $this->setVar('end_time', microtime(true));
+
+        return $output;
+    }
+
+    /**
+     * 设置数据值
+     *
+     * @param string      $name
+     * @param null        $value
+     * @param string|null $context 有效值为:html, css, js, url, null
+     *
+     * @return YP_Validation
+     */
+    public function setVar(string $name, $value = null, string $context = null): self
+    {
+        if (!empty($context)) {
+            $value = esc($value, $context);
+        }
+        $this->viewData[$name] = $value;
 
         return $this;
     }

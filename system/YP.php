@@ -485,6 +485,16 @@ class YP
     }
 
     /**
+     * 设置缓存时间
+     *
+     * @param int $time
+     */
+    public static function cache(int $time)
+    {
+        self::$cacheTTL = (int)$time;
+    }
+
+    /**
      * 确定给定的URI是否已缓存响应
      *
      * @param $config 配置

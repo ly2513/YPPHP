@@ -23,9 +23,9 @@ class YP_IncomingRequest extends Request
     protected $enableCSRF = false;
 
     /**
-     * A \CodeIgniter\HTTPLite\URI instance.
+     * 一个 YP_Uri 实例
      *
-     * @var URI
+     * @var null
      */
     public $uri;
 
@@ -34,12 +34,17 @@ class YP_IncomingRequest extends Request
      *
      * @var Files\FileCollection
      */
+    /**
+     * 
+     * 
+     * @var
+     */
     protected $files;
 
     /**
      * Negotiator
      *
-     * @var \CodeIgniter\HTTP\Negotiate
+     * @var \YP\HTTP\Negotiate
      */
     protected $negotiate;
 

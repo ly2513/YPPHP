@@ -350,26 +350,27 @@ class Services
 
         return new \Config\Error();
     }
-
+    
     /**
-     * 加载email
+     * 加载自动验证
      *
-     * @param \Config\Email $config
-     * @param bool          $getShared
+     * @param \Config\Validation|null $config
+     * @param bool                    $getShared
      *
-     * @return mixed|\YP\Libraries\YP_Twig
+     * @return mixed|\YP\Libraries\YP_Validation
      */
-    //    public static function email(\Config\Email $config = null, $getShared = true)
-    //    {
-    //        if ($getShared) {
-    //            return self::getSharedInstance('email', $config);
-    //        }
-    //        if (!is_object($config)) {
-    //            $config = new \Config\Email();
-    //        }
-    //
-    //        return new YP_Email($config);
-    //    }
+    public static function validation(\Config\Validation $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('validation', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\Validation();
+        }
+
+        return new \YP\Libraries\YP_Validation($config, self::renderer());
+    }
+
     /**
      * 获得已加载的类的映射数组
      * 将已加载的类的类名作为key存放到$instances中
@@ -389,9 +390,6 @@ class Services
 
         return static::$instances[$key];
     }
-
-
-
 
     /**
      * Provides the ability to perform case-insensitive calling of service

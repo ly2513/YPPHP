@@ -21,6 +21,11 @@ class YP_Input
      */
     private $request = [];
 
+    /**
+     * 存放get、post、put、delete的参数
+     *
+     * @var null
+     */
     private $socket = null;
 
     /**
@@ -39,14 +44,6 @@ class YP_Input
      * RequestModel constructor.
      */
     public function __construct()
-    {
-        $this->initParam();
-    }
-
-    /**
-     * 初始化参数
-     */
-    public function initParam()
     {
         $this->getAllParam();
         // 得到json的验证数据
@@ -78,6 +75,11 @@ class YP_Input
         return isset($this->request[$key]) ? $this->request[$key] : null;
     }
 
+    /**
+     * 获得YP_Input对象
+     *
+     * @return null|YP_Input
+     */
     public static function &get_instance()
     {
         if (!(self::$instance instanceof self)) {
@@ -129,6 +131,11 @@ class YP_Input
     }
 }
 
+/**
+ * Class Input 将输出对象转化为数组
+ *
+ * @package YP\Libraries
+ */
 class Input extends \ArrayObject
 {
     public function __construct(array $data, $type)
@@ -141,6 +148,13 @@ class Input extends \ArrayObject
         }
     }
 
+    /**
+     * 魔术方法取数据
+     *
+     * @param $key
+     *
+     * @return mixed|null
+     */
     public function __get($key)
     {
         return $this->offsetExists($key) ? $this->offsetGet($key) : null;
@@ -148,6 +162,8 @@ class Input extends \ArrayObject
 
     /**
      * 将 Request 字段转化递归转化为数组直接使用
+     *
+     * @return array
      */
     public function toArray()
     {

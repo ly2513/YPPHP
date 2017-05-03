@@ -8,7 +8,6 @@
  */
 namespace APP\Controllers\Admin;
 
-use Config\Services;
 use YP\Core\YP_Controller as Controller;
 use Admin\UserModel as UserModel;
 
@@ -16,6 +15,14 @@ class User extends Controller
 {
     public function add()
     {
+        P($_POST);
+//        P($_GET);
+//        P($param2);
+        $param = $this->request->getGet();
+        $param1 = $this->request->getPost();
+        P($param);
+        P($param1);
+
         $userInfo = UserModel::select('id', 'username', 'email', 'photo_url')->get()->toArray();
         //        P($userInfo);
         $this->assign('company', '优品未来');

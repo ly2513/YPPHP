@@ -371,6 +371,35 @@ class Services
         return new \YP\Libraries\YP_Validation($config, self::renderer());
     }
 
+    // negotiator
+    /**
+     * The Negotiate class provides the content negotiation features for
+     * working the request to determine correct language, encoding, charset,
+     * and more.
+     */
+    /**
+     *
+     * 
+     * @param \YP\Core\YP_IncomingRequest|null $request
+     * @param bool                             $getShared
+     *
+     * @return mixed|\YP\Core\YP_Negotiate
+     */
+    public static function negotiator(\YP\Core\YP_IncomingRequest $request=null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('negotiator', $request);
+        }
+
+        if (is_null($request))
+        {
+            $request = self::request();
+        }
+
+        return new \YP\Core\YP_Negotiate($request);
+    }
+
     /**
      * 获得已加载的类的映射数组
      * 将已加载的类的类名作为key存放到$instances中

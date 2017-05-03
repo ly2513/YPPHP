@@ -50,10 +50,10 @@ class YP_Input
     {
         $this->getAllParam();
         // 得到json的验证数据
-        $this->json = json_decode(json_encode($this->socket));
-        $this->json = $this->json ? $this->json : new \STDclass();
+        $this->json    = json_decode(json_encode($this->socket));
+        $this->json    = $this->json ? $this->json : new \STDclass();
         $this->request = $this->socket;
-        $this->socket    = new Input($this->socket, \ArrayObject::STD_PROP_LIST);
+        $this->socket  = new Input($this->socket, \ArrayObject::STD_PROP_LIST);
     }
 
     /**
@@ -118,50 +118,15 @@ class YP_Input
             }
         }
         if ('POST' == $_SERVER['REQUEST_METHOD']) {
-            $_POST = [];
             $param = file_get_contents('php://input');
             if ($param = json_decode($param, true)) {
+                $_POST = [];
                 $_POST = array_merge($_POST, $param);
             }
         }
         // 将所有的所有的数据存放到$_POST
         $this->socket = array_merge($_POST, $_GET, $_PUT, $_DELETE);
-        //         $this->stringToUtf8($_POST);
-        $_POST = [];
     }
-
-//    private function stringToUtf8(&$param)
-//    {
-//        if (is_null($param)) {
-//            return [];
-//        }
-//        if (!is_array($param)) {
-//            return [];
-//        }
-//        $params = [];
-//        if (!is_null($param)) {
-//            foreach ($param as $key => $value) {
-//                if (is_array($value)) {
-//                    $params[$key] = $this->stringToUtf8($value);
-//                }
-//                // 获得当前的编码
-//                $encode = mb_detect_encoding($value, ["ASCII", 'UTF-8', "GB2312", "GBK", 'BIG5']);
-//                // 将当前的字符串转换为utf8编码格式
-//                $value = mb_convert_encoding($value, 'UTF-8', $encode);
-//                //                P($value);
-//                $params[$key] = $value;
-//            }
-//        }
-//        P($params);
-//
-//        return $params;
-//    }
-
-//    public function getRequestParam()
-//    {
-//        return $this->request;
-//    }
-
 }
 
 class Input extends \ArrayObject
@@ -186,8 +151,7 @@ class Input extends \ArrayObject
      */
     public function toArray()
     {
-        $finalData = [];
-        $data      = $this->getArrayCopy();
+        $data = $this->getArrayCopy();
         foreach ($data as $k => $val) {
             if ($val instanceof Input) {
                 $data[$k] = $val->toArray();

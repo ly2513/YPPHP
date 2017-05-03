@@ -8,8 +8,8 @@
  */
 namespace YP\Core;
 
-    //use CodeIgniter\HTTP\Files\FileCollection;
-//use CodeIgniter\HTTP\Files\UploadedFile;
+use YP\Libraries\YP_FileCollection as FileCollection;
+use YP\Libraries\YP_Upload as Upload;
 use YP\Core\YP_Request as Request;
 use Config\Services;
 
@@ -30,57 +30,47 @@ class YP_IncomingRequest extends Request
     public $uri;
 
     /**
-     * File collection
+     * 文件收集器实例
      *
-     * @var Files\FileCollection
-     */
-    /**
-     * 
-     * 
-     * @var
+     * @var \YP\Libraries\YP_FileCollection
      */
     protected $files;
 
     /**
-     * Negotiator
+     * Negotiator 实例
      *
-     * @var \YP\HTTP\Negotiate
+     * @var \YP\Core\YP_Negotiate
      */
     protected $negotiate;
 
     /**
-     * The default Locale this request
-     * should operate under.
+     * 默认的本地请求
      *
-     * @var string
+     * @var
      */
     protected $defaultLocale;
 
     /**
-     * The current locale of the application.
-     * Default value is set in Config\App.php
+     * 当前应用的本地配置,默认值在Config\App.php中设置
      *
-     * @var string
+     * @vars
      */
     protected $locale;
 
     /**
-     * Stores the valid locale codes.
+     * 存储Code码
      *
      * @var array
      */
     protected $validLocales = [];
 
     /**
+     * 配置信息
+     *
      * @var \Config\App
      */
     public $config;
-
-    /**
-     * Holds the old data from a redirect.
-     * @var array
-     */
-    protected $oldInput = [];
+    
 
     /**
      * YP_IncomingRequest constructor.
@@ -105,13 +95,6 @@ class YP_IncomingRequest extends Request
         $this->detectLocale($config);
     }
 
-    //--------------------------------------------------------------------
-    /**
-     * Handles setting up the locale, perhaps auto-detecting through
-     * content negotiation.
-     *
-     * @param $config
-     */
     /**
      * 设置当前操作配置
      *
@@ -332,7 +315,6 @@ class YP_IncomingRequest extends Request
     public function getFiles(): array
     {
         if (is_null($this->files)) {
-            // @todo modify to use Services, at the very least.
             $this->files = new FileCollection();
         }
 
@@ -349,7 +331,6 @@ class YP_IncomingRequest extends Request
     public function getFile(string $fileID)
     {
         if (is_null($this->files)) {
-            // @todo modify to use Services, at the very least.
             $this->files = new FileCollection();
         }
 
@@ -411,17 +392,6 @@ class YP_IncomingRequest extends Request
         return $path;
     }
 
-    //--------------------------------------------------------------------
-    /**
-     * Provides a convenient way to work with the Negotiate class
-     * for content negotiation.
-     *
-     * @param string $type
-     * @param array  $supported
-     * @param bool   $strictMatch
-     *
-     * @return mixed
-     */
     /**
      * 使用Negotiate类来处理
      *
@@ -453,20 +423,18 @@ class YP_IncomingRequest extends Request
         throw new \InvalidArgumentException($type . ' is not a valid negotiation type.');
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Will parse the REQUEST_URI and automatically detect the URI from it,
-     * fixing the query string if necessary.
+     * 通过解析REQUEST_URI,自动检测从它的URI，如果有必要，修复查询字符串
      *
-     * @return string The URI it found.
+     * @return string 找到的URI
      */
     protected function parseRequestURI(): string
     {
         if (!isset($_SERVER['REQUEST_URI'], $_SERVER['SCRIPT_NAME'])) {
             return '';
         }
-        // parse_url() returns false if no host is present, but the path or query string
-        // contains a colon followed by a number
+        // 如果主机不存在,parse_url()会返回FALSE;
+        // 路径或查询字符串包含一个冒号，后跟一个数字
         $parts = parse_url('http://dummy' . $_SERVER['REQUEST_URI']);
         $query = isset($parts['query']) ? $parts['query'] : '';
         $uri   = isset($parts['path']) ? $parts['path'] : '';
@@ -477,8 +445,7 @@ class YP_IncomingRequest extends Request
                 $uri = (string)substr($uri, strlen(dirname($_SERVER['SCRIPT_NAME'])));
             }
         }
-        // This section ensures that even on servers that require the URI to be in the query string (Nginx) a correct
-        // URI is found, and also fixes the QUERY_STRING getServer var and $_GET array.
+        //
         if (trim($uri, '/') === '' && strncmp($query, '/', 1) === 0) {
             $query                   = explode('?', $query, 2);
             $uri                     = $query[0];
@@ -494,11 +461,9 @@ class YP_IncomingRequest extends Request
         return $this->removeRelativeDirectory($uri);
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Parse QUERY_STRING
-     *
-     * Will parse QUERY_STRING and automatically detect the URI from it.
+     * 解析 QUERY_STRING
+     * 将解析的QUERY_STRING并且从它的URI自动检测出来。
      *
      * @return    string
      */
@@ -516,16 +481,15 @@ class YP_IncomingRequest extends Request
 
         return $this->removeRelativeDirectory($uri);
     }
-
-    //--------------------------------------------------------------------
+    
     /**
-     * Remove relative directory (../) and multi slashes (///)
+     * 除去相对目录（/）和多斜线（/ / /)
      *
-     * Do some final cleaning of the URI and return it, currently only used in self::_parse_request_uri()
+     * 做最后的清洗这URI并且返回
      *
-     * @param    string $uri
+     * @param $uri
      *
-     * @return    string
+     * @return string
      */
     protected function removeRelativeDirectory($uri)
     {

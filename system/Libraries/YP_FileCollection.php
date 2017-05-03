@@ -8,7 +8,7 @@
  */
 namespace YP\Libraries;
 
-class FileCollection
+class YP_FileCollection
 {
 
     /**

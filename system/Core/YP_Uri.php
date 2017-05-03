@@ -614,19 +614,18 @@ class YP_Uri
     protected function filterPath(string $path = null)
     {
         $orig = $path;
-        // Decode/normalize percent-encoded chars so
-        // we can always have matching for Routes, etc.
+        // 解析路径
         $path = urldecode($path);
         // Remove dot segments
         $path = $this->removeDotSegments($path);
-        // Fix up some leading slash edge cases...
+        // 修复斜线边
         if (strpos($orig, './') === 0) {
             $path = '/' . $path;
         }
         if (strpos($orig, '../') === 0) {
             $path = '/' . $path;
         }
-        // Encode characters
+        // 字符编码
         $path = preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . ':@&=\+\$,\/;%]+|%(?![A-Fa-f0-9]{2}))/',
             function (array $matches) {
                 return rawurlencode($matches[0]);
@@ -682,36 +681,25 @@ class YP_Uri
         }
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Combines one URI string with this one based on the rules set out in
-     * RFC 3986 Section 2
+     * 处理相对URI
      *
-     * @see http://tools.ietf.org/html/rfc3986#section-5.2
-     *
-     * @param string $uri
-     *
-     * @return \CodeIgniter\HTTP\URI
-     */
-    /**
-     * 
      * @param string $uri
      *
      * @return URI
      */
     public function resolveRelativeURI(string $uri)
     {
-        /*
-         * NOTE: We don't use removeDotSegments in this
-         * algorithm since it's already done by this line!
+        /**
+         * 提示:如果已经这样做了,就没必要使用removeDotSegments这个算法了
          */
-        $relative = new URI();
+        $relative = new YP_Uri();
         $relative->setURI($uri);
         if ($relative->getScheme() == $this->getScheme()) {
             $relative->setScheme('');
         }
         $transformed = clone $relative;
-        // 5.2.2 Transform References in a non-strict method (no scheme)
+        // 在非严格方法中转换引用
         if (!empty($relative->getAuthority())) {
             $transformed->setAuthority($relative->getAuthority())->setPath($relative->getPath())->setQuery($relative->getQuery());
         } else {
@@ -738,19 +726,15 @@ class YP_Uri
         return $transformed;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Given 2 paths, will merge them according to rules set out in RFC 2986,
-     * Section 5.2
+     * 将根据RFC 2986中的规则合并给定的两个路径
      *
-     * @see http://tools.ietf.org/html/rfc3986#section-5.2.3
-     *
-     * @param URI $base
-     * @param URI $reference
+     * @param YP_Uri $base
+     * @param YP_Uri $reference
      *
      * @return string
      */
-    protected function mergePaths(URI $base, URI $reference)
+    protected function mergePaths(YP_Uri $base, YP_Uri $reference)
     {
         if (!empty($base->getAuthority()) && empty($base->getPath())) {
             return '/' . ltrim($base->getPath(), '/ ');
@@ -765,19 +749,12 @@ class YP_Uri
         return implode('/', $path);
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Used when resolving and merging paths to correctly interpret and
-     * remove single and double dot segments from the path per
-     * RFC 3986 Section 5.2.4
-     *
-     * @see      http://tools.ietf.org/html/rfc3986#section-5.2.4
+     * 该方法用于分解并且合并当前的路径,相当于对路径进行过滤()
      *
      * @param string $path
      *
      * @return string
-     * @internal param \CodeIgniter\HTTP\URI $uri
-     *
      */
     public function removeDotSegments(string $path): string
     {
@@ -790,10 +767,7 @@ class YP_Uri
             unset($input[0]);
             $input = array_values($input);
         }
-        // This is not a perfect representation of the
-        // RFC, but matches most cases and is pretty
-        // much what Guzzle uses. Should be good enough
-        // for almost every real use case.
+        // 这不是一个RFC完美的表现，但大多数情况下，匹配更多的例子几乎都是常用的。几乎每一个真正的用例,应该是足够好。
         foreach ($input as $segment) {
             if ($segment == '..') {
                 array_pop($output);
@@ -804,11 +778,11 @@ class YP_Uri
         $output = implode('/', $output);
         $output = ltrim($output, '/ ');
         if ($output != '/') {
-            // Add leading slash if necessary
+            // 如有必要添加斜线
             if (substr($path, 0, 1) == '/') {
                 $output = '/' . $output;
             }
-            // Add trailing slash if necessary
+            // 如果需要添加尾斜杠
             if (substr($path, -1, 1) == '/') {
                 $output .= '/';
             }

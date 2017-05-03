@@ -368,7 +368,7 @@ class Services
             $config = new \Config\Validation();
         }
 
-        return new \YP\Libraries\YP_Validation($config, self::renderer());
+        return new \YP\Libraries\YP_Validation($config);
     }
 
     // negotiator

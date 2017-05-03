@@ -109,6 +109,13 @@ class YP_Controller
      */
     protected $jsonSchema;
 
+    /**
+     * 验证错误信息
+     *
+     * @var array
+     */
+    protected $errors = [];
+
     protected $serverObject;
 
     /**
@@ -189,7 +196,9 @@ class YP_Controller
         $this->validator = Services::validation();
         // 校验路由
         $success = $this->validator->withRequest($request)->setRules($rules, $messages)->run();
-
+        if(!$success){
+            $this->errors = $this->validator->getErrors();
+        }
         return $success;
     }
 

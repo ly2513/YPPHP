@@ -24,9 +24,9 @@ class YP_Input
     /**
      * 存放get、post、put、delete的参数
      *
-     * @var null
+     * @var array|Input
      */
-    private $socket = null;
+    private $socket = [];
 
     /**
      * 请求Socket Json数据
@@ -90,11 +90,11 @@ class YP_Input
     }
 
     /**
-     * 获得所有的参数
+     * 获得所有的参数,以便支持RESTful风格的路由设计
      */
     protected function getAllParam()
     {
-        static $_PUT = [];
+        static  $_PUT = [];
         static $_DELETE = [];
         // 获得put的参数
         if ('PUT' == $_SERVER['REQUEST_METHOD']) {

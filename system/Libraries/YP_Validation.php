@@ -76,14 +76,12 @@ class YP_Validation
     /**
      * YP_Validation constructor.
      *
-     * @param                 $config
-     * @param IncomingRequest $view
+     * @param $config
      */
-    public function __construct($config, IncomingRequest $view)
+    public function __construct($config)
     {
         $this->ruleSetFiles = $config->ruleSets;
         $this->config       = $config;
-        $this->view         = $view;
     }
 
     /**
@@ -113,7 +111,7 @@ class YP_Validation
     }
 
     /**
-     * 运行验证过程，返回TRUE或false确定是否成功验证。
+     * 运行验证某个值，返回TRUE或false确定是否成功验证。
      *
      * @param        $value  验证的值
      * @param string $rule   验证规则
@@ -145,6 +143,7 @@ class YP_Validation
     protected function processRules(string $field, $value, $rules = null, array $data)
     {
         foreach ($rules as $rule) {
+            // 检测参数是否为合法的可调用结构
             $callable = is_callable($rule);
             $passed   = false;
             // 规则可以包含最大长度为5的参数,即最多存放5个参数
@@ -155,7 +154,7 @@ class YP_Validation
             }
             // 规则中自定义错误的占位符
             $error = null;
-            // 如果调用,将调离这
+            // 如果存在调用函数,将在这进行调用
             if ($callable) {
                 $passed = $param === false ? $rule($value) : $rule($value, $param, $data);
             } else {
@@ -166,8 +165,7 @@ class YP_Validation
                         continue;
                     }
                     $found  = true;
-                    $passed = $param === false ? $set->$rule($value, $error) : $set->$rule($value, $param, $data,
-                        $error);
+                    $passed = $param === false ? $set->$rule($value, $error) : $set->$rule($value, $param, $data, $error);
                     break;
                 }
                 // 如果规则在任何地方没有找到，我们应该抛出一个异常，使开发人员可以找到它
@@ -175,7 +173,7 @@ class YP_Validation
                     throw new \InvalidArgumentException(lang('Validation.ruleNotFound'));
                 }
             }
-            // 设置错误信息，如果错误信息不生存
+            // 如果错误信息不存在,就设置错误信息
             if ($passed === false) {
                 $this->errors[$field] = is_null($error) ? $this->getErrorMessage($rule, $field) : $error;
 
@@ -486,8 +484,8 @@ class YP_Validation
     /**
      * 根据文件名和已设置的数据生成输出
      *
-     * @param string     $view
-     * @param null       $saveData
+     * @param string $view
+     * @param null   $saveData
      *
      * @return string
      */

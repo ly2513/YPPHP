@@ -85,10 +85,11 @@ class App extends Config
      *
      * @var string
      */
-    public $sessionDriver            = 'YP\Session\Handlers\FileHandler';
+    //    public $sessionDriver            = 'YP\Libraries\Session\YP_FileHandler';
+    public $sessionDriver            = 'YP\Libraries\Session\YP_DatabaseHandler';
     public $sessionCookieName        = 'yp_session';
     public $sessionExpiration        = 7200;
-    public $sessionSavePath          = null;
+    public $sessionSavePath          = 'yp_session';
     public $sessionMatchIP           = false;
     public $sessionTimeToUpdate      = 300;
     public $sessionRegenerateDestroy = false;
@@ -133,7 +134,7 @@ class App extends Config
     public $CSRFCookieName = 'csrf_cookie_name';
     public $CSRFExpire     = 7200;
     public $CSRFRegenerate = true;
-    public $CSPEnabled = false;
+    public $CSPEnabled     = false;
 
     /**
      * 调试工具栏

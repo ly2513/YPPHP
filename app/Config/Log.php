@@ -41,7 +41,7 @@ class Log
      * @var string
      */
     public $dateFormat = 'Y-m-d H:i:s';
-    
+
     /**
      * 日志处理程序
      *
@@ -68,16 +68,5 @@ class Log
             // 文件的访问权限
             'filePermissions' => 0644
         ],
-        /**
-         * The ChromeLoggerHandler requires the use of the Chrome web browser
-         * and the ChromeLogger extension. Uncomment this block to use it.
-         */
-        //	    'CodeIgniter\Log\Handlers\ChromeLoggerHandler' => [
-        //		    /*
-        //			 * The log levels that this handler will handle.
-        //			 */
-        //		    'handles' => ['critical', 'alert', 'emergency', 'debug',
-        //		                  'error', 'info', 'notice', 'warning'],
-        //	    ]
     ];
 }

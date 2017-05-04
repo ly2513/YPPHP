@@ -10,10 +10,18 @@ namespace APP\Controllers\Admin;
 
 use YP\Core\YP_Controller as Controller;
 use Admin\UserModel as UserModel;
+use Config\Services;
 
 class User extends Controller
 {
-    public function add()
+
+    public function testSession()
+    {
+        $session = Services::session();
+        P($session);
+    }
+
+    public function testValidate()
     {
         // 校验规则
         $rules = [
@@ -41,9 +49,8 @@ class User extends Controller
             // 校验失败,输出错误信息
             P($this->errors);
         }
-
         // 获得$_GET数据
-        $param  = $this->request->getGet();
+        $param = $this->request->getGet();
         // 获得$_POST数据
         $param1 = $this->request->getPost();
         P($param);
@@ -55,7 +62,7 @@ class User extends Controller
         $this->display();
     }
 
-    public function getUserInfo()
+    public function testJsonSchema()
     {
         $this->checkSchema();
         //        P($this->input->json);

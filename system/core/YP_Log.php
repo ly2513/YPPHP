@@ -8,13 +8,15 @@
  */
 namespace YP\Core;
 
+use Psr\Log\LoggerInterface;
+
 /**
  *
  * Class YP_Log
  *
  * @package YP\Core
  */
-class YP_Log
+class YP_Log implements LoggerInterface
 {
 
     /**
@@ -133,6 +135,22 @@ class YP_Log
     public function emergency($message, array $context = [])
     {
         $this->log('emergency', $message, $context);
+    }
+
+    /**
+     * Action must be taken immediately.
+     *
+     * Example: Entire website down, database unavailable, etc. This should
+     * trigger the SMS alerts and wake you up.
+     *
+     * @param string $message
+     * @param array  $context
+     *
+     * @return null
+     */
+    public function alert($message, array $context = [])
+    {
+        $this->log('alert', $message, $context);
     }
 
     /**

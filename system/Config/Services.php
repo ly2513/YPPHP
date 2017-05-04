@@ -371,6 +371,39 @@ class Services
         return new \YP\Libraries\YP_Validation($config);
     }
 
+    /**
+     * 加载session库
+     *
+     * @param \Config\App|null $config
+     * @param bool             $getShared
+     *
+     * @return mixed|\YP\Core\YP_Session
+     */
+    public static function session(\Config\App $config = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('session', $config);
+        }
+
+        if (! is_object($config))
+        {
+            $config = new \Config\App();
+        }
+
+        $logger = self::log(true);
+
+        $driverName = $config->sessionDriver;
+        $driver = new $driverName($config);
+        $driver->setLogger($logger);
+
+        $session = new \YP\Core\YP_Session($driver, $config);
+        $session->setLogger($logger);
+
+        return $session;
+    }
+
+
     // negotiator
     /**
      * The Negotiate class provides the content negotiation features for

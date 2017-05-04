@@ -72,13 +72,7 @@ class YP_Session
      * @var ints
      */
     protected $sessionTimeToUpdate = 300;
-
-    /**
-     * Whether to destroy session data associated with the old session ID
-     * when auto-regenerating the session ID. When set to FALSE, the data
-     * will be later deleted by the garbage collector.
-     * @var bool
-     */
+    
     /**
      * 是否在重新生成会话ID时,自动销毁与旧会话ID关联的会话数据
      * 当设置为false时，数据将由垃圾收集器稍后删除
@@ -170,9 +164,9 @@ class YP_Session
         $this->startSession();
         // 会话ID自动更新配置(忽略ajax请求)
         if ((empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') && ($regenerate_time = $this->sessionTimeToUpdate) > 0) {
-            if (!isset($_SESSION['__ci_last_regenerate'])) {
-                $_SESSION['__ci_last_regenerate'] = time();
-            } elseif ($_SESSION['__ci_last_regenerate'] < (time() - $regenerate_time)) {
+            if (!isset($_SESSION['__yp_last_regenerate'])) {
+                $_SESSION['__yp_last_regenerate'] = time();
+            } elseif ($_SESSION['__yp_last_regenerate'] < (time() - $regenerate_time)) {
                 $this->regenerate((bool)$this->sessionRegenerateDestroy);
             }
         } elseif (isset($_COOKIE[$this->sessionCookieName]) && $_COOKIE[$this->sessionCookieName] === session_id()) {
@@ -297,7 +291,7 @@ class YP_Session
      */
     public function regenerate(bool $destroy = false)
     {
-        $_SESSION['__ci_last_regenerate'] = time();
+        $_SESSION['__yp_last_regenerate'] = time();
         session_regenerate_id($destroy);
     }
 

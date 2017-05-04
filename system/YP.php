@@ -258,6 +258,7 @@ class YP
             Hooks::trigger('post_controller_constructor');
             // 运行控制器
             $returned = $this->runController($controller);
+
         } else {
             $this->benchmark->stop('controller_constructor');
             $this->benchmark->stop('controller');

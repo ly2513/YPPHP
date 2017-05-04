@@ -15,10 +15,14 @@ use Config\Services;
 class User extends Controller
 {
 
-    public function testSession()
+    public function addSession()
     {
         $session = Services::session();
-        P($session);
+        $session->start();
+//        $a = $session->read(123456789);
+//        P($a);
+//        P($session);
+
     }
 
     public function testValidate()

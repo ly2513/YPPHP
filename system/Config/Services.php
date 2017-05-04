@@ -226,6 +226,26 @@ class Services
     }
 
     /**
+     * 返回数据配置信息
+     *
+     * @param \Config\Database|null $config
+     * @param bool                  $getShared
+     *
+     * @return \Config\Database|mixed
+     */
+    public static function database(\Config\Database $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('database', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\Database();
+        }
+
+        return $config;
+    }
+
+    /**
      * 负责加载语言字符串翻译
      *
      * @param string|null $locale
@@ -350,7 +370,7 @@ class Services
 
         return new \Config\Error();
     }
-    
+
     /**
      * 加载自动验证
      *
@@ -381,52 +401,39 @@ class Services
      */
     public static function session(\Config\App $config = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('session', $config);
         }
-
-        if (! is_object($config))
-        {
+        if (!is_object($config)) {
             $config = new \Config\App();
         }
-
-        $logger = self::log(true);
-
+        $logger     = self::log(true);
         $driverName = $config->sessionDriver;
-        $driver = new $driverName($config);
+        $driver     = new $driverName($config);
         $driver->setLogger($logger);
-
         $session = new \YP\Core\YP_Session($driver, $config);
         $session->setLogger($logger);
 
         return $session;
     }
 
-
-    // negotiator
     /**
+     * negotiator
      * The Negotiate class provides the content negotiation features for
      * working the request to determine correct language, encoding, charset,
      * and more.
-     */
-    /**
      *
-     * 
      * @param \YP\Core\YP_IncomingRequest|null $request
      * @param bool                             $getShared
      *
      * @return mixed|\YP\Core\YP_Negotiate
      */
-    public static function negotiator(\YP\Core\YP_IncomingRequest $request=null, $getShared = true)
+    public static function negotiator(\YP\Core\YP_IncomingRequest $request = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('negotiator', $request);
         }
-
-        if (is_null($request))
-        {
+        if (is_null($request)) {
             $request = self::request();
         }
 

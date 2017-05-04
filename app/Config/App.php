@@ -85,11 +85,15 @@ class App extends Config
      *
      * @var string
      */
-    //    public $sessionDriver            = 'YP\Libraries\Session\YP_FileHandler';
-    public $sessionDriver            = 'YP\Libraries\Session\YP_DatabaseHandler';
-    public $sessionCookieName        = 'yp_session';
-    public $sessionExpiration        = 7200;
-    public $sessionSavePath          = 'yp_session';
+    //    public $sessionDriver = 'YP\Libraries\Session\YP_FileHandler';
+    //    public $sessionDriver            = 'YP\Libraries\Session\YP_DatabaseHandler';
+    public $sessionDriver = 'YP\Libraries\Session\YP_RedisHandler';
+
+    public $sessionCookieName = 'yp_session';
+    public $sessionExpiration = 7200;
+    //    public $sessionSavePath   = CACHE_PATH . '/Session';
+    //    public $sessionSavePath          = 'yp_session';
+    public $sessionSavePath          = 'tcp://127.0.0.1:6379database=1timeout=7200';
     public $sessionMatchIP           = false;
     public $sessionTimeToUpdate      = 300;
     public $sessionRegenerateDestroy = false;

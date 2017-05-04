@@ -93,7 +93,7 @@ class App extends Config
     public $sessionExpiration = 7200;
     //    public $sessionSavePath   = CACHE_PATH . '/Session';
     //    public $sessionSavePath          = 'yp_session';
-    public $sessionSavePath          = 'tcp://127.0.0.1:6379database=1timeout=7200';
+    public $sessionSavePath          = 'tcp://127.0.0.1:6379';
     public $sessionMatchIP           = false;
     public $sessionTimeToUpdate      = 300;
     public $sessionRegenerateDestroy = false;

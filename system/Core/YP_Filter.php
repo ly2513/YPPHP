@@ -87,7 +87,7 @@ class YP_Filter
             }
             $class = new $this->config->aliases[$alias]();
             if (!$class instanceof FilterInterface) {
-                throw new \RuntimeException(get_class($class) . ' must implement YP\Core\YP_FilterInterface.');
+                throw new \RuntimeException(get_class($class) . ' 必须实现 YP\Core\YP_FilterInterface 该接口.');
             }
             if ($position == 'before') {
                 $result = $class->before($this->request);

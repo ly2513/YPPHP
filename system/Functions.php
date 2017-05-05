@@ -246,31 +246,6 @@ if (!function_exists('get_rand')) {
         return $result;
     }
 }
-//if (!function_exists('view')) {
-//    /**
-//     * 渲染视图
-//     *
-//     * @param string $name
-//     * @param array  $data
-//     * @param array  $options
-//     *
-//     * @return mixed
-//     */
-//    function view(string $name, array $data = [], array $options = [])
-//    {
-//        /**
-//         * @var CodeIgniter\View\View $renderer
-//         */
-//        $renderer = Services::renderer();
-//        $saveData = null;
-//        if (array_key_exists('saveData', $options) && $options['saveData'] === true) {
-//            $saveData = (bool)$options['saveData'];
-//            unset($options['saveData']);
-//        }
-//
-//        return $renderer->setData($data, 'raw')->render($name, $options, $saveData);
-//    }
-//}
 if (!function_exists('site_url')) {
     /**
      * 获得一个网站的URL用于视图
@@ -341,4 +316,28 @@ if (!function_exists('base_url')) {
         return (string)$url;
     }
 
+}
+
+if (! function_exists('service'))
+{
+    /**
+     * 允许对服务配置文件的更清洁访问
+     * 总是返回类的共享实例，所以应该多次调用函数返回相同的实例
+     *
+     * 以下这两种方式都可以
+     * $timer = service('timer')
+     * $timer = \YP\Services::timer();
+     *
+     * @param string $name
+     * @param array  ...$params
+     *
+     * @return mixed
+     */
+    function service(string $name, ...$params)
+    {
+        // 确认是否分享实例
+        array_push($params, true);
+
+        return Services::$name(...$params);
+    }
 }

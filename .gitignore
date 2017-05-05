@@ -1,5 +1,6 @@
 .idea/
 vendor/
 composer.lock
+!cache
 cache/Twig/
 app/Views/Twig/

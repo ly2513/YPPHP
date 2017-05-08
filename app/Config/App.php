@@ -125,13 +125,7 @@ class App extends Config
      * @var bool
      */
     public $sessionRegenerateDestroy = false;
-
-    /**
-     * 
-     *
-     * @var bool
-     */
-    public $enable_query_strings = FALSE;
+    
 
     /**
      * cookie 相关的属性

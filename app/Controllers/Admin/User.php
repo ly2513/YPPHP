@@ -11,6 +11,7 @@ namespace App\Controllers\Admin;
 use YP\Core\YP_Controller as Controller;
 use Admin\UserModel as UserModel;
 use Config\Services;
+use YP\Libraries\YP_Pagination as Pagination;
 
 class User extends Controller
 {
@@ -19,10 +20,9 @@ class User extends Controller
     {
         $session = Services::session();
         $session->start();
-//        $a = $session->read(123456789);
-//        P($a);
-//        P($session);
-
+        //        $a = $session->read(123456789);
+        //        P($a);
+        //        P($session);
     }
 
     public function testValidate()
@@ -71,5 +71,21 @@ class User extends Controller
         $this->checkSchema();
         //        P($this->input->json);
         die;
+    }
+
+    public function page()
+    {
+        $pagination = new Pagination();
+        $url         = '/Admin/User/page';
+        $uri_segment = 3;
+        $num         = isset($_GET['per_page']) && !empty($_GET['per_page']) ? intval(strip_tags($_GET['per_page'])) : 10;
+        //设置分页类总条数，跳转链接
+        $config = setPageConfig(20, $url, $num, 10);
+        // 配置分页
+        $pagination->initialize($config);
+        //获得账号数据
+        // 生成页码
+        $page = $pagination->create_links();
+        P($page);
     }
 }

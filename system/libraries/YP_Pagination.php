@@ -316,8 +316,15 @@ class YP_Pagination
      */
     public $request ;
 
-    
+    /**
+     * @var mixed|\YP\Core\YP_Uri
+     */
     public $uri;
+
+
+    protected $enable_query_strings = 'false';
+
+    protected $url_suffix = '.shtml';
 
     /**
      * YP_Pagination constructor.
@@ -354,11 +361,11 @@ class YP_Pagination
                 $this->$key = $val;
             }
         }
-        if ($this->CI->config->item('enable_query_strings') === true) {
+        if ($this->enable_query_strings === true) {
             $this->page_query_string = true;
         }
         if ($this->use_global_url_suffix === true) {
-            $this->suffix = $this->CI->config->item('url_suffix');
+            $this->suffix = $this->url_suffix;
         }
 
         return $this;
@@ -534,13 +541,10 @@ class YP_Pagination
         return $this->full_tag_open . $output . $this->full_tag_close;
     }
 
-    // --------------------------------------------------------------------
     /**
-     * Parse attributes
+     * 解析属性
      *
-     * @param    array $attributes
-     *
-     * @return    void
+     * @param $attributes
      */
     protected function _parse_attributes($attributes)
     {
@@ -553,15 +557,12 @@ class YP_Pagination
         }
     }
 
-    // --------------------------------------------------------------------
     /**
-     * Add "rel" attribute
+     * 添加rel属性
      *
-     * @link    http://www.w3.org/TR/html5/links.html#linkTypes
+     * @param $type
      *
-     * @param    string $type
-     *
-     * @return    string
+     * @return string
      */
     protected function _attr_rel($type)
     {

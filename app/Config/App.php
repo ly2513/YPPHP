@@ -71,31 +71,59 @@ class App extends Config
     public $forceGlobalSecureRequests = false;
 
     /**
-     * session 属性设置
-     * sessionDriver:    设置session存储的驱动,包含文件存储、数据库存储、redis存储
-     * YP\Session\Handlers\FileHandler
-     * YP\Session\Handlers\DatabaseHandler
-     * YP\Session\Handlers\RedisHandler
-     * sessionCookieName: 设置session名称
-     * sessionExpiration: 设置session会话持续的秒数,设置为0,表示知道浏览器关闭时结束会话
-     * sessionSavePath:   如果是文件驱动,该值为存储的session文件的路径(仅支持绝对路径),如果是数据库驱动,则该属性值为存储session的表名
-     * sessionMatchIP:    读取session会话数据时是否匹配用户的IP地址,注意:如果你使用的数据库驱动程序，不要忘记更新session表的主键时更改此设置
-     * sessionTimeToUpdate: 间隔多少秒生成一次session ID
-     * sessionRegenerateDestroy: 当自动再生的session ID时,是否销毁与旧的session ID数据。设置false时,数据将由垃圾回收器回收后删除
+     * session 处理驱动设置
+     * sessionDriver:    设置session存储的驱动,包含文件存储、数据库存储、redis存储, 肯能的值为下面三种
+     * YP\Libraries\Session\YP_FileHandler
+     * YP\Libraries\Session\YP_DatabaseHandler
+     * YYP\Libraries\Session\YP_RedisHandler
      *
      * @var string
      */
-    //    public $sessionDriver = 'YP\Libraries\Session\YP_FileHandler';
-    //    public $sessionDriver            = 'YP\Libraries\Session\YP_DatabaseHandler';
     public $sessionDriver = 'YP\Libraries\Session\YP_RedisHandler';
 
+    /**
+     * 设置session名称
+     *
+     * @var string
+     */
     public $sessionCookieName = 'yp_session';
+
+    /**
+     * 设置session会话持续的秒数,设置为0,表示当浏览器关闭时会话才关闭
+     *
+     * @var int
+     */
     public $sessionExpiration = 7200;
-    //    public $sessionSavePath   = CACHE_PATH . '/Session';
-    //    public $sessionSavePath          = 'yp_session';
+
+    /**
+     * 如果是文件驱动,该值为存储的session文件的路径(仅支持绝对路径), 建议配置的值: CACHE_PATH . '/Session'
+     * 如果是数据库驱动,则该属性值为存储session的表名, 值随便,建议采用相同的表的前缀
+     * 如果是redis驱动,则为主机和端口 如: tcp://127.0.0.1:6379
+     *
+     * @var string
+     */
     public $sessionSavePath          = 'tcp://127.0.0.1:6379';
+
+    /**
+     * 读取session会话数据时是否匹配用户的IP地址,
+     * 注意:如果你使用的数据库驱动程序，不要忘记更新session表的主键时更改此设置
+     *
+     * @var bool
+     */
     public $sessionMatchIP           = false;
+
+    /**
+     * 间隔多少秒再生成一次session ID
+     *
+     * @var int
+     */
     public $sessionTimeToUpdate      = 300;
+
+    /**
+     * 当自动再生成的session ID时,是否销毁与旧的session ID数据。设置false时,数据将由垃圾回收器回收后删除
+     *
+     * @var bool
+     */
     public $sessionRegenerateDestroy = false;
 
     /**

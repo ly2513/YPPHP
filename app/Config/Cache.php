@@ -32,7 +32,7 @@ class Cache
      *
      * @var string
      */
-    public $path = WRITE_PATH . 'cache/';
+    public $path = CACHE_PATH . 'cache/';
 
     /**
      * 缓存包括查询字符串
@@ -54,19 +54,6 @@ class Cache
     public $prefix = '';
 
     /**
-     *  Memcached 配置
-     *
-     * @var array
-     */
-    public $memcached = [
-        'default' => [
-            'host'   => '127.0.0.1',
-            'port'   => 11211,
-            'weight' => 1
-        ]
-    ];
-
-    /**
      * redis配置
      *
      * @var array
@@ -79,20 +66,14 @@ class Cache
         'persistent' => false,
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Available Cache Handlers
-    |--------------------------------------------------------------------------
-    |
-    | This is an array of cache engine alias' and class names. Only engines
-    | that are listed here are allowed to be used.
-    |
-    */
+    /**
+     * 处理缓存方式,key为类的别名,value为处理缓存的类
+     *
+     * @var array
+     */
     public $validHandlers = [
         'dummy'     => \YP\Libraries\Cache\YP_Dummy::class,
         'file'      => \YP\Libraries\Cache\YP_File::class,
-//        'memcached' => \YP\Libraries\Cache\YP_Memcached::class,
         'redis'     => \YP\Libraries\Cache\YP_Redis::class,
-//        'wincache'  => \YP\Libraries\CacheWincache::class,
     ];
 }

@@ -8,6 +8,11 @@
  */
 namespace YP\Libraries;
 
+/**
+ * Class YP_Rules 路由库
+ *
+ * @package YP\Libraries
+ */
 class YP_Rules
 {
     /**

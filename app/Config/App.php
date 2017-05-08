@@ -127,6 +127,13 @@ class App extends Config
     public $sessionRegenerateDestroy = false;
 
     /**
+     * 
+     *
+     * @var bool
+     */
+    public $enable_query_strings = FALSE;
+
+    /**
      * cookie 相关的属性
      * cookiePrefix:   防止cookie碰撞,可以设置Cookie名称前缀
      * cookieDomain:   设置站内cookie

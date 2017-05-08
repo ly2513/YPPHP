@@ -46,10 +46,12 @@ $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
 $routes->setAutoRoute(true);
+
 /**
  * 路由定义,可以通过指定默认路由来提高性能，因为我们不需要扫描目录
  */
 $routes->add('/', 'Home::index');
+
 /**
  * 额外的路由设置
  * 可根据不同环境设置不同的路由规则
@@ -58,3 +60,4 @@ $routes->add('/', 'Home::index');
 if (file_exists(APP_PATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APP_PATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
+

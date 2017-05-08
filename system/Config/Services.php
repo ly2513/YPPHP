@@ -282,6 +282,24 @@ class Services
 
         return new \YP\Cli\YP_CLIRequest($config, new \YP\Core\YP_Uri());
     }
+    
+    /**
+     * URI类提供了一种模式和操作的URI
+     *
+     * @param null $uri
+     * @param bool $getShared
+     *
+     * @return mixed|\YP\Core\YP_Uri
+     */
+    public static function uri($uri = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('uri', $uri);
+        }
+
+        return new \YP\Core\YP_Uri($uri);
+    }
 
     /**
      * 加载工具栏

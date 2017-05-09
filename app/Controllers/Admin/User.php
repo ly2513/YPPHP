@@ -75,7 +75,7 @@ class User extends Controller
 
     public function page()
     {
-        $pagination = new Pagination();
+        $pagination  = new Pagination();
         $url         = '/Admin/User/page';
         $uri_segment = 3;
         $num         = isset($_GET['per_page']) && !empty($_GET['per_page']) ? intval(strip_tags($_GET['per_page'])) : 10;
@@ -87,5 +87,19 @@ class User extends Controller
         // 生成页码
         $page = $pagination->create_links();
         P($page);
+    }
+
+    
+    public function query()
+    {
+        $url_info['url']  = 'https://apist.baiqishi.com/services/decision';
+        $urlData     = [
+            'name'   => '李勇',
+            'mobile' => '18518178485',
+            'certNo' => '362429199005072513',
+        ];
+        $url_info['data'] = json_encode(['data' => $urlData]);
+        $data = multiCurlPost([$url_info]);
+        P($data);
     }
 }

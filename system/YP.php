@@ -303,8 +303,7 @@ class YP
      */
     protected function detectEnvironment()
     {
-        // running under Continuous Integration server?
-        if (getenv('CI') !== false) {
+        if (getenv('YP') !== false) {
             define('ENVIRONMENT', 'test');
         } else {
             define('ENVIRONMENT', isset($_SERVER['YP_ENV']) ? $_SERVER['YP_ENV'] : 'dev');
@@ -385,7 +384,7 @@ class YP
     {
         $this->benchmark->start('controller');
         $this->benchmark->start('controller_constructor');
-        // Is it routed to a Closure?
+        // 闭包路由
         if (is_object($this->controller) && (get_class($this->controller) == 'Closure')) {
             $controller = $this->controller;
 

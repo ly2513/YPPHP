@@ -18,18 +18,16 @@ use Config\Services;
 class YP_Pagination
 {
     /**
-     * Base URL
+     * 分页链接的基础的URL
      *
-     * The page that we're linking to
-     *
-     * @var    string
+     * @var string
      */
     protected $base_url = '';
 
     /**
-     * Prefix
+     * 前缀
      *
-     * @var    string
+     * @var string
      */
     protected $prefix = '';
 
@@ -41,68 +39,63 @@ class YP_Pagination
     protected $suffix = '';
 
     /**
-     * Total number of items
+     * 数据总条数
      *
-     * @var    int
+     * @var int
      */
     protected $total_rows = 0;
 
     /**
-     * Number of links to show
+     * 显示几个数字链接
      *
-     * Relates to "digit" type links shown before/after
-     * the currently viewed page.
-     *
-     * @var    int
+     * @var int
      */
     protected $num_links = 2;
 
     /**
-     * Items per page
+     * 每页显示多少条
      *
-     * @var    int
+     * @var int
      */
     public $per_page = 10;
 
     /**
-     * Current page
+     * 当前页
      *
-     * @var    int
+     * @var int
      */
     public $cur_page = 0;
 
     /**
-     * Use page numbers flag
+     * 使用页码标志
      *
-     * Whether to use actual page numbers instead of an offset
-     *
-     * @var    bool
+     * @var bool
      */
     protected $use_page_numbers = false;
 
     /**
-     * First link
+     * 第一页链接
      *
-     * @var    string
+     * @var string
      */
     protected $first_link = '&lsaquo; First';
 
     /**
-     * Next link
+     * 下一页链接
      *
      * @var    string
      */
     protected $next_link = '&gt;';
 
     /**
-     * Previous link
+     * 上一页链接
      *
      * @var    string
      */
     protected $prev_link = '&lt;';
 
     /**
-     * Last link
+     * 最后一页链接
      *
      * @var    string
      */
@@ -116,53 +109,51 @@ class YP_Pagination
     protected $uri_segment = 0;
 
     /**
-     * Full tag open
+     * 完整的标签打开
      *
      * @var    string
      */
     protected $full_tag_open = '';
 
     /**
-     * Full tag close
+     * 完整的标签关闭
      *
      * @var    string
      */
     protected $full_tag_close = '';
 
     /**
-     * First tag open
+     * 第一页标签打开
      *
      * @var    string
      */
     protected $first_tag_open = '';
 
     /**
-     * First tag close
+     * 第一页标签关闭
      *
      * @var    string
      */
     protected $first_tag_close = '';
 
     /**
-     * Last tag open
+     * 最后一个标签打开
      *
      * @var    string
      */
     protected $last_tag_open = '';
 
     /**
-     * Last tag close
+     * 最后一个标签关闭
      *
      * @var    string
      */
     protected $last_tag_close = '';
 
     /**
-     * First URL
+     * 第一页URL
      *
-     * An alternative URL for the first page
-     *
-     * @var    string
+     * @var string
      */
     protected $first_url = '';
 
@@ -171,159 +162,142 @@ class YP_Pagination
      *
      * @var    string
      */
+    /**
+     * 当前标签打开
+     *
+     * @var string
+     */
     protected $cur_tag_open = '<strong>';
 
     /**
-     * Current tag close
+     * 当前标签关闭
      *
      * @var    string
      */
     protected $cur_tag_close = '</strong>';
 
     /**
-     * Next tag open
+     * 下一页标签打开
      *
      * @var    string
      */
     protected $next_tag_open = '';
 
     /**
-     * Next tag close
+     * 下一页标签关闭
      *
      * @var    string
      */
     protected $next_tag_close = '';
 
     /**
-     * Previous tag open
+     * 上一页标签打开
      *
      * @var    string
      */
     protected $prev_tag_open = '';
 
     /**
-     * Previous tag close
+     * 上一页标签关闭
      *
      * @var    string
      */
     protected $prev_tag_close = '';
 
     /**
-     * Number tag open
+     * 数字标签打开
      *
      * @var    string
      */
     protected $num_tag_open = '';
 
     /**
-     * Number tag close
+     * 数字标签关闭
      *
      * @var    string
      */
     protected $num_tag_close = '';
 
     /**
-     * Page query string flag
+     * 分页查询字符串标识
      *
-     * @var    bool
+     * @var bool
      */
     protected $page_query_string = false;
 
     /**
-     * Query string segment
+     * 当前页码参数,查询字符串分割参数
      *
-     * @var    string
+     * @var string
      */
     protected $query_string_segment = 'per_page';
 
     /**
-     * Display pages flag
+     * 是否显示页码
      *
-     * @var    bool
+     * @var bool true: 显示页码 false: 不显示
      */
     protected $display_pages = true;
 
     /**
-     * Attributes
-     *
-     * @var    string
+     * 设置链接样式属性
+     * 
+     * @var string
      */
     protected $_attributes = '';
 
     /**
-     * Link types
+     * 链接类型
      *
-     * "rel" attribute
-     *
-     * @see    CI_Pagination::_attr_rel()
-     * @var    array
+     * @var array
      */
     protected $_link_types = [];
 
     /**
-     * Reuse query string flag
+     * 是否保留查询条件
      *
-     * @var    bool
+     * @var    bool  true: 保留 false: 不保留
      */
-    protected $reuse_query_string = false;
+    protected $reuse_query_string = true;
 
     /**
-     * Use global URL suffix flag
+     * 是否使用全局URL后缀标志
      *
-     * @var    bool
+     * @var bool true: 使用 false: 不使用
      */
     protected $use_global_url_suffix = false;
 
     /**
-     * Data page attribute
-     *
-     * @var    string
-     */
-    protected $data_page_attr = 'data-ci-pagination-page';
-
-    /**
-     *
+     * 数字分页属性
      *
      * @var string
      */
-    protected $pagination_first_link = '&lsaquo; First';
-
-    /**
-     *
-     *
-     * @var string
-     */
-    protected $pagination_next_link = '&gt;';
-
-    /**
-     *
-     *
-     * @var string
-     */
-    protected $pagination_prev_link = '&lt;';
-
-    /**
-     *
-     *
-     * @var string
-     */
-    protected $pagination_last_link = 'Last &rsaquo;';
+    protected $data_page_attr = 'data-yp-pagination-page';
 
     /**
      * 请求对象
      *
      * @var mixed|\YP\Core\YP_IncomingRequest
      */
-    public $request ;
+    public $request;
 
     /**
      * @var mixed|\YP\Core\YP_Uri
      */
     public $uri;
 
-
+    /**
+     * 是否使用查询字符串
+     *
+     * @var string
+     */
     protected $enable_query_strings = 'false';
 
+    /**
+     * url 后缀
+     *
+     * @var string
+     */
     protected $url_suffix = '.shtml';
 
     /**
@@ -334,7 +308,7 @@ class YP_Pagination
     public function __construct($params = [])
     {
         $this->request = Services::request();
-        $this->uri = Services::uri();
+        $this->uri     = Services::uri();
         $this->initialize($params);
         log_message('info', '分页类已初始化');
     }
@@ -395,7 +369,7 @@ class YP_Pagination
         // 保留任何现有的查询字符串项目
         if ($this->reuse_query_string === true) {
             $get = $this->request->getGet();
-            // Unset the controll, method, old-school routing options
+            // 删除控制器、方法和老式的路由
             unset($get['c'], $get['m'], $get[$this->query_string_segment]);
         } else {
             $get = [];
@@ -413,7 +387,7 @@ class YP_Pagination
             // the base_url, but without the page item.
             if ($first_url === '') {
                 $first_url = $base_url;
-                // If we saved any GET items earlier, make sure they're appended.
+                // 将$_GET参数追加到链接中去
                 if (!empty($get)) {
                     $first_url .= $query_string_sep . http_build_query($get);
                 }
@@ -446,9 +420,11 @@ class YP_Pagination
         } else {
             // Default to the last segment number if one hasn't been defined.
             if ($this->uri_segment === 0) {
-                $this->uri_segment = count($this->uri->segment_array());
+                //                $this->uri_segment = count($this->uri->segment_array());
+                $this->uri_segment = $this->uri->getTotalSegments();
             }
-            $this->cur_page = $this->uri->segment($this->uri_segment);
+            //            $this->cur_page = $this->uri->segment($this->uri_segment);
+            $this->cur_page = $this->uri->getSegment($this->uri_segment);
             // Remove any specified prefix/suffix from the segment.
             if ($this->prefix !== '' OR $this->suffix !== '') {
                 $this->cur_page = str_replace([$this->prefix, $this->suffix], '', $this->cur_page);
@@ -482,18 +458,18 @@ class YP_Pagination
         $end   = (($this->cur_page + $this->num_links) < $num_pages) ? $this->cur_page + $this->num_links : $num_pages;
         // And here we go...
         $output = '';
-        // Render the "First" link.
+        // 渲染第一页链接
         if ($this->first_link !== false && $this->cur_page > ($this->num_links + 1 + !$this->num_links)) {
             // Take the general parameters, and squeeze this pagination-page attr in for JS frameworks.
             $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, 1);
             $output .= $this->first_tag_open . '<a href="' . $first_url . '"' . $attributes . $this->_attr_rel('start') . '>' . $this->first_link . '</a>' . $this->first_tag_close;
         }
-        // Render the "Previous" link.
+        // 渲染上一页链接
         if ($this->prev_link !== false && $this->cur_page !== 1) {
-            $i = ($this->use_page_numbers) ? $uri_page_number - 1 : $uri_page_number - $this->per_page;
+            $i          = ($this->use_page_numbers) ? $uri_page_number - 1 : $uri_page_number - $this->per_page;
             $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int)$i);
             if ($i === $base_page) {
-                // First page
+                // 第一页
                 $output .= $this->prev_tag_open . '<a href="' . $first_url . '"' . $attributes . $this->_attr_rel('prev') . '>' . $this->prev_link . '</a>' . $this->prev_tag_close;
             } else {
                 $append = $this->prefix . $i . $this->suffix;
@@ -501,18 +477,18 @@ class YP_Pagination
             }
 
         }
-        // Render the pages
+        // 渲染页码
         if ($this->display_pages !== false) {
-            // Write the digit links
+            // 写数字链接
             for ($loop = $start - 1; $loop <= $end; $loop++) {
-                $i = ($this->use_page_numbers) ? $loop : ($loop * $this->per_page) - $this->per_page;
+                $i          = ($this->use_page_numbers) ? $loop : ($loop * $this->per_page) - $this->per_page;
                 $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int)$i);
                 if ($i >= $base_page) {
                     if ($this->cur_page === $loop) {
-                        // Current page
+                        // 当前页
                         $output .= $this->cur_tag_open . $loop . $this->cur_tag_close;
                     } elseif ($i === $base_page) {
-                        // First page
+                        // 首页
                         $output .= $this->num_tag_open . '<a href="' . $first_url . '"' . $attributes . $this->_attr_rel('start') . '>' . $loop . '</a>' . $this->num_tag_close;
                     } else {
                         $append = $this->prefix . $i . $this->suffix;
@@ -521,15 +497,15 @@ class YP_Pagination
                 }
             }
         }
-        // Render the "next" link
+        // 渲染下一页链接
         if ($this->next_link !== false && $this->cur_page < $num_pages) {
-            $i = ($this->use_page_numbers) ? $this->cur_page + 1 : $this->cur_page * $this->per_page;
+            $i          = ($this->use_page_numbers) ? $this->cur_page + 1 : $this->cur_page * $this->per_page;
             $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int)$i);
             $output .= $this->next_tag_open . '<a href="' . $base_url . $this->prefix . $i . $this->suffix . '"' . $attributes . $this->_attr_rel('next') . '>' . $this->next_link . '</a>' . $this->next_tag_close;
         }
-        // Render the "Last" link
+        // 渲染最后一页链接
         if ($this->last_link !== false && ($this->cur_page + $this->num_links + !$this->num_links) < $num_pages) {
-            $i = ($this->use_page_numbers) ? $num_pages : ($num_pages * $this->per_page) - $this->per_page;
+            $i          = ($this->use_page_numbers) ? $num_pages : ($num_pages * $this->per_page) - $this->per_page;
             $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int)$i);
             $output .= $this->last_tag_open . '<a href="' . $base_url . $this->prefix . $i . $this->suffix . '"' . $attributes . '>' . $this->last_link . '</a>' . $this->last_tag_close;
         }

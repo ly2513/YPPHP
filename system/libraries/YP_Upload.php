@@ -80,7 +80,7 @@ class YP_Upload
         string $originalName,
         string $mimeType = null,
         int $size = null,
-        int $error = null
+        int $error = 0
     ) {
         $this->path             = $path;
         $this->name             = $originalName;
@@ -107,7 +107,8 @@ class YP_Upload
         if (!$this->isValid()) {
             throw new \RuntimeException('The original file is not a valid file.');
         }
-        $targetPath  = rtrim($targetPath, '/') . '/';
+        $targetPath = rtrim($targetPath, '/') . '/';
+        is_dir($targetPath) or mkdir($targetPath, 0777, true);
         $name        = is_null($name) ? $this->getName() : $name;
         $destination = $overwrite ? $this->getDestination($targetPath . $name) : $targetPath . $name;
         if (!@move_uploaded_file($this->path, $destination)) {
@@ -284,7 +285,7 @@ class YP_Upload
     {
         return is_uploaded_file($this->path) && $this->error === UPLOAD_ERR_OK;
     }
-    
+
     /**
      * 返回进行移动操作之后的目标的路径，期望不能覆盖。
      * 首先，它检查分隔符是否存在于文件名中，如果存在，那么检查最后一个元素是否是整数，

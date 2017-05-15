@@ -495,4 +495,16 @@ class YP_Rules
         return true;
     }
 
+    /**
+     * 校验日规则
+     *
+     * @param string|null $str
+     *
+     * @return bool
+     */
+    public function is_date(string $str = null)
+    {
+        return (bool)preg_match('/\\d{4}-\\d{2}-\\d{2}+$/', $str);
+    }
+
 }

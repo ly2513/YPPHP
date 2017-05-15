@@ -141,7 +141,7 @@ class YP_Session
      */
     public function start()
     {
-        if (is_cli() && ENVIRONMENT !== 'testing') {
+        if (is_cli() && ENVIRONMENT !== 'test') {
             $this->logger->debug('Session: Initialization under CLI aborted.');
 
             return;

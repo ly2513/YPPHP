@@ -102,25 +102,26 @@ function multiCurlPost($url_array, $wait_usec = 0)
         curl_setopt($ch, CURLOPT_POSTFIELDS, $url_info['data']);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'Content-Length: ' . strlen($url_info['data'])
-            ]);
-        curl_multi_add_handle($mh, $ch); // 把 curl resource 放进 multi curl handler 里
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($url_info['data'])
+        ]);
+        // 把 curl resource 放进 multi curl handler 里
+        curl_multi_add_handle($mh, $ch);
         $handle[$i++] = $ch;
     }
-    /* 执行 */
+    // 执行
     do {
         curl_multi_exec($mh, $running);
-        if ($wait_usec > 0) { /* 每个 connect 要间隔多久 */
+        if ($wait_usec > 0) { // 每个 connect 要间隔多久
             usleep($wait_usec); // 250000 = 0.25 sec
         }
     } while ($running > 0);
-    /* 读取资料 */
+    // 读取资料
     foreach ($handle as $i => $ch) {
         $content  = curl_multi_getcontent($ch);
         $data[$i] = (curl_errno($ch) == 0) ? $content : false;
     }
-    /* 移除 handle*/
+    // 移除 handle
     foreach ($handle as $ch) {
         curl_multi_remove_handle($mh, $ch);
     }

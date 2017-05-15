@@ -119,6 +119,20 @@ class YP_Controller
     protected $serverObject;
 
     /**
+     * 当前控制器所在的目录
+     *
+     * @var
+     */
+    protected $directory;
+
+    /**
+     * 当前控制器
+     *
+     * @var
+     */
+    protected $controller;
+
+    /**
      * YP_Controller constructor.
      *
      */
@@ -196,9 +210,10 @@ class YP_Controller
         $this->validator = Services::validation();
         // 校验路由
         $success = $this->validator->withRequest($request)->setRules($rules, $messages)->run();
-        if(!$success){
+        if (!$success) {
             $this->errors = $this->validator->getErrors();
         }
+
         return $success;
     }
 
@@ -211,16 +226,16 @@ class YP_Controller
         $config = new \Config\Twig();
         $config = (array)$config;
         // 获得当前路由信息
-        $router          = Services::router();
-        $directory       = $router->directory();
-        $controller      = explode('\\', $router->controllerName());
-        $controller      = end($controller);
-        $this->method    = $router->methodName();
-        $this->extension = $config['extension'] ?? $this->extension;
+        $router           = Services::router();
+        $this->directory  = $router->directory();
+        $controller       = explode('\\', $router->controllerName());
+        $this->controller = end($controller);
+        $this->method     = $router->methodName();
+        $this->extension  = $config['extension'] ?? $this->extension;
         // 模板目录
-        $config['template_dir'] = $config['template_dir'] . $directory . $controller . '/';
+        $config['template_dir'] = $config['template_dir'];
         // 缓存目录
-        $config['cache_dir'] = $config['cache_dir'] . $directory . $controller . '/';
+        $config['cache_dir'] = $config['cache_dir'] . $this->directory . $this->controller . '/';
         $this->twig          = new Twig($config);
         $this->tempPath      = $config['template_dir'];
     }
@@ -228,21 +243,24 @@ class YP_Controller
     /**
      * 视图渲染
      *
-     * @param array $data
      * @param null  $htmlFile
+     * @param array $data
      */
-    public function display($data = [], $htmlFile = null)
+    public function display($htmlFile = null, $data = [])
     {
         // 修改模板名称
         if (!is_null($htmlFile)) {
             $this->method = $htmlFile;
         }
+        $path = $htmlFile ? $htmlFile : $this->directory . $this->controller. '/' . $this->method;
         // 模板文件
-        $tempFile     = $this->method . $this->extension;
-        $tempFilePath = $this->tempPath . $tempFile;
+        $tempFile     = $path . $this->extension;
+        $tempFilePath = $htmlFile ? $tempFile :$this->tempPath . $tempFile;
         is_file($tempFilePath) or touch($tempFilePath);
         echo $this->twig->render($tempFile, $data);
-        //        die;
+        if (!YP_DEBUG) {
+            die;
+        }
     }
 
     /**
@@ -254,7 +272,7 @@ class YP_Controller
     public function assign($var, $value = null)
     {
         $this->twig->assign($var, $value);
-                $this->twig->assign('FRONT_PATH', FRONT_PATH);
+        $this->twig->assign('FRONT_PATH', FRONT_PATH);
     }
 
     /**

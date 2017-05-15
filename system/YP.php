@@ -143,6 +143,9 @@ class YP
         $this->bootstrapEnvironment();
         // 加载环境变量
         // $this->loadEnvironment();
+        // 开启session
+        $session = \Config\Services::session();
+        $session->start();
         if (YP_DEBUG) {
             // require_once SYSTRM_PATH . 'ThirdParty/Kint/Kint.class.php';
         }
@@ -168,21 +171,21 @@ class YP
         $this->displayCache($cacheConfig);
         // 用不同的方法去修改请求对象
         $this->spoofRequestMethod();
-        try {
+//        try {
             // 处理请求
             $this->handleRequest($routes, $cacheConfig);
-        } catch (\Exception $e) {
-            // 日志记录异常错误
-            $logger = Config\Services::log();
-            $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
-            // 如果该路由是重定向路由，则以$to作为消息抛出异常
-            $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
-            $this->callExit(EXIT_SUCCESS);
-        } catch (\Exception $e) {// 捕获响应的重定向错误
-            $this->callExit(EXIT_SUCCESS);
-        } catch (\RuntimeException $e) {
-            $this->display404errors($e);
-        }
+//        } catch (\Exception $e) {
+//            // 日志记录异常错误
+//            $logger = Config\Services::log();
+//            $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
+//            // 如果该路由是重定向路由，则以$to作为消息抛出异常
+//            $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
+//            $this->callExit(EXIT_SUCCESS);
+//        } catch (\Exception $e) {// 捕获响应的重定向错误
+//            $this->callExit(EXIT_SUCCESS);
+//        } catch (\RuntimeException $e) {
+//            $this->display404errors($e);
+//        }
     }
 
     /**
@@ -258,7 +261,6 @@ class YP
             Hooks::trigger('post_controller_constructor');
             // 运行控制器
             $returned = $this->runController($controller);
-
         } else {
             $this->benchmark->stop('controller_constructor');
             $this->benchmark->stop('controller');
@@ -303,7 +305,7 @@ class YP
      */
     protected function detectEnvironment()
     {
-        if (getenv('YP') !== false) {
+        if (getenv('CI') !== false) {
             define('ENVIRONMENT', 'test');
         } else {
             define('ENVIRONMENT', isset($_SERVER['YP_ENV']) ? $_SERVER['YP_ENV'] : 'dev');
@@ -384,10 +386,10 @@ class YP
     {
         $this->benchmark->start('controller');
         $this->benchmark->start('controller_constructor');
+
         // 闭包路由
         if (is_object($this->controller) && (get_class($this->controller) == 'Closure')) {
             $controller = $this->controller;
-
             return $controller(...$this->router->params());
         } else {
             // 没有指定控制器

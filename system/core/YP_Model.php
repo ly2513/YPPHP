@@ -32,5 +32,4 @@ class YP_Model extends Model
     // 设置create_at/update_at 时间格式为 Unix 时间戳,默认为 DateTime 格式数据
     protected  $dateFormat =   'U';
     
-  
 }

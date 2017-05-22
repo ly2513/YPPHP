@@ -241,7 +241,7 @@ class YP_Pagination
 
     /**
      * 设置链接样式属性
-     * 
+     *
      * @var string
      */
     protected $_attributes = '';
@@ -301,6 +301,13 @@ class YP_Pagination
     protected $url_suffix = '.shtml';
 
     /**
+     * 链接的样式
+     *
+     * @var string
+     */
+    protected $anchor_class = '';
+
+    /**
      * YP_Pagination constructor.
      *
      * @param array $params
@@ -352,7 +359,7 @@ class YP_Pagination
      */
     public function create_links()
     {
-        // 如果我们的项目计数或每页总数为零，就没有必要继续
+        // 如果数据的总条数或每页总数为零，就没有必要继续
         if ($this->total_rows == 0 OR $this->per_page == 0) {
             return '';
         }
@@ -364,7 +371,7 @@ class YP_Pagination
         // 检查用户定义的链接数量
         $this->num_links = (int)$this->num_links;
         if ($this->num_links < 0) {
-            show_error('Your number of links must be a non-negative number.');
+            show_error('数字链接的个数必须是非负的整数');
         }
         // 保留任何现有的查询字符串项目
         if ($this->reuse_query_string === true) {
@@ -374,17 +381,15 @@ class YP_Pagination
         } else {
             $get = [];
         }
-        // Put together our base and first URLs.
-        // Note: DO NOT append to the properties as that would break successive calls
+        // 向链接中放入基础Url和第一个链接的url
+        // 注意: 不要追加属性，因为它会中断连续调用
         $base_url = trim($this->base_url);
-        // $base_url='';
         $first_url        = $this->first_url;
         $query_string     = '';
         $query_string_sep = (strpos($base_url, '?') === false) ? '?' : '&amp;';
-        // Are we using query strings?
+        // 是否使用查询字符串,所谓查询字符串就是用 '&' 符连接所有的查询参数
         if ($this->page_query_string === true) {
-            // If a custom first_url hasn't been specified, we'll create one from
-            // the base_url, but without the page item.
+            // 如果自定义first_url没有指定，我们将创建一个从base_url
             if ($first_url === '') {
                 $first_url = $base_url;
                 // 将$_GET参数追加到链接中去
@@ -392,12 +397,11 @@ class YP_Pagination
                     $first_url .= $query_string_sep . http_build_query($get);
                 }
             }
-            // Add the page segment to the end of the query string, where the
-            // page number will be appended.
+            // 在数字链接插入的地方添加per_page结束查询字符串
             $base_url .= $query_string_sep . http_build_query(array_merge($get, [$this->query_string_segment => '']));
         } else {
-            // Standard segment mode.
-            // Generate our saved query string to append later after the page number.
+            // 标准的url段模式
+            // 在页码后添加生成保存的查询字符串
             if (!empty($get)) {
                 $query_string = $query_string_sep . http_build_query($get);
                 $this->suffix .= $query_string;
@@ -412,18 +416,16 @@ class YP_Pagination
             }
             $base_url = rtrim($base_url, '/') . '/';
         }
-        // Determine the current page number.
+        // 当前页码数值
         $base_page = ($this->use_page_numbers) ? 1 : 0;
-        // Are we using query strings?
+        // 是否使用查询字符串
         if ($this->page_query_string === true) {
             $this->cur_page = $this->request->getGet($this->query_string_segment);
         } else {
-            // Default to the last segment number if one hasn't been defined.
+            // 如果uri段一个都没定义,就默认为url段的最后一个
             if ($this->uri_segment === 0) {
-                //                $this->uri_segment = count($this->uri->segment_array());
                 $this->uri_segment = $this->uri->getTotalSegments();
             }
-            //            $this->cur_page = $this->uri->segment($this->uri_segment);
             $this->cur_page = $this->uri->getSegment($this->uri_segment);
             // Remove any specified prefix/suffix from the segment.
             if ($this->prefix !== '' OR $this->suffix !== '') {
@@ -456,7 +458,7 @@ class YP_Pagination
         // which number to start and end the digit links with.
         $start = (($this->cur_page - $this->num_links) > 0) ? $this->cur_page - ($this->num_links - 1) : 1;
         $end   = (($this->cur_page + $this->num_links) < $num_pages) ? $this->cur_page + $this->num_links : $num_pages;
-        // And here we go...
+        // 输出页码
         $output = '';
         // 渲染第一页链接
         if ($this->first_link !== false && $this->cur_page > ($this->num_links + 1 + !$this->num_links)) {
@@ -513,8 +515,154 @@ class YP_Pagination
         // in the penultimate link so we'll kill all double slashes.
         $output = preg_replace('#([^:])//+#', '\\1/', $output);
 
-        // Add the wrapper HTML if exists
+        // 获得页码的html代码
         return $this->full_tag_open . $output . $this->full_tag_close;
+    }
+
+    /**
+     * 创建Ajax分页
+     *
+     * @return string
+     */
+    public function create_ajax_links()
+    {
+        // 如果数据的总条数或每页总数为零，就没有必要继续
+        if ($this->total_rows == 0 OR $this->per_page == 0) {
+            return '';
+        }
+
+        // 计算页面总数
+        $num_pages = (int)ceil($this->total_rows / $this->per_page);
+        if ($num_pages === 1) {
+            return '';
+        }
+
+        // Set the base page index for starting page number
+        $base_page = $this->use_page_numbers ? 1 : 0;
+        // 设置当前页
+        if ($this->page_query_string === true OR $this->page_query_string === true) {
+            if ( $this->request->getGet($this->query_string_segment) != $base_page) {
+                $this->cur_page = $this->request->getGet($this->query_string_segment);
+                // Prep the current page - no funny business!
+                $this->cur_page = (int)$this->cur_page;
+            }
+        } else {
+            if ($_REQUEST['page'] != $base_page) {
+                $this->cur_page = $_REQUEST['page'];
+                // Prep the current page - no funny business!
+                $this->cur_page = (int)$this->cur_page;
+            }
+        }
+        // Set current page to 1 if using page numbers instead of offset
+        if ($this->use_page_numbers AND $this->cur_page == 0) {
+            $this->cur_page = $base_page;
+        }
+        $this->num_links = (int)$this->num_links;
+        if ($this->num_links < 1) {
+            show_error('数字链接的个数不能是非负整数.');
+        }
+        if (!is_numeric($this->cur_page)) {
+            $this->cur_page = $base_page;
+        }
+        // Is the page number beyond the result range?
+        // If so we show the last page
+        if ($this->use_page_numbers) {
+            if ($this->cur_page > $num_pages) {
+                $this->cur_page = $num_pages;
+            }
+        } else {
+            if ($this->cur_page > $this->total_rows) {
+                $this->cur_page = ($num_pages - 1) * $this->per_page;
+            }
+        }
+        $uri_page_number = $this->cur_page;
+        if (!$this->use_page_numbers) {
+            $this->cur_page = floor(($this->cur_page / $this->per_page) + 1);
+        }
+        // Calculate the start and end numbers. These determine
+        // which number to start and end the digit links with
+        $start = (($this->cur_page - $this->num_links) > 0) ? $this->cur_page - ($this->num_links - 1) : 1;
+        $end   = (($this->cur_page + $this->num_links) < $num_pages) ? $this->cur_page + $this->num_links : $num_pages;
+        // Is pagination being used over GET or POST?  If get, add a per_page query
+        // string. If post, add a trailing slash to the base URL if needed
+        if ($this->enable_query_strings === true OR $this->page_query_string === true) {
+            $this->base_url = rtrim($this->base_url) . '&' . $this->query_string_segment . '=';
+        } else {
+            $this->base_url = rtrim($this->base_url, '/') . '/';
+        }
+        // 输出分页
+        $output = '';
+        // 渲染第一页链接
+        if ($this->first_link !== false AND $this->cur_page > ($this->num_links + 1)) {
+            $first_url = ($this->first_url == '') ? $this->base_url : $this->first_url;
+            $output .= $this->first_tag_open . '<a ' . " onclick='ajax_page(0);return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $this->first_link . '</a>' . $this->first_tag_close;
+        }
+        // Render the "previous" link
+        if ($this->prev_link !== false AND $this->cur_page != 1) {
+            if ($this->use_page_numbers) {
+                $i = $uri_page_number - 1;
+            } else {
+                $i = $uri_page_number - $this->per_page;
+            }
+            if ($i == 0 && $this->first_url != '') {
+                $output .= $this->prev_tag_open . '<a ' . " onclick='ajax_page(0);return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $this->prev_link . '</a>' . $this->prev_tag_close;
+            } else {
+                $i = ($i == 0) ? '' : $this->prefix . $i . $this->suffix;
+                $output .= $this->prev_tag_open . '<a ' . " onclick='ajax_page({$i});return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $this->prev_link . '</a>' . $this->prev_tag_close;
+            }
+
+        }
+        // 渲染页码
+        if ($this->display_pages !== false) {
+            // 写数字链接
+            for ($loop = $start - 1; $loop <= $end; $loop++) {
+                if ($this->use_page_numbers) {
+                    $i = $loop;
+                } else {
+                    $i = ($loop * $this->per_page) - $this->per_page;
+                }
+                if ($i >= $base_page) {
+                    if ($this->cur_page == $loop) {
+                        $output .= $this->cur_tag_open . $loop . $this->cur_tag_close; // Current page
+                    } else {
+                        $n = ($i == $base_page) ? '' : $i;
+                        if ($n == '' && $this->first_url != '') {
+                            $output .= $this->num_tag_open . '<a ' . " onclick='ajax_page(0);return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $loop . '</a>' . $this->num_tag_close;
+                        } else {
+                            $n = ($n == '') ? '' : $this->prefix . $n . $this->suffix;
+                            $output .= $this->num_tag_open . '<a ' . " onclick='ajax_page({$n});return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $loop . '</a>' . $this->num_tag_close;
+                        }
+                    }
+                }
+            }
+        }
+        // 渲染下一页链接
+        if ($this->next_link !== false AND $this->cur_page < $num_pages) {
+            if ($this->use_page_numbers) {
+                $i = $this->cur_page + 1;
+            } else {
+                $i = ($this->cur_page * $this->per_page);
+            }
+            $ajax_p = $this->prefix . $i . $this->suffix;
+            $output .= $this->next_tag_open . '<a ' . " onclick='ajax_page({$ajax_p});return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $this->next_link . '</a>' . $this->next_tag_close;
+        }
+        // 渲染最后一页链接
+        if ($this->last_link !== false AND ($this->cur_page + $this->num_links) < $num_pages) {
+            if ($this->use_page_numbers) {
+                $i = $num_pages;
+            } else {
+                $i = (($num_pages * $this->per_page) - $this->per_page);
+            }
+            $ajax_p = $this->prefix . $i . $this->suffix;
+            $output .= $this->last_tag_open . '<a ' . " onclick='ajax_page({$ajax_p});'" . $this->anchor_class . 'href="javascript:void(0)">' . $this->last_link . '</a>' . $this->last_tag_close;
+        }
+        // Kill double slashes.  Note: Sometimes we can end up with a double slash
+        // in the penultimate link so we'll kill all double slashes.
+        $output = preg_replace("#([^:])//+#", "\\1/", $output);
+        // Add the wrapper HTML if exists
+        $output = $this->full_tag_open . $output . $this->full_tag_close;
+
+        return $output;
     }
 
     /**

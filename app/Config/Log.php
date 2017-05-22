@@ -62,7 +62,7 @@ class Log
                 'warning'
             ],
             // 日志目录
-            'path'            => WRITE_PATH . 'logs/',
+            'path'            => CACHE_PATH . 'logs/',
             // 日志文件扩展名称
             'fileExtension'   => 'log',
             // 文件的访问权限

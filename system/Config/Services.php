@@ -282,7 +282,7 @@ class Services
 
         return new \YP\Cli\YP_CLIRequest($config, new \YP\Core\YP_Uri());
     }
-    
+
     /**
      * URI类提供了一种模式和操作的URI
      *
@@ -293,8 +293,7 @@ class Services
      */
     public static function uri($uri = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('uri', $uri);
         }
 
@@ -456,6 +455,38 @@ class Services
         }
 
         return new \YP\Core\YP_Negotiate($request);
+    }
+
+    /**
+     * 分页类
+     *
+     * @param bool  $getShared
+     *
+     * @return mixed|\YP\Libraries\YP_Pagination
+     */
+    public static function pagination( $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('pagination');
+        }
+
+        return new \YP\Libraries\YP_Pagination();
+    }
+
+    /**
+     * eloquent
+     *
+     * @param bool  $getShared
+     *
+     * @return mixed|\YP\Libraries\YP_Eloquent
+     */
+    public static function eloquent( $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('eloquent');
+        }
+
+        return new \YP\Libraries\YP_Eloquent();
     }
 
     /**

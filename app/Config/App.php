@@ -79,7 +79,7 @@ class App extends Config
      *
      * @var string
      */
-    public $sessionDriver = 'YP\Libraries\Session\YP_RedisHandler';
+    public $sessionDriver = 'YP\Libraries\Session\YP_FileHandler';
 
     /**
      * 设置session名称
@@ -93,7 +93,7 @@ class App extends Config
      *
      * @var int
      */
-    public $sessionExpiration = 7200;
+    public $sessionExpiration = 0;
 
     /**
      * 如果是文件驱动,该值为存储的session文件的路径(仅支持绝对路径), 建议配置的值: CACHE_PATH . '/Session'
@@ -102,7 +102,7 @@ class App extends Config
      *
      * @var string
      */
-    public $sessionSavePath          = 'tcp://127.0.0.1:6379';
+    public $sessionSavePath = CACHE_PATH . '/Session';
 
     /**
      * 读取session会话数据时是否匹配用户的IP地址,
@@ -110,14 +110,14 @@ class App extends Config
      *
      * @var bool
      */
-    public $sessionMatchIP           = false;
+    public $sessionMatchIP = false;
 
     /**
      * 间隔多少秒再生成一次session ID
      *
      * @var int
      */
-    public $sessionTimeToUpdate      = 300;
+    public $sessionTimeToUpdate = 300;
 
     /**
      * 当自动再生成的session ID时,是否销毁与旧的session ID数据。设置false时,数据将由垃圾回收器回收后删除
@@ -125,7 +125,6 @@ class App extends Config
      * @var bool
      */
     public $sessionRegenerateDestroy = false;
-    
 
     /**
      * cookie 相关的属性

@@ -6,25 +6,26 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+
 // 设置内存
 //ini_set('memory_limit','300M');
 // 定义根路径
 define('ROOT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 
 // 定义应用路径
-define('APP_PATH', rtrim(realpath($paths->appDirectory), '/') . DIRECTORY_SEPARATOR);
+define('APP_PATH', rtrim(dirname(__DIR__) . '/app', '/') . DIRECTORY_SEPARATOR);
 
 // 定义框架路径
-define('SYSTEM_PATH', rtrim(realpath($paths->systemDirectory), '/') . DIRECTORY_SEPARATOR);
+define('SYSTEM_PATH', rtrim(__DIR__, '/') . DIRECTORY_SEPARATOR);
 
 // 定义测试路径
-define('TEST_PATH', rtrim(realpath($paths->testsDirectory), '/') . DIRECTORY_SEPARATOR);
+define('TEST_PATH', rtrim(dirname(__DIR__) . '/test', '/') . DIRECTORY_SEPARATOR);
 
 // 重写目录
-define('WRITE_PATH', rtrim(realpath($paths->writeDirectory), '/') . DIRECTORY_SEPARATOR);
+define('WRITE_PATH', rtrim(dirname(__DIR__) . '/write', '/') . DIRECTORY_SEPARATOR);
 
 // 缓存目录
-define('CACHE_PATH', rtrim(realpath($paths->cacheDirectory), '/') . DIRECTORY_SEPARATOR);
+define('CACHE_PATH', rtrim(dirname(__DIR__) . '/cache', '/') . DIRECTORY_SEPARATOR);
 
 // 定义应用的命名空间
 define('APP_NAMESPACE', 'App');
@@ -65,8 +66,7 @@ if (file_exists(COMPOSER_PATH)) {
 require APP_PATH . 'Functions/Function.php';
 
 // 加载Eloquent
-new \YP\Libraries\YP_Eloquent();
-
+Config\Services::eloquent();
 
 // 启动应用加载框架
 $app = new  \YP\YP(new \Config\App());

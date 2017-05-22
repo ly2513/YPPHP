@@ -133,6 +133,13 @@ class YP_Controller
     protected $controller;
 
     /**
+     * 当前的url
+     *
+     * @var string
+     */
+    protected $url = '';
+
+    /**
      * YP_Controller constructor.
      *
      */
@@ -150,6 +157,7 @@ class YP_Controller
         $this->setInput();
         $this->initialization();
         $this->initTwig();
+        $this->url = $this->_getCurrentUrl();
     }
 
     /**
@@ -252,10 +260,13 @@ class YP_Controller
         if (!is_null($htmlFile)) {
             $this->method = $htmlFile;
         }
-        $path = $htmlFile ? $htmlFile : $this->directory . $this->controller. '/' . $this->method;
+        $path = $htmlFile ? $htmlFile : $this->directory . $this->controller . '/' . $this->method;
+        $htmlPath = $this->tempPath . $this->directory . $this->controller;
+        // 穿件模板目录
+        is_dir($htmlPath) or mkdir($htmlPath, 0777, true);
         // 模板文件
         $tempFile     = $path . $this->extension;
-        $tempFilePath = $htmlFile ? $tempFile :$this->tempPath . $tempFile;
+        $tempFilePath = $htmlFile ? $tempFile : $this->tempPath . $tempFile;
         is_file($tempFilePath) or touch($tempFilePath);
         echo $this->twig->render($tempFile, $data);
         if (!YP_DEBUG) {
@@ -318,6 +329,11 @@ class YP_Controller
     {
         // set_status_header(400);
         callBack(4, $msg);
+    }
+
+    private function _getCurrentUrl()
+    {
+        return '/' . $this->directory . $this->controller . '/' . $this->method;
     }
 
 }

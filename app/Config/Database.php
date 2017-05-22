@@ -30,7 +30,7 @@ class Database
         $this->db['default'] = [
             'driver'    => 'mysql',             // 数据库驱动
             'host'      => '127.0.0.1',         // 数据库主机
-            'database'  => 'rmos_dev',          // 数据库名称
+            'database'  => 'chedai',          // 数据库名称
             'username'  => 'root',              // 用户名
             'password'  => 'root',              // 密码
             'charset'   => 'utf8',              // 字符编码
@@ -44,7 +44,7 @@ class Database
             'hostname' => '127.0.0.1',
             'username' => 'root',
             'password' => 'root',
-            'database' => 'rmos_dev',
+            'database' => 'chedai',
             'dbdriver' => 'mysqli',
             'dbprefix' => '',
             'pconnect' => false,

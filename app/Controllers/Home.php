@@ -36,55 +36,5 @@ class Home extends Controller
         $this->assign('version', VERSION);
         $this->display();
     }
-
-    public function getUserInfo()
-    {
-        //        $this->checkSchema();
-        //        $this->setJsonSchema();
-        //        P($this->getJsonSchema()->checkSchema());
-        //        P($this->getRequest()->socket());
-        //        P($this->request);
-        //        die;
-        //        P($_POST);
-        //        P($_GET);
-        //        P($userInfo);
-    }
-
-    /**
-     * 测试Eloquent组件
-     */
-    public function testEloquent()
-    {
-        $userInfo = HomeModel::select('id', 'username', 'email', 'photo_url')->get()->toArray();
-        P($userInfo);
-    }
-
-    /**
-     * redis测试
-     */
-    public function testRedis()
-    {
-        $cache = Services::cache();
-        $cache->set('YP:cache', 'YP框架你好');
-        $data = [
-            ['name' => 'liyong', 'age' => 20],
-            ['name' => 'zhujun', 'age' => 23],
-            ['name' => 'lijian', 'age' => 24]
-        ];
-        foreach ($data as $key => $value) {
-            $cache->hmset('YP:cache:' . $key, '', $value);
-        }
-
-    }
-
-    /**
-     * 邮件测试
-     */
-    public function testEmail()
-    {
-        $email  = new Email();
-        $status = $email->sendEmail('优品框架发送邮件测试', ['626375290@qq.com'], $title = '深圳优品未来');
-        P($email->errorInfo);
-        P($status);
-    }
+    
 }

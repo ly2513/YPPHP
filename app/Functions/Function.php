@@ -30,7 +30,6 @@ if (!function_exists('callBack')) {
 
     }
 }
-
 /**
  * 设置分页
  *
@@ -49,7 +48,7 @@ function setPageConfig($row, $url, $uri_segment, $per_page = 10)
     $config['uri_segment']       = $uri_segment;
     $config['num_links']         = 2;//数量链接
     $config['page_query_string'] = true;
-    $config['full_tag_open']     = '<ul>';
+    $config['full_tag_open']     = '<ul class="pagination">';
     $config['full_tag_close']    = '</ul>';
     $config['first_link']        = '首页';
     $config['first_tag_open']    = '<li class="pre">';
@@ -130,3 +129,36 @@ function multiCurlPost($url_array, $wait_usec = 0)
     return $data;
 }
 
+/**
+ * 生成随机字符串
+ *
+ * @param $length
+ *
+ * @return string
+ */
+function random($length)
+{
+    $hash  = '';
+    $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
+    $max   = strlen($chars) - 1;
+    PHP_VERSION < '4.2.0' && mt_srand((double)microtime() * 1000000);
+    for ($i = 0; $i < $length; $i++) {
+        $hash .= $chars[mt_rand(0, $max)];
+    }
+
+    return $hash;
+}
+
+/**
+ * 获取指定长度的随机密码
+ *
+ * @param int $length
+ *
+ * @return string
+ */
+function getPassword($length = 6)
+{
+    $str = substr(md5(time()), 0, $length);
+
+    return $str;
+}

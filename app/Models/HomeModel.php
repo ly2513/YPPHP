@@ -11,5 +11,5 @@ use YP\Core\YP_Model as Model;
 
 class HomeModel extends Model
 {
-        protected $table = 'rmos_user';
+        protected $table = 'cd_user';
 }

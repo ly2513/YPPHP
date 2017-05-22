@@ -12,6 +12,6 @@ namespace Admin;
 
 class UserModel extends \YP\Core\YP_Model
 {
-    protected $table = 'rmos_user';
+    protected $table = 'cd_user';
 
 }

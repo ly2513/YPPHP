@@ -55,6 +55,8 @@ class YP_Eloquent
                 $this->capsule->addConnection($dbConfig, $key);
             }
         }
+        // 设置全局访问的连接
+        $this->capsule->setAsGlobal();
         $this->capsule->bootEloquent();
 
     }

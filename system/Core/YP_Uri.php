@@ -295,6 +295,8 @@ class YP_Uri
     public function getSegment(int $number): string
     {
         $number -= 1;
+        P($number);
+        P(count($this->segments));
         if ($number > count($this->segments)) {
             throw new \InvalidArgumentException('Request URI segment is our of range.');
         }

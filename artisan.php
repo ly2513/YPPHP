@@ -58,18 +58,6 @@ $artisans = [
     new \YP\Console\Doctrine\ConvertMappingCommand(),
     new \YP\Console\Doctrine\GenerateEntitiesCommand(),
     new \YP\Console\Doctrine\UpdateCommand(),
-    //    #队列命令
-    //    new \TradingMax\Console\Queue\CreateJobCommand(),
-    //    new \TradingMax\Console\Queue\WorkQueueCommand(),
-    //    #new \TradingMax\Console\Queue\ListenCommand(),
-    //    new \TradingMax\Console\Queue\ListFailedCommand(),
-    //    #定时任务区域
-    //    new \TradingMax\Console\Crond\CollectJobCommand(),
-    //    new \TradingMax\Console\Crond\SyncRMBasicDataCommand(), // 同步ReachMax基础数据到TradingMax
-    //    #系统活动提醒消息
-    //    new \TradingMax\Console\Crond\SystemMessageCommand(),
-    //    #查询短信剩余条数
-    //    new \TradingMax\Console\Crond\ShortMessageServiceCommand(),
 ];
 $app->addCommands($artisans);
 $app->run();

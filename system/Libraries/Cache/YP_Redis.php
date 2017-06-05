@@ -80,11 +80,12 @@ class YP_Redis
      */
     public function __construct(\Config\Cache $config = null)
     {
+        $redisConf = \Config\Cache::$redis;
         // redis前缀
-        self::$_prefix = $config->prefix ? : '';
+        self::$_prefix = $config->prefix ? : $redisConf['prefix'];
         // 初始化redis配置
-        if (isset($config->redis)) {
-            $this->config = array_merge($this->config, $config->redis);
+        if (isset(\Config\Cache::$redis)) {
+            $this->config = array_merge($this->config, $redisConf);
         }
     }
 

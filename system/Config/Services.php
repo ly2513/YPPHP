@@ -490,6 +490,26 @@ class Services
     }
 
     /**
+     * 实例化一个缓存操作对象
+     *
+     * @param \Config\Cache|null $config
+     * @param bool               $getShared
+     *
+     * @return mixed
+     */
+    public static function redis(\Config\Cache $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('redis', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\Cache();
+        }
+
+        return \YP\Libraries\Cache\YP_Redis::getHandler($config);
+    }
+
+    /**
      * 获得已加载的类的映射数组
      * 将已加载的类的类名作为key存放到$instances中
      *

@@ -8,7 +8,6 @@
  */
 namespace Config;
 
-
 class Cache
 {
     /**
@@ -18,8 +17,7 @@ class Cache
      * @var string
      */
     public $handler = 'file';
-//    public $handler = 'redis';
-
+    //    public $handler = 'redis';
     /**
      * 备份处理
      *
@@ -58,13 +56,7 @@ class Cache
      *
      * @var array
      */
-    public $redis = [
-        'host'     => '127.0.0.1',
-        'password' => null,
-        'port'     => 6379,
-        'index'    => '0',
-        'persistent' => false,
-    ];
+    public static $redis = null;
 
     /**
      * 处理缓存方式,key为类的别名,value为处理缓存的类
@@ -72,8 +64,52 @@ class Cache
      * @var array
      */
     public $validHandlers = [
-        'dummy'     => \YP\Libraries\Cache\YP_Dummy::class,
-        'file'      => \YP\Libraries\Cache\YP_File::class,
-        'redis'     => \YP\Libraries\Cache\YP_Redis::class,
+        'dummy' => \YP\Libraries\Cache\YP_Dummy::class,
+        'file'  => \YP\Libraries\Cache\YP_File::class,
+        'redis' => \YP\Libraries\Cache\YP_Redis::class,
     ];
+
+    public function __construct()
+    {
+        $this->getRedis();
+    }
+
+    /**
+     * 获得redis配置
+     *
+     * @return mixed
+     */
+    protected function getRedis()
+    {
+        switch (ENVIRONMENT) {
+            case 'prod':
+                $config = [
+                    'host'       => '127.0.0.1',// 主机
+                    'port'       => 6379,       // 端口号
+                    'index'      => '0',        // 数据库下标
+                    'prefix'     => 'zb:',      // 数据表前缀
+                    'persistent' => false,
+                ];
+                break;
+            case 'test':
+                $config = [
+                    'host'       => '127.0.0.1',// 主机
+                    'port'       => 6379,       // 端口号
+                    'index'      => '1',        // 数据库下标
+                    'prefix'     => 'zb:',      // 数据表前缀
+                    'persistent' => false,
+                ];
+                break;
+            default:
+                $config = [
+                    'host'       => '127.0.0.1',// 主机
+                    'port'       => 6379,       // 端口号
+                    'index'      => '0',        // 数据库下标
+                    'prefix'     => 'zb:',      // 数据表前缀
+                    'persistent' => false,
+                ];
+                break;
+        };
+        self::$redis = $config;
+    }
 }

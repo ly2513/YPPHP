@@ -506,7 +506,7 @@ class Services
             $config = new \Config\Cache();
         }
 
-        return \YP\Libraries\Cache\YP_Redis($config);
+        return new \YP\Libraries\Cache\YP_Redis($config);
     }
 
     /**

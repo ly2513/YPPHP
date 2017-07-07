@@ -50,14 +50,14 @@ class YP_Log implements LoggerInterface
     protected $loggableLevels = [];
 
     /**
-     * File permissions
+     * 文件的权限
      *
      * @var int
      */
     protected $filePermissions = 0644;
 
     /**
-     * Format of the timestamp for log files.
+     * 格式化文件的时间戳格式
      *
      * @var string
      */
@@ -71,10 +71,7 @@ class YP_Log implements LoggerInterface
     protected $fileExt;
 
     /**
-     * Holds the configuration for each handler.
-     * The key is the handler's class name. The
-     * value is an associative array of configuration
-     * items.
+     * 为每个处理程序保留配置。关键是处理程序的类名。该值是配置项的关联数组
      *
      * @var array
      */
@@ -253,17 +250,15 @@ class YP_Log implements LoggerInterface
                 'msg'   => $message
             ];
         }
-        //        P($this->handlerConfig );
         foreach ($this->handlerConfig as $className => $config) {
             /**
-             * @var \CodeIgniter\Log\Handlers\HandlerInterface
+             * 实例化操作类对象
              */
             $handler = new $className($config);
             if (!$handler->canHandle($level)) {
                 continue;
             }
-            // If the handler returns false, then we
-            // don't execute any other handlers.
+            // 如果处理程序返回false，则不执行任何其他处理程序
             if (!$handler->setDateFormat($this->dateFormat)->handle($level, $message)) {
                 break;
             }
@@ -272,18 +267,8 @@ class YP_Log implements LoggerInterface
         return true;
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Replaces any placeholders in the message with variables
-     * from the context, as well as a few special items like:
-     *
-     * {session_vars}
-     * {post_vars}
-     * {get_vars}
-     * {env}
-     * {env:foo}
-     * {file}
-     * {line}
+     * 使用变量取代日志消息中的特殊的占位符
      *
      * @param       $message
      * @param array $context
@@ -295,28 +280,27 @@ class YP_Log implements LoggerInterface
         if (!is_string($message)) {
             return $message;
         }
-        // build a replacement array with braces around the context keys
+        // 取代数组,使用括号构建替换数组
         $replace = [];
         foreach ($context as $key => $val) {
-            // Verify that the 'exception' key is actually an exception
-            // or error, both of which implement the 'Throwable' interface.
+            // 验证一个异常或错误实例,并将其抛出
             if ($key == 'exception' && $val instanceof \Throwable) {
                 $val = $val->getMessage() . ' ' . $this->cleanFileNames($val->getFile()) . ':' . $val->getLine();
             }
             // todo - sanitize input before writing to file?
             $replace['{' . $key . '}'] = $val;
         }
-        // Add special placeholders
+        // 添加特殊的占位符
         $replace['{post_vars}'] = '$_POST: ' . print_r($_POST, true);
         $replace['{get_vars}']  = '$_GET: ' . print_r($_GET, true);
         $replace['{env}']       = ENVIRONMENT;
-        // Allow us to log the file/line that we are logging from
+        // 记录正在分析的文件
         if (strpos($message, '{file}') !== false) {
             list($file, $line) = $this->determineFile();
             $replace['{file}'] = $file;
             $replace['{line}'] = $line;
         }
-        // Match up environment variables in {env:foo} tags.
+        // 匹配环境变量并标记
         if (strpos($message, 'env:') !== false) {
             preg_match('/env:[^}]+/', $message, $matches);
             if (count($matches)) {
@@ -330,21 +314,18 @@ class YP_Log implements LoggerInterface
             $replace['{session_vars}'] = '$_SESSION: ' . print_r($_SESSION, true);
         }
 
-        // interpolate replacement values into the message and return
+        // 将替换值插入到消息中并返回
         return strtr($message, $replace);
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Determines the current file/line that the log method was called from.
-     * by analyzing the backtrace.
+     * 解析当前的类及方法调用相应的日志方法
      *
      * @return array
      */
     public function determineFile()
     {
-        // Determine the file and line by finding the first
-        // backtrace that is not part of our logging system.
+        // 通过寻找第一回溯，是不是我们的日志系统部分确定文件和行
         $trace = debug_backtrace();
         $file  = null;
         $line  = null;
@@ -363,14 +344,11 @@ class YP_Log implements LoggerInterface
         ];
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Cleans the paths of filenames by replacing APPPATH, BASEPATH, FCPATH
-     * with the actual var. i.e.
-     *
-     *  /var/www/site/application/Controllers/Home.php
+     * 清理文件名路径,代替APP_PATH、BASE_PATH、FRONT_PATH
+     * eg: /var/www/site/app/Controllers/Home.php
      *      becomes:
-     *  APPPATH/Controllers/Home.php
+     *  APP_PATH/Controllers/Home.php
      *
      * @param $file
      *
@@ -378,9 +356,9 @@ class YP_Log implements LoggerInterface
      */
     protected function cleanFileNames($file)
     {
-        $file = str_replace(APPPATH, 'APPPATH/', $file);
-        $file = str_replace(BASEPATH, 'BASEPATH/', $file);
-        $file = str_replace(FCPATH, 'FCPATH/', $file);
+        $file = str_replace(APP_PATH, 'APP_PATH/', $file);
+        $file = str_replace(BASE_PATH, 'BASE_PATH/', $file);
+        $file = str_replace(FRONT_PATH, 'FRONT_PATH/', $file);
 
         return $file;
     }

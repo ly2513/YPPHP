@@ -28,46 +28,35 @@ class FileLocator
     {
         $this->namespaces = $autoload->namespaceMap;
         unset($autoload);
-        // Always keep the Application directory as a "package".
+        // 始终将应用程序目录保持为“包”
         array_unshift($this->namespaces, APP_PATH);
     }
 
-    //--------------------------------------------------------------------
     /**
-     * Attempts to locate a file by examining the name for a namespace
-     * and looking through the PSR-4 namespaced files that we know about.
+     * 通过命名空间,加载相应的文件
      *
-     * @param string $file   The namespaced file to locate
-     * @param string $folder The folder within the namespace that we should look for the file.
-     * @param string $ext    The file extension the file should have.
+     * @param string      $file 命名空间
+     * @param string|null $folder 命名空间内的文件夹
+     * @param string      $ext 可能的文件后缀
      *
-     * @return string       The path to the file if found, or an empty string.
-     */
-    /**
-     * 加载文件
-     *
-     * @param string      $file
-     * @param string|null $folder
-     * @param string      $ext
-     *
-     * @return string
+     * @return string 返回文件的目录或返回为空字符串
      */
     public function locateFile(string $file, string $folder = null, string $ext = 'php'): string
     {
-        // Ensure the extension is on the filename
+        // 确保扩展名在文件名上
         $file = strpos($file, '.' . $ext) !== false ? $file : $file . '.' . $ext;
-        // Clean the folder name from the filename
+        // 将文件夹名从文件名中清除
         if (!empty($folder)) {
             $file = str_replace($folder . '/', '', $file);
         }
-        // No namespaceing? Try the application folder.
+        // 如没有命名空间,尝试在app文件夹中查找
         if (strpos($file, '\\') === false) {
             return $this->legacyLocate($file, $folder);
         }
-        // Standardize slashes to handle nested directories.
+        // 规范斜线处理嵌套目录
         $file     = str_replace('/', '\\', $file);
         $segments = explode('\\', $file);
-        // The first segment will be empty if a slash started the filename.
+        // 如果斜杠开始文件名，第一段将为空。
         if (empty($segments[0])) {
             unset($segments[0]);
         }
@@ -81,9 +70,7 @@ class FileLocator
             $filename = implode('/', $segments);
             break;
         }
-        // IF we have a folder name, then the calling function
-        // expects this file to be within that folder, like 'Views',
-        // or 'libraries'.
+        // 如果我们有一个文件夹名，那么调用函数希望这个文件在该文件夹中，比如“视图”或“库”。
         // @todo Allow it to check with and without the nested folder.
         if (!empty($folder) && strpos($filename, $folder) === false) {
             $filename = $folder . '/' . $filename;
@@ -103,8 +90,8 @@ class FileLocator
      *  $locator->search('Config/Routes.php');
      *  // Assuming PSR4 namespaces include foo and bar, might return:
      *  [
-     *      'application/modules/foo/Config/Routes.php',
-     *      'application/modules/bar/Config/Routes.php',
+     *      'app/modules/foo/Config/Routes.php',
+     *      'app/modules/bar/Config/Routes.php',
      *  ]
      *
      * @param string $path
@@ -115,7 +102,7 @@ class FileLocator
     public function search(string $path, string $ext = 'php'): array
     {
         $foundPaths = [];
-        // Ensure the extension is on the filename
+        // 确保扩展名在文件名上
         $path = strpos($path, '.' . $ext) !== false ? $path : $path . '.' . $ext;
         foreach ($this->namespaces as $name => $folder) {
             $folder = rtrim($folder, '/') . '/';
@@ -123,12 +110,12 @@ class FileLocator
                 $foundPaths[] = $folder . $path;
             }
         }
-        // Remove any duplicates
+        // 去重路径
         $foundPaths = array_unique($foundPaths);
 
         return $foundPaths;
     }
-    
+
     /**
      * 获得文件的域名空间
      *
@@ -150,7 +137,6 @@ class FileLocator
             if (mb_strpos($path, $nsPath) === 0) {
                 $className = '\\' . $namespace . '\\' . ltrim(str_replace('/', '\\',
                         mb_substr($path, mb_strlen($nsPath))), '\\');
-                // Remove the file extension (.php)
                 // 去除文件的扩展名
                 $className = mb_substr($className, 0, -4);
 
@@ -190,19 +176,16 @@ class FileLocator
     }
 
     /**
-     * Checks the application folder to see if the file can be found.
-     * Only for use with filenames that DO NOT include namespacing.
+     * 对于仅使用文件名不包含命名空间的类库,直接去检查app文件夹，查看是否找到文件。
      *
      * @param string      $file
      * @param string|null $folder
      *
      * @return string
-     * @internal param string $ext
-     *
      */
     protected function legacyLocate(string $file, string $folder = null): string
     {
-        $paths = [APPPATH, BASEPATH];
+        $paths = [APP_PATH, BASE_PATH];
         foreach ($paths as $path) {
             $path .= empty($folder) ? $file : $folder . '/' . $file;
             if ($this->requireFile($path) === true) {
@@ -212,7 +195,6 @@ class FileLocator
 
         return '';
     }
-
 
     /**
      * 判断加载文件的是否存在

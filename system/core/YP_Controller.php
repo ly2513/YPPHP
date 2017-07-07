@@ -138,10 +138,13 @@ class YP_Controller
      * @var string
      */
     protected $url = '';
-
+    
     /**
      * YP_Controller constructor.
      *
+     * @param YP_IncomingRequest $request
+     * @param YP_Response        $response
+     * @param YP_Log|null        $logger
      */
     public function __construct(IncomingRequest $request, Response $response, Log $logger = null)
     {

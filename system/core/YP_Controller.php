@@ -1,3 +1,4 @@
+
 <?php
 /**
  * User: yongli
@@ -138,7 +139,7 @@ class YP_Controller
      * @var string
      */
     protected $url = '';
-    
+
     /**
      * YP_Controller constructor.
      *
@@ -334,6 +335,9 @@ class YP_Controller
         callBack(4, $msg);
     }
 
+    /**
+     * 获得当前url
+     */
     private function _getCurrentUrl()
     {
         return '/' . $this->directory . $this->controller . '/' . $this->method;

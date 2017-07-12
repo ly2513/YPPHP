@@ -306,9 +306,6 @@ class YP_Request extends Message
         //				}
         //			}
         //		}
-        // Due to issues with FastCGI and testing,
-        // we need to do these all manually instead
-        // of the simpler filter_input();
         // 由于FastCGI和测试问题，我们需要手工代替filter_input()；做简单的数据过滤
         switch ($type) {
             case INPUT_GET:
@@ -343,66 +340,38 @@ class YP_Request extends Message
     }
 
     /**
-     * Parses the command line it was called from and collects all options
-     * and valid segments.
-     *
-     * NOTE: I tried to use getopt but had it fail occasionally to find
-     * any options, where argv has always had our back.
+     * 解析所调用的命令行,并收集该命令的所有参数
      */
     protected function parseCommand()
     {
-        // Since we're building the options ourselves,
-        // we stop adding it to the segments array once
-        // we have found the first dash.
+        // 查找操作状态
         $options_found = false;
-
         $argc = $this->getServer('argc', FILTER_SANITIZE_NUMBER_INT);
         $argv = $this->getServer('argv');
-
-        // We start at 1 since we never want to include index.php
-        for ($i = 1; $i < $argc; $i++)
-        {
-            // If there's no '-' at the beginning of the argument
-            // then add it to our segments.
-            if ( ! $options_found && strpos($argv[$i], '-') === false)
-            {
+        //
+        for ($i = 1; $i < $argc; $i++) {
+            // 如果参数中没有'-',就直接将参数添加进来
+            if (!$options_found && strpos($argv[$i], '-') === false) {
                 $this->segments[] = filter_var($argv[$i], FILTER_SANITIZE_STRING);
                 continue;
             }
-
             $options_found = true;
-
-            if (substr($argv[$i], 0, 1) != '-')
-            {
+            if (substr($argv[$i], 0, 1) != '-') {
                 continue;
             }
-
-            $arg = filter_var(str_replace('-', '', $argv[$i]), FILTER_SANITIZE_STRING);
+            $arg   = filter_var(str_replace('-', '', $argv[$i]), FILTER_SANITIZE_STRING);
             $value = null;
-
-            // If the next item starts with a dash it's a value
-            if (isset($argv[$i + 1]) && substr($argv[$i + 1], 0, 1) != '-' )
-            {
+            //
+            if (isset($argv[$i + 1]) && substr($argv[$i + 1], 0, 1) != '-') {
                 $value = filter_var($argv[$i + 1], FILTER_SANITIZE_STRING);
                 $i++;
             }
-
             $this->options[$arg] = $value;
         }
     }
 
     /**
-     * Returns the "path" of the request script so that it can be used
-     * in routing to the appropriate controller/method.
-     *
-     * The path is determined by treating the command line arguments
-     * as if it were a URL - up until we hit our first option.
-     *
-     * Example:
-     *      php index.php users 21 profile -foo bar
-     *
-     *      // Routes to /users/21/profile (index is removed for routing sake)
-     *      // with the option foo = bar.
+     * 根据路由信息获得脚本文件的路径
      *
      * @return string
      */

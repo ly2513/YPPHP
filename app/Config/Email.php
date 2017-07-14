@@ -30,7 +30,7 @@ class Email
      *
      * @var string
      */
-    public $username = 'noreply@addnewer.com';
+    public $username = '';
 
     /**
      * 密码(需配置)
@@ -38,7 +38,7 @@ class Email
      *
      * @var string
      */
-    public $password = 'nWaybb74rLYm';
+    public $password = '';
 
     /**
      * 账户名称,主要显示

@@ -16,11 +16,6 @@ if (substr(php_sapi_name(), 0, 3) == 'cgi') {
     die('运行php-cgi时不支持CLI工具。它需要php-cli函数！' . "\n\n");
 }
 
-// 本地路径目录配置文件
-$pathsPath = 'app/Config/Paths.php';
-require $pathsPath;
-$paths = new Config\Paths();
-
 // 定义环境常量
 define('ENVIRONMENT', isset($_SERVER['YP_ENV']) ? $_SERVER['YP_ENV'] : 'prod');
 

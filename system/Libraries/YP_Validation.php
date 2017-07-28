@@ -104,7 +104,10 @@ class YP_Validation
             if (is_string($rules)) {
                 $rules = explode('|', $rules);
             }
-            $this->processRules($rField, $data[$rField] ?? null, $rules, $data);
+            // 存在就验证
+            if(isset($data[$rField])){
+                $this->processRules($rField, $data[$rField], $rules, $data);
+            }
         }
 
         return count($this->errors) > 0 ? false : true;

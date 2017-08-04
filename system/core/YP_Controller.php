@@ -314,7 +314,7 @@ class YP_Controller
      */
     public function checkSchema()
     {
-        \Config\Services::getObject()['schema']->check($this->input->json);
+        $this->jsonSchema->check($this->input->json);
         if (!$this->jsonSchema->isValid()) {
             $error = $this->jsonSchema->error();
             $this->callBackWithParamError($error);

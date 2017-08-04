@@ -104,13 +104,11 @@ class YP_JsonSchema
         $controller      = explode('\\', $this->router->controllerName());
         $this->class     = end($controller);
         $this->method    = $this->router->methodName();
-        $basicPath       = APP_PATH . 'ThirdParty/Json_Schema/';
-        $jsonPath        = $basicPath . $this->directory . $this->class;
-        is_dir($jsonPath) or mkdir($jsonPath, 0755, true);
-        $this->path = $jsonPath . '/' . $this->method . '.json';
-        is_file($this->path) or touch($this->path);
     }
 
+    /**
+     * 加载验证的json文件
+     */
     private function loadSchema()
     {
         $this->validator = new \JsonSchema\Validator();
@@ -121,18 +119,11 @@ class YP_JsonSchema
         }
     }
 
-    private function loadSchemaFile($path)
-    {
-        $fp      = fopen($path, 'r');
-        $content = '';
-        while (!feof($fp)) {
-            $content .= fread($fp);
-        }
-        fclose($fp);
-
-        return $content;
-    }
-
+    /**
+     * json文件路径
+     *
+     * @return null
+     */
     public function getSchemaPath()
     {
         return $this->path;
@@ -147,6 +138,12 @@ class YP_JsonSchema
      */
     public function check(\StdClass $jsonData)
     {
+        $basicPath = APP_PATH . 'ThirdParty/Json_Schema/';
+        $jsonPath  = $basicPath . $this->directory . $this->class;
+        is_dir($jsonPath) or mkdir($jsonPath, 0755, true);
+        $this->path = $jsonPath . '/' . $this->method . '.json';
+        is_file($this->path) or touch($this->path);
+        // 验证
         if ($this->errCode == self::ERROR_NO_EXISTS) {
             $this->errMsg = 'Can Not Found Json Schema File. The ' . $this->path . ' file or directory does not exist';
         } else {
@@ -168,12 +165,19 @@ class YP_JsonSchema
 
     /**
      * 判断当前字段是否可用
+     *
+     * @return bool
      */
     public function isValid()
     {
         return $this->errMsg ? false : true;
     }
 
+    /**
+     * 错误信息
+     *
+     * @return string
+     */
     public function error()
     {
         return $this->errMsg;

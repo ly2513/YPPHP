@@ -105,7 +105,10 @@ class YP_JsonSchema
         $this->class     = end($controller);
         $this->method    = $this->router->methodName();
         $basicPath       = APP_PATH . 'ThirdParty/Json_Schema/';
-        $this->path      = $basicPath . $this->directory . $this->class . '/' . $this->method . '.json';
+        $jsonPath        = $basicPath . $this->directory . $this->class;
+        is_dir($jsonPath) or mkdir($jsonPath, 0755, true);
+        $this->path = $jsonPath . '/' . $this->method . '.json';
+        is_file($this->path) or touch($this->path);
     }
 
     private function loadSchema()

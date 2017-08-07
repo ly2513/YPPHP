@@ -91,7 +91,6 @@ class YP_JsonSchema
     public function __construct()
     {
         $this->init();
-        $this->loadSchema();
     }
 
     /**
@@ -111,6 +110,7 @@ class YP_JsonSchema
      */
     private function loadSchema()
     {
+
         $this->validator = new \JsonSchema\Validator();
         if (file_exists($this->path)) {
             $this->schema = file_get_contents($this->path);
@@ -143,9 +143,11 @@ class YP_JsonSchema
         is_dir($jsonPath) or mkdir($jsonPath, 0755, true);
         $this->path = $jsonPath . '/' . $this->method . '.json';
         is_file($this->path) or touch($this->path);
+        $this->loadSchema();
         // 验证
-        if ($this->errCode == self::ERROR_NO_EXISTS) {
+        if (!file_exists($this->path)) {
             $this->errMsg = 'Can Not Found Json Schema File. The ' . $this->path . ' file or directory does not exist';
+            $this->errCode = self::ERROR_NO_EXISTS;
         } else {
             $schemaData = json_decode($this->schema);
             if (!$schemaData) {

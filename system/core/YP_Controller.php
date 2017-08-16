@@ -10,16 +10,14 @@ namespace YP\Core;
 
 use YP\YP;
 use YP\Config\Services;
-use YP\Libraries\YP_Twig as Twig;
 use YP\Core\YP_Log as Log;
 use YP\Core\YP_Response as Response;
-use YP\Libraries\YP_Validation as Validation;
 use YP\Core\YP_IncomingRequest as IncomingRequest;
 
 /**
- * Class Controller
+ * Class YP_Controller
  *
- * @package CodeIgniter
+ * @package YP\Core
  */
 class YP_Controller
 {
@@ -235,20 +233,17 @@ class YP_Controller
     {
         // TWig配置信息
         $config = new \Config\Twig();
-        $config = (array)$config;
         // 获得当前路由信息
         $router           = Services::router();
         $this->directory  = $router->directory();
         $controller       = explode('\\', $router->controllerName());
         $this->controller = end($controller);
         $this->method     = $router->methodName();
-        $this->extension  = $config['extension'] ?? $this->extension;
-        // 模板目录
-        $config['template_dir'] = $config['template_dir'];
+        $this->extension  = $config->extension ?? $this->extension;
         // 缓存目录
-        $config['cache_dir'] = $config['cache_dir'] . $this->directory . $this->controller . '/';
-        $this->twig          = new Twig($config);
-        $this->tempPath      = $config['template_dir'];
+        $config->cache_dir = $config->cache_dir . $this->directory . $this->controller . '/';
+        $this->twig        = Services::twig($config);
+        $this->tempPath    = $config->template_dir;
     }
 
     /**
@@ -263,7 +258,7 @@ class YP_Controller
         if (!is_null($htmlFile)) {
             $this->method = $htmlFile;
         }
-        $path = $htmlFile ? $htmlFile : $this->directory . $this->controller . '/' . $this->method;
+        $path     = $htmlFile ? $htmlFile : $this->directory . $this->controller . '/' . $this->method;
         $htmlPath = $this->tempPath . $this->directory . $this->controller;
         // 穿件模板目录
         is_dir($htmlPath) or mkdir($htmlPath, 0777, true);

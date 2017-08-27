@@ -41,7 +41,7 @@ class YP_ThriftClient
         $this->time_out = $config->time_out;
     }
 
-    public function connet($data)
+    public function connet()
     {
         $startTime  = $this->getMillisecond();
         $thrift_gen = APP_PATH . 'ThirdParty/Thrift/gen-php';

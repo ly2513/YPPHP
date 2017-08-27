@@ -6,9 +6,10 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Libraries\Thrift\Client;
+namespace YP\Libraries\Thrift;
 
 use Thrift\ClassLoader\ThriftClassLoader;
+use Thrift\Transport\TSocket;
 
 /**
  *
@@ -66,8 +67,18 @@ use Thrift\ClassLoader\ThriftClassLoader;
  *
  *
  */
-class ThriftClient
+class YP_ThriftClient
 {
+    /**
+     * @var string
+     */
+    private static  $thriftProtocol = 'TBinaryProtocol';
+
+    /**
+     * @var string
+     */
+    private static $thriftTransport = 'TBufferedTransport';
+
     /**
      * 客户端实例
      * @var array
@@ -92,11 +103,10 @@ class ThriftClient
      */
     private static $badAddressList = null;
 
-    public function __construct()
+    public function __construct(\Config\ThriftClient $config)
     {
-        $loader = new ThriftClassLoader();
-        $loader->registerNamespace('Thrift', THRIFT_CLIENT . '/../Lib');
-        $loader->register();
+        self::$thriftProtocol = $config->thriftProtocol;
+        self::$thriftTransport = $config->thriftTransport;
     }
 
     /**
@@ -130,7 +140,7 @@ class ThriftClient
             foreach (self::$config as $key => $item) {
                 $address_map[$key] = $item['addresses'];
             }
-            AddressManager::config($address_map);
+            YP_AddressManager::config($address_map);
         }
 
         return self::$config;
@@ -140,7 +150,7 @@ class ThriftClient
      * 获取实例
      *
      * @param      $serviceName 服务名称
-     * @param bool $newOne 是否强制获取一个新的实例
+     * @param bool $newOne      是否强制获取一个新的实例
      *
      * @return mixed
      * @throws \Exception
@@ -161,7 +171,7 @@ class ThriftClient
     }
 
     /**
-     * getProtocol
+     * 获得通信协议
      *
      * @param string $service_name
      *
@@ -170,16 +180,15 @@ class ThriftClient
     public static function getProtocol($service_name)
     {
         $config   = self::config();
-        $protocol = 'TBinaryProtocol';
         if (!empty($config[$service_name]['thrift_protocol'])) {
-            $protocol = $config[$service_name]['thrift_protocol'];
+            self::$thriftProtocol = $config[$service_name]['thrift_protocol'];
         }
 
-        return "\\Thrift\\Protocol\\" . $protocol;
+        return "\\Thrift\\Protocol\\" . self::$thriftProtocol;
     }
 
     /**
-     * getTransport
+     * 获得通信方式
      *
      * @param string $service_name
      *
@@ -188,12 +197,11 @@ class ThriftClient
     public static function getTransport($service_name)
     {
         $config    = self::config();
-        $transport = 'TBufferedTransport';
         if (!empty($config[$service_name]['thrift_transport'])) {
-            $transport = $config[$service_name]['thrift_transport'];
+            self::$thriftTransport = $config[$service_name]['thrift_transport'];
         }
 
-        return "\\Thrift\\Transport\\" . $transport;
+        return "\\Thrift\\Transport\\" . self::$thriftTransport;
     }
 
     /**
@@ -207,15 +215,14 @@ class ThriftClient
     {
         $config = self::config();
         if (!empty($config[$service_name]['service_dir'])) {
-            $service_dir = $config[$service_name]['service_dir'] . "/$service_name";
+            $service_dir = $config[$service_name]['service_dir'] . '/' . $service_name;
         } else {
-            $service_dir = THRIFT_CLIENT . "/../Services/$service_name";
+            $service_dir = THRIFT_CLIENT . '/../Services/' . $service_name;
         }
 
         return $service_dir;
     }
 }
-
 
 /**
  * thrift异步客户端实例
@@ -355,20 +362,20 @@ class ThriftInstance
     protected function __instance()
     {
         // 获取一个服务端节点地址
-        $address = AddressManager::getOneAddress($this->serviceName);
+        $address = YP_AddressManager::getOneAddress($this->serviceName);
         list($ip, $port) = explode(':', $address);
         // Transport
-        $socket         = new \Thrift\Transport\TSocket($ip, $port);
-        $transport_name = ThriftClient::getTransport($this->serviceName);
+        $socket         = new TSocket($ip, $port);
+        $transport_name = YP_ThriftClient::getTransport($this->serviceName);
         $transport      = new $transport_name($socket);
         // Protocol
-        $protocol_name = ThriftClient::getProtocol($this->serviceName);
+        $protocol_name = YP_ThriftClient::getProtocol($this->serviceName);
         $protocol      = new $protocol_name($transport);
         try {
             $transport->open();
         } catch (\Exception $e) {
             // 无法连上，则踢掉这个地址
-            AddressManager::kickAddress($address);
+            YP_AddressManager::kickAddress($address);
             throw $e;
         }
         // 客户端类名称
@@ -393,7 +400,7 @@ class ThriftInstance
     protected function includeFile()
     {
         // 载入该服务下的所有文件
-        $service_dir = ThriftClient::getServiceDir($this->serviceName);
+        $service_dir = YP_ThriftClient::getServiceDir($this->serviceName);
         foreach (glob($service_dir . '/*.php') as $php_file) {
             require_once $php_file;
         }
@@ -402,37 +409,3 @@ class ThriftInstance
     }
 }
 
-/***********以下是测试代码***********/
-if (PHP_SAPI == 'cli' && isset($argv[0]) && $argv[0] == basename(__FILE__)) {
-    ThriftClient::config([
-        'HelloWorld' => [
-            'addresses'        => [
-                '127.0.0.1:9090',
-                //'127.0.0.2:9191', //设置的一个故障地址，用来测试客户端故障节点踢出功能
-            ],
-            'thrift_protocol'  => 'TBinaryProtocol',        // 不设置默认为TBinaryProtocol
-            'thrift_transport' => 'TBufferedTransport',  // 不设置默认为TBufferedTransport
-            'service_dir'      => __DIR__ . '/../Services/'   // 不设置默认是__DIR__.'/../Services/',即上一级目录下的Services目录
-        ],
-        'UserInfo'   => [
-            'addresses' => [
-                '127.0.0.1:9090'
-            ],
-        ],
-    ]);
-    $client = ThriftClient::instance('HelloWorld');
-    // 同步
-    echo "sync send and recv sayHello(\"TOM\")\n";
-    var_export($client->sayHello("TOM"));
-    // 异步
-    echo "\nasync send request asend_sayHello(\"JERRY\") asend_sayHello(\"KID\")\n";
-    $client->asend_sayHello("JERRY");
-    $client->asend_sayHello("KID");
-    // 这里是其它业务逻辑
-    echo "sleep 1 second now\n";
-    sleep(1);
-    echo "\nasync recv response arecv_sayHello(\"KID\") arecv_sayHello(\"JERRY\")\n";
-    var_export($client->arecv_sayHello("KID"));
-    var_export($client->arecv_sayHello("JERRY"));
-    echo "\n";
-}

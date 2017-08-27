@@ -6,7 +6,7 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Libraries\Thrift\Client;
+namespace YP\Libraries\Thrift;
 
 /**
  * address 分配器
@@ -17,46 +17,53 @@ namespace YP\Libraries\Thrift\Client;
  *
  * @package YP\Libraries\Thrift\Client
  */
-class AddressManager
+class YP_AddressManager
 {
     /**
      * 多少几率去访问故障节点，用来判断节点是否已经恢复
+     *
      * @var float
      */
     const DETECT_RATE = 0.0005;
 
     /**
      * 存储RPC服务端节点共享内存的key
+     *
      * @var int
      */
     const BAD_ASSRESS_LIST_SHM_KEY = 0x55656;
 
     /**
      * 保存所有故障节点的VAR
+     *
      * @var int
      */
     const SHM_BAD_ADDRESS_KEY = 1;
 
     /**
      * 保存配置的md5的VAR,用于判断文件配置是否已经更新
+     *
      * @var int
      */
     const SHM_CONFIG_MD5 = 2;
 
     /**
      * 配置
+     *
      * @var array
      */
     private static $config = null;
 
     /**
      * 故障节点共享内存fd
+     *
      * @var resource
      */
     private static $badAddressShmFd = null;
 
     /**
      * 故障的节点列表
+     *
      * @var array
      */
     private static $badAddressList = null;
@@ -202,6 +209,7 @@ class AddressManager
         }
         // 尝试读取md5，可能其它进程已经写入了
         $config_md5     = @shm_get_var(self::getShmFd(), self::SHM_CONFIG_MD5);
+        P($config_md5);
         $config_md5_now = md5(serialize(self::$config));
         // 有md5值，则判断是否与当前md5值相等
         if ($config_md5 === $config_md5_now) {
@@ -335,7 +343,7 @@ class AddressManager
 
 // ================ 以下是测试代码 ======================
 if (PHP_SAPI == 'cli' && isset($argv[0]) && $argv[0] == basename(__FILE__)) {
-    AddressManager::config([
+    YP_AddressManager::config([
         'HelloWorld'        => [
             '127.0.0.1:9090',
             '127.0.0.2:9090',
@@ -346,23 +354,23 @@ if (PHP_SAPI == 'cli' && isset($argv[0]) && $argv[0] == basename(__FILE__)) {
         ],
     ]);
     echo "\n剔除address 127.0.0.1:9090 127.0.0.2:9090，放入故障address列表\n";
-    AddressManager::kickAddress('127.0.0.1:9090');
-    AddressManager::kickAddress('127.0.0.2:9090');
+    YP_AddressManager::kickAddress('127.0.0.1:9090');
+    YP_AddressManager::kickAddress('127.0.0.2:9090');
     echo "\n打印故障address列表\n";
-    var_export(AddressManager::getBadAddressList());
+    var_export(YP_AddressManager::getBadAddressList());
     echo "\n获取HelloWorld服务的一个可用address\n";
-    var_export(AddressManager::getOneAddress('HelloWorld'));
+    var_export(YP_AddressManager::getOneAddress('HelloWorld'));
     echo "\n恢复address 127.0.0.2:9090\n";
-    var_export(AddressManager::recoverAddress('127.0.0.2:9090'));
+    var_export(YP_AddressManager::recoverAddress('127.0.0.2:9090'));
     echo "\n打印故障address列表\n";
-    var_export(AddressManager::getBadAddressList());
+    var_export(YP_AddressManager::getBadAddressList());
     echo "\n配置有更改，md5会改变，则故障address列表自动清空\n";
-    AddressManager::config([
+    YP_AddressManager::config([
         'HelloWorld' => [
             '127.0.0.2:9090',
             '127.0.0.3:9090',
         ],
     ]);
     echo "\n打印故障address列表\n";
-    var_export(AddressManager::getBadAddressList());
+    var_export(YP_AddressManager::getBadAddressList());
 }

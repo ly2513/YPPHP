@@ -526,7 +526,7 @@ class Services
             $config = new \Config\ThriftClient();
         }
 
-        return new \YP\Libraries\YP_ThriftClient($config);
+        return new \YP\Libraries\Thrift\YP_ThriftClient($config);
     }
 
     /**

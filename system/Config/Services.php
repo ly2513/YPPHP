@@ -508,6 +508,26 @@ class Services
 
         return new \YP\Libraries\Cache\YP_Redis($config);
     }
+    
+    /**
+     * 实例化 thrift客户端
+     *
+     * @param \Config\ThriftClient|null $config
+     * @param bool                      $getShared
+     *
+     * @return mixed|\YP\Libraries\YP_ThriftClient
+     */
+    public static function thrift_client(\Config\ThriftClient $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('thrift_client', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\ThriftClient();
+        }
+
+        return new \YP\Libraries\YP_ThriftClient($config);
+    }
 
     /**
      * 获得已加载的类的映射数组

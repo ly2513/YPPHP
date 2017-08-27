@@ -44,7 +44,6 @@ class YP_ThriftClient
     public function connet($data)
     {
         $startTime  = $this->getMillisecond();
-//        $thrift_lib = APP_PATH . 'ThirdParty/Thrift/';
         $thrift_gen = APP_PATH . 'ThirdParty/Thrift/gen-php';
         $loader     = new ThriftClassLoader();
 //        $loader->registerNamespace('Thrift', $thrift_lib);

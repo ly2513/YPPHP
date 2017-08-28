@@ -1,7 +1,12 @@
 .idea/
 vendor/
 composer.lock
+<<<<<<< HEAD
 cache
+=======
+!cache
+cache/Session/
+>>>>>>> master
 cache/Twig/
 app/Views/Twig/
 .DS_Store

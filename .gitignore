@@ -2,6 +2,7 @@
 vendor/
 composer.lock
 !cache
+cache/Session/
 cache/Twig/
 app/Views/Twig/
 .DS_Store

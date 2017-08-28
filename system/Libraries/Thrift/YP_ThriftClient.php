@@ -8,7 +8,6 @@
  */
 namespace YP\Libraries\Thrift;
 
-use Thrift\ClassLoader\ThriftClassLoader;
 use Thrift\Transport\TSocket;
 
 /**
@@ -18,12 +17,10 @@ use Thrift\Transport\TSocket;
  * <b>使用示例:</b>
  * <pre>
  * <code>
- * // 引入客户端文件
- * require_once 'yourdir/workerman/applications/ThriftRpc/Clients/ThriftClient.php';
- * use ThriftClient;
+ * use YP_ThriftClient;
  *
  * // 传入配置，一般在某统一入口文件中调用一次该配置接口即可
- * ThriftClient::config(array(
+ * YP_ThriftClient::config(array(
  * 'HelloWorld' => array(
  * 'addresses' => array(
  * '127.0.0.1:9090',
@@ -45,7 +42,7 @@ use Thrift\Transport\TSocket;
  * // =========  以下是开发过程中的调用示例  ==========
  *
  * // 初始化一个HelloWorld的实例
- * $client = ThriftClient::instance('HelloWorld');
+ * $client = YP_ThriftClient::instance('HelloWorld');
  *
  * // --------同步调用实例----------
  * var_export($client->sayHello("TOM"));

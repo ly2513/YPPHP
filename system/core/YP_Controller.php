@@ -326,7 +326,7 @@ class YP_Controller
     public function callBackWithParamError($msg = '')
     {
         // set_status_header(400);
-        callBack(4, $msg);
+        callBack(4, [], $msg);
     }
 
     /**

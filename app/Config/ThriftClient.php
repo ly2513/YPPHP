@@ -44,4 +44,11 @@ class ThriftClient
      * @var string
      */
     public $thriftTransport = 'TBufferedTransport';
+
+    /**
+     * 编译好的thrift存放路径
+     *
+     * @var string
+     */
+    public $genDir = APP_PATH . 'ThirdParty/Thrift/gen-php';
 }

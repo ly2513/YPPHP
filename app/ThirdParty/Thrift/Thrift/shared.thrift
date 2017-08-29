@@ -1,4 +1,4 @@
-namespace php shared
+namespace php Shared
 
 struct SharedStruct {
   1: i32 key

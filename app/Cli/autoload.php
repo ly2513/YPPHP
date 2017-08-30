@@ -6,9 +6,11 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-
-
-
+/**
+ * 所要加载的类
+ *
+ * @param $class
+ */
 function do_yp_load($class)
 {
     if ($class) {

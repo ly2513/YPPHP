@@ -12,7 +12,7 @@ use YP\Core\YP_Filter as Filter;
 use YP\Core\YP_Request as Request;
 use Config\Services;
 
-class CSRF extends Filter
+class YP_CSRF extends Filter
 {
 
     /**

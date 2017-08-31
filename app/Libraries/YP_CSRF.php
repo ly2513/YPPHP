@@ -6,13 +6,13 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace APP\Libraries;
+namespace App\Libraries;
 
 use YP\Core\YP_Filter as Filter;
 use YP\Core\YP_Request as Request;
 use Config\Services;
 
-class CSRF extends Filter
+class YP_CSRF extends Filter
 {
 
     /**

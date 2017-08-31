@@ -6,7 +6,7 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace APP\Libraries;
+namespace App\Libraries;
 
 use YP\Core\YP_IncomingRequest as IncomingRequest;
 use YP\Core\YP_Response as Response;

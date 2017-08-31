@@ -185,6 +185,29 @@ class Services
     }
 
     /**
+     * 过滤非法攻击,确保http通信安全
+     *
+     * @param \Config\App|null $config
+     * @param bool             $getShared
+     *
+     * @return mixed|\YP\Libraries\Security
+     */
+    public static function security(\Config\App $config = null, $getShared = true)
+    {
+        if ($getShared)
+        {
+            return self::getSharedInstance('security', $config);
+        }
+
+        if ( ! is_object($config))
+        {
+            $config = new \Config\App();
+        }
+
+        return new \YP\Libraries\YP_Security($config);
+    }
+
+    /**
      * 过滤器允许您在执行控制器之前和/或之后运行任务。在过滤器之前，
      * 请求可以被修改，并且基于请求执行的操作，而在过滤器被发送到客户端之前，它可以对响应本身进行修改或修改
      *

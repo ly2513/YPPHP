@@ -6,9 +6,11 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-
-date_default_timezone_set('PRC');
-
+/**
+ * 所要加载的类
+ *
+ * @param $class
+ */
 function do_yp_load($class)
 {
     if ($class) {
@@ -29,9 +31,6 @@ require APP_PATH . 'ThirdParty/Doctrine/Doctrine.php';
 // 加载队列所需要的model
 //require APP_PATH . 'ThirdParty/Queue/autoload.php';
 
-
-//$doctrine  = new \ThirdParty\Doctrine\Doctrine();
-//$doctrine  = new Doctrine\Doctrine();
 $doctrine  = new Doctrine();
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(
     [

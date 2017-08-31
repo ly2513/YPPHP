@@ -134,7 +134,7 @@ if (!function_exists('esc')) {
      * 如果$data是一个字符串，那么它只是转义并返回它。如果$data是一个数组，那么它循环过来，转义每个键值/值对的“值”。
      *
      * @param        $data
-     * @param string $context  有效的值为:html, js, css, url, attr, raw, null
+     * @param string $context 有效的值为:html, js, css, url, attr, raw, null
      * @param null   $encoding
      *
      * @return mixed
@@ -264,7 +264,7 @@ if (!function_exists('site_url')) {
         }
         // 如果提供配置使用提供的配置,否则使用默认配置
         $config = empty($altConfig) ? new \Config\App() : $altConfig;
-        $base = base_url();
+        $base   = base_url();
         // 如果没有配置indexPage,将添加indexPage
         if (!empty($config->indexPage)) {
             $path = rtrim($base, '/') . '/' . rtrim($config->indexPage, '/') . '/' . $path;
@@ -317,9 +317,7 @@ if (!function_exists('base_url')) {
     }
 
 }
-
-if (! function_exists('service'))
-{
+if (!function_exists('service')) {
     /**
      * 允许对服务配置文件的更清洁访问
      * 总是返回类的共享实例，所以应该多次调用函数返回相同的实例
@@ -340,4 +338,31 @@ if (! function_exists('service'))
 
         return Services::$name(...$params);
     }
+}
+if (!function_exists('remove_invisible_characters')) {
+    /**
+     * 删除不可见字符
+     * 防止夹空字符之间的ASCII字符，如java \0script
+     *
+     * @param      $str
+     * @param bool $url_encoded
+     *
+     * @return mixed
+     */
+    function remove_invisible_characters($str, $url_encoded = true)
+    {
+        $non_display_ables = [];
+        // 每一个控制字符，除了换行符、回车、水平制表符
+        if ($url_encoded) {
+            $non_display_ables[] = '/%0[0-8bcef]/';  // url encoded 00-08, 11, 12, 14, 15
+            $non_display_ables[] = '/%1[0-9a-f]/';   // url encoded 16-31
+        }
+        $non_display_ables[] = '/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]+/S';   // 00-08, 11, 12, 14-31, 127
+        do {
+            $str = preg_replace($non_display_ables, '', $str, -1, $count);
+        } while ($count);
+
+        return $str;
+    }
+
 }

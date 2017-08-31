@@ -26,7 +26,7 @@ class Log
      *
      * @var int
      */
-    public $threshold = 0;
+    public $threshold = [1,2,3,4,5];
 
     /**
      * 错误日志的路基
@@ -49,7 +49,7 @@ class Log
      */
     public $handlers = [
         // 被处理的日记级别
-        'YP\YP_Log' => [
+        'YP\Libraries\LogHandlers\YP_FileHandler' => [
             // 处理程序将处理的日志级别
             'handles'         => [
                 'critical',
@@ -62,7 +62,7 @@ class Log
                 'warning'
             ],
             // 日志目录
-            'path'            => CACHE_PATH . 'logs/',
+            'path'            => CACHE_PATH . 'Logs/',
             // 日志文件扩展名称
             'fileExtension'   => 'log',
             // 文件的访问权限

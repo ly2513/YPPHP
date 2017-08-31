@@ -16,6 +16,9 @@ if (substr(php_sapi_name(), 0, 3) == 'cgi') {
     die('运行php-cgi时不支持CLI工具。它需要php-cli函数！' . "\n\n");
 }
 
+// 设定时区
+date_default_timezone_set('PRC');
+
 // 定义环境常量
 define('ENVIRONMENT', isset($_SERVER['YP_ENV']) ? $_SERVER['YP_ENV'] : 'prod');
 
@@ -34,6 +37,13 @@ function do_doctrine_load($className)
     $path = APP_PATH . 'ThirdParty/Doctrine/Entity/' . $className . '.php';
     if (file_exists($path)) {
         require $path;
+    }else{
+        // 加载配置文件
+        $className = str_replace('\\', '/', $className);
+        $path = APP_PATH  . $className . '.php';
+        if (file_exists($path)) {
+            require $path;
+        }
     }
 }
 
@@ -53,6 +63,9 @@ $artisans = [
     new \YP\Console\Doctrine\ConvertMappingCommand(),
     new \YP\Console\Doctrine\GenerateEntitiesCommand(),
     new \YP\Console\Doctrine\UpdateCommand(),
+    // Thrift 命令
+    new \YP\Console\Thrift\CreateCommand(),
+    new \YP\Console\Thrift\GenCommand(),
 ];
 $app->addCommands($artisans);
 $app->run();

@@ -45,6 +45,9 @@ class Autoload
         unset($config);
     }
 
+    /**
+     * 注册加载的类
+     */
     public function register()
     {
         // 设置加载文件的后缀

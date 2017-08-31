@@ -61,7 +61,7 @@ class YP_FileHandler implements YP_HandlerInterface
     public function __construct(array $config)
     {
         $this->handles = $config['handles'] ?? [];
-        $this->path    = $config['path'] ?? CACHE_PATH . 'logs/';
+        $this->path    = $config['path'] ?? CACHE_PATH . 'Logs/';
         is_dir($this->path) or mkdir($this->path, 0777, true);
         $this->fileExtension   = $config['fileExtension'] ?? 'php';
         $this->fileExtension   = ltrim($this->fileExtension, '.');

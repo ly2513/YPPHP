@@ -74,3 +74,29 @@
  - [ X ] PHPMailer 邮件工具
  - [ X ] PHPExcel Excel工具
 
+## 命令行工具
+
+ ```
+ php artisan list
+ ```
+
+### Doctrine
+
+```
+# 数据表转 yml 映射文件(已支持字段注释直接转化为yml文件)
+php artisan doctrine:orm:convert-mapping --from-database yml app/ThirdParty/Doctrine/Mappings
+# 生成 Entity 文件
+php artisan doctrine:orm:generate-entities app/ThirdParty/Doctrine/Entity
+# 查看 更新SQL
+php artisan doctrine:orm:schema-tool:update --dump-sql
+# 执行更新
+php artisan doctrine:orm:schema-tool:update --force
+```
+### Thrift
+
+```
+# 生成Thrift文件
+php artisan thrift:create -f  Thrift文件名称
+# 编译Thrift文件
+php artisan thrift:gen -p  Thrift文件目录
+```

@@ -64,7 +64,8 @@ $artisans = [
     new \YP\Console\Doctrine\GenerateEntitiesCommand(),
     new \YP\Console\Doctrine\UpdateCommand(),
     // Thrift 命令
-    new \YP\Console\Thrift\createCommand(),
+    new \YP\Console\Thrift\CreateCommand(),
+    new \YP\Console\Thrift\GenCommand(),
 ];
 $app->addCommands($artisans);
 $app->run();

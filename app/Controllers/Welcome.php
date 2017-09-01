@@ -6,7 +6,7 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace APP\Controllers;
+namespace App\Controllers;
 
 use YP\Core\YP_Controller as Controller;
 

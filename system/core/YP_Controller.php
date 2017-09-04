@@ -255,16 +255,15 @@ class YP_Controller
     public function display($htmlFile = null, $data = [])
     {
         // 修改模板名称
-        if (!is_null($htmlFile)) {
-            $this->method = $htmlFile;
-        }
-        $path     = $htmlFile ? $htmlFile : $this->directory . $this->controller . '/' . $this->method;
-        $htmlPath = $this->tempPath . $this->directory . $this->controller;
+        $templateName = !is_null($htmlFile) ? $htmlFile : $this->method;
+        // 模板文件
+        $tempFile = $this->directory . $this->controller . '/' . $templateName . $this->extension;;
+        // 模板路径
+        $htmlPath     = $this->tempPath . $this->directory . $this->controller;
+        $tempFilePath = $this->tempPath . $tempFile;
         // 穿件模板目录
         is_dir($htmlPath) or mkdir($htmlPath, 0777, true);
         // 模板文件
-        $tempFile     = $path . $this->extension;
-        $tempFilePath = $htmlFile ? $tempFile : $this->tempPath . $tempFile;
         is_file($tempFilePath) or touch($tempFilePath);
         echo $this->twig->render($tempFile, $data);
         if (!YP_DEBUG) {

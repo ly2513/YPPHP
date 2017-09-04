@@ -6,104 +6,76 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+namespace YP\Console\Database;
 
-namespace Illuminate\Database\Console\Migrations;
-
-use Illuminate\Database\Migrations\Migrator;
+use YP\Libraries\Migrations\YP_Migrator;
 use Symfony\Component\Console\Input\InputOption;
 
 class StatusCommand extends BaseCommand
 {
     /**
-     * The console command name.
+     * 迁移实例
      *
-     * @var string
-     */
-    protected $name = 'migrate:status';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Show the status of each migration';
-
-    /**
-     * The migrator instance.
-     *
-     * @var \Illuminate\Database\Migrations\Migrator
+     * @var YP_Migrator
      */
     protected $migrator;
 
     /**
-     * Create a new migration rollback command instance.
+     * 创建一个新的迁移回滚命令实例
      *
-     * @param  \Illuminate\Database\Migrations\Migrator $migrator
-     * @return \Illuminate\Database\Console\Migrations\StatusCommand
+     * StatusCommand constructor.
+     *
+     * @param YP_Migrator $migrator
      */
-    public function __construct(Migrator $migrator)
+    public function __construct(YP_Migrator $migrator)
     {
         parent::__construct();
-
         $this->migrator = $migrator;
     }
 
     /**
-     * Execute the console command.
-     *
-     * @return void
+     * 命令配置
+     * {@inheritdoc}
      */
-    public function fire()
+    protected function configure()
     {
-        if (! $this->migrator->repositoryExists()) {
+        $this->setName('migrate:status')->setDescription('显示每个迁移的状态.')->setDefinition([
+            new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
+            new InputOption('path', null, InputOption::VALUE_OPTIONAL, '要使用的迁移路径路径.'),
+        ]);
+
+    }
+
+    /**
+     * 命令操作
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        if (!$this->migrator->repositoryExists()) {
             return $this->error('No migrations found.');
         }
-
-        $this->migrator->setConnection($this->input->getOption('database'));
-
-        if (! is_null($path = $this->input->getOption('path'))) {
-            $path = $this->laravel->basePath().'/'.$path;
+        $this->migrator->setConnection($input->getOption('database'));
+        // 设置迁移文件目录
+        if (!is_null($path = $input->getOption('path'))) {
+            $path = ROOT_PATH . $path;
         } else {
             $path = $this->getMigrationPath();
         }
-
         $ran = $this->migrator->getRepository()->getRan();
-
         $migrations = [];
-
-        foreach ($this->getAllMigrationFiles($path) as $migration) {
-            $migrations[] = in_array($migration, $ran) ? ['<info>Y</info>', $migration] : ['<fg=red>N</fg=red>', $migration];
+        foreach ($this->migrator->getMigrationFiles($path) as $migration) {
+            $migrations[] = in_array($migration, $ran) ? ['<info>Y</info>', $migration] : [
+                '<fg=red>N</fg=red>',
+                $migration
+            ];
         }
-
         if (count($migrations) > 0) {
             $this->table(['Ran?', 'Migration'], $migrations);
         } else {
-            $this->error('No migrations found');
+            $output->writeln('<error>No migrations found</error>');
         }
-    }
-
-    /**
-     * Get all of the migration files.
-     *
-     * @param  string  $path
-     * @return array
-     */
-    protected function getAllMigrationFiles($path)
-    {
-        return $this->migrator->getMigrationFiles($path);
-    }
-
-    /**
-     * Get the console command options.
-     *
-     * @return array
-     */
-    protected function getOptions()
-    {
-        return [
-            ['database', null, InputOption::VALUE_OPTIONAL, 'The database connection to use.'],
-
-            ['path', null, InputOption::VALUE_OPTIONAL, 'The path of migrations files to use.'],
-        ];
     }
 }

@@ -165,10 +165,7 @@ class YP_Controller
      * 初始化控制器,用于子类使用
      *
      */
-    public function initialization()
-    {
-
-    }
+    public function initialization() { }
 
     /**
      *

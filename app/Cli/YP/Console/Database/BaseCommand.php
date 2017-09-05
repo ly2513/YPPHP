@@ -10,6 +10,7 @@ namespace YP\Console\Database;
 
 use Config\Migrations;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
 
 /**
  * Class BaseCommand
@@ -29,7 +30,7 @@ class BaseCommand extends Command
 
         return $migration->migratePath;;
     }
-    
+
     /**
      * 执行另一个命令
      *
@@ -42,7 +43,6 @@ class BaseCommand extends Command
     public function call($command, array $arguments = [])
     {
         $instance = $this->getApplication()->find($command);
-
         $arguments['command'] = $command;
 
         return $instance->run(new ArrayInput($arguments), $this->output);
@@ -58,5 +58,23 @@ class BaseCommand extends Command
         return function () {
             return ENVIRONMENT == 'production';
         };
+    }
+
+    
+    /**
+     * 格式化输入到文本表
+     *
+     * @param array  $headers
+     * @param        $rows
+     * @param string $style
+     * @param        $output
+     */
+    public function table(array $headers, $rows, $style = 'default', $output)
+    {
+        $table = new Table($output);
+        if ($rows instanceof Arrayable) {
+            $rows = $rows->toArray();
+        }
+        $table->setHeaders($headers)->setRows($rows)->setStyle($style)->render();
     }
 }

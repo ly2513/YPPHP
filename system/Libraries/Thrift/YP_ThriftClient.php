@@ -102,6 +102,8 @@ class YP_ThriftClient
 
     public function __construct(\Config\ThriftClient $config)
     {
+        P($config);
+        self::$config = $config;
         self::$thriftProtocol = $config->thriftProtocol;
         self::$thriftTransport = $config->thriftTransport;
     }
@@ -127,7 +129,7 @@ class YP_ThriftClient
      *
      * @return array
      */
-    public static function config(array $config = [])
+    public static function config()
     {
         if (!empty($config)) {
             // 赋值

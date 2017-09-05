@@ -64,7 +64,7 @@ class StatusCommand extends BaseCommand
         } else {
             $path = $this->getMigrationPath();
         }
-        $ran = $this->migrator->getRepository()->getRan();
+        $ran        = $this->migrator->getRepository()->getRan();
         $migrations = [];
         foreach ($this->migrator->getMigrationFiles($path) as $migration) {
             $migrations[] = in_array($migration, $ran) ? ['<info>Y</info>', $migration] : [
@@ -73,7 +73,7 @@ class StatusCommand extends BaseCommand
             ];
         }
         if (count($migrations) > 0) {
-            $this->table(['Ran?', 'Migration'], $migrations);
+            $this->table(['Ran?', 'Migration'], $migrations, 'default', $output);
         } else {
             $output->writeln('<error>No migrations found</error>');
         }

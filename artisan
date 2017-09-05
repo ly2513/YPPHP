@@ -66,6 +66,14 @@ $artisans = [
     // Thrift 命令
     new \YP\Console\Thrift\CreateCommand(),
     new \YP\Console\Thrift\GenCommand(),
+    // migrations 命令
+    new \YP\Console\Database\CreateCommand(),
+    new \YP\Console\Database\MigrateCommand(),
+    new \YP\Console\Database\MigrateMakeCommand(),
+    new \YP\Console\Database\RefreshCommand(),
+    new \YP\Console\Database\ResetCommand(),
+    new \YP\Console\Database\RollbackCommand(),
+    new \YP\Console\Database\StatusCommand(),
 ];
 $app->addCommands($artisans);
 $app->run();

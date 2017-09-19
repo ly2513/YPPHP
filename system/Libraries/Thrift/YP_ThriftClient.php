@@ -10,6 +10,8 @@ namespace YP\Libraries\Thrift;
 
 use Thrift\Transport\TSocket;
 
+define('THRIFT_CLIENT', APP_PATH . 'ThirdParty/Thrift/');
+
 /**
  *
  * 通用客户端,支持故障ip自动踢出及探测节点是否已经存活
@@ -67,78 +69,104 @@ use Thrift\Transport\TSocket;
 class YP_ThriftClient
 {
     /**
+     * 协议
+     *
      * @var string
      */
-    private static  $thriftProtocol = 'TBinaryProtocol';
+    private static $thriftProtocol = 'TBinaryProtocol';
 
     /**
+     * 传输方式
+     *
      * @var string
      */
     private static $thriftTransport = 'TBufferedTransport';
 
     /**
      * 客户端实例
+     *
      * @var array
      */
     private static $instance = [];
 
     /**
      * 配置
+     *
      * @var array
      */
-    private static $config = null;
+    private static $config = [];
+
+    /**
+     * socket对象
+     *
+     * @var null|TSocket
+     */
+    private static $socket = null;
+
+    /**
+     * 传输对象
+     *
+     * @var null|TBufferedTransport
+     */
+    private static $transport = null;
+
+    /**
+     * @var null
+     */
+
+    /**
+     * 协议对象
+     *
+     * @var null|TBinaryProtocol
+     */
+    private static $protocol = null;
 
     /**
      * 故障节点共享内存fd
+     *
      * @var resource
      */
     private static $badAddressShmFd = null;
 
     /**
      * 故障的节点列表
+     *
      * @var array
      */
     private static $badAddressList = null;
 
+    /**
+     * YP_ThriftClient constructor.
+     *
+     * @param \Config\ThriftClient $config
+     */
     public function __construct(\Config\ThriftClient $config)
     {
-        P($config);
-        self::$config = $config;
-        self::$thriftProtocol = $config->thriftProtocol;
-        self::$thriftTransport = $config->thriftTransport;
+        self::$config['host']            = $config->host;
+        self::$config['port']            = $config->port;
+        self::$config['genDir']          = $config->genDir;
+        self::$config['time_out']        = $config->time_out;
+        self::$config['thriftProtocol']  = $config->thriftProtocol;
+        self::$config['thriftTransport'] = $config->thriftTransport;
+        self::$thriftProtocol            = $config->thriftProtocol;
+        self::$thriftTransport           = $config->thriftTransport;
+        self::$socket                    = new TSocket(self::$config['host'], self::$config['port']);
+        self::$socket->setSendTimeout(self::$config['time_out']);
+        self::$socket->setRecvTimeout(self::$config['time_out']);
+        self::$transport = new self::getProtocol()(self::$socket);
+        self::$protocol  = new self::getTransport()(self::$transport);
     }
 
     /**
      * 设置/获取 配置
-     *  array(
-     *      'HelloWorld' => array(
-     *          'addresses' => array(
-     *              '127.0.0.1:9090',
-     *              '127.0.0.2:9090',
-     *              '127.0.0.3:9090',
-     *          ),
-     *      ),
-     *      'UserInfo' => array(
-     *          'addresses' => array(
-     *              '127.0.0.1:9090'
-     *          ),
-     *      ),
-     *  )
-     *
-     * @param array $config
      *
      * @return array
      */
     public static function config()
     {
-        if (!empty($config)) {
-            // 赋值
-            self::$config = $config;
+        if (!empty(self::$config)) {
             // 注册address到AddressManager
-            $address_map = [];
-            foreach (self::$config as $key => $item) {
-                $address_map[$key] = $item['addresses'];
-            }
+            $address_map[] = self::$config['host'] . ':' . self::config['port'];
             YP_AddressManager::config($address_map);
         }
 
@@ -172,15 +200,13 @@ class YP_ThriftClient
     /**
      * 获得通信协议
      *
-     * @param string $service_name
-     *
      * @return string
      */
-    public static function getProtocol($service_name)
+    public static function getProtocol()
     {
-        $config   = self::config();
-        if (!empty($config[$service_name]['thrift_protocol'])) {
-            self::$thriftProtocol = $config[$service_name]['thrift_protocol'];
+        $config = self::config();
+        if (!empty($config['thrift_protocol'])) {
+            self::$thriftProtocol = $config['thrift_protocol'];
         }
 
         return "\\Thrift\\Protocol\\" . self::$thriftProtocol;
@@ -189,15 +215,13 @@ class YP_ThriftClient
     /**
      * 获得通信方式
      *
-     * @param string $service_name
-     *
      * @return string
      */
-    public static function getTransport($service_name)
+    public static function getTransport()
     {
-        $config    = self::config();
-        if (!empty($config[$service_name]['thrift_transport'])) {
-            self::$thriftTransport = $config[$service_name]['thrift_transport'];
+        $config = self::config();
+        if (!empty($config['thrift_transport'])) {
+            self::$thriftTransport = $config['thrift_transport'];
         }
 
         return "\\Thrift\\Transport\\" . self::$thriftTransport;
@@ -213,10 +237,10 @@ class YP_ThriftClient
     public static function getServiceDir($service_name)
     {
         $config = self::config();
-        if (!empty($config[$service_name]['service_dir'])) {
-            $service_dir = $config[$service_name]['service_dir'] . '/' . $service_name;
+        if (!empty($config['genDir'])) {
+            $service_dir = $config['genDir'] . '/' . $service_name;
         } else {
-            $service_dir = THRIFT_CLIENT . '/../Services/' . $service_name;
+            $service_dir = THRIFT_CLIENT . $service_name;
         }
 
         return $service_dir;

@@ -341,16 +341,16 @@ class YP_Session
         } elseif (empty($_SESSION)) {
             return [];
         }
-        $userdata = [];
+        $userData = [];
         $_exclude = array_merge(['__yp_vars'], $this->getFlashKeys(), $this->getTempKeys());
         $keys     = array_keys($_SESSION);
         foreach ($keys as $key) {
             if (!in_array($key, $_exclude, true)) {
-                $userdata[$key] = $_SESSION[$key];
+                $userData[$key] = $_SESSION[$key];
             }
         }
 
-        return $userdata;
+        return $userData;
     }
 
     /**

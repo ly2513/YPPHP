@@ -1,0 +1,269 @@
+[2017-09-21 11:27:52]Create queue job success, the queue job id is c0bea3141d89f529e4a4107d65728079
+[2017-09-21 11:27:56]Create queue job success, the queue job id is d43dfdf38111ac14bb703685a277e0e2
+[2017-09-21 11:27:58]Create queue job success, the queue job id is c1f0cbf685dfb68da4020076b51b588e
+[2017-09-21 11:27:59]Create queue job success, the queue job id is c9971a48ac276b3be8e2c91706b47c22
+[2017-09-21 11:28:00]Create queue job success, the queue job id is f048f340a916eaff0dcf4bcc4ee7309c
+[2017-09-21 11:28:01]Create queue job success, the queue job id is 449d34aead0fc45c732346c247ffb848
+[2017-09-21 11:28:03]Create queue job success, the queue job id is 54d99b36384cb864cfa35439a7a5ac96
+[2017-09-21 11:28:10]Registered signals
+[2017-09-21 11:28:10]Pruning dead worker: YongdeMacBook-Pro.local:17044:default
+[2017-09-21 11:28:10]Found job on default
+[2017-09-21 11:28:10]got(Job{default} | ID: c0bea3141d89f529e4a4107d65728079 | sentEmailJob | [{"time":1505964472,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:28:10]Forked 27775 at 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Processing default since 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Found job on default
+[2017-09-21 11:28:10]got(Job{default} | ID: d43dfdf38111ac14bb703685a277e0e2 | sentEmailJob | [{"time":1505964476,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:28:10]Forked 27776 at 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Processing default since 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Found job on default
+[2017-09-21 11:28:10]got(Job{default} | ID: c1f0cbf685dfb68da4020076b51b588e | sentEmailJob | [{"time":1505964478,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:28:10]Forked 27777 at 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Processing default since 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Found job on default
+[2017-09-21 11:28:10]got(Job{default} | ID: c9971a48ac276b3be8e2c91706b47c22 | sentEmailJob | [{"time":1505964479,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:28:10]Forked 27778 at 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Processing default since 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Found job on default
+[2017-09-21 11:28:10]got(Job{default} | ID: f048f340a916eaff0dcf4bcc4ee7309c | sentEmailJob | [{"time":1505964480,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:28:10]Forked 27779 at 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Processing default since 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Found job on default
+[2017-09-21 11:28:10]got(Job{default} | ID: 449d34aead0fc45c732346c247ffb848 | sentEmailJob | [{"time":1505964481,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:28:10]Forked 27780 at 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Processing default since 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Found job on default
+[2017-09-21 11:28:10]got(Job{default} | ID: 54d99b36384cb864cfa35439a7a5ac96 | sentEmailJob | [{"time":1505964483,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:28:10]Forked 27781 at 2017-09-21 11:28:10
+[2017-09-21 11:28:10]Processing default since 2017-09-21 11:28:10
+[2017-09-21 11:28:17]Exiting...
+[2017-09-21 11:28:17]No child to kill.
+[2017-09-21 11:31:22]Registered signals
+[2017-09-21 11:31:25]Exiting...
+[2017-09-21 11:31:25]No child to kill.
+[2017-09-21 11:31:31]Create queue job success, the queue job id is b7fa92003e301eeaf68f33e14b4d0346
+[2017-09-21 11:31:32]Create queue job success, the queue job id is 07053131dd78cb24954fa2f46f85150e
+[2017-09-21 11:31:33]Create queue job success, the queue job id is d93c213df3b732cea806de99bf3b0425
+[2017-09-21 11:31:34]Create queue job success, the queue job id is d3e45472b668e938bb614a718897329f
+[2017-09-21 11:31:34]Create queue job success, the queue job id is 208f8cf99962a07983bbb3e6f2320456
+[2017-09-21 11:31:35]Create queue job success, the queue job id is 9c0d77085dc4c5dd2ea7c4494997a373
+[2017-09-21 11:31:37]Registered signals
+[2017-09-21 11:31:38]Found job on default
+[2017-09-21 11:31:38]got(Job{default} | ID: b7fa92003e301eeaf68f33e14b4d0346 | sentEmailJob | [{"time":1505964691,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:31:38]Forked 27946 at 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Processing default since 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Found job on default
+[2017-09-21 11:31:38]got(Job{default} | ID: 07053131dd78cb24954fa2f46f85150e | sentEmailJob | [{"time":1505964692,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:31:38]Forked 27947 at 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Processing default since 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Found job on default
+[2017-09-21 11:31:38]got(Job{default} | ID: d93c213df3b732cea806de99bf3b0425 | sentEmailJob | [{"time":1505964693,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:31:38]Forked 27948 at 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Processing default since 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Found job on default
+[2017-09-21 11:31:38]got(Job{default} | ID: d3e45472b668e938bb614a718897329f | sentEmailJob | [{"time":1505964694,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:31:38]Forked 27949 at 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Processing default since 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Found job on default
+[2017-09-21 11:31:38]got(Job{default} | ID: 208f8cf99962a07983bbb3e6f2320456 | sentEmailJob | [{"time":1505964694,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:31:38]Forked 27950 at 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Processing default since 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Found job on default
+[2017-09-21 11:31:38]got(Job{default} | ID: 9c0d77085dc4c5dd2ea7c4494997a373 | sentEmailJob | [{"time":1505964695,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 11:31:38]Forked 27951 at 2017-09-21 11:31:38
+[2017-09-21 11:31:38]Processing default since 2017-09-21 11:31:38
+[2017-09-21 11:31:40]Exiting...
+[2017-09-21 11:31:40]No child to kill.
+[2017-09-21 12:02:17]Create queue job success, the queue job id is 5b8f4974406f186b8e9b7bac485ab98b
+[2017-09-21 12:02:20]Create queue job success, the queue job id is 4d68b87333943cbb3b273e09f5c5fabd
+[2017-09-21 12:02:21]Create queue job success, the queue job id is 267ec313caa67008f3cebcb71079d8e7
+[2017-09-21 12:02:25]Registered signals
+[2017-09-21 12:02:26]Found job on default
+[2017-09-21 12:02:26]got(Job{default} | ID: 5b8f4974406f186b8e9b7bac485ab98b | sentEmailJob | [{"time":1505966537,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:02:26]Forked 28875 at 2017-09-21 12:02:26
+[2017-09-21 12:02:26]Processing default since 2017-09-21 12:02:26
+[2017-09-21 12:02:26]Found job on default
+[2017-09-21 12:02:26]got(Job{default} | ID: 4d68b87333943cbb3b273e09f5c5fabd | sentEmailJob | [{"time":1505966540,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:02:26]Forked 28876 at 2017-09-21 12:02:26
+[2017-09-21 12:02:26]Processing default since 2017-09-21 12:02:26
+[2017-09-21 12:02:26]Found job on default
+[2017-09-21 12:02:26]got(Job{default} | ID: 267ec313caa67008f3cebcb71079d8e7 | sentEmailJob | [{"time":1505966541,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:02:26]Forked 28877 at 2017-09-21 12:02:26
+[2017-09-21 12:02:26]Processing default since 2017-09-21 12:02:26
+[2017-09-21 12:02:28]Exiting...
+[2017-09-21 12:02:28]No child to kill.
+[2017-09-21 12:05:05]Create queue job success, the queue job id is a2c01953b934ae8edd622298ba4c431f
+[2017-09-21 12:05:06]Create queue job success, the queue job id is 4caa8a78661cac3a71b2d1620975dcc8
+[2017-09-21 12:05:07]Create queue job success, the queue job id is aa376c1771844955e436dcdd84718416
+[2017-09-21 12:05:07]Create queue job success, the queue job id is 95cc372951621987e780e8c4c819ec20
+[2017-09-21 12:05:08]Create queue job success, the queue job id is 0b73286e44b072ea888e9c70957af765
+[2017-09-21 12:05:10]Create queue job success, the queue job id is 0bc3dc1dbabcdacb33943016c4609156
+[2017-09-21 12:05:11]Create queue job success, the queue job id is 56b552884565b6687fe151b214b1aa73
+[2017-09-21 12:05:12]Registered signals
+[2017-09-21 12:05:13]Found job on default
+[2017-09-21 12:05:13]got(Job{default} | ID: a2c01953b934ae8edd622298ba4c431f | sentEmailJob | [{"time":1505966705,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:05:13]Forked 28993 at 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Processing default since 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Found job on default
+[2017-09-21 12:05:13]got(Job{default} | ID: 4caa8a78661cac3a71b2d1620975dcc8 | sentEmailJob | [{"time":1505966706,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:05:13]Forked 28994 at 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Processing default since 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Found job on default
+[2017-09-21 12:05:13]got(Job{default} | ID: aa376c1771844955e436dcdd84718416 | sentEmailJob | [{"time":1505966707,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:05:13]Forked 28995 at 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Processing default since 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Found job on default
+[2017-09-21 12:05:13]got(Job{default} | ID: 95cc372951621987e780e8c4c819ec20 | sentEmailJob | [{"time":1505966707,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:05:13]Forked 28996 at 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Processing default since 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Found job on default
+[2017-09-21 12:05:13]got(Job{default} | ID: 0b73286e44b072ea888e9c70957af765 | sentEmailJob | [{"time":1505966708,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:05:13]Forked 28997 at 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Processing default since 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Found job on default
+[2017-09-21 12:05:13]got(Job{default} | ID: 0bc3dc1dbabcdacb33943016c4609156 | sentEmailJob | [{"time":1505966710,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:05:13]Forked 28998 at 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Processing default since 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Found job on default
+[2017-09-21 12:05:13]got(Job{default} | ID: 56b552884565b6687fe151b214b1aa73 | sentEmailJob | [{"time":1505966711,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:05:13]Forked 28999 at 2017-09-21 12:05:13
+[2017-09-21 12:05:13]Processing default since 2017-09-21 12:05:13
+[2017-09-21 12:05:14]Exiting...
+[2017-09-21 12:05:14]No child to kill.
+[2017-09-21 12:44:02]Registered signals
+[2017-09-21 12:44:08]Create queue job success, the queue job id is 846f66009d5010c69241cade0df2f391
+[2017-09-21 12:44:08]Create queue job success, the queue job id is 5f9d9a6b84b74ad58a9e06949ccdd537
+[2017-09-21 12:44:09]Create queue job success, the queue job id is ca1260933b11e593edd5ec2719af9b3a
+[2017-09-21 12:44:12]Registered signals
+[2017-09-21 12:44:12]Pruning dead worker: YongdeMacBook-Pro.local:29301:default
+[2017-09-21 12:44:12]Found job on default
+[2017-09-21 12:44:12]got(Job{default} | ID: 846f66009d5010c69241cade0df2f391 | sentEmailJob | [{"time":1505969048,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:44:12]Forked 29359 at 2017-09-21 12:44:12
+[2017-09-21 12:44:12]Processing default since 2017-09-21 12:44:12
+[2017-09-21 12:44:12]Found job on default
+[2017-09-21 12:44:12]got(Job{default} | ID: 5f9d9a6b84b74ad58a9e06949ccdd537 | sentEmailJob | [{"time":1505969048,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:44:12]Forked 29360 at 2017-09-21 12:44:12
+[2017-09-21 12:44:12]Processing default since 2017-09-21 12:44:12
+[2017-09-21 12:44:12]Found job on default
+[2017-09-21 12:44:12]got(Job{default} | ID: ca1260933b11e593edd5ec2719af9b3a | sentEmailJob | [{"time":1505969049,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:44:12]Forked 29361 at 2017-09-21 12:44:12
+[2017-09-21 12:44:12]Processing default since 2017-09-21 12:44:12
+[2017-09-21 12:44:13]Exiting...
+[2017-09-21 12:44:13]No child to kill.
+[2017-09-21 12:44:58]Registered signals
+[2017-09-21 12:45:01]Exiting...
+[2017-09-21 12:45:01]No child to kill.
+[2017-09-21 12:45:03]Create queue job success, the queue job id is b816b5fb4ae379c54c1dabff1ae12796
+[2017-09-21 12:45:04]Create queue job success, the queue job id is 27b99013a65c1265dfb7cc2a51845584
+[2017-09-21 12:45:05]Create queue job success, the queue job id is 12974314619a161316d5474c7413d780
+[2017-09-21 12:45:06]Registered signals
+[2017-09-21 12:45:06]Found job on default
+[2017-09-21 12:45:06]got(Job{default} | ID: b816b5fb4ae379c54c1dabff1ae12796 | sentEmailJob | [{"time":1505969103,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:45:06]Forked 29431 at 2017-09-21 12:45:06
+[2017-09-21 12:45:06]Processing default since 2017-09-21 12:45:06
+[2017-09-21 12:45:06]Found job on default
+[2017-09-21 12:45:06]got(Job{default} | ID: 27b99013a65c1265dfb7cc2a51845584 | sentEmailJob | [{"time":1505969104,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:45:06]Forked 29432 at 2017-09-21 12:45:06
+[2017-09-21 12:45:06]Processing default since 2017-09-21 12:45:06
+[2017-09-21 12:45:06]Found job on default
+[2017-09-21 12:45:06]got(Job{default} | ID: 12974314619a161316d5474c7413d780 | sentEmailJob | [{"time":1505969105,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:45:06]Forked 29433 at 2017-09-21 12:45:06
+[2017-09-21 12:45:06]Processing default since 2017-09-21 12:45:06
+[2017-09-21 12:45:08]Exiting...
+[2017-09-21 12:45:08]No child to kill.
+[2017-09-21 12:45:33]Create queue job success, the queue job id is be0634aa04960ea191b6ca9a337f3ed2
+[2017-09-21 12:45:34]Registered signals
+[2017-09-21 12:45:34]Found job on default
+[2017-09-21 12:45:34]got(Job{default} | ID: be0634aa04960ea191b6ca9a337f3ed2 | sentEmailJob | [{"time":1505969133,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:45:34]Forked 29465 at 2017-09-21 12:45:34
+[2017-09-21 12:45:34]Processing default since 2017-09-21 12:45:34
+[2017-09-21 12:45:36]Exiting...
+[2017-09-21 12:45:36]No child to kill.
+[2017-09-21 12:51:03]Create queue job success, the queue job id is f3ffe23bbdf61266ad9da4ac3107bebd
+[2017-09-21 12:51:05]Create queue job success, the queue job id is 818a40a134f16c826eed1da7804d4b9a
+[2017-09-21 12:51:09]Registered signals
+[2017-09-21 12:51:09]Found job on default
+[2017-09-21 12:51:09]got(Job{default} | ID: f3ffe23bbdf61266ad9da4ac3107bebd | sentEmailJob | [{"time":1505969463,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:51:09]Forked 29583 at 2017-09-21 12:51:09
+[2017-09-21 12:51:09]Processing default since 2017-09-21 12:51:09
+[2017-09-21 12:51:09]Found job on default
+[2017-09-21 12:51:09]got(Job{default} | ID: 818a40a134f16c826eed1da7804d4b9a | sentEmailJob | [{"time":1505969465,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:51:09]Forked 29584 at 2017-09-21 12:51:09
+[2017-09-21 12:51:09]Processing default since 2017-09-21 12:51:09
+[2017-09-21 12:51:11]Exiting...
+[2017-09-21 12:51:11]No child to kill.
+[2017-09-21 12:54:03]Create queue job success, the queue job id is 43ffd7e1fe8ab68aedb63a32fd1da078
+[2017-09-21 12:54:04]Registered signals
+[2017-09-21 12:54:04]Found job on default
+[2017-09-21 12:54:04]got(Job{default} | ID: 43ffd7e1fe8ab68aedb63a32fd1da078 | sentEmailJob | [{"time":1505969643,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 12:54:04]Forked 29635 at 2017-09-21 12:54:04
+[2017-09-21 12:54:04]Processing default since 2017-09-21 12:54:04
+[2017-09-21 12:54:05]Exiting...
+[2017-09-21 12:54:05]No child to kill.
+[2017-09-21 13:46:00]Create queue job success, the queue job id is 0ff440c1e77b773c873c2275018bc1b6
+[2017-09-21 13:46:02]Create queue job success, the queue job id is b030326068c2fc775eb3ed6746a7a633
+[2017-09-21 13:46:09]Registered signals
+[2017-09-21 13:46:09]Found job on default
+[2017-09-21 13:46:09]got(Job{default} | ID: 0ff440c1e77b773c873c2275018bc1b6 | sentEmailJob | [{"time":1505972760,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 13:46:09]Forked 29796 at 2017-09-21 13:46:09
+[2017-09-21 13:46:09]Processing default since 2017-09-21 13:46:09
+[2017-09-21 13:46:09]Found job on default
+[2017-09-21 13:46:09]got(Job{default} | ID: b030326068c2fc775eb3ed6746a7a633 | sentEmailJob | [{"time":1505972762,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 13:46:09]Forked 29797 at 2017-09-21 13:46:09
+[2017-09-21 13:46:09]Processing default since 2017-09-21 13:46:09
+[2017-09-21 13:46:11]Exiting...
+[2017-09-21 13:46:11]No child to kill.
+[2017-09-21 13:46:42]Create queue job success, the queue job id is 3325dc03e51b5a79f76f6d442ad0be32
+[2017-09-21 13:46:43]Create queue job success, the queue job id is 5b5e5dc2320ba9b4e57ed023fbf52f8a
+[2017-09-21 13:46:44]Registered signals
+[2017-09-21 13:46:44]Found job on default
+[2017-09-21 13:46:44]got(Job{default} | ID: 3325dc03e51b5a79f76f6d442ad0be32 | sentEmailJob | [{"time":1505972802,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 13:46:44]Forked 29833 at 2017-09-21 13:46:44
+[2017-09-21 13:46:44]Processing default since 2017-09-21 13:46:44
+[2017-09-21 13:46:44]Found job on default
+[2017-09-21 13:46:44]got(Job{default} | ID: 5b5e5dc2320ba9b4e57ed023fbf52f8a | sentEmailJob | [{"time":1505972803,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 13:46:44]Forked 29834 at 2017-09-21 13:46:44
+[2017-09-21 13:46:44]Processing default since 2017-09-21 13:46:44
+[2017-09-21 13:46:46]Exiting...
+[2017-09-21 13:46:46]No child to kill.
+[2017-09-21 13:47:30]Create queue job success, the queue job id is 7448d8dfaba9ce7093ce083417d5cce1
+[2017-09-21 13:47:31]Create queue job success, the queue job id is 32217d2587fe3f1b5b870f0d7eedd9eb
+[2017-09-21 13:47:33]Registered signals
+[2017-09-21 13:47:33]Found job on default
+[2017-09-21 13:47:33]got(Job{default} | ID: 7448d8dfaba9ce7093ce083417d5cce1 | sentEmailJob | [{"time":1505972850,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 13:47:33]Forked 29869 at 2017-09-21 13:47:33
+[2017-09-21 13:47:33]Processing default since 2017-09-21 13:47:33
+[2017-09-21 13:47:35]done (Job{default} | ID: 7448d8dfaba9ce7093ce083417d5cce1 | sentEmailJob | [{"time":1505972850,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 13:47:35]Found job on default
+[2017-09-21 13:47:35]got(Job{default} | ID: 32217d2587fe3f1b5b870f0d7eedd9eb | sentEmailJob | [{"time":1505972851,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 13:47:35]Forked 29870 at 2017-09-21 13:47:35
+[2017-09-21 13:47:35]Processing default since 2017-09-21 13:47:35
+[2017-09-21 13:47:36]done (Job{default} | ID: 32217d2587fe3f1b5b870f0d7eedd9eb | sentEmailJob | [{"time":1505972851,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 13:47:40]Exiting...
+[2017-09-21 13:47:40]No child to kill.
+[2017-09-21 14:08:40]Create queue job success, the queue job id is bf39fe9ac28cc85ed11f61a2ec69f750
+[2017-09-21 14:08:49]Registered signals
+[2017-09-21 14:08:49]Found job on default
+[2017-09-21 14:08:49]got(Job{default} | ID: bf39fe9ac28cc85ed11f61a2ec69f750 | sentEmailJob | [{"time":1505974120,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 14:08:49]Forked 30120 at 2017-09-21 14:08:49
+[2017-09-21 14:08:49]Processing default since 2017-09-21 14:08:49
+[2017-09-21 14:08:51]Exiting...
+[2017-09-21 14:08:51]No child to kill.
+[2017-09-21 14:10:34]Registered signals
+[2017-09-21 14:10:43]Create queue job success, the queue job id is 2c6bd9d31f588b08ade235728b227856
+[2017-09-21 14:10:58]Registered signals
+[2017-09-21 14:10:58]Pruning dead worker: YongdeMacBook-Pro.local:30141:default
+[2017-09-21 14:10:58]Found job on default
+[2017-09-21 14:10:58]got(Job{default} | ID: 2c6bd9d31f588b08ade235728b227856 | sentEmailJob | [{"time":1505974243,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 14:10:58]Forked 30166 at 2017-09-21 14:10:58
+[2017-09-21 14:10:58]Processing default since 2017-09-21 14:10:58
+[2017-09-21 14:10:59]Exiting...
+[2017-09-21 14:10:59]No child to kill.
+[2017-09-21 14:13:28]Create queue job success, the queue job id is 1edb71dd02826d943aad3a7d57d357c1
+[2017-09-21 14:13:30]Registered signals
+[2017-09-21 14:13:30]Found job on default
+[2017-09-21 14:13:30]got(Job{default} | ID: 1edb71dd02826d943aad3a7d57d357c1 | sentEmailJob | [{"time":1505974408,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 14:13:30]Forked 30210 at 2017-09-21 14:13:30
+[2017-09-21 14:13:30]Processing default since 2017-09-21 14:13:30
+[2017-09-21 14:13:31]done (Job{default} | ID: 1edb71dd02826d943aad3a7d57d357c1 | sentEmailJob | [{"time":1505974408,"array":{"test":"Describe the function of the queue"}}])
+[2017-09-21 14:13:33]Exiting...
+[2017-09-21 14:13:33]No child to kill.

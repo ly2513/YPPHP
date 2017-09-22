@@ -19,22 +19,22 @@ class Services extends \YP\Config\Services
 {
     // TODO 你可以在这里添加你需要加载的的类库,以下仅供参考
     /**
-     * 加载自动验证
+     * 队列
      *
-     * @param \Config\Validation|null $config
-     * @param bool                    $getShared
+     * @param Queue|null $config
+     * @param bool       $getShared
      *
-     * @return mixed|\YP\Libraries\YP_Validation
+     * @return \App\Libraries\YP_Queue|mixed
      */
-    //    public static function validation(\Config\Validation $config = null, $getShared = true)
-    //    {
-    //        if ($getShared) {
-    //            return parent::getSharedInstance('validation', $config);
-    //        }
-    //        if (!is_object($config)) {
-    //            $config = new \Config\Validation();
-    //        }
-    //
-    //        return new \YP\Libraries\YP_Validation($config);
-    //    }
+    public static function queue(\Config\Queue $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return parent::getSharedInstance('queue', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\Queue();
+        }
+
+        return new \App\Libraries\YP_Queue($config);
+    }
 }

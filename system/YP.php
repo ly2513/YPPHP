@@ -171,6 +171,7 @@ class YP
         $this->displayCache($cacheConfig);
         // 用不同的方法去修改请求对象
         $this->spoofRequestMethod();
+        // TODO 以下注释是暂时的,主要是方便调试
 //        try {
             // 处理请求
             $this->handleRequest($routes, $cacheConfig);

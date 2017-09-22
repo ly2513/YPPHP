@@ -25,7 +25,6 @@ class Autoload extends \YP\Config\AutoloadConfig
             'Config'      => APP_PATH . 'Config',
             'Core'        => APP_PATH . 'Core',
             'Function'    => APP_PATH . 'Function',
-            'App'         => APP_PATH,
             APP_NAMESPACE => APP_PATH,
         ];
         $classMap     = [];

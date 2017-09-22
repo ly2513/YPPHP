@@ -7,12 +7,13 @@
         "twig/twig": "2.3.*",
         "phpoffice/phpexcel": "1.8.*",
         "kint-php/kint": "*",
-        "phpmailer/phpmailer": "*",
+        "phpmailer/phpmailer": "5.2.*",
         "doctrine/orm": "^2.5",
         "symfony/yaml": "*",
         "symfony/console": "~2.0",
         "packaged/thrift": "0.10.*",
-        "php-amqplib/php-amqplib": "2.6.*"
+        "php-amqplib/php-amqplib": "2.6.*",
+        "ly2513/redis-queue": "dev-master"
     },
     "authors": [
         {

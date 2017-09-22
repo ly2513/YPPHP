@@ -11,35 +11,35 @@ namespace YP\Libraries\Cache;
 class YP_Redis
 {
 
-    protected      $_options  = [];
+    protected $_options = [];
 
     /**
      * redis数据库下标
      *
      * @var int
      */
-    private static $_db       = 0;
+    private static $_db = 0;
 
     /**
      * 主redis库
      *
      * @var int
      */
-    private static $_master   = 0;
+    private static $_master = 0;
 
     /**
      * 从redis库
      *
      * @var int
      */
-    private static $_multi    = 0;
+    private static $_multi = 0;
 
     /**
      * redis前缀
      *
      * @var string
      */
-    private static $_prefix   = "wj_";
+    private static $_prefix = "wj_";
     /**
      * redis 写对象
      *

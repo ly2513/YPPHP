@@ -165,9 +165,9 @@ class Autoload
     /**
      * 规范化文件名，移除非法字符使用破折号代替。
      *
-     * @param string $filename
+     * @param string $filename 需要规范的文件
      *
-     * @return string       需要规范的文件
+     * @return string
      */
     public function sanitizeFilename(string $filename): string
     {

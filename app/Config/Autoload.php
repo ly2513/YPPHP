@@ -20,7 +20,7 @@ class Autoload extends \YP\Config\AutoloadConfig
     {
         // 执行父类构造方法
         parent::__construct();
-        //
+        // 命名空间映射
         $namespaceMap = [
             'Config'      => APP_PATH . 'Config',
             'Core'        => APP_PATH . 'Core',

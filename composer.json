@@ -11,7 +11,9 @@
         "doctrine/orm": "^2.5",
         "symfony/yaml": "*",
         "symfony/console": "~2.0",
-        "packaged/thrift": "0.10.*"
+        "packaged/thrift": "0.10.*",
+        "php-amqplib/php-amqplib": "2.6.*",
+        "ly2513/redis-queue": "dev-master"
     },
     "authors": [
         {

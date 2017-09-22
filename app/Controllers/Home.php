@@ -104,10 +104,18 @@ class Home extends Controller
         var_export(AddressManager::getBadAddressList());
     }
 
-    public function testLog(){
+    public function testLog()
+    {
         $log = \Config\Services::log();
-        $s = $log->error('we are success');
+        $s   = $log->error('we are success');
         P($s);
+    }
+
+    public function getVal()
+    {
+        $a = 'worked';
+        xdebug_debug_zval($a);
+        print_r($a);
     }
 
 }

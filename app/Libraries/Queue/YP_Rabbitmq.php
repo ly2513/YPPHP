@@ -195,7 +195,7 @@ class YP_Rabbitmq extends YP_QueueInterface
      */
     private function _outputMessage($message, $type = null, $symbol = '>')
     {
-        if (PHP_SAPI == 'cli') {
+        if (is_cli()) {
             switch ($type) {
                 case 'error':
                     echo '[x] RabbitMQ Library Error : ' . $message . PHP_EOL;

@@ -35,6 +35,6 @@ class Services extends \YP\Config\Services
             $config = new \Config\Queue();
         }
 
-        return new \App\Libraries\YP_Queue($config);
+        return new \App\Libraries\Queue\YP_Queue($config);
     }
 }

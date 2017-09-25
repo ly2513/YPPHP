@@ -50,5 +50,12 @@ class ThriftClient
      *
      * @var string
      */
-    public $genDir = APP_PATH . 'ThirdParty/Thrift/gen-php';
+    public static $genPath = APP_PATH . 'ThirdParty/Thrift/gen-php';
+
+    /**
+     * Thrift文件目录
+     *
+     * @var string
+     */
+    public static $thriftPath = APP_PATH . 'ThirdParty/Thrift/Thrift/';
 }

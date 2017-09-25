@@ -137,7 +137,7 @@ class Queue
             // redis 配置
             $config = Redis::$redis;
         }
-        self::$redis[$this->handlerDrive] = $config;
+        self::$instance[$this->handlerDrive] = $config;
     }
 
 }

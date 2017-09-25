@@ -88,6 +88,8 @@ class YP_Queue
     {
         // 初始化配置
         $this->_initConfig($config);
+        $this->setInstance();
+        P(self::$instance);
     }
 
     public function pull()
@@ -98,6 +100,11 @@ class YP_Queue
     public function push()
     {
 
+    }
+
+    public function setInstance()
+    {
+        self::$instance = "new App\\Libraries\\Queue\\YP_{$this->handlerDrive}";
     }
 
     /**

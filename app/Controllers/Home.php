@@ -118,4 +118,15 @@ class Home extends Controller
         print_r($a);
     }
 
+    public function testEmail()
+    {
+        
+    }
+
+    public function testQueue()
+    {
+        $queue = \Config\Services::queue();
+        P($queue);
+    }
+
 }

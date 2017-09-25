@@ -8,6 +8,7 @@
  */
 namespace YP\Console\Thrift;
 
+use Config\ThriftClient;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -32,17 +33,20 @@ class CreateCommand extends Command
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return bool
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $thriftName = $input->getOption('thrift-name');
         $thriftName = ucfirst($thriftName) . '.thrift';
-        $path       = APP_PATH . 'ThirdParty/Thrift/Thrift/';
+        $path       = ThriftClient::$thriftPath;
         is_dir($path) or mkdir($path, 0777, true);
         is_file($path . $thriftName) or touch($path . $thriftName);
-        if(!is_file($path . $thriftName)){
+        if (!is_file($path . $thriftName)) {
             $output->writeln(sprintf('创建thrift文件失败!'));
         }
-    }
 
+        return true;
+    }
 }

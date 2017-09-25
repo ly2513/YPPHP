@@ -16,7 +16,6 @@ use Config\ThriftClient;
 
 class GenCommand extends Command
 {
-
     /**
      * 命令配置
      * {@inheritdoc}

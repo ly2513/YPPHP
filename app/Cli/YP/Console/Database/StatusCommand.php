@@ -45,12 +45,14 @@ class StatusCommand extends BaseCommand
         ]);
 
     }
-
+    
     /**
      * 命令操作
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return bool
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -77,5 +79,7 @@ class StatusCommand extends BaseCommand
         } else {
             $output->writeln('<error>No migrations found</error>');
         }
+
+        return true;
     }
 }

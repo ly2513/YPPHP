@@ -31,8 +31,7 @@ class CreateCommand extends BaseCommand
      */
     public function __construct(YP_MigrationRepositoryInterface $repository)
     {
-        parent::__construct();
-
+        parent::__construct($name = null);
         $this->repository = $repository;
     }
 
@@ -52,13 +51,15 @@ class CreateCommand extends BaseCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return bool
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->repository->setSource($input->getOption('database'));
-
         $this->repository->createRepository();
-
         $output->writeln(sprintf('迁移表创建成功!'));
+
+        return true;
     }
 }

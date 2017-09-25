@@ -29,12 +29,14 @@ class RefreshCommand extends BaseCommand
         ]);
 
     }
-
+    
     /**
      * 命令操作
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return bool|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -87,5 +89,6 @@ class RefreshCommand extends BaseCommand
             ]);
         }
 
+        return true;
     }
 }

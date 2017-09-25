@@ -68,6 +68,8 @@ class MigrateMakeCommand extends BaseCommand
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return bool
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -89,6 +91,8 @@ class MigrateMakeCommand extends BaseCommand
         $process = (new Process('', $this->workingPath))->setTimeout(null);
         $process->setCommandLine(trim($this->findComposer() . ' dump-autoload '));
         $process->run();
+
+        return true;
     }
 
     /**

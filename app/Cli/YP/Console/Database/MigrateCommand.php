@@ -38,8 +38,6 @@ class MigrateCommand extends BaseCommand
         $this->migrator = $migrator;
     }
 
-    
-
     /**
      * 命令配置
      * {@inheritdoc}
@@ -50,12 +48,14 @@ class MigrateCommand extends BaseCommand
             new InputOption('database', 'f', InputOption::VALUE_REQUIRED, '迁移库表名.'),
         ]);
     }
-
+    
     /**
      * 命令操作
      *
      * @param InputInterface  $input
      * @param OutputInterface $output
+     *
+     * @return bool|void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -96,7 +96,7 @@ class MigrateCommand extends BaseCommand
         // 接下来，我们将检查是否已经定义了一个PATH选项。
         // 如果有，我们将使用与这个安装文件夹的根相对的路径，以便迁移可以在应用程序中的任何路径上运行
         if (!is_null($path = $input->getOption('path'))) {
-            $path = ROOT_PATH  . $path;
+            $path = ROOT_PATH . $path;
         } else {
             $path = $this->getMigrationPath();
         }
@@ -117,5 +117,7 @@ class MigrateCommand extends BaseCommand
         $this->repository->setSource($input->getOption('database'));
         $this->repository->createRepository();
         $output->writeln(sprintf('迁移表创建成功!'));
+
+        return true;
     }
 }

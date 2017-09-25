@@ -39,6 +39,11 @@ class CreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $thriftName = $input->getOption('thrift-name');
+        if (!$thriftName) {
+            $output->writeln(sprintf('请输入thrift文件名称!'));
+
+            return false;
+        }
         $thriftName = ucfirst($thriftName) . '.thrift';
         $path       = ThriftClient::$thriftPath;
         is_dir($path) or mkdir($path, 0777, true);

@@ -16,7 +16,7 @@ use Thrift\Transport\TSocketPool;
 use Thrift\Transport\TFramedTransport;
 use Thrift\Transport\TBufferedTransport;
 
-class YP_ThriftClient
+class YP_Thrift
 {
     /**
      * 服务IP

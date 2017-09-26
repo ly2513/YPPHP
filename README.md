@@ -53,8 +53,8 @@
   |       |____Utf8.php
   |       |       |---- 编码处理类
   |       |       |---- URL处理类
-  |        |       |____Utf8.php
-          |               |---- 编码处理类
+  |       |       |____Utf8.php
+  |       |              |---- 编码处理类
   |____Libraries
           |____FormValidation.php
           |       |---- 表单验证类
@@ -98,5 +98,5 @@ php artisan doctrine:orm:schema-tool:update --force
 # 生成Thrift文件
 php artisan thrift:create -f  Thrift文件名称
 # 编译Thrift文件
-php artisan thrift:gen -p  Thrift文件目录
+php artisan thrift:gen -p app/ThirdParty/Thrift/Thrift/shared.thrift(thrift文件)
 ```

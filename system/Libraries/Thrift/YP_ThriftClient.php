@@ -9,72 +9,26 @@
 namespace YP\Libraries\Thrift;
 
 use Thrift\Transport\TSocket;
+use Thrift\ClassLoader\ThriftClassLoader;
 
 /**
+ * Class YP_ThriftClient
  *
- * 通用客户端,支持故障ip自动踢出及探测节点是否已经存活
- *
- * <b>使用示例:</b>
- * <pre>
- * <code>
- * use YP_ThriftClient;
- *
- * // 传入配置，一般在某统一入口文件中调用一次该配置接口即可
- * YP_ThriftClient::config(array(
- * 'HelloWorld' => array(
- * 'addresses' => array(
- * '127.0.0.1:9090',
- * '127.0.0.2:9191',
- * ),
- * 'thrift_protocol' => 'TBinaryProtocol',//不配置默认是TBinaryProtocol，对应服务端HelloWorld.conf配置中的thrift_protocol
- * 'thrift_transport' => 'TBufferedTransport',//不配置默认是TBufferedTransport，对应服务端HelloWorld.conf配置中的thrift_transport
- * ),
- * 'UserInfo' => array(
- * 'addresses' => array(
- * '127.0.0.1:9393'
- * ),
- * ),
- * )
- * );
- * // =========  以上在WEB入口文件中调用一次即可  ===========
- *
- *
- * // =========  以下是开发过程中的调用示例  ==========
- *
- * // 初始化一个HelloWorld的实例
- * $client = YP_ThriftClient::instance('HelloWorld');
- *
- * // --------同步调用实例----------
- * var_export($client->sayHello("TOM"));
- *
- * // --------异步调用示例-----------
- * // 异步调用 之 发送请求给服务端（注意：异步发送请求格式统一为 asend_XXX($arg),既在原有方法名前面增加'asend_'前缀）
- * $client->asend_sayHello("JERRY");
- * $client->asend_sayHello("KID");
- *
- * // 这里是其它业务逻辑
- * sleep(1);
- *
- * // 异步调用 之 接收服务端的回应（注意：异步接收请求格式统一为 arecv_XXX($arg),既在原有方法名前面增加'arecv_'前缀）
- * var_export($client->arecv_sayHello("KID"));
- * var_export($client->arecv_sayHello("JERRY"));
- *
- * <code>
- * </pre>
- *
- *
+ * @package YP\Libraries\Thrift
  */
 class YP_ThriftClient
 {
     /**
      * @var string
      */
-    private static  $thriftProtocol = 'TBinaryProtocol';
+    private static $thriftProtocol = 'TBinaryProtocol';
 
     /**
      * @var string
      */
     private static $thriftTransport = 'TBufferedTransport';
+
+    public static $loader;
 
     /**
      * 客户端实例
@@ -88,61 +42,44 @@ class YP_ThriftClient
      */
     private static $config = null;
 
-    /**
-     * 故障节点共享内存fd
-     * @var resource
-     */
-    private static $badAddressShmFd = null;
-
-    /**
-     * 故障的节点列表
-     * @var array
-     */
-    private static $badAddressList = null;
-
     public function __construct(\Config\ThriftClient $config)
     {
-        P($config);
-        self::$config = $config;
-        self::$thriftProtocol = $config->thriftProtocol;
-        self::$thriftTransport = $config->thriftTransport;
+        self::config($config);
+
     }
 
     /**
      * 设置/获取 配置
-     *  array(
-     *      'HelloWorld' => array(
-     *          'addresses' => array(
-     *              '127.0.0.1:9090',
-     *              '127.0.0.2:9090',
-     *              '127.0.0.3:9090',
-     *          ),
-     *      ),
-     *      'UserInfo' => array(
-     *          'addresses' => array(
-     *              '127.0.0.1:9090'
-     *          ),
-     *      ),
-     *  )
      *
-     * @param array $config
+     * @param $config
      *
      * @return array
      */
-    public static function config()
+    public static function config($config)
     {
-        if (!empty($config)) {
+        if (is_object($config)) {
             // 赋值
-            self::$config = $config;
-            // 注册address到AddressManager
-            $address_map = [];
-            foreach (self::$config as $key => $item) {
-                $address_map[$key] = $item['addresses'];
-            }
-            YP_AddressManager::config($address_map);
+            self::$config['host']       = $config->host;
+            self::$config['port']       = $config->port;
+            self::$config['genPath']    = $config->genPath;
+            self::$config['thriftPath'] = $config->thriftPath;
+            self::$thriftProtocol       = $config->thriftProtocol;
+            self::$thriftTransport      = $config->thriftTransport;
+            $address_map[]              = self::$config['host'] . ':' . self::$config['port'];
+            AddressManager::config($address_map);
         }
 
         return self::$config;
+    }
+
+    public static function load()
+    {
+        $loader = new ThriftClassLoader();
+        $loader->registerNamespace('Services', self::$config['genPath']);
+//        $loader->registerDefinition('shared', $GEN_DIR);
+//        $loader->registerDefinition('tutorial', $GEN_DIR);
+        $loader->register();
+        self::$loader['loader'] = $loader;
     }
 
     /**
@@ -154,202 +91,48 @@ class YP_ThriftClient
      * @return mixed
      * @throws \Exception
      */
-    public static function instance($serviceName, $newOne = false)
-    {
-        if (empty($serviceName)) {
-            throw new \Exception('ServiceName can not be empty');
-        }
-        if ($newOne) {
-            unset(self::$instance[$serviceName]);
-        }
-        if (!isset(self::$instance[$serviceName])) {
-            self::$instance[$serviceName] = new ThriftInstance($serviceName);
-        }
-
-        return self::$instance[$serviceName];
-    }
-
+    //    public static function instance($serviceName, $newOne = false)
+    //    {
+    //        if (empty($serviceName)) {
+    //            throw new \Exception('ServiceName can not be empty');
+    //        }
+    //        if ($newOne) {
+    //            unset(self::$instance[$serviceName]);
+    //        }
+    //        if (!isset(self::$instance[$serviceName])) {
+    //            self::$instance[$serviceName] = new ThriftInstance($serviceName);
+    //        }
+    //
+    //        return self::$instance[$serviceName];
+    //    }
     /**
      * 获得通信协议
      *
-     * @param string $service_name
-     *
      * @return string
      */
-    public static function getProtocol($service_name)
+    public static function getProtocol()
     {
-        $config   = self::config();
-        if (!empty($config[$service_name]['thrift_protocol'])) {
-            self::$thriftProtocol = $config[$service_name]['thrift_protocol'];
-        }
-
         return "\\Thrift\\Protocol\\" . self::$thriftProtocol;
     }
 
     /**
      * 获得通信方式
      *
-     * @param string $service_name
-     *
      * @return string
      */
-    public static function getTransport($service_name)
+    public static function getTransport()
     {
-        $config    = self::config();
-        if (!empty($config[$service_name]['thrift_transport'])) {
-            self::$thriftTransport = $config[$service_name]['thrift_transport'];
-        }
-
         return "\\Thrift\\Transport\\" . self::$thriftTransport;
     }
 
     /**
      * 获得服务目录，用来查找thrift生成的客户端文件
      *
-     * @param string $service_name
-     *
      * @return string
      */
-    public static function getServiceDir($service_name)
+    public static function getServiceDir()
     {
-        $config = self::config();
-        if (!empty($config[$service_name]['service_dir'])) {
-            $service_dir = $config[$service_name]['service_dir'] . '/' . $service_name;
-        } else {
-            $service_dir = THRIFT_CLIENT . '/../Services/' . $service_name;
-        }
-
-        return $service_dir;
-    }
-}
-
-/**
- * thrift异步客户端实例
- *
- * Class ThriftInstance
- *
- * @package YP\Libraries\Thrift\Client
- */
-class ThriftInstance
-{
-    /**
-     * 异步发送前缀
-     * @var string
-     */
-    const ASYNC_SEND_PREFIX = 'asend_';
-
-    /**
-     * 异步接收后缀
-     * @var string
-     */
-    const ASYNC_RECV_PREFIX = 'arecv_';
-
-    /**
-     * 服务名
-     * @var string
-     */
-    public $serviceName = '';
-
-    /**
-     * thrift实例
-     * @var array
-     */
-    protected $thriftInstance = null;
-
-    /**
-     * thrift异步实例['asend_method1'=>thriftInstance1, 'asend_method2'=>thriftInstance2, ..]
-     * @var array
-     */
-    protected $thriftAsyncInstances = [];
-
-    /**
-     * 初始化工作
-     *
-     * ThriftInstance constructor.
-     *
-     * @param $serviceName
-     */
-    public function __construct($serviceName)
-    {
-        if (empty($serviceName)) {
-            throw new \Exception('serviceName can not be empty', 500);
-        }
-        $this->serviceName = $serviceName;
-    }
-
-    /**
-     * 方法调用
-     *
-     * @param $method_name
-     * @param $arguments
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    public function __call($method_name, $arguments)
-    {
-        // 异步发送
-        if (0 === strpos($method_name, self::ASYNC_SEND_PREFIX)) {
-            $real_method_name = substr($method_name, strlen(self::ASYNC_SEND_PREFIX));
-            $arguments_key    = serialize($arguments);
-            $method_name_key  = $method_name . $arguments_key;
-            // 判断是否已经有这个方法的异步发送请求
-            if (isset($this->thriftAsyncInstances[$method_name_key])) {
-                // 删除实例，避免在daemon环境下一直出错
-                unset($this->thriftAsyncInstances[$method_name_key]);
-                throw new \Exception($this->serviceName . "->$method_name(" . implode(',',
-                        $arguments) . ") already has been called, you can't call again before you call " . self::ASYNC_RECV_PREFIX . $real_method_name,
-                    500);
-            }
-            // 创建实例发送请求
-            $instance = $this->__instance();
-            $callback = [$instance, 'send_' . $real_method_name];
-            if (!is_callable($callback)) {
-                throw new \Exception($this->serviceName . '->' . $method_name . ' not callable', 400);
-            }
-            $ret = call_user_func_array($callback, $arguments);
-            // 保存客户单实例
-            $this->thriftAsyncInstances[$method_name_key] = $instance;
-
-            return $ret;
-        }
-        // 异步接收
-        if (0 === strpos($method_name, self::ASYNC_RECV_PREFIX)) {
-            $real_method_name = substr($method_name, strlen(self::ASYNC_RECV_PREFIX));
-            $send_method_name = self::ASYNC_SEND_PREFIX . $real_method_name;
-            $arguments_key    = serialize($arguments);
-            $method_name_key  = $send_method_name . $arguments_key;
-            // 判断是否有发送过这个方法的异步请求
-            if (!isset($this->thriftAsyncInstances[$method_name_key])) {
-                throw new \Exception($this->serviceName . "->$send_method_name(" . implode(',',
-                        $arguments) . ") have not previously been called", 500);
-            }
-            $instance = $this->thriftAsyncInstances[$method_name_key];
-            // 先删除客户端实例
-            unset($this->thriftAsyncInstances[$method_name_key]);
-            $callback = [$instance, 'recv_' . $real_method_name];
-            if (!is_callable($callback)) {
-                throw new \Exception($this->serviceName . '->' . $method_name . ' not callable', 400);
-            }
-            // 接收请求
-            $ret = call_user_func_array($callback, []);
-
-            return $ret;
-        }
-        // 同步调用
-        $success = true;
-        // 每次都重新创建一个实例
-        $this->thriftInstance = $this->__instance();
-        $callback             = [$this->thriftInstance, $method_name];
-        if (!is_callable($callback)) {
-            throw new \Exception($this->serviceName . '->' . $method_name . ' not callable', 1400);
-        }
-        // 调用客户端方法
-        $ret = call_user_func_array($callback, $arguments);
-        // 每次都销毁实例
-        $this->thriftInstance = null;
-
-        return $ret;
+        return self::$config['genPath'];
     }
 
     /**
@@ -361,10 +144,10 @@ class ThriftInstance
     protected function __instance()
     {
         // 获取一个服务端节点地址
-        $address = YP_AddressManager::getOneAddress($this->serviceName);
-        list($ip, $port) = explode(':', $address);
+        //        $address = YP_AddressManager::getOneAddress($this->serviceName);
+        //        list($ip, $port) = explode(':', $address);
         // Transport
-        $socket         = new TSocket($ip, $port);
+        $socket         = new TSocket(self::$config['host'], self::$config['port']);
         $transport_name = YP_ThriftClient::getTransport($this->serviceName);
         $transport      = new $transport_name($socket);
         // Protocol
@@ -374,7 +157,7 @@ class ThriftInstance
             $transport->open();
         } catch (\Exception $e) {
             // 无法连上，则踢掉这个地址
-            YP_AddressManager::kickAddress($address);
+            YP_AddressManager::kickAddress(self::$config['host'] . ':' . self::$config['port']);
             throw $e;
         }
         // 客户端类名称
@@ -399,7 +182,7 @@ class ThriftInstance
     protected function includeFile()
     {
         // 载入该服务下的所有文件
-        $service_dir = YP_ThriftClient::getServiceDir($this->serviceName);
+        $service_dir = YP_ThriftClient::getServiceDir();
         foreach (glob($service_dir . '/*.php') as $php_file) {
             require_once $php_file;
         }
@@ -407,4 +190,3 @@ class ThriftInstance
         return $service_dir;
     }
 }
-

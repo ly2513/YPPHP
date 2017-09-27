@@ -194,13 +194,10 @@ class Services
      */
     public static function security(\Config\App $config = null, $getShared = true)
     {
-        if ($getShared)
-        {
+        if ($getShared) {
             return self::getSharedInstance('security', $config);
         }
-
-        if ( ! is_object($config))
-        {
+        if (!is_object($config)) {
             $config = new \Config\App();
         }
 
@@ -483,11 +480,11 @@ class Services
     /**
      * 分页类
      *
-     * @param bool  $getShared
+     * @param bool $getShared
      *
      * @return mixed|\YP\Libraries\YP_Pagination
      */
-    public static function pagination( $getShared = true)
+    public static function pagination($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('pagination');
@@ -499,11 +496,11 @@ class Services
     /**
      * eloquent
      *
-     * @param bool  $getShared
+     * @param bool $getShared
      *
      * @return mixed|\YP\Libraries\YP_Eloquent
      */
-    public static function eloquent( $getShared = true)
+    public static function eloquent($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('eloquent');
@@ -531,7 +528,7 @@ class Services
 
         return new \YP\Libraries\Cache\YP_Redis($config);
     }
-    
+
     /**
      * 实例化 thrift客户端
      *
@@ -540,16 +537,32 @@ class Services
      *
      * @return mixed|\YP\Libraries\YP_ThriftClient
      */
-    public static function thrift_client(\Config\ThriftClient $config = null, $getShared = true)
+    public static function thriftClient(\Config\ThriftClient $config = null, $getShared = true)
     {
         if ($getShared) {
-            return self::getSharedInstance('thrift_client', $config);
+            return self::getSharedInstance('thriftClient', $config);
         }
         if (!is_object($config)) {
             $config = new \Config\ThriftClient();
         }
 
         return new \YP\Libraries\Thrift\YP_ThriftClient($config);
+    }
+
+    /**
+     * thrift加载类
+     *
+     * @param bool $getShared
+     *
+     * @return mixed|\Thrift\ClassLoader\ThriftClassLoader
+     */
+    public static function thriftClassLoader($getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('thriftClassLoader');
+        }
+
+        return new \Thrift\ClassLoader\ThriftClassLoader();
     }
 
     /**

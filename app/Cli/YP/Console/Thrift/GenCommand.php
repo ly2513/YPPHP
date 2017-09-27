@@ -49,8 +49,8 @@ class GenCommand extends Command
         $file      = pathinfo($thriftPath);
         // 自动创建thrift的编译文件到指定目录
         is_dir($thriftDir) or mkdir($thriftDir, 0777, true);
-        $sourceDir = ROOT_PATH . 'gen-php/Services';
-        $command   = 'thrift -gen php:server ' . $thriftPath . ' && cp -R ' . $sourceDir . ' ' . $thriftDir . ' && rm -rf ' . ROOT_PATH . 'gen-php';
+        $sourceDir = ROOT_PATH . 'gen-php/';
+        $command   = 'thrift -gen php ' . $thriftPath . ' && cp -R ' . $sourceDir . ' ' . $thriftDir . ' && rm -rf ' . ROOT_PATH . 'gen-php';
         // 执行命令
         system($command, $status);
         unset($file, $command);

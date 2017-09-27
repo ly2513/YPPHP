@@ -74,7 +74,7 @@ class YP_Exceptions
         // 设置模板
         $templates_path = $this->viewPath;
         if (empty($templates_path)) {
-            $templates_path = APP_PATH . 'Views/errors/';
+            $templates_path = APP_PATH . 'Views/Errors/';
         }
         if (is_cli()) {
             $templates_path .= 'cli/';
@@ -192,11 +192,11 @@ class YP_Exceptions
     public static function cleanPath($file)
     {
         if (strpos($file, APP_PATH) === 0) {
-            $file = APP_PATH . DIRECTORY_SEPARATOR . substr($file, strlen(APP_PATH));
+            $file = APP_PATH . substr($file, strlen(APP_PATH));
         } elseif (strpos($file, SYSTEM_PATH) === 0) {
-            $file = SYSTEM_PATH . DIRECTORY_SEPARATOR . substr($file, strlen(SYSTEM_PATH));
+            $file = SYSTEM_PATH . substr($file, strlen(SYSTEM_PATH));
         } elseif (strpos($file, FRONT_PATH) === 0) {
-            $file = FRONT_PATH . DIRECTORY_SEPARATOR . substr($file, strlen(FRONT_PATH));
+            $file = FRONT_PATH . substr($file, strlen(FRONT_PATH));
         }
 
         return $file;

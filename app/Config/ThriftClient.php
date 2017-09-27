@@ -50,7 +50,7 @@ class ThriftClient
      *
      * @var string
      */
-    public static $genPath = APP_PATH . 'ThirdParty/Thrift/gen-php/';
+    public static $genPath = APP_PATH . 'ThirdParty/Thrift/';
 
     /**
      * Thrift文件目录

@@ -43,5 +43,5 @@ class ThriftService
      *
      * @var string
      */
-    public $genDir = APP_PATH . 'ThirdParty/Thrift/gen-php';
+    public static $genDir = APP_PATH . 'ThirdParty/Thrift/';
 }

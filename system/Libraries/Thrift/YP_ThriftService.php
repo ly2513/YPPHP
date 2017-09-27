@@ -78,6 +78,13 @@ class YP_ThriftService
     public $log = null;
 
     /**
+     * 服务文件路径
+     *
+     * @var
+     */
+    public $servicePath;
+
+    /**
      * 统计数据上报的地址
      *
      * @var string
@@ -96,7 +103,7 @@ class YP_ThriftService
         $this->thriftProtocol  = $config->thriftProtocol;
         $this->thriftTransport = $config->thriftTransport;
         $this->log             = Services::log();
-
+        $this->servicePath     = \Config\ThriftService::$genDir;
     }
 
     /**
@@ -115,9 +122,7 @@ class YP_ThriftService
             $this->name = $this->class;
         }
         // 载入该服务下的所有文件
-        foreach (glob(THRIFT_ROOT . '/Services/' . $this->class . '/*.php') as $php_file) {
-            require_once $php_file;
-        }
+        $this->includeFile();
         // 检查类是否存在
         $processor_class_name = "\\Services\\" . $this->class . "\\" . $this->class . 'Processor';
         if (!class_exists($processor_class_name)) {
@@ -147,14 +152,24 @@ class YP_ThriftService
         $transport      = new $transport_name($t_socket);
         $protocol_name  = '\\Thrift\\Protocol\\' . $this->thriftProtocol;
         $protocol       = new $protocol_name($transport);
-        
         $handler        = new CalculatorHandler();
         $processor      = new \tutorial\CalculatorProcessor($handler);
-//        $transport      = new \Thrift\Transport\TBufferedTransport(new \Thrift\Transport\TPhpStream(\Thrift\Transport\TPhpStream::MODE_R | \Thrift\Transport\TPhpStream::MODE_W));
-//        $protocol       = new \Thrift\Protocol\TBinaryProtocol($transport, true, true);
+        //        $transport      = new \Thrift\Transport\TBufferedTransport(new \Thrift\Transport\TPhpStream(\Thrift\Transport\TPhpStream::MODE_R | \Thrift\Transport\TPhpStream::MODE_W));
+        //        $protocol       = new \Thrift\Protocol\TBinaryProtocol($transport, true, true);
         $transport->open();
         $processor->process($protocol, $protocol);
         $transport->close();
+    }
+
+    /**
+     * 载入thrift生成的客户端文件
+     */
+    protected function includeFile()
+    {
+        // 载入该服务下的所有文件
+        foreach (glob($this->servicePath . 'Services/' . $this->class . '/*.php') as $file) {
+            require_once $file;
+        }
     }
 
 }

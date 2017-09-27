@@ -5,6 +5,6 @@ struct SharedStruct {
   2: string value
 }
 
-service SharedService {
+service Shared {
   SharedStruct getStruct(1: i32 key)
 }

@@ -12,7 +12,7 @@ namespace YP\Libraries\Thrift;
  * address 分配器
  * 支持故障地址剔除接口（需要PHP开启sysvshm）
  * 支持一定几率（默认5/10000）使用故障地址，用来判断故障地址是否重新可用（需要PHP开启sysvshm）
- * 
+ *
  * Class AddressManager
  *
  * @package YP\Libraries\Thrift\Client
@@ -208,8 +208,8 @@ class YP_AddressManager
             return false;
         }
         // 尝试读取md5，可能其它进程已经写入了
-        $config_md5     = @shm_get_var(self::getShmFd(), self::SHM_CONFIG_MD5);
-        P($config_md5);
+        $status         = shm_has_var(self::getShmFd(), self::SHM_CONFIG_MD5);
+        $config_md5     = $status ? shm_get_var(self::getShmFd(), self::SHM_CONFIG_MD5) : '';
         $config_md5_now = md5(serialize(self::$config));
         // 有md5值，则判断是否与当前md5值相等
         if ($config_md5 === $config_md5_now) {

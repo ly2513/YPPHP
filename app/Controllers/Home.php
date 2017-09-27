@@ -11,6 +11,7 @@ namespace App\Controllers;
 use YP\Core\YP_Controller as Controller;
 use YP\Config\Services;
 use YP\Libraries\Thrift\AddressManager;
+use YP\Libraries\Thrift\YP_ThriftClient;
 
 class Home extends Controller
 {
@@ -33,9 +34,9 @@ class Home extends Controller
 
     public function testThrift()
     {
-        $thrift = Services::thrift_client();
-        $thrift->connet();
-        P($thrift);
+        Services::thriftClient();
+        $client = YP_ThriftClient::instance('HelloWorld');
+        var_export($client->sayHello("TOM"));
         // ****************** 测试代码 ***************
         //        ThriftClient::config([
         //            'HelloWorld' => [

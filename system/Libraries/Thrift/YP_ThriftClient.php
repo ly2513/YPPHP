@@ -9,7 +9,10 @@
 namespace YP\Libraries\Thrift;
 
 use Thrift\Transport\TSocket;
-use Thrift\ClassLoader\ThriftClassLoader;
+
+$loader = \Config\Services::thriftClassLoader();
+$loader->registerNamespace('Services', \Config\ThriftClient::$genPath);
+$loader->register();
 
 /**
  * Class YP_ThriftClient
@@ -28,8 +31,6 @@ class YP_ThriftClient
      */
     private static $thriftTransport = 'TBufferedTransport';
 
-    public static $loader;
-
     /**
      * 客户端实例
      * @var array
@@ -40,12 +41,17 @@ class YP_ThriftClient
      * 配置
      * @var array
      */
-    private static $config = null;
+    public static $config = [];
 
+    /**
+     * YP_ThriftClient constructor.
+     *
+     * @param \Config\ThriftClient $config
+     */
     public function __construct(\Config\ThriftClient $config)
     {
         self::config($config);
-
+        //                self::load();
     }
 
     /**
@@ -61,25 +67,25 @@ class YP_ThriftClient
             // 赋值
             self::$config['host']       = $config->host;
             self::$config['port']       = $config->port;
-            self::$config['genPath']    = $config->genPath;
-            self::$config['thriftPath'] = $config->thriftPath;
+            self::$config['genPath']    = \Config\ThriftClient::$genPath;
+            self::$config['thriftPath'] = \Config\ThriftClient::$thriftPath;
             self::$thriftProtocol       = $config->thriftProtocol;
             self::$thriftTransport      = $config->thriftTransport;
             $address_map[]              = self::$config['host'] . ':' . self::$config['port'];
-            AddressManager::config($address_map);
+            YP_AddressManager::config($address_map);
         }
 
         return self::$config;
     }
 
+    /**
+     * 定义thrift的编译文件的命名空间
+     */
     public static function load()
     {
-        $loader = new ThriftClassLoader();
+        $loader = \Config\Services::thriftClassLoader();
         $loader->registerNamespace('Services', self::$config['genPath']);
-//        $loader->registerDefinition('shared', $GEN_DIR);
-//        $loader->registerDefinition('tutorial', $GEN_DIR);
         $loader->register();
-        self::$loader['loader'] = $loader;
     }
 
     /**
@@ -91,20 +97,21 @@ class YP_ThriftClient
      * @return mixed
      * @throws \Exception
      */
-    //    public static function instance($serviceName, $newOne = false)
-    //    {
-    //        if (empty($serviceName)) {
-    //            throw new \Exception('ServiceName can not be empty');
-    //        }
-    //        if ($newOne) {
-    //            unset(self::$instance[$serviceName]);
-    //        }
-    //        if (!isset(self::$instance[$serviceName])) {
-    //            self::$instance[$serviceName] = new ThriftInstance($serviceName);
-    //        }
-    //
-    //        return self::$instance[$serviceName];
-    //    }
+    public static function instance($serviceName, $newOne = false)
+    {
+        if (empty($serviceName)) {
+            throw new \Exception('ServiceName can not be empty');
+        }
+        if ($newOne) {
+            unset(self::$instance[$serviceName]);
+        }
+        if (!isset(self::$instance[$serviceName])) {
+            self::$instance[$serviceName] = new ThriftInstance($serviceName);
+        }
+
+        return self::$instance[$serviceName];
+    }
+
     /**
      * 获得通信协议
      *
@@ -128,11 +135,76 @@ class YP_ThriftClient
     /**
      * 获得服务目录，用来查找thrift生成的客户端文件
      *
+     * @param $serviceName
+     *
      * @return string
      */
-    public static function getServiceDir()
+    public static function getServiceDir($serviceName)
     {
-        return self::$config['genPath'];
+        $service_dir = self::$config['genPath'] . "Services/$serviceName/";
+
+        return $service_dir;
+    }
+}
+
+/**
+ *
+ * thrift异步客户端实例
+ * @author liangl
+ *
+ */
+class ThriftInstance
+{
+    /**
+     * 服务名
+     * @var string
+     */
+    public $serviceName = '';
+
+    /**
+     * thrift实例
+     * @var array
+     */
+    protected $thriftInstance = null;
+
+    /**
+     * 初始化工作
+     *
+     * ThriftInstance constructor.
+     *
+     * @param $serviceName
+     */
+    public function __construct($serviceName)
+    {
+        if (empty($serviceName)) {
+            throw new \Exception('serviceName can not be empty', 500);
+        }
+        $this->serviceName = $serviceName;
+    }
+
+    /**
+     * 方法调用
+     *
+     * @param $method_name
+     * @param $arguments
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    public function __call($method_name, $arguments)
+    {
+        // 每次都重新创建一个实例
+        $this->thriftInstance = $this->instance();
+        $callback             = [$this->thriftInstance, $method_name];
+        if (!is_callable($callback)) {
+            throw new \Exception($this->serviceName . '->' . $method_name . ' not callable', 1400);
+        }
+        // 调用客户端方法
+        $ret = call_user_func_array($callback, $arguments);
+        // 每次都销毁实例
+        $this->thriftInstance = null;
+
+        return $ret;
     }
 
     /**
@@ -141,24 +213,21 @@ class YP_ThriftClient
      * @return mixed
      * @throws \Exception
      */
-    protected function __instance()
+    protected function instance()
     {
-        // 获取一个服务端节点地址
-        //        $address = YP_AddressManager::getOneAddress($this->serviceName);
-        //        list($ip, $port) = explode(':', $address);
         // Transport
-        $socket         = new TSocket(self::$config['host'], self::$config['port']);
-        $transport_name = YP_ThriftClient::getTransport($this->serviceName);
+        $socket         = new TSocket(YP_ThriftClient::$config['host'], YP_ThriftClient::$config['port']);
+        $transport_name = YP_ThriftClient::getTransport();
         $transport      = new $transport_name($socket);
         // Protocol
-        $protocol_name = YP_ThriftClient::getProtocol($this->serviceName);
+        $protocol_name = YP_ThriftClient::getProtocol();
         $protocol      = new $protocol_name($transport);
         try {
             $transport->open();
         } catch (\Exception $e) {
             // 无法连上，则踢掉这个地址
-            YP_AddressManager::kickAddress(self::$config['host'] . ':' . self::$config['port']);
-            throw $e;
+            YP_AddressManager::kickAddress(YP_ThriftClient::$config['host'] . ':' . YP_ThriftClient::$config['port']);
+            //            throw $e;
         }
         // 客户端类名称
         $class_name = "\\Services\\" . $this->serviceName . "\\" . $this->serviceName . "Client";
@@ -166,7 +235,7 @@ class YP_ThriftClient
         if (!class_exists($class_name)) {
             $service_dir = $this->includeFile();
             if (!class_exists($class_name)) {
-                throw new \Exception("Class $class_name not found in directory $service_dir");
+                throw new \Exception('Class ' . $class_name . ' not found in directory ' . $service_dir);
             }
         }
 
@@ -176,17 +245,15 @@ class YP_ThriftClient
 
     /**
      * 载入thrift生成的客户端文件
-     * @throws \Exception
-     * @return void
      */
     protected function includeFile()
     {
         // 载入该服务下的所有文件
-        $service_dir = YP_ThriftClient::getServiceDir();
-        foreach (glob($service_dir . '/*.php') as $php_file) {
-            require_once $php_file;
+        $serviceDir = YP_ThriftClient::getServiceDir($this->serviceName);
+        foreach (glob($serviceDir . '*.php') as $file) {
+            require_once $file;
         }
 
-        return $service_dir;
+        return $serviceDir;
     }
 }

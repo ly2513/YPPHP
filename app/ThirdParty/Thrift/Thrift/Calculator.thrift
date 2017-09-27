@@ -1,7 +1,7 @@
 
 include "Shared.thrift"
 
-namespace php Calculator
+namespace php Services.Calculator
 
 
 typedef i32 MyInteger
@@ -29,7 +29,7 @@ exception InvalidOperation {
 }
 
 
-service Calculator extends Shared.SharedService {
+service Calculator extends Shared.Shared {
 
 
    void ping(),

@@ -31,7 +31,7 @@ define('CACHE_PATH', rtrim(dirname(__DIR__) . '/cache', '/') . DIRECTORY_SEPARAT
 define('APP_NAMESPACE', 'App');
 // 定义退出的常量的状态码
 //defined('EXIT_SUCCESS')        || define('EXIT_SUCCESS',        0); // 没出错
-//defined('EXIT_ERROR')          || define('EXIT_ERROR',          1); // 一般错误
+defined('EXIT_ERROR')          || define('EXIT_ERROR',          1); // 一般错误
 //defined('EXIT_CONFIG')         || define('EXIT_CONFIG',         3); // 配置错误
 //defined('EXIT_UNKNOWN_FILE')   || define('EXIT_UNKNOWN_FILE',   4); // 文件没找到错误
 //defined('EXIT_UNKNOWN_CLASS')  || define('EXIT_UNKNOWN_CLASS',  5); // 不知道类

@@ -35,14 +35,13 @@ defined('SYSTEM_PATH') ? : define('SYSTEM_PATH', rtrim(ROOT_PATH . 'system', '/'
 require ROOT_PATH . 'vendor/autoload.php';
 
 // 注册 Doctrine2 类库自动加载
-function do_doctrine_load($className)
-{
+function do_doctrine_load($className) {
+    $className = str_replace('\\', '/', $className);
     $path = APP_PATH . 'ThirdParty/Doctrine/Entity/' . $className . '.php';
     if (file_exists($path)) {
         require $path;
     }else{
         // 加载配置文件
-        $className = str_replace('\\', '/', $className);
         $path = APP_PATH  . $className . '.php';
         if (file_exists($path)) {
             require $path;
@@ -51,27 +50,6 @@ function do_doctrine_load($className)
 }
 
 spl_autoload_register('do_doctrine_load');
-
-// 加载 YP 命令行工具rm 
-//require APP_PATH . 'Cli/autoload.php';
-/**
- * 所要加载的类
- *
- * @param $class
- */
-function do_yp_load($class)
-{
-    if ($class) {
-        $file           = str_replace('\\', '/', $class);
-        $file = APP_PATH . $file . '.php';
-        if (file_exists($file)) {
-            require $file;
-        }
-    }
-
-}
-
-spl_autoload_register('do_yp_load');
 
 //加载 Doctrine 以及 Doctrine 的 DB连接
 require APP_PATH . 'ThirdParty/Doctrine/Doctrine.php';
@@ -100,13 +78,13 @@ $artisans = [
     new \Cli\Console\Thrift\GenCommand(),
     new \Cli\Console\Thrift\WorkCommand(),
     // migrations 命令
-//    new \YP\Console\Database\CreateCommand(),
-//    new \YP\Console\Database\MigrateCommand(),
-//    new \YP\Console\Database\MigrateMakeCommand(),
-//    new \YP\Console\Database\RefreshCommand(),
-//    new \YP\Console\Database\ResetCommand(),
-//    new \YP\Console\Database\RollbackCommand(),
-//    new \YP\Console\Database\StatusCommand(),
+//    new \Cli\Console\Database\CreateCommand(),
+//    new \Cli\Console\Database\MigrateCommand(),
+//    new \Cli\Console\Database\MigrateMakeCommand(),
+//    new \Cli\Console\Database\RefreshCommand(),
+//    new \Cli\Console\Database\ResetCommand(),
+//    new \Cli\Console\Database\RollbackCommand(),
+//    new \Cli\Console\Database\StatusCommand(),
 ];
 $app->addCommands($artisans);
 $app->run();

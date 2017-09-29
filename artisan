@@ -52,9 +52,7 @@ function do_doctrine_load($className) {
 spl_autoload_register('do_doctrine_load');
 
 //加载 Doctrine 以及 Doctrine 的 DB连接
-require APP_PATH . 'ThirdParty/Doctrine/Doctrine.php';
-
-$doctrine  = new Doctrine();
+$doctrine  = new \Config\Doctrine();
 $helperSet = new \Symfony\Component\Console\Helper\HelperSet(
     [
         'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($doctrine->em->getConnection()),

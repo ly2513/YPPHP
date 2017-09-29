@@ -14,47 +14,35 @@ use Config\App;
 class YP_CliRequest extends Request
 {
     /**
-     * Stores the segments of our cli "URI" command.
+     * 存储段我们 CLI“URI” 命令
      *
      * @var array
      */
     protected $segments = [];
 
     /**
-     * Command line options and their values.
+     * 命令行选项及其值
+     *
      * @var array
      */
     protected $options = [];
 
     /**
-     * CliRequest constructor.
+     * YP_CliRequest constructor.
      *
      * @param App $config
      */
     public function __construct(App $config)
     {
         parent::__construct($config, null);
-
-        // Don't terminate the script when the cli's tty goes away
+        // 不终止脚本, 当CLI终端消失
         ignore_user_abort(true);
-
         $this->parseCommand();
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the "path" of the request script so that it can be used
-     * in routing to the appropriate controller/method.
-     *
-     * The path is determined by treating the command line arguments
-     * as if it were a URL - up until we hit our first option.
-     *
-     * Example:
-     *      php index.php users 21 profile -foo bar
-     *
-     *      // Routes to /users/21/profile (index is removed for routing sake)
-     *      // with the option foo = bar.
+     * 返回请求脚本的“路径”，以便将其用于路由到适当的 控制器/方法。
+     * 路径是通过处理命令行参数来决定的，就像它是一个URL一样，直到我们命中第一个选项为止
      *
      * @return string
      */
@@ -65,11 +53,8 @@ class YP_CliRequest extends Request
         return empty($path) ? '' : $path;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns an associative array of all CLI options found, with
-     * their values.
+     * 返回找到的所有CLI选项的关联数组及其值
      *
      * @return array
      */
@@ -78,115 +63,72 @@ class YP_CliRequest extends Request
         return $this->options;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the value for a single CLI option that was passed in.
+     * 返回传入的单个CLI选项的值。
      *
      * @param string $key
      *
-     * @return string|null
+     * @return mixed|null
      */
     public function getOption(string $key)
     {
-        if (array_key_exists($key, $this->options))
-        {
+        if (array_key_exists($key, $this->options)) {
             return $this->options[$key];
         }
 
         return null;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the options as a string, suitable for passing along on
-     * the CLI to other commands.
-     *
-     * Example:
-     *      $options = [
-     *          'foo' => 'bar',
-     *          'baz' => 'queue some stuff'
-     *      ];
-     *
-     *      getOptionString() = '-foo bar -baz "queue some stuff"'
+     * 将选项返回为字符串，适合在CLI上传递给其他命令
      *
      * @return string
      */
     public function getOptionString(): string
     {
-        if (empty($this->options))
-        {
+        if (empty($this->options)) {
             return '';
         }
-
         $out = '';
-
-        foreach ($this->options as $name => $value)
-        {
-            // If there's a space, we need to group
-            // so it will pass correctly.
-            if (strpos($value, ' ') !== false)
-            {
-                $value = '"'. $value .'"';
+        foreach ($this->options as $name => $value) {
+            // 如果有一个空间，我们需要组会通过正确
+            if (strpos($value, ' ') !== false) {
+                $value = '"' . $value . '"';
             }
-
             $out .= "-{$name} $value ";
         }
 
         return $out;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Parses the command line it was called from and collects all options
-     * and valid segments.
-     *
-     * NOTE: I tried to use getopt but had it fail occasionally to find
-     * any options, where argv has always had our back.
+     * 解析命令行，它被称为从收集所有的选择和有效的细分
      */
     protected function parseCommand()
     {
-        // Since we're building the options ourselves,
-        // we stop adding it to the segments array once
-        // we have found the first dash.
+        // 由于我们自己构建了选项，所以一旦我们找到第一个破折号，就停止将它添加到段数组中
         $options_found = false;
-
-        $argc = $this->getServer('argc', FILTER_SANITIZE_NUMBER_INT);
-        $argv = $this->getServer('argv');
-
-        // We start at 1 since we never want to include index.php
-        for ($i = 1; $i < $argc; $i++)
-        {
-            // If there's no '-' at the beginning of the argument
-            // then add it to our segments.
-            if ( ! $options_found && strpos($argv[$i], '-') === false)
-            {
+        $argc          = $this->getServer('argc', FILTER_SANITIZE_NUMBER_INT);
+        $argv          = $this->getServer('argv');
+        //
+        for ($i = 1; $i < $argc; $i++) {
+            // 如果参数开始时没有“-”，则将其添加到我们的段中。
+            if (!$options_found && strpos($argv[$i], '-') === false) {
                 $this->segments[] = filter_var($argv[$i], FILTER_SANITIZE_STRING);
                 continue;
             }
-
             $options_found = true;
-
-            if (substr($argv[$i], 0, 1) != '-')
-            {
+            if (substr($argv[$i], 0, 1) != '-') {
                 continue;
             }
-
-            $arg = filter_var(str_replace('-', '', $argv[$i]), FILTER_SANITIZE_STRING);
+            $arg   = filter_var(str_replace('-', '', $argv[$i]), FILTER_SANITIZE_STRING);
             $value = null;
-
-            // If the next item starts with a dash it's a value
-            if (isset($argv[$i + 1]) && substr($argv[$i + 1], 0, 1) != '-' )
-            {
+            //
+            if (isset($argv[$i + 1]) && substr($argv[$i + 1], 0, 1) != '-') {
                 $value = filter_var($argv[$i + 1], FILTER_SANITIZE_STRING);
                 $i++;
             }
-
             $this->options[$arg] = $value;
         }
     }
-
-
 }

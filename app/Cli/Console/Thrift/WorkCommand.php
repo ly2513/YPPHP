@@ -1,8 +1,8 @@
 <?php
 /**
  * User: yongli
- * Date: 17/9/27
- * Time: 18:03
+ * Date: 17/9/29
+ * Time: 14:51
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
@@ -49,7 +49,6 @@ class WorkCommand extends Command
 
             return false;
         }
-
 
         return true;
     }

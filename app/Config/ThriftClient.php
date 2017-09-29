@@ -29,7 +29,7 @@ class ThriftClient
      *
      * @var int
      */
-    public $time_out = 84800;
+    public static $timeOut = 84800;
 
     /**
      * 使用的协议,默认TBinaryProtocol,可更改

@@ -1,12 +1,12 @@
 <?php
 /**
  * User: yongli
- * Date: 17/9/2
- * Time: 08:25
+ * Date: 17/9/29
+ * Time: 15:12
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Console\Database;
+namespace Cli\Console\Database;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,9 +27,8 @@ class RefreshCommand extends BaseCommand
             new InputOption('seed', null, InputOption::VALUE_NONE, '指示是否应重新运行随机任务.'),
             new InputOption('seeder', null, InputOption::VALUE_OPTIONAL, '随机类名称.'),
         ]);
-
     }
-    
+
     /**
      * 命令操作
      *

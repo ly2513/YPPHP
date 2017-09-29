@@ -1,8 +1,8 @@
 <?php
 /**
  * User: yongli
- * Date: 17/8/30
- * Time: 17:43
+ * Date: 17/9/29
+ * Time: 14:50
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
@@ -39,8 +39,9 @@ class GenCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $thriftPath = $input->getOption('thrift-path');
-        if(!$thriftPath){
+        if (!$thriftPath) {
             $output->writeln(sprintf('请输入需要编译的文件!'));
+
             return false;
         }
         // 获得thrift 目录
@@ -52,6 +53,7 @@ class GenCommand extends Command
         $sourceDir = ROOT_PATH . 'gen-php/';
         $command   = 'thrift -gen php ' . $thriftPath . ' && cp -R ' . $sourceDir . ' ' . $thriftDir . ' && rm -rf ' . ROOT_PATH . 'gen-php';
         // 执行命令
+        
         system($command, $status);
         unset($file, $command);
         if ($status) {

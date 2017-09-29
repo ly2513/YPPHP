@@ -1,12 +1,12 @@
 <?php
 /**
  * User: yongli
- * Date: 17/9/2
- * Time: 08:24
+ * Date: 17/9/29
+ * Time: 14:58
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Console\Database;
+namespace Cli\Console\Database;
 
 use YP\Libraries\Migrations\YP_MigrationRepositoryInterface;
 use Symfony\Component\Console\Input\InputOption;

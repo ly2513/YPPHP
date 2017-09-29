@@ -550,6 +550,27 @@ class Services
     }
 
     /**
+     * 实例化 Thrift服务端
+     *
+     * @param \Config\ThriftService|null $config
+     * @param bool                       $getShared
+     *
+     * @return mixed|\YP\Libraries\Thrift\YP_ThriftService
+     */
+    public static function thriftService(\Config\ThriftService $config = null, $getShared = true)
+    {
+        if ($getShared) {
+            return self::getSharedInstance('thriftService', $config);
+        }
+        if (!is_object($config)) {
+            $config = new \Config\ThriftService();
+        }
+
+        return new \YP\Libraries\Thrift\YP_ThriftService($config);
+    }
+
+
+    /**
      * thrift加载类
      *
      * @param bool $getShared

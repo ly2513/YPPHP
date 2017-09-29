@@ -1,12 +1,12 @@
 <?php
 /**
  * User: yongli
- * Date: 17/9/2
- * Time: 08:26
+ * Date: 17/9/29
+ * Time: 15:13
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Console\Database;
+namespace Cli\Console\Database;
 
 use YP\Libraries\Migrations\YP_Migrator;
 use Symfony\Component\Console\Input\InputOption;
@@ -43,9 +43,8 @@ class StatusCommand extends BaseCommand
             new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
             new InputOption('path', null, InputOption::VALUE_OPTIONAL, '要使用的迁移路径路径.'),
         ]);
-
     }
-    
+
     /**
      * 命令操作
      *

@@ -68,7 +68,7 @@ class YP_ThriftService
      *
      * @var string
      */
-    public $class = '';
+    public static $class = '';
 
     /**
      * 日志对象
@@ -98,40 +98,57 @@ class YP_ThriftService
      */
     public function __construct(\Config\ThriftService $config)
     {
-        $this->host            = $config->host;
-        $this->port            = $config->port;
-        $this->thriftProtocol  = $config->thriftProtocol;
-        $this->thriftTransport = $config->thriftTransport;
-        $this->log             = Services::log();
-        $this->servicePath     = \Config\ThriftService::$genDir;
+        $this->config($config);
+//        call_user_func('onStart', $this);
+//        call_user_func('onConnect', $this);
+    }
+
+    /**
+     * 初始化配置
+     *
+     * @param $config
+     */
+    protected function config($config)
+    {
+        if (is_object($config)) {
+            $this->host            = $config->host;
+            $this->port            = $config->port;
+            $this->thriftProtocol  = $config->thriftProtocol;
+            $this->thriftTransport = $config->thriftTransport;
+            $this->log             = Services::log();
+            $this->servicePath     = \Config\ThriftService::$genDir;
+        }
     }
 
     /**
      * 进程启动时做的一些初始化工作
      *
+     * @param $class
+     *
      * @throws \Exception
      */
-    public function onStart()
+    public function onStart($class)
     {
         // 检查类是否设置
-        if (!$this->class) {
+        if (!$class) {
             throw new \Exception('ThriftWorker->class not set');
         }
+        self::$class = $class;
         // 设置name
         if ($this->name == 'none') {
-            $this->name = $this->class;
+            $this->name = self::$class;
         }
         // 载入该服务下的所有文件
         $this->includeFile();
         // 检查类是否存在
-        $processor_class_name = "\\Services\\" . $this->class . "\\" . $this->class . 'Processor';
+        $processor_class_name = "\\Services\\" . self::$class . "\\" . self::$class . 'Processor';
         if (!class_exists($processor_class_name)) {
             $this->log->error("Class $processor_class_name not found");
 
             return;
         }
         // 检查类是否存在
-        $handler_class_name = "\\Services\\" . $this->class . "\\" . $this->class . 'Handler';
+        $handler_class_name = "\\Services\\" . self::$class . "\\" . self::$class . 'Handler';
         if (!class_exists($handler_class_name)) {
             $this->log->error("Class $handler_class_name not found");
 
@@ -147,18 +164,23 @@ class YP_ThriftService
     public function onConnect()
     {
         $t_socket = new TSocket($this->host, $this->port);
+        $t_socket->setSendTimeout(10000);#Sets the send timeout.
+        $t_socket->setRecvTimeout(20000);
         //        $t_socket->setHandle($socket);
         $transport_name = '\\Thrift\\Transport\\' . $this->thriftTransport;
         $transport      = new $transport_name($t_socket);
         $protocol_name  = '\\Thrift\\Protocol\\' . $this->thriftProtocol;
         $protocol       = new $protocol_name($transport);
-        $handler        = new CalculatorHandler();
-        $processor      = new \tutorial\CalculatorProcessor($handler);
-        //        $transport      = new \Thrift\Transport\TBufferedTransport(new \Thrift\Transport\TPhpStream(\Thrift\Transport\TPhpStream::MODE_R | \Thrift\Transport\TPhpStream::MODE_W));
-        //        $protocol       = new \Thrift\Protocol\TBinaryProtocol($transport, true, true);
         $transport->open();
-        $processor->process($protocol, $protocol);
+        $this->processor->process($protocol, $protocol);
         $transport->close();
+        //        $handlerClass   = "\\Services\\" . self::$class . "\\" . self::$class . 'Handler';
+        //        $handler        = new $handlerClass();
+        //        $processorClass = "\\Services\\" . self::$class . "\\" . self::$class . 'Processor';
+        //        $processor      = new $processorClass($handler);
+        //        $transport->open();
+        //        $processor->process($protocol, $protocol);
+        //        $transport->close();
     }
 
     /**

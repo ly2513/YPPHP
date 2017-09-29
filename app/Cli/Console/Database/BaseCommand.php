@@ -1,12 +1,12 @@
 <?php
 /**
  * User: yongli
- * Date: 17/9/2
- * Time: 08:26
+ * Date: 17/9/29
+ * Time: 14:55
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Console\Database;
+namespace Cli\Console\Database;
 
 use Config\Migrations;
 use Symfony\Component\Console\Command\Command;
@@ -42,7 +42,7 @@ class BaseCommand extends Command
      */
     public function call($command, array $arguments = [])
     {
-        $instance = $this->getApplication()->find($command);
+        $instance             = $this->getApplication()->find($command);
         $arguments['command'] = $command;
 
         return $instance->run(new ArrayInput($arguments), $this->output);
@@ -60,7 +60,6 @@ class BaseCommand extends Command
         };
     }
 
-    
     /**
      * 格式化输入到文本表
      *

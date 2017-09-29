@@ -1,12 +1,12 @@
 <?php
 /**
  * User: yongli
- * Date: 17/9/2
- * Time: 08:24
+ * Date: 17/9/29
+ * Time: 15:00
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Console\Database;
+namespace Cli\Console\Database;
 
 use Closure;
 use YP\Libraries\Migrations\YP_Migrator;
@@ -17,7 +17,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class MigrateCommand extends BaseCommand
 {
-
     /**
      * 迁移实例
      *
@@ -48,7 +47,7 @@ class MigrateCommand extends BaseCommand
             new InputOption('database', 'f', InputOption::VALUE_REQUIRED, '迁移库表名.'),
         ]);
     }
-    
+
     /**
      * 命令操作
      *

@@ -1,13 +1,12 @@
 <?php
 /**
  * User: yongli
- * Date: 17/9/2
- * Time: 08:25
+ * Date: 17/9/29
+ * Time: 15:12
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Console\Database;
-
+namespace Cli\Console\Database;
 
 use YP\Libraries\Migrations\YP_Migrator;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,7 +15,7 @@ class RollbackCommand extends Command
 {
     /**
      * 迁移实例
-     * 
+     *
      * @var YP_Migrator
      */
     protected $migrator;
@@ -31,10 +30,9 @@ class RollbackCommand extends Command
     public function __construct(YP_Migrator $migrator)
     {
         parent::__construct();
-
         $this->migrator = $migrator;
     }
-    
+
     /**
      * 命令配置
      * {@inheritdoc}
@@ -46,7 +44,6 @@ class RollbackCommand extends Command
             new InputOption('force', null, InputOption::VALUE_NONE, '强行在生产环境操作运行.'),
             new InputOption('pretend', null, InputOption::VALUE_NONE, '运行的SQL查询.'),
         ]);
-
     }
 
     /**
@@ -84,13 +81,9 @@ class RollbackCommand extends Command
         if (!$status) {
             return;
         }
-
         $this->migrator->setConnection($input->getOption('database'));
-
         $pretend = $input->getOption('pretend');
-
         $this->migrator->rollback($pretend);
-
         // 一旦他们跑了我们会抓住注意输出并将其发送至控制台屏幕，
         // 因为他们本身的功能没有传入类的任何实例输出合同
         foreach ($this->migrator->getNotes() as $note) {

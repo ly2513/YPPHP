@@ -28,6 +28,9 @@ define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
 // 定义应用路径
 define('APP_PATH', rtrim(ROOT_PATH . 'app', '/') . DIRECTORY_SEPARATOR);
 
+// 定义框架路径
+defined('SYSTEM_PATH') ? : define('SYSTEM_PATH', rtrim(ROOT_PATH . 'system', '/') . DIRECTORY_SEPARATOR);
+
 // 加载 Illuminate\Console Doctrine Eloquent
 require ROOT_PATH . 'vendor/autoload.php';
 
@@ -49,8 +52,37 @@ function do_doctrine_load($className)
 
 spl_autoload_register('do_doctrine_load');
 
-// 加载 YP 命令行工具
-require APP_PATH . 'Cli/autoload.php';
+// 加载 YP 命令行工具rm 
+//require APP_PATH . 'Cli/autoload.php';
+/**
+ * 所要加载的类
+ *
+ * @param $class
+ */
+function do_yp_load($class)
+{
+    if ($class) {
+        $file           = str_replace('\\', '/', $class);
+        $file = APP_PATH . $file . '.php';
+        if (file_exists($file)) {
+            require $file;
+        }
+    }
+
+}
+
+spl_autoload_register('do_yp_load');
+
+//加载 Doctrine 以及 Doctrine 的 DB连接
+require APP_PATH . 'ThirdParty/Doctrine/Doctrine.php';
+
+$doctrine  = new Doctrine();
+$helperSet = new \Symfony\Component\Console\Helper\HelperSet(
+    [
+        'db' => new \Doctrine\DBAL\Tools\Console\Helper\ConnectionHelper($doctrine->em->getConnection()),
+        'em' => new \Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper($doctrine->em),
+    ]
+);
 
 // 加载命令行工具
 $app = new \Symfony\Component\Console\Application('YP框架命令行工具', 'v1.0(stable)');
@@ -60,12 +92,13 @@ $app->setHelperSet($helperSet);
 // 开始注册所需命令
 $artisans = [
     // Doctrine 命令
-    new \YP\Console\Doctrine\ConvertMappingCommand(),
-    new \YP\Console\Doctrine\GenerateEntitiesCommand(),
-    new \YP\Console\Doctrine\UpdateCommand(),
+    new \Cli\Console\Doctrine\ConvertMappingCommand(),
+    new \Cli\Console\Doctrine\GenerateEntitiesCommand(),
+    new \Cli\Console\Doctrine\UpdateCommand(),
     // Thrift 命令
-    new \YP\Console\Thrift\CreateCommand(),
-    new \YP\Console\Thrift\GenCommand(),
+    new \Cli\Console\Thrift\CreateCommand(),
+    new \Cli\Console\Thrift\GenCommand(),
+    new \Cli\Console\Thrift\WorkCommand(),
     // migrations 命令
 //    new \YP\Console\Database\CreateCommand(),
 //    new \YP\Console\Database\MigrateCommand(),

@@ -1,12 +1,12 @@
 <?php
 /**
  * User: yongli
- * Date: 17/8/29
- * Time: 22:55
+ * Date: 17/9/29
+ * Time: 14:50
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Console\Thrift;
+namespace Cli\Console\Thrift;
 
 use Config\ThriftClient;
 use Symfony\Component\Console\Command\Command;
@@ -16,7 +16,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateCommand extends Command
 {
-
     /**
      * 命令配置
      * {@inheritdoc}

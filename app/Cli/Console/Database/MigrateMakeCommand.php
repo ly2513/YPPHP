@@ -1,12 +1,12 @@
 <?php
 /**
  * User: yongli
- * Date: 17/9/2
- * Time: 08:25
+ * Date: 17/9/29
+ * Time: 15:11
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace YP\Console\Database;
+namespace Cli\Console\Database;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +23,6 @@ class MigrateMakeCommand extends BaseCommand
         {--create= : 要创建的表.}
         {--table= : 要迁移的表.}
         {--path= : 应该创建迁移文件的位置.}';
-
     /**
      * 迁移创建者实例
      *
@@ -60,7 +59,6 @@ class MigrateMakeCommand extends BaseCommand
                 $this->getDefinition()->addOption($option);
             }
         }
-
     }
 
     /**

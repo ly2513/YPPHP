@@ -10,7 +10,7 @@ namespace YP\Core;
 
 use YP\Libraries\YP_Message as Message;
 
-class YP_Request extends Message
+class YP_Request extends Message implements YP_RequestInterface
 {
 
     /**

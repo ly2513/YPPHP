@@ -10,9 +10,6 @@ namespace YP\Core;
 
 use YP\YP;
 use YP\Config\Services;
-use YP\Core\YP_Log as Log;
-use YP\Core\YP_Response as Response;
-use YP\Core\YP_IncomingRequest as IncomingRequest;
 
 /**
  * Class YP_Controller
@@ -140,11 +137,11 @@ class YP_Controller
     /**
      * YP_Controller constructor.
      *
-     * @param YP_IncomingRequest $request
-     * @param YP_Response        $response
-     * @param YP_Log|null        $logger
+     * @param YP_RequestInterface $request
+     * @param YP_Request          $response
+     * @param YP_Log|null         $logger
      */
-    public function __construct(IncomingRequest $request, Response $response, Log $logger = null)
+    public function __construct(YP_RequestInterface $request, YP_Request $response, YP_Log $logger = null)
     {
         $this->request  = $request;
         $this->response = $response;

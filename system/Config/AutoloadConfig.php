@@ -46,7 +46,6 @@ class AutoloadConfig
             'YP\YP'                    => SYSTEM_PATH . 'YP.php',
             'YP\CLI\CLI'               => SYSTEM_PATH . 'CLI/CLI.php',
             'YP\Loader'                => SYSTEM_PATH . 'Loader.php',
-            'YP\Controller'            => SYSTEM_PATH . 'Controller.php',
             'YP\Config\AutoloadConfig' => SYSTEM_PATH . 'Config/AutoloadConfig.php',
             'YP\Config\Config'         => SYSTEM_PATH . 'Config/Config.php',
             'Zend\Escaper\Escaper'     => SYSTEM_PATH . 'ThirdParty/ZendEscaper/Escaper.php',

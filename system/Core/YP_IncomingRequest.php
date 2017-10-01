@@ -9,11 +9,10 @@
 namespace YP\Core;
 
 use YP\Libraries\YP_FileCollection as FileCollection;
-use YP\Libraries\YP_Upload as Upload;
 use YP\Core\YP_Request as Request;
 use Config\Services;
 
-class YP_IncomingRequest extends Request
+class YP_IncomingRequest extends Request 
 {
     /**
      * CSRF 标志

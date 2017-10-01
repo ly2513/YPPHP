@@ -189,11 +189,11 @@ class BaseCollector
      */
     public function cleanPath($file)
     {
-        if (strpos($file, APPPATH) === 0) {
+        if (strpos($file, APP_PATH) === 0) {
             $file = 'APP_PATH/' . substr($file, strlen(APP_PATH));
-        } elseif (strpos($file, BASEPATH) === 0) {
+        } elseif (strpos($file, SYSTEM_PATH) === 0) {
             $file = 'SYSTEM_PATH/' . substr($file, strlen(SYSTEM_PATH));
-        } elseif (strpos($file, FCPATH) === 0) {
+        } elseif (strpos($file, FRONT_PATH) === 0) {
             $file = 'FRONT_PATH/' . substr($file, strlen(FRONT_PATH));
         }
 

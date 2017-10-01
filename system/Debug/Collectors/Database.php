@@ -6,10 +6,10 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace CodeIgniter\Debug\Toolbar\Collectors;
+namespace YP\Debug\Toolbar\Collectors;
 
 use CodeIgniter\Database\Query;
-use CodeIgniter\Services;
+use Config\Services;
 
 /**
  * Collector for the Database tab of the Debug Toolbar.
@@ -135,7 +135,7 @@ class Database extends BaseCollector
 			'IN', 'LIKE', 'NOT&nbsp;LIKE', 'COUNT', 'MAX', 'MIN', 'ON', 'AS', 'AVG', 'SUM', '(', ')'
 		];
 
-		$parser = \Config\Services::parser(BASEPATH.'Debug/Toolbar/Views/');
+		$parser = \Config\Services::parser(SYSTEM_PATH . 'Debug/Toolbar/Views/');
 
 		$data = [
 			'queries' => []

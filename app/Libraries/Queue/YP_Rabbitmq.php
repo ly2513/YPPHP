@@ -16,7 +16,7 @@ use PhpAmqpLib\Message\AMQPMessage;
  *
  * @package Queue
  */
-class YP_Rabbitmq extends YP_QueueInterface
+class YP_Rabbitmq implements YP_QueueInterface
 {
     /**
      * 配置信息

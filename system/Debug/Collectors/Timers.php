@@ -6,9 +6,9 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace CodeIgniter\Debug\Toolbar\Collectors;
+namespace YP\Debug\Toolbar\Collectors;
 
-use CodeIgniter\Services;
+use Config\Services;
 
 /**
  * Timers collector

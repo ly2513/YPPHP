@@ -11,7 +11,12 @@ namespace YP\Cli;
 use YP\Core\YP_Request as Request;
 use Config\App;
 
-class YP_CliRequest extends Request
+/**
+ * Class YP_CliRequest
+ *
+ * @package YP\Cli
+ */
+class YP_CliRequest extends Request 
 {
     /**
      * 存储段我们 CLI“URI” 命令

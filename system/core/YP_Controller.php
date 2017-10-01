@@ -10,6 +10,7 @@ namespace YP\Core;
 
 use YP\YP;
 use YP\Config\Services;
+use YP\Core\YP_IncomingRequest as IncomingRequest;
 
 /**
  * Class YP_Controller

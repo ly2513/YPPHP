@@ -11,7 +11,7 @@ namespace YP;
 use Config\Cache;
 use YP\Core\YP_Uri as Uri;
 use YP\Core\YP_Hooks as Hooks;
-use YP\Core\YP_Request as Request;
+//use YP\Core\YP_Request as Request;
 use YP\Core\YP_Response as Response;
 use YP\Cli\YP_CliRequest as CliRequest;
 use YP\Core\YP_RouterCollection as RouterCollection;

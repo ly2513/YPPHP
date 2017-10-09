@@ -11,27 +11,24 @@ namespace YP\Libraries;
 class YP_Header
 {
     /**
-     * The name of the header.
+     * 头部名称
      *
-     * @var string
+     * @var null|string
      */
     protected $name;
 
     /**
-     * The value of the header. May have more than one
-     * value. If so, will be an array of strings.
+     * 头部的值,可能存在多个值,如果是多个值就是一个数组,单个就是字符串
      *
-     * @var string|array
+     * @var null
      */
     protected $value;
 
-    //--------------------------------------------------------------------
-
     /**
-     * Header constructor. If a name or value is provided they will be set.
+     * YP_Header constructor.
      *
-     * @param string|null        $name
-     * @param string|array|null  $value
+     * @param string|null $name
+     * @param null        $value
      */
     public function __construct(string $name = null, $value = null)
     {
@@ -39,23 +36,18 @@ class YP_Header
         $this->value = $value;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns the name of the header, in the same case it was set.
+     * 返回头的名称
      *
-     * @return string
+     * @return null|string
      */
     public function getName()
     {
         return $this->name;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Gets the raw value of the header. This may return either a string
-     * of an array, depending on whether the header has mutliple values or not.
+     * 获取标头的原始值。这会返回一个字符串数组，取决于头是否有多值
      *
      * @return array|null|string
      */
@@ -64,10 +56,8 @@ class YP_Header
         return $this->value;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Sets the name of the header, overwriting any previous value.
+     * 设置头部名称,覆盖以前的任何值。
      *
      * @param string $name
      *
@@ -80,10 +70,8 @@ class YP_Header
         return $this;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Sets the value of the header, overwriting any previous value(s).
+     * 设置一个头部值, 覆盖以前的任何值（S）
      *
      * @param null $value
      *
@@ -96,11 +84,8 @@ class YP_Header
         return $this;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Appends a value to the list of values for this header. If the
-     * header is a single value string, it will be converted to an array.
+     * 添加一个值为该报头值的列表。如果标题是一个单值的字符串，它将被转换为一个数组
      *
      * @param null $value
      *
@@ -118,11 +103,8 @@ class YP_Header
         return $this;
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Prepends a value to the list of values for this header. If the
-     * header is a single value string, it will be converted to an array.
+     * 预备一个值作为此标头值列表。如果标题是一个单值的字符串，它将被转换为一个数组
      *
      * @param null $value
      *
@@ -140,17 +122,11 @@ class YP_Header
         return $this;
     }
 
-    //--------------------------------------------------------------------
-
-
     /**
-     * Retrieves a comma-separated string of the values for a single header.
+     * 检索一个逗号分隔的字符串的值为一个单一的头。
+     * 注意：不是所有标头值可以适当代表使用逗号连接。这样的标题，而不是用getheader()并提供您自己的连接符时
      *
-     * NOTE: Not all header values may be appropriately represented using
-     * comma concatenation. For such headers, use getHeader() instead
-     * and supply your own delimiter when concatenating.
-     *
-     * @see https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+     * @return string
      */
     public function getValueLine(): string
     {
@@ -185,11 +161,8 @@ class YP_Header
         return implode(', ', $options);
     }
 
-    //--------------------------------------------------------------------
-
     /**
-     * Returns a representation of the entire header string, including
-     * the header name and all values converted to the proper format.
+     * 返回整个标头字符串的表示形式，包括标题名称和所有转换为适当格式的值
      *
      * @return string
      */

@@ -111,8 +111,6 @@ class YP_Controller
      */
     protected $errors = [];
 
-    protected $serverObject;
-
     /**
      * 当前控制器所在的目录
      *
@@ -143,7 +141,6 @@ class YP_Controller
      */
     public function __construct(YP_RequestInterface $request, YP_Request $response, YP_Log $logger = null)
     {
-        P($request);die;
         $this->request  = $request;
         $this->response = $response;
         $this->logger   = is_null($logger) ? Services::log(true) : $logger;

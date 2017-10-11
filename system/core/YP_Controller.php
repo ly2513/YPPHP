@@ -131,15 +131,15 @@ class YP_Controller
      * @var string
      */
     protected $url = '';
-
+    
     /**
      * YP_Controller constructor.
      *
      * @param YP_RequestInterface $request
-     * @param YP_Request          $response
+     * @param YP_Response         $response
      * @param YP_Log|null         $logger
      */
-    public function __construct(YP_RequestInterface $request, YP_Request $response, YP_Log $logger = null)
+    public function __construct(YP_RequestInterface $request, YP_Response $response, YP_Log $logger = null)
     {
         $this->request  = $request;
         $this->response = $response;

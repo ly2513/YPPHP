@@ -10,7 +10,6 @@ namespace YP\Core;
 
 use YP\YP;
 use YP\Config\Services;
-use YP\Core\YP_IncomingRequest as IncomingRequest;
 
 /**
  * Class YP_Controller
@@ -144,6 +143,7 @@ class YP_Controller
      */
     public function __construct(YP_RequestInterface $request, YP_Request $response, YP_Log $logger = null)
     {
+        P($request);die;
         $this->request  = $request;
         $this->response = $response;
         $this->logger   = is_null($logger) ? Services::log(true) : $logger;
@@ -203,17 +203,16 @@ class YP_Controller
      * 校验请求的参数
      * 如果校验失败,将错误存放到类的$error的属性上
      *
-     * @param IncomingRequest $request
-     * @param                 $rules
-     * @param array|null      $messages
+     * @param            $rules
+     * @param array|null $messages
      *
      * @return bool
      */
-    public function validate(IncomingRequest $request, $rules, array $messages = null): bool
+    public function validate($rules, array $messages = null): bool
     {
         $this->validator = Services::validation();
         // 校验路由
-        $success = $this->validator->withRequest($request)->setRules($rules, $messages)->run();
+        $success = $this->validator->withRequest($this->request)->setRules($rules, $messages)->run();
         if (!$success) {
             $this->errors = $this->validator->getErrors();
         }
@@ -320,7 +319,7 @@ class YP_Controller
     public function callBackWithParamError($msg = '')
     {
         // set_status_header(400);
-        callBack(4, [], $msg);
+        call_back(4, [], explode("\n\r", $msg));
     }
 
     /**

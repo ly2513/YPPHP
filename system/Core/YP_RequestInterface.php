@@ -32,5 +32,22 @@ interface YP_RequestInterface
      * @return mixed
      */
     public function getServer($index = null, $filter = null);
+    
+    /**
+     * 获得用户的IP地址
+     *
+     * @return string
+     */
+    public function getIPAddress(): string;
+
+    /**
+     * 校验IP地址
+     *
+     * @param string      $ip IP地址
+     * @param string|null $which IP协议: ipv4、ipv6
+     *
+     * @return bool
+     */
+    public function isValidIP(string $ip, string $which = null): bool;
 
 }

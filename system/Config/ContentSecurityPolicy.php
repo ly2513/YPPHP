@@ -8,6 +8,11 @@
  */
 namespace YP\Config;
 
+/**
+ * Class ContentSecurityPolicy
+ *
+ * @package YP\Config
+ */
 class ContentSecurityPolicy
 {
     public $reportOnly = false;

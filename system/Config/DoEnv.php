@@ -8,6 +8,11 @@
  */
 namespace YP\Config;
 
+/**
+ * Class DotEnv
+ *
+ * @package YP\Config
+ */
 class DotEnv
 {
     /**

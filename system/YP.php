@@ -129,7 +129,7 @@ class YP
     }
 
     /**
-     * Handles some basic app and environment setup.
+     * 处理一些基本的应用程序和环境设置
      */
     public function initialize()
     {
@@ -147,7 +147,7 @@ class YP
         $session = \Config\Services::session();
         $session->start();
         if (YP_DEBUG) {
-            // require_once SYSTRM_PATH . 'ThirdParty/Kint/Kint.class.php';
+             require_once SYSTEM_PATH . 'ThirdParty/Kint/Kint.class.php';
         }
     }
 

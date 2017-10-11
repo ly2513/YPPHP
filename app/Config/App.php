@@ -102,7 +102,7 @@ class App extends Config
      *
      * @var string
      */
-    public $sessionSavePath = CACHE_PATH . '/Session';
+    public $sessionSavePath = CACHE_PATH . 'Session';
 
     /**
      * 读取session会话数据时是否匹配用户的IP地址,

@@ -8,7 +8,7 @@
  */
 use Config\Services;
 
-if (!function_exists('callBack')) {
+if (!function_exists('call_back')) {
     /**
      * 接口返回函数
      *
@@ -16,7 +16,7 @@ if (!function_exists('callBack')) {
      * @param array  $data
      * @param string $msg
      */
-    function callBack($errCode = 0, $data = [], $msg = '')
+    function call_back($errCode = 0, $data = [], $msg = '')
     {
         $errorResult = Services::error()->getAllError();
         $msg         = $msg ??  $errorResult[$errCode];
@@ -40,7 +40,7 @@ if (!function_exists('callBack')) {
  *
  * @return mixed
  */
-function setPageConfig($row, $url, $uri_segment, $per_page = 10)
+function set_page_config($row, $url, $uri_segment, $per_page = 10)
 {
     $config['base_url']          = $url;
     $config['total_rows']        = $row;
@@ -79,7 +79,7 @@ function setPageConfig($row, $url, $uri_segment, $per_page = 10)
  *
  * @return array|bool
  */
-function multiCurlPost($url_array, $wait_usec = 0)
+function multi_curl_post($url_array, $wait_usec = 0)
 {
     if (!is_array($url_array)) {
         return false;
@@ -156,7 +156,7 @@ function random($length)
  *
  * @return string
  */
-function getPassword($length = 6)
+function get_password($length = 6)
 {
     $str = substr(md5(time()), 0, $length);
 

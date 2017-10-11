@@ -8,7 +8,11 @@
  */
 namespace YP\Config;
 
-
+/**
+ * Class Config
+ *
+ * @package YP\Config
+ */
 class Config
 {
 

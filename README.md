@@ -75,6 +75,24 @@
  - [x] PHPExcel Excel工具
  - [x] Thrift
 
+ ## 框架快速上手
+ 首先在本地克隆该框架,在命令行中输入
+ ```
+ git clone  https://github.com/ly2513/YPPHP.git
+
+ #或者
+
+ git clone git@github.com:ly2513/YPPHP.git
+ ```
+ 克隆下来后,进入到public目录下,输入命令
+ ```
+ php -S 127.0.0.1:1025
+ ```
+ 回车,你将看到如下界面
+
+![图片](71921870-3F22-4094-8E52-08018F185F27.png)
+
+
 ## 命令行工具
 
  ```
@@ -101,3 +119,4 @@ php artisan thrift:create -f  Thrift文件名称
 # 编译Thrift文件
 php artisan thrift:gen -p app/ThirdParty/Thrift/Thrift/shared.thrift(thrift文件)
 ```
+

@@ -232,7 +232,7 @@ class YP_Controller
         $this->method     = $router->methodName();
         $this->extension  = $config->extension ?? $this->extension;
         // 缓存目录
-        $config->cache_dir = $config->cache_dir . $this->directory . $this->controller . '/';
+        $config->cache_dir = $config->cache_dir . $this->directory . $this->controller . DIRECTORY_SEPARATOR;
         $this->twig        = Services::twig($config);
         $this->tempPath    = $config->template_dir;
     }
@@ -248,7 +248,7 @@ class YP_Controller
         // 修改模板名称
         $templateName = !is_null($htmlFile) ? $htmlFile : $this->method;
         // 模板文件
-        $tempFile = $this->directory . $this->controller . '/' . $templateName . $this->extension;;
+        $tempFile = $this->directory . $this->controller . DIRECTORY_SEPARATOR . $templateName . $this->extension;;
         // 模板路径
         $htmlPath     = $this->tempPath . $this->directory . $this->controller;
         $tempFilePath = $this->tempPath . $tempFile;
@@ -324,7 +324,7 @@ class YP_Controller
      */
     private function _getCurrentUrl()
     {
-        return '/' . $this->directory . $this->controller . '/' . $this->method;
+        return DIRECTORY_SEPARATOR . $this->directory . $this->controller . DIRECTORY_SEPARATOR . $this->method;
     }
 
 }

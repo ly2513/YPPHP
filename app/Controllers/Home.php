@@ -130,4 +130,12 @@ class Home extends Controller
         P($queue);
     }
 
+    public function ga(){
+
+        echo 2222;
+        $this->display();
+
+        echo 3333;
+    }
+
 }

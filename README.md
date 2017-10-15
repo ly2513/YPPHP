@@ -84,7 +84,8 @@
 
  git clone git@github.com:ly2513/YPPHP.git
  ```
- 克隆下来后,进入到public目录下,输入命令
+ 克隆下来后, 由于
+ 进入到public目录下,输入命令
  ```
  php -S 127.0.0.1:1025
  ```

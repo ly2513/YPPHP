@@ -8,6 +8,8 @@
  */
 namespace App\Libraries\Queue;
 
+use RedisQueue\ResQueue;
+
 /**
  * Class Queue
  *
@@ -49,7 +51,7 @@ class YP_Queue
      *
      * @var string
      */
-    private $logPath = CACHE_PATH . '/Log/';
+    private $logPath = CACHE_PATH . 'Log' . DIRECTORY_SEPARATOR;
 
     /**
      * 设置如果失败将执行的次数
@@ -70,7 +72,7 @@ class YP_Queue
      *
      * @var string
      */
-    private $jobPath = APP_PATH . 'ThirdParty/Queue/';
+    private $jobPath = APP_PATH . 'ThirdParty/Queue' . DIRECTORY_SEPARATOR;
 
     /**
      * 配置数组
@@ -92,16 +94,25 @@ class YP_Queue
         P(self::$instance);
     }
 
+    /**
+     * 出队
+     */
     public function pull()
     {
-
+        //        ResQueue::
     }
 
+    /**
+     * 入队
+     */
     public function push()
     {
 
     }
 
+    /**
+     *
+     */
     public function setInstance()
     {
         self::$instance = "new App\\Libraries\\Queue\\YP_{$this->handlerDrive}";

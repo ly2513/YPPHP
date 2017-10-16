@@ -86,6 +86,8 @@ class YP_Rabbitmq implements YP_QueueInterface
      * @param null  $data
      * @param bool  $permanent
      * @param array $params
+     *
+     * @return bool
      */
     public function push($queue = null, $data = null, $permanent = false, $params = [])
     {
@@ -104,6 +106,8 @@ class YP_Rabbitmq implements YP_QueueInterface
                 null, '+') : true;
         } else {
             $this->_outputMessage('You did not specify the [queue] parameter', 'error', 'x');
+
+            return false;
         }
     }
 
@@ -113,6 +117,8 @@ class YP_Rabbitmq implements YP_QueueInterface
      * @param null  $queue     指定的队列
      * @param bool  $permanent 队列的模式
      * @param array $callback  自定义回调
+     *
+     * @return bool
      */
     public function pull($queue = null, $permanent = false, array $callback = [])
     {
@@ -130,6 +136,8 @@ class YP_Rabbitmq implements YP_QueueInterface
             }
         } else {
             $this->_outputMessage('You did not specify the [queue] parameter', 'error', 'x');
+
+            return false;
         }
     }
 

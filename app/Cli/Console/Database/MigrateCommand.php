@@ -43,9 +43,9 @@ class MigrateCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName('migrate')->setDescription('运行数据库迁移.')->setDefinition([
-            new InputOption('database', 'f', InputOption::VALUE_REQUIRED, '迁移库表名.'),
-        ]);
+        $this->setName('migrate')->setDescription('运行数据库迁移.')->setDefinition(
+            [new InputOption('database', 'f', InputOption::VALUE_REQUIRED, '迁移库表名.')]
+        );
     }
 
     /**
@@ -72,7 +72,7 @@ class MigrateCommand extends BaseCommand
                 $style     = new SymfonyStyle($input, $output);
                 $confirmed = $style->confirm('Do you really wish to run this command?');
                 unset($style);
-                if (!$confirmed) {
+                if (! $confirmed) {
                     $output->writeln('Command Cancelled!');
                     $status = false;
                 } else {
@@ -80,12 +80,12 @@ class MigrateCommand extends BaseCommand
                 }
             }
         }
-        if (!$status) {
-            return;
+        if (! $status) {
+            return ;
         }
         // 准备运行的迁移数据库
         $this->migrator->setConnection($input->getOption('database'));
-        if (!$this->migrator->repositoryExists()) {
+        if (! $this->migrator->repositoryExists()) {
             $options = ['--database' => $input->getOption('database')];
             $this->call('migrate:create', $options);
         }
@@ -94,15 +94,17 @@ class MigrateCommand extends BaseCommand
         $pretend = $input->getOption('pretend');
         // 接下来，我们将检查是否已经定义了一个PATH选项。
         // 如果有，我们将使用与这个安装文件夹的根相对的路径，以便迁移可以在应用程序中的任何路径上运行
-        if (!is_null($path = $input->getOption('path'))) {
+        if (! is_null($path = $input->getOption('path'))) {
             $path = ROOT_PATH . $path;
         } else {
             $path = $this->getMigrationPath();
         }
-        $this->migrator->run($path, [
-            'pretend' => $pretend,
-            'step'    => $input->getOption('step'),
-        ]);
+        $this->migrator->run($path, 
+            [
+             'pretend' => $pretend,
+             'step'    => $input->getOption('step'),
+            ]
+        );
         // 一旦他们跑了我们会抓住注意输出并将其发送至控制台屏幕，
         // 因为他们本身的功能没有传入类的任何实例输出合同
         foreach ($this->migrator->getNotes() as $note) {
@@ -119,4 +121,5 @@ class MigrateCommand extends BaseCommand
 
         return true;
     }
+    
 }

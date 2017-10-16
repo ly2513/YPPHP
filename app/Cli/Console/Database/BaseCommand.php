@@ -28,14 +28,14 @@ class BaseCommand extends Command
     {
         $migration = new Migrations();
 
-        return $migration->migratePath;;
+        return $migration->migratePath;
     }
 
     /**
      * 执行另一个命令
      *
-     * @param       $command
-     * @param array $arguments
+     * @param string $command
+     * @param array  $arguments
      *
      * @return int
      * @throws \Symfony\Component\Console\Exception\ExceptionInterface
@@ -64,9 +64,9 @@ class BaseCommand extends Command
      * 格式化输入到文本表
      *
      * @param array  $headers
-     * @param        $rows
+     * @param array  $rows
      * @param string $style
-     * @param        $output
+     * @param array  $output
      */
     public function table(array $headers, $rows, $style = 'default', $output)
     {

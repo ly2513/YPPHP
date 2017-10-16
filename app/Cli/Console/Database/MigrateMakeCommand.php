@@ -76,7 +76,7 @@ class MigrateMakeCommand extends BaseCommand
         $name   = trim($input->getArgument('name'));
         $table  = $input->getOption('table');
         $create = $input->getOption('create') ? : false;
-        if (!$table && is_string($create)) {
+        if (! $table && is_string($create)) {
             $table  = $create;
             $create = true;
         }
@@ -118,6 +118,11 @@ class MigrateMakeCommand extends BaseCommand
             return array_merge([$name], static::parameters($tokens));
         }
 
-        return [$name, [], []];
+        return
+            [
+             $name,
+             [],
+             [],
+            ];
     }
 }

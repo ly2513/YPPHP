@@ -32,7 +32,7 @@ class CreateCommand extends BaseCommand
     public function __construct(YP_MigrationRepositoryInterface $repository)
     {
         parent::__construct($name = null);
-        $this->repository = $repository;
+        $this->repository         = $repository;
     }
 
     /**
@@ -41,9 +41,9 @@ class CreateCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName('migrate:create')->setDescription('创建一个迁移存储库.')->setDefinition([
-            new InputOption('database', 'f', InputOption::VALUE_REQUIRED, '迁移库表名.'),
-        ]);
+        $this->setName('migrate:create')->setDescription('创建一个迁移存储库.')->setDefinition(
+            [new InputOption('database', 'f', InputOption::VALUE_REQUIRED, '迁移库表名.')]
+        );
     }
 
     /**

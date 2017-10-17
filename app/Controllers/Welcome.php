@@ -10,8 +10,8 @@ namespace App\Controllers;
 
 use YP\Core\YP_Controller as Controller;
 
-class Welcome extends Controller
-{
+class Welcome extends Controller {
+
     public function index()
     {
         p($_SERVER);

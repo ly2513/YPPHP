@@ -13,15 +13,15 @@ use YP\Config\Services;
 use YP\Libraries\Thrift\AddressManager;
 use YP\Libraries\Thrift\YP_ThriftClient;
 
-class Home extends Controller
-{
+class Home extends Controller {
+
 
     /**
      * 网站信息
      */
     public function index()
     {
-        $time         = microtime(true) * 1000;
+        $time         = microtime(TRUE) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
         $this->assign('title', '你好,Twig模板引擎');
         $this->assign('view_path', 'app/Views/Home/' . $this->method . $this->extension);
@@ -74,15 +74,13 @@ class Home extends Controller
     public function testAddress()
     {
         AddressManager::config([
-            'HelloWorld'        => [
-                '127.0.0.1:9090',
-                '127.0.0.2:9090',
-                '127.0.0.3:9090',
-            ],
-            'HelloWorldService' => [
-                '127.0.0.4:9090'
-            ],
-        ]);
+                                'HelloWorld'        => [
+                                                        '127.0.0.1:9090',
+                                                        '127.0.0.2:9090',
+                                                        '127.0.0.3:9090',
+                                                       ],
+                                'HelloWorldService' => ['127.0.0.4:9090'],
+                               ]);
         echo "\n剔除address 127.0.0.1:9090 127.0.0.2:9090，放入故障address列表\n";
         AddressManager::kickAddress('127.0.0.1:9090');
         AddressManager::kickAddress('127.0.0.2:9090');
@@ -96,11 +94,11 @@ class Home extends Controller
         var_export(AddressManager::getBadAddressList());
         echo "\n配置有更改，md5会改变，则故障address列表自动清空\n";
         AddressManager::config([
-            'HelloWorld' => [
-                '127.0.0.2:9090',
-                '127.0.0.3:9090',
-            ],
-        ]);
+                                'HelloWorld' => [
+                                                 '127.0.0.2:9090',
+                                                 '127.0.0.3:9090',
+                                                ],
+                               ]);
         echo "\n打印故障address列表\n";
         var_export(AddressManager::getBadAddressList());
     }
@@ -130,7 +128,8 @@ class Home extends Controller
         P($queue);
     }
 
-    public function ga(){
+    public function ga()
+    {
 
         echo 2222;
         $this->display();

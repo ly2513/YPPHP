@@ -12,10 +12,11 @@ namespace YP\Libraries\LogHandlers;
  * 日志处理接口
  *
  * Interface HandlerInterface
+ *
  * @package YP\Libraries\LogHandlers
  */
-interface YP_HandlerInterface
-{
+interface YP_HandlerInterface {
+
     /**
      * 处理记录消息。
      * 如果处理程序返回false，则处理程序将停止执行。尚未运行的任何处理程序都不会运行。

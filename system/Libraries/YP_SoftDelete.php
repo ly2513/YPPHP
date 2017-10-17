@@ -15,8 +15,8 @@ namespace Illuminate\Database\Eloquent;
  *
  * @package YP\Libraries
  */
-trait SoftDelete
-{
+trait SoftDelete {
+
     use SoftDeletes;
 
     /**
@@ -36,7 +36,7 @@ trait SoftDelete
      */
     public function trashed()
     {
-        return $this->{$this->getDeletedAtColumn()} ? true : false;
+        return $this->{$this->getDeletedAtColumn()} ? TRUE : FALSE;
     }
 
     /**
@@ -49,16 +49,16 @@ trait SoftDelete
         // If the restoring event does not return false, we will proceed with this
         // restore operation. Otherwise, we bail out so the developer will stop
         // the restore totally. We will clear the deleted timestamp and save.
-        if ($this->fireModelEvent('restoring') === false) {
-            return false;
+        if ($this->fireModelEvent('restoring') === FALSE) {
+            return FALSE;
         }
         $this->{$this->getDeletedAtColumn()} = SoftDeleteScope::DELETED_NORMAL;
         // Once we have saved the model, we will fire the "restored" event so this
         // developer will do anything they need to after a restore operation is
         // totally finished. Then we will return the result of the save call.
-        $this->exists = true;
-        $result = $this->save();
-        $this->fireModelEvent('restored', false);
+        $this->exists = TRUE;
+        $result       = $this->save();
+        $this->fireModelEvent('restored', FALSE);
 
         return $result;
     }
@@ -70,7 +70,7 @@ trait SoftDelete
      */
     protected function runSoftDelete()
     {
-        $query = $this->newQueryWithoutScopes()->where($this->getKeyName(), $this->getKey());
+        $query                               = $this->newQueryWithoutScopes()->where($this->getKeyName(), $this->getKey());
         $this->{$this->getDeletedAtColumn()} = SoftDeleteScope::DELETED_NORMAL;
         $query->update([$this->getDeletedAtColumn() => SoftDeleteScope::DELETED_NORMAL]);
     }
@@ -82,8 +82,8 @@ trait SoftDelete
  *
  * @package YP\Libraries
  */
-class SoftDeleteScope extends SoftDeletingScope
-{
+class SoftDeleteScope extends SoftDeletingScope {
+
     // 新增的关于deleted_at 值的定义
     const DELETED_NORMAL = 0;
     const DELETED_DEL    = 1;
@@ -141,8 +141,8 @@ class SoftDeleteScope extends SoftDeletingScope
             $column = $this->getDeletedAtColumn($builder);
 
             return $builder->update([
-                $column => self::DELETED_DEL,
-            ]);
+                                     $column => self::DELETED_DEL,
+                                    ]);
         });
     }
 

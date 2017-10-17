@@ -1,15 +1,19 @@
 <?php
 
-class Kint_Parsers_SplObjectStorage extends kintParser
-{
+class Kint_Parsers_SplObjectStorage extends kintParser {
+
 	protected function _parse( & $variable )
 	{
-		if ( !is_object( $variable ) || !$variable instanceof SplObjectStorage ) return false;
+		if ( ! is_object( $variable ) || ! $variable instanceof SplObjectStorage ) { return FALSE;
+        }
 
-		/** @var $variable SplObjectStorage */
+		/**
+ * @var $variable SplObjectStorage 
+*/
 
 		$count = $variable->count();
-		if ( $count === 0 ) return false;
+		if ( $count === 0 ) { return FALSE;
+        }
 
 		$variable->rewind();
 		while ( $variable->valid() ) {

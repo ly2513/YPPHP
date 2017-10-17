@@ -8,8 +8,8 @@
  */
 use Config\Email;
 
-class YP_Email
-{
+class YP_Email {
+
     /**
      * email对象
      *
@@ -38,7 +38,7 @@ class YP_Email
     {
         // 邮件配置
         $this->mailConf = new Email();
-        $this->mailConf = (array)$this->mailConf;
+        $this->mailConf = (array) $this->mailConf;
         $this->initMailer();
     }
 
@@ -70,7 +70,7 @@ class YP_Email
     /**
      * 发送邮件
      *
-     * @param        $message
+     * @param $message
      * @param array  $user
      * @param string $title
      *
@@ -89,7 +89,7 @@ class YP_Email
         $this->mail->Body    = $message;
 
         try{
-            if( !$this->mail->send()){
+            if( ! $this->mail->send()){
                 $this->errorInfo = $this->mail->ErrorInfo;
                 return FALSE;
             }
@@ -99,6 +99,5 @@ class YP_Email
             return FALSE;
         }
     }
-
-
+    
 }

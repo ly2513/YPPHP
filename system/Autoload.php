@@ -8,8 +8,8 @@
  */
 namespace YP;
 
-class Autoload
-{
+class Autoload {
+
     /**
      * 命名空间映射数组
      * 将命名空间作为key,路径作为value
@@ -53,15 +53,15 @@ class Autoload
         // 设置加载文件的后缀
         spl_autoload_extensions('.php,.inc');
         // 加载类
-        spl_autoload_register([$this, 'loadClass'], true, true);
+        spl_autoload_register([$this, 'loadClass'], TRUE, TRUE);
         // 加载框架运行必要的类
         $config = is_array($this->classMap) ? $this->classMap : [];
         spl_autoload_register(function ($class) use ($config) {
-            if (!array_key_exists($class, $config)) {
-                return false;
+            if (! array_key_exists($class, $config)) {
+                return FALSE;
             }
             include_once $config[$class];
-        }, true, true);
+        }, TRUE, TRUE);
     }
 
     /**
@@ -76,7 +76,7 @@ class Autoload
         $class       = trim($class, '\\');
         $class       = str_ireplace('.php', '', $class);
         $mapped_file = $this->loadInNamespace($class);
-        if (!$mapped_file) {
+        if (! $mapped_file) {
             $mapped_file = $this->loadLegacy($class);
         }
 
@@ -92,8 +92,8 @@ class Autoload
      */
     protected function loadInNamespace($class)
     {
-        if (strpos($class, '\\') === false) {
-            return false;
+        if (strpos($class, '\\') === FALSE) {
+            return FALSE;
         }
         foreach ($this->namespaceMap as $namespace => $directories) {
             if (is_string($directories)) {
@@ -111,7 +111,7 @@ class Autoload
         }
 
         // 没找到映射文件
-        return false;
+        return FALSE;
     }
 
     /**
@@ -123,15 +123,15 @@ class Autoload
      */
     protected function loadLegacy($class)
     {
-        if (strpos('\\', $class) !== false) {
-            return false;
+        if (strpos('\\', $class) !== FALSE) {
+            return FALSE;
         }
         // 加载应用的控制器、类库、模型
         $paths = [
-            APP_PATH . 'Controllers/',
-            APP_PATH . 'Libraries/',
-            APP_PATH . 'Models/',
-        ];
+                  APP_PATH . 'Controllers/',
+                  APP_PATH . 'Libraries/',
+                  APP_PATH . 'Models/',
+                 ];
         $class = str_replace('\\', '/', $class) . '.php';
 
         foreach ($paths as $path) {
@@ -140,7 +140,7 @@ class Autoload
             }
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -159,7 +159,7 @@ class Autoload
             return $file;
         }
 
-        return false;
+        return FALSE;
     }
 
     /**

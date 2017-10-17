@@ -19,8 +19,8 @@ use Config\App;
  *
  * @package APP\Libraries
  */
-class YP_DebugToolbar implements FilterInterface
-{
+class YP_DebugToolbar implements FilterInterface {
+
 
     /**
      * 我们这里没有任何事要做
@@ -45,7 +45,7 @@ class YP_DebugToolbar implements FilterInterface
     public function after(IncomingRequest $request, Response $response)
     {
         $format = $response->getHeaderLine('content-type');
-        if (!is_cli() && YP_DEBUG && strpos($format, 'html') !== false) {
+        if (! is_cli() && YP_DEBUG && strpos($format, 'html') !== FALSE) {
             global $app;
             $toolbar = Services::toolbar(new App());
             $stats   = $app->getPerformanceStats();

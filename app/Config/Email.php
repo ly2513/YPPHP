@@ -8,8 +8,8 @@
  */
 namespace Config;
 
-class Email
-{
+class Email {
+
     /**
      * 邮箱服务器
      *

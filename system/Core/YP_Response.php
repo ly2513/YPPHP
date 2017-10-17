@@ -17,8 +17,8 @@ use YP\Config\ContentSecurityPolicy;
  *
  * @package YP\Core
  */
-class YP_Response extends Message
-{
+class YP_Response extends Message {
+
     /**
      * HTTP 状态码
      *
@@ -26,72 +26,72 @@ class YP_Response extends Message
      */
     protected static $statusCodes = [
         // 1xx: Informational
-        100 => 'Continue',
-        101 => 'Switching Protocols',
-        102 => 'Processing',
+                                     100 => 'Continue',
+                                     101 => 'Switching Protocols',
+                                     102 => 'Processing',
         // 2xx: 响应成功
-        200 => 'OK',
-        201 => 'Created',
-        202 => 'Accepted',
-        203 => 'Non-Authoritative Information',
-        204 => 'No Content',
-        205 => 'Reset Content',
-        206 => 'Partial Content',
-        207 => 'Multi-Status',
-        208 => 'Already Reported',
-        226 => 'IM Used',
+                                     200 => 'OK',
+                                     201 => 'Created',
+                                     202 => 'Accepted',
+                                     203 => 'Non-Authoritative Information',
+                                     204 => 'No Content',
+                                     205 => 'Reset Content',
+                                     206 => 'Partial Content',
+                                     207 => 'Multi-Status',
+                                     208 => 'Already Reported',
+                                     226 => 'IM Used',
         // 3xx: 重定向
-        300 => 'Multiple Choices',
-        301 => 'Moved Permanently',
-        302 => 'Found',
-        303 => 'See Other',
-        304 => 'Not Modified',
-        305 => 'Use Proxy',
-        306 => 'Switch Proxy',
-        307 => 'Temporary Redirect',
-        308 => 'Permanent Redirect',
+                                     300 => 'Multiple Choices',
+                                     301 => 'Moved Permanently',
+                                     302 => 'Found',
+                                     303 => 'See Other',
+                                     304 => 'Not Modified',
+                                     305 => 'Use Proxy',
+                                     306 => 'Switch Proxy',
+                                     307 => 'Temporary Redirect',
+                                     308 => 'Permanent Redirect',
         // 4xx: 客服端错误
-        400 => 'Bad Request',
-        401 => 'Unauthorized',
-        402 => 'Payment Required',
-        403 => 'Forbidden',
-        404 => 'Not Found',
-        405 => 'Method Not Allowed',
-        406 => 'Not Acceptable',
-        407 => 'Proxy Authentication Required',
-        408 => 'Request Timeout',
-        409 => 'Conflict',
-        410 => 'Gone',
-        411 => 'Length Required',
-        412 => 'Precondition Failed',
-        413 => 'Request Entity Too Large',
-        414 => 'Request-URI Too Long',
-        415 => 'Unsupported Media Type',
-        416 => 'Requested Range Not Satisfiable',
-        417 => 'Expectation Failed',
-        418 => "I'm a teapot",
-        421 => 'Misdirected Request',
-        422 => 'Unprocessable Entity',
-        423 => 'Locked',
-        424 => 'Failed Dependency',
-        426 => 'Upgrade Required',
-        428 => 'Precondition Required',
-        429 => 'Too Many Requests',
-        431 => 'Request Header Fields Too Large',
-        451 => 'Unavailable For Legal Reasons',
+                                     400 => 'Bad Request',
+                                     401 => 'Unauthorized',
+                                     402 => 'Payment Required',
+                                     403 => 'Forbidden',
+                                     404 => 'Not Found',
+                                     405 => 'Method Not Allowed',
+                                     406 => 'Not Acceptable',
+                                     407 => 'Proxy Authentication Required',
+                                     408 => 'Request Timeout',
+                                     409 => 'Conflict',
+                                     410 => 'Gone',
+                                     411 => 'Length Required',
+                                     412 => 'Precondition Failed',
+                                     413 => 'Request Entity Too Large',
+                                     414 => 'Request-URI Too Long',
+                                     415 => 'Unsupported Media Type',
+                                     416 => 'Requested Range Not Satisfiable',
+                                     417 => 'Expectation Failed',
+                                     418 => "I'm a teapot",
+                                     421 => 'Misdirected Request',
+                                     422 => 'Unprocessable Entity',
+                                     423 => 'Locked',
+                                     424 => 'Failed Dependency',
+                                     426 => 'Upgrade Required',
+                                     428 => 'Precondition Required',
+                                     429 => 'Too Many Requests',
+                                     431 => 'Request Header Fields Too Large',
+                                     451 => 'Unavailable For Legal Reasons',
         // 5xx: 服务器错误
-        500 => 'Internal Server Error',
-        501 => 'Not Implemented',
-        502 => 'Bad Gateway',
-        503 => 'Service Unavailable',
-        504 => 'Gateway Timeout',
-        505 => 'HTTP Version Not Supported',
-        506 => 'Variant Also Negotiates',
-        507 => 'Insufficient Storage',
-        508 => 'Loop Detected',
-        510 => 'Not Extended',
-        511 => 'Network Authentication Required'
-    ];
+                                     500 => 'Internal Server Error',
+                                     501 => 'Not Implemented',
+                                     502 => 'Bad Gateway',
+                                     503 => 'Service Unavailable',
+                                     504 => 'Gateway Timeout',
+                                     505 => 'HTTP Version Not Supported',
+                                     506 => 'Variant Also Negotiates',
+                                     507 => 'Insufficient Storage',
+                                     508 => 'Loop Detected',
+                                     510 => 'Not Extended',
+                                     511 => 'Network Authentication Required',
+                                    ];
 
     /**
      * 状态码对应的原因短语
@@ -112,7 +112,7 @@ class YP_Response extends Message
      *
      * @var bool
      */
-    protected $CSPEnabled = false;
+    protected $CSPEnabled = FALSE;
 
     /**
      * 内容安全策略对象
@@ -130,6 +130,7 @@ class YP_Response extends Message
 
     /**
      * 当前网站的Cookie
+     *
      * @var string
      */
     protected $cookieDomain = '';
@@ -146,14 +147,14 @@ class YP_Response extends Message
      *
      * @var bool
      */
-    protected $cookieSecure = false;
+    protected $cookieSecure = FALSE;
 
     /**
      * Cookie只能通过HTTP(s)访问标识
      *
      * @var bool
      */
-    protected $cookieHTTPOnly = false;
+    protected $cookieHTTPOnly = FALSE;
 
     /**
      * YP_Response constructor.
@@ -165,9 +166,9 @@ class YP_Response extends Message
         // 设置不缓存,同时确保设置Cache-control在响应头里
         $this->noCache();
         // 判断是否执行内容安全策略
-        if ($config->CSPEnabled === true) {
+        if ($config->CSPEnabled === TRUE) {
             $this->CSP        = new ContentSecurityPolicy();
-            $this->CSPEnabled = true;
+            $this->CSPEnabled = TRUE;
         }
         $this->cookiePrefix   = $config->cookiePrefix;
         $this->cookieDomain   = $config->cookieDomain;
@@ -210,7 +211,7 @@ class YP_Response extends Message
             throw new \InvalidArgumentException($code . ' is not a valid HTTP return status code');
         }
         $this->statusCode = $code;
-        if (!empty($reason)) {
+        if (! empty($reason)) {
             $this->reason = $reason;
         } else {
             if ($codeLen == 3 && ($code > 100 || $code < 599)) {
@@ -228,7 +229,7 @@ class YP_Response extends Message
     public function getReason(): string
     {
         if (empty($this->reason)) {
-            return !empty($this->statusCode) ? static::$statusCodes[$this->statusCode] : '';
+            return ! empty($this->statusCode) ? static::$statusCodes[$this->statusCode] : '';
         }
 
         return $this->reason;
@@ -259,7 +260,7 @@ class YP_Response extends Message
      */
     public function setContentType(string $mime, string $charset = 'UTF-8'): self
     {
-        if (!empty($charset)) {
+        if (! empty($charset)) {
             $mime .= '; charset=' . $charset;
         }
         $this->setHeader('Content-Type', $mime);
@@ -352,7 +353,7 @@ class YP_Response extends Message
     public function send(): self
     {
         // 如果正在执行内容安全策略，需要构建它的头文件
-        if ($this->CSPEnabled === true) {
+        if ($this->CSPEnabled === TRUE) {
             $this->CSP->finalize($this);
         }
         $this->sendHeaders();
@@ -377,11 +378,11 @@ class YP_Response extends Message
             $this->setDate(\DateTime::createFromFormat('U', time()));
         }
         // HTTP状态
-        header(sprintf('HTTP/%s %s %s', $this->protocolVersion, $this->statusCode, $this->reason), true,
+        header(sprintf('HTTP/%s %s %s', $this->protocolVersion, $this->statusCode, $this->reason), TRUE,
             $this->statusCode);
         // 发送所有的响应头
         foreach ($this->getHeaders() as $name => $values) {
-            header($name . ': ' . $this->getHeaderLine($name), false, $this->statusCode);
+            header($name . ': ' . $this->getHeaderLine($name), FALSE, $this->statusCode);
         }
 
         return $this;
@@ -408,14 +409,14 @@ class YP_Response extends Message
      *
      * @throws \Exception
      */
-    public function redirect(string $uri, string $method = 'auto', int $code = null)
+    public function redirect(string $uri, string $method = 'auto', int $code = NULL)
     {
         // 如果是IIS服务器,用refresh做最好的兼容
         if ($method === 'auto' && isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],
-                'Microsoft-IIS') !== false
+                'Microsoft-IIS') !== FALSE
         ) {
             $method = 'refresh';
-        } elseif ($method !== 'refresh' && (empty($code) || !is_numeric($code))) {
+        } elseif ($method !== 'refresh' && (empty($code) || ! is_numeric($code))) {
             if (isset($_SERVER['SERVER_PROTOCOL'], $_SERVER['REQUEST_METHOD']) && $_SERVER['SERVER_PROTOCOL'] === 'HTTP/1.1') {
                 $code = ($_SERVER['REQUEST_METHOD'] !== 'GET') ? 303    // reference: http://en.wikipedia.org/wiki/Post/Redirect/Get
                     : 307;
@@ -440,7 +441,7 @@ class YP_Response extends Message
     /**
      * 设置Cookie
      *
-     * @param        $name      Cookie 名称
+     * @param $name      Cookie 名称
      * @param string $value     Cookie 值
      * @param string $expire    Cookie 过期时间
      * @param string $domain    Cookie 域 ()
@@ -456,9 +457,10 @@ class YP_Response extends Message
         $domain = '',
         $path = '/',
         $prefix = '',
-        $secure = false,
-        $http_only = false
-    ) {
+        $secure = FALSE,
+        $http_only = FALSE
+    ) 
+    {
         if (is_array($name)) {
             // always leave 'name' in last place, as the loop will break otherwise, due to $$item
             foreach (['value', 'expire', 'domain', 'path', 'prefix', 'secure', 'httponly', 'name'] as $item) {
@@ -476,13 +478,13 @@ class YP_Response extends Message
         if ($path === '/' && $this->cookiePath !== '/') {
             $path = $this->cookiePath;
         }
-        if ($secure === false && $this->cookieSecure === true) {
+        if ($secure === FALSE && $this->cookieSecure === TRUE) {
             $secure = $this->cookieSecure;
         }
-        if ($http_only === false && $this->cookieHTTPOnly !== false) {
+        if ($http_only === FALSE && $this->cookieHTTPOnly !== FALSE) {
             $http_only = $this->cookieHTTPOnly;
         }
-        if (!is_numeric($expire)) {
+        if (! is_numeric($expire)) {
             $expire = time() - 86500;
         } else {
             $expire = ($expire > 0) ? time() + $expire : 0;
@@ -497,12 +499,12 @@ class YP_Response extends Message
      * @param string $data     下载的数据
      * @param bool   $setMime  是否尝试发送实际MIME类型
      */
-    public function download(string $filename = '', $data = '', bool $setMime = false)
+    public function download(string $filename = '', $data = '', bool $setMime = FALSE)
     {
         if ($filename === '' || $data === '') {
             return;
-        } elseif ($data === null) {
-            if (!@is_file($filename) || ($file_size = @filesize($filename)) === false) {
+        } elseif ($data === NULL) {
+            if (! @is_file($filename) || ($file_size = @filesize($filename)) === FALSE) {
                 return;
             }
             $filepath = $filename;
@@ -515,8 +517,8 @@ class YP_Response extends Message
         $mime      = 'application/octet-stream';
         $x         = explode('.', $filename);
         $extension = end($x);
-        if ($setMime === true) {
-            if (count($x) === 1 OR $extension === '') {
+        if ($setMime === TRUE) {
+            if (count($x) === 1 or $extension === '') {
                 // 如果要检测MIME类型,需要一个文件扩展名
                 return;
             }
@@ -529,11 +531,11 @@ class YP_Response extends Message
             $x[count($x) - 1] = strtoupper($extension);
             $filename         = implode('.', $x);
         }
-        if ($data === null && ($fp = @fopen($filepath, 'rb')) === false) {
+        if ($data === NULL && ($fp = @fopen($filepath, 'rb')) === FALSE) {
             return;
         }
         // 干净的输出缓冲器
-        if (ob_get_level() !== 0 && @ob_end_clean() === false) {
+        if (ob_get_level() !== 0 && @ob_end_clean() === FALSE) {
             @ob_clean();
         }
         // 生成服务器响应头部
@@ -544,11 +546,11 @@ class YP_Response extends Message
         header('Content-Length: ' . $file_size);
         header('Cache-Control: private, no-transform, no-store, must-revalidate');
         // If we have raw data - just dump it
-        if ($data !== null) {
+        if ($data !== NULL) {
             exit($data);
         }
         // Flush 1MB chunks of data
-        while (!feof($fp) && ($data = fread($fp, 1048576)) !== false) {
+        while (! feof($fp) && ($data = fread($fp, 1048576)) !== FALSE) {
             echo $data;
         }
         fclose($fp);

@@ -8,8 +8,8 @@
  */
 namespace YP\Libraries;
 
-class YP_Message
-{
+class YP_Message {
+
     /**
      * HTTP 请求头数组
      *
@@ -36,7 +36,11 @@ class YP_Message
      *
      * @var array
      */
-    protected $validProtocolVersions = ['1.0', '1.1', '2'];
+    protected $validProtocolVersions = [
+                                        '1.0',
+                                        '1.1',
+                                        '2',
+                                       ];
 
     /**
      * 消息的主体
@@ -78,7 +82,7 @@ class YP_Message
      */
     public function appendBody($data): self
     {
-        $this->body .= (string)$data;
+        $this->body .= (string) $data;
 
         return $this;
     }
@@ -89,7 +93,7 @@ class YP_Message
     public function populateHeaders()
     {
         $contentType = isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : getenv('CONTENT_TYPE');
-        if (!empty($contentType)) {
+        if (! empty($contentType)) {
             $this->setHeader('Content-Type', $contentType);
         }
         unset($contentType);
@@ -133,8 +137,8 @@ class YP_Message
     public function getHeader($name)
     {
         $orig_name = $this->getHeaderName($name);
-        if (!isset($this->headers[$orig_name])) {
-            return null;
+        if (! isset($this->headers[$orig_name])) {
+            return NULL;
         }
 
         return $this->headers[$orig_name];
@@ -164,7 +168,7 @@ class YP_Message
     public function getHeaderLine(string $name): string
     {
         $orig_name = $this->getHeaderName($name);
-        if (!array_key_exists($orig_name, $this->headers)) {
+        if (! array_key_exists($orig_name, $this->headers)) {
             return '';
         }
         // 如果头部数组中含有一个以上的值,将返回数组的第一个值
@@ -179,19 +183,19 @@ class YP_Message
      * 设置一个头部参数
      *
      * @param string $name
-     * @param        $value
+     * @param $value
      *
      * @return $this
      */
     public function setHeader(string $name, $value)
     {
-        if (!isset($this->headers[$name])) {
+        if (! isset($this->headers[$name])) {
             $this->headers[$name]               = new \YP\Libraries\YP_Header($name, $value);
             $this->headerMap[strtolower($name)] = $name;
 
             return $this;
         }
-        if (!is_array($this->headers[$name])) {
+        if (! is_array($this->headers[$name])) {
             $this->headers[$name] = [$this->headers[$name]];
         }
         if (isset($this->headers[$name])) {
@@ -223,7 +227,7 @@ class YP_Message
      * 向头部数组添加指定的头部参数
      *
      * @param string $name
-     * @param        $value
+     * @param $value
      *
      * @return $this
      */
@@ -240,7 +244,7 @@ class YP_Message
      * multiple values (i.e. are an array or implement ArrayAccess)
      *
      * @param string $name
-     * @param        $value
+     * @param $value
      *
      * @return string
      */
@@ -271,10 +275,10 @@ class YP_Message
      */
     public function setProtocolVersion(string $version)
     {
-        if (!is_numeric($version)) {
+        if (! is_numeric($version)) {
             $version = substr($version, strpos($version, '/') + 1);
         }
-        if (!in_array($version, $this->validProtocolVersions)) {
+        if (! in_array($version, $this->validProtocolVersions)) {
             throw new \InvalidArgumentException('Invalid HTTP Protocol Version. Must be one of: ' . implode(', ',
                     $this->validProtocolVersions));
         }

@@ -11,13 +11,12 @@ namespace YP\Core;
 use Psr\Log\LoggerInterface;
 
 /**
- *
  * Class YP_Log
  *
  * @package YP\Core
  */
-class YP_Log implements LoggerInterface
-{
+class YP_Log implements LoggerInterface {
+
 
     /**
      * 保存日志的目录
@@ -32,15 +31,15 @@ class YP_Log implements LoggerInterface
      * @var array
      */
     protected $logLevels = [
-        'emergency' => 1,
-        'alert'     => 2,
-        'critical'  => 3,
-        'error'     => 4,
-        'debug'     => 5,
-        'warning'   => 6,
-        'notice'    => 7,
-        'info'      => 8,
-    ];
+                            'emergency' => 1,
+                            'alert'     => 2,
+                            'critical'  => 3,
+                            'error'     => 4,
+                            'debug'     => 5,
+                            'warning'   => 6,
+                            'notice'    => 7,
+                            'info'      => 8,
+                           ];
 
     /**
      * 用户日志级别,Config/Log的配置
@@ -91,33 +90,33 @@ class YP_Log implements LoggerInterface
      *
      * @var bool
      */
-    protected $cacheLogs = false;
+    protected $cacheLogs = FALSE;
 
     /**
      * YP_Log constructor.
      *
-     * @param      $config 日志配置信息
+     * @param $config 日志配置信息
      * @param bool $debug  是否开启调试
      */
     public function __construct($config, bool $debug = YP_DEBUG)
     {
-        $this->loggableLevels = is_array($config->threshold) ? $config->threshold : range(1, (int)$config->threshold);
+        $this->loggableLevels = is_array($config->threshold) ? $config->threshold : range(1, (int) $config->threshold);
         // 使用数字设置日志级别门阀值方便开发者
         if (count($this->loggableLevels)) {
             $temp = [];
             foreach ($this->loggableLevels as $level) {
-                $temp[] = array_search((int)$level, $this->logLevels);
+                $temp[] = array_search((int) $level, $this->logLevels);
             }
             $this->loggableLevels = $temp;
             unset($temp);
         }
         $this->dateFormat = $config->dateFormat ?? $this->dateFormat;
-        if (!is_array($config->handlers) || empty($config->handlers)) {
+        if (! is_array($config->handlers) || empty($config->handlers)) {
             throw new \RuntimeException('LoggerConfig must provide at least one Handler.');
         }
         // 保存处理日志的配置信息
         $this->handlerConfig = $config->handlers;
-        $this->cacheLogs     = (bool)$debug;
+        $this->cacheLogs     = (bool) $debug;
         if ($this->cacheLogs) {
             $this->logCache = [];
         }
@@ -126,7 +125,7 @@ class YP_Log implements LoggerInterface
     /**
      * 记录系统无法使用的错误
      *
-     * @param       $message
+     * @param $message
      * @param array $context
      */
     public function emergency($message, array $context = [])
@@ -153,7 +152,7 @@ class YP_Log implements LoggerInterface
     /**
      * 记录临界条件时的错误
      *
-     * @param       $message
+     * @param $message
      * @param array $context
      */
     public function critical($message, array $context = [])
@@ -164,7 +163,7 @@ class YP_Log implements LoggerInterface
     /**
      * 记录运行时错误，不需要立即动作，但通常应记录和监视
      *
-     * @param       $message
+     * @param $message
      * @param array $context
      */
     public function error($message, array $context = [])
@@ -175,7 +174,7 @@ class YP_Log implements LoggerInterface
     /**
      * 记录非错误的异常事件
      *
-     * @param       $message
+     * @param $message
      * @param array $context
      */
     public function warning($message, array $context = [])
@@ -186,7 +185,7 @@ class YP_Log implements LoggerInterface
     /**
      * 记录正常但是重要的事件
      *
-     * @param       $message
+     * @param $message
      * @param array $context
      */
     public function notice($message, array $context = [])
@@ -197,7 +196,7 @@ class YP_Log implements LoggerInterface
     /**
      * 记录有趣的事件(sql日志、用户日志)
      *
-     * @param       $message
+     * @param $message
      * @param array $context
      */
     public function info($message, array $context = [])
@@ -208,7 +207,7 @@ class YP_Log implements LoggerInterface
     /**
      * 记录详细的调试信息
      *
-     * @param       $message
+     * @param $message
      * @param array $context
      */
     public function debug($message, array $context = [])
@@ -219,8 +218,8 @@ class YP_Log implements LoggerInterface
     /**
      * 记录任何日志级别的日志信息
      *
-     * @param       $level   日志级别
-     * @param       $message 记录的信息
+     * @param $level   日志级别
+     * @param $message 记录的信息
      * @param array $context
      *
      * @return bool
@@ -228,56 +227,56 @@ class YP_Log implements LoggerInterface
     public function log($level, $message, array $context = []): bool
     {
         if (is_numeric($level)) {
-            $level = array_search((int)$level, $this->logLevels);
+            $level = array_search((int) $level, $this->logLevels);
         }
         // 判断日志级别是否有效
-        if (!array_key_exists($level, $this->logLevels)) {
+        if (! array_key_exists($level, $this->logLevels)) {
             throw new \InvalidArgumentException($level . ' is an invalid log level.');
         }
         // 检查当前日志类型是否立马要记录
-        if (!in_array($level, $this->loggableLevels)) {
-            return false;
+        if (! in_array($level, $this->loggableLevels)) {
+            return FALSE;
         }
         // 解析占位符
         $message = $this->interpolate($message, $context);
-        if (!is_string($message)) {
-            $message = print_r($message, true);
+        if (! is_string($message)) {
+            $message = print_r($message, TRUE);
         }
         // 是否开启日志缓存
         if ($this->cacheLogs) {
             $this->logCache[] = [
-                'level' => $level,
-                'msg'   => $message
-            ];
+                                 'level' => $level,
+                                 'msg'   => $message,
+                                ];
         }
         foreach ($this->handlerConfig as $className => $config) {
             /**
              * 实例化操作类对象
              */
             $handler = new $className($config);
-            if (!$handler->canHandle($level)) {
+            if (! $handler->canHandle($level)) {
                 continue;
             }
             // 如果处理程序返回false，则不执行任何其他处理程序
-            if (!$handler->setDateFormat($this->dateFormat)->handle($level, $message)) {
+            if (! $handler->setDateFormat($this->dateFormat)->handle($level, $message)) {
                 break;
             }
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
      * 使用变量取代日志消息中的特殊的占位符
      *
-     * @param       $message
+     * @param $message
      * @param array $context
      *
      * @return string
      */
     protected function interpolate($message, array $context = [])
     {
-        if (!is_string($message)) {
+        if (! is_string($message)) {
             return $message;
         }
         // 取代数组,使用括号构建替换数组
@@ -291,17 +290,17 @@ class YP_Log implements LoggerInterface
             $replace['{' . $key . '}'] = $val;
         }
         // 添加特殊的占位符
-        $replace['{post_vars}'] = '$_POST: ' . print_r($_POST, true);
-        $replace['{get_vars}']  = '$_GET: ' . print_r($_GET, true);
+        $replace['{post_vars}'] = '$_POST: ' . print_r($_POST, TRUE);
+        $replace['{get_vars}']  = '$_GET: ' . print_r($_GET, TRUE);
         $replace['{env}']       = ENVIRONMENT;
         // 记录正在分析的文件
-        if (strpos($message, '{file}') !== false) {
+        if (strpos($message, '{file}') !== FALSE) {
             list($file, $line) = $this->determineFile();
             $replace['{file}'] = $file;
             $replace['{line}'] = $line;
         }
         // 匹配环境变量并标记
-        if (strpos($message, 'env:') !== false) {
+        if (strpos($message, 'env:') !== FALSE) {
             preg_match('/env:[^}]+/', $message, $matches);
             if (count($matches)) {
                 foreach ($matches as $str) {
@@ -311,7 +310,7 @@ class YP_Log implements LoggerInterface
             }
         }
         if (isset($_SESSION)) {
-            $replace['{session_vars}'] = '$_SESSION: ' . print_r($_SESSION, true);
+            $replace['{session_vars}'] = '$_SESSION: ' . print_r($_SESSION, TRUE);
         }
 
         // 将替换值插入到消息中并返回
@@ -327,8 +326,8 @@ class YP_Log implements LoggerInterface
     {
         // 通过寻找第一回溯，是不是我们的日志系统部分确定文件和行
         $trace = debug_backtrace();
-        $file  = null;
-        $line  = null;
+        $file  = NULL;
+        $line  = NULL;
         foreach ($trace as $row) {
             if (in_array($row['function'], ['interpolate', 'determineFile', 'log', 'log_message'])) {
                 continue;
@@ -339,9 +338,9 @@ class YP_Log implements LoggerInterface
         }
 
         return [
-            $file,
-            $line
-        ];
+                $file,
+                $line,
+               ];
     }
 
     /**

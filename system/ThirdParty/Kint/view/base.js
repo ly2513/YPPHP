@@ -4,13 +4,13 @@
 
 if ( typeof kintInitialized === 'undefined' ) {
 	kintInitialized = 1;
-	var kint = {
+	var kint        = {
 		visiblePluses : [], // all visible toggle carets
 		currentPlus   : -1, // currently selected caret
 
 		selectText : function( element ) {
 			var selection = window.getSelection(),
-			    range = document.createRange();
+			    range     = document.createRange();
 
 			range.selectNodeContents(element);
 			selection.removeAllRanges();
@@ -22,7 +22,8 @@ if ( typeof kintInitialized === 'undefined' ) {
 		},
 
 		hasClass : function( target, className ) {
-			if ( !target.classList ) return false;
+			if ( ! target.classList ) { return false;
+            }
 
 			if ( typeof className === 'undefined' ) {
 				className = 'kint-show';
@@ -77,9 +78,9 @@ if ( typeof kintInitialized === 'undefined' ) {
 		},
 
 		toggleChildren : function( element, hide ) {
-			var parent = kint.next(element)
+			var parent  = kint.next(element)
 				, nodes = parent.getElementsByClassName('kint-parent')
-				, i = nodes.length;
+				, i     = nodes.length;
 
 			if ( typeof hide === 'undefined' ) {
 				hide = kint.hasClass(element);
@@ -92,8 +93,8 @@ if ( typeof kintInitialized === 'undefined' ) {
 		},
 
 		toggleAll : function( caret ) {
-			var elements = document.getElementsByClassName('kint-parent')
-				, i = elements.length
+			var elements  = document.getElementsByClassName('kint-parent')
+				, i       = elements.length
 				, visible = kint.hasClass(caret.parentNode);
 
 			while ( i-- ) {
@@ -105,10 +106,11 @@ if ( typeof kintInitialized === 'undefined' ) {
 			var lis, el = target, index = 0;
 
 			target.parentNode.getElementsByClassName('kint-active-tab')[0].className = '';
-			target.className = 'kint-active-tab';
+			target.className                                                         = 'kint-active-tab';
 
 			// take the index of clicked title tab and make the same n-th content tab visible
-			while ( el = el.previousSibling ) el.nodeType === 1 && index++;
+			while ( el = el.previousSibling ) { el.nodeType === 1 && index++;
+            }
 			lis = target.parentNode.nextSibling.childNodes;
 			for ( var i = 0; i < lis.length; i++ ) {
 				if ( i === index ) {
@@ -130,10 +132,11 @@ if ( typeof kintInitialized === 'undefined' ) {
 		isSibling : function( el ) {
 			for ( ; ; ) {
 				el = el.parentNode;
-				if ( !el || kint.hasClass(el, 'kint') ) break;
+				if ( ! el || kint.hasClass(el, 'kint') ) { break;
+                }
 			}
 
-			return !!el;
+			return ! ! el;
 		},
 
 		fetchVisiblePluses : function() {
@@ -186,8 +189,10 @@ if ( typeof kintInitialized === 'undefined' ) {
 				.sort(function( a, b ) {
 					a = format(a.cells[column].textContent);
 					b = format(b.cells[column].textContent);
-					if ( a < b ) return -1;
-					if ( a > b ) return 1;
+					if ( a < b ) { return -1;
+                    }
+					if ( a > b ) { return 1;
+                    }
 
 					return 0;
 				})
@@ -199,7 +204,7 @@ if ( typeof kintInitialized === 'undefined' ) {
 		keyCallBacks : {
 			cleanup : function( i ) {
 				var focusedClass = 'kint-focused';
-				var prevElement = document.querySelector('.' + focusedClass);
+				var prevElement  = document.querySelector('.' + focusedClass);
 				prevElement && kint.removeClass(prevElement, focusedClass);
 
 				if ( i !== -1 ) {
@@ -237,20 +242,21 @@ if ( typeof kintInitialized === 'undefined' ) {
 	};
 
 	window.addEventListener("click", function( e ) {
-		var target = e.target
+		var target     = e.target
 			, nodeName = target.nodeName.toLowerCase();
 
-		if ( !kint.isSibling(target) ) return;
+		if ( ! kint.isSibling(target) ) { return;
+        }
 
 		// auto-select name of variable
 		if ( nodeName === 'dfn' ) {
 			kint.selectText(target);
 			target = target.parentNode;
 		} else if ( nodeName === 'var' ) { // stupid workaround for misc elements
-			target = target.parentNode;    // to not stop event from further propagating
+			target   = target.parentNode;    // to not stop event from further propagating
 			nodeName = target.nodeName.toLowerCase()
 		} else if ( nodeName === 'th' ) {
-			if ( !e.ctrlKey ) {
+			if ( ! e.ctrlKey ) {
 				kint.sortTable(target.parentNode.parentNode.parentNode, target.cellIndex)
 			}
 			return false;
@@ -260,7 +266,8 @@ if ( typeof kintInitialized === 'undefined' ) {
 		if ( nodeName === 'li' && target.parentNode.className === 'kint-tabs' ) {
 			if ( target.className !== 'kint-active-tab' ) {
 				kint.switchTab(target);
-				if ( kint.currentPlus !== -1 ) kint.fetchVisiblePluses();
+				if ( kint.currentPlus !== -1 ) { kint.fetchVisiblePluses();
+                }
 			}
 			return false;
 		}
@@ -283,7 +290,8 @@ if ( typeof kintInitialized === 'undefined' ) {
 						target.kintTimer--;
 					} else {
 						kint.toggleChildren(target.parentNode); // <dt>
-						if ( kint.currentPlus !== -1 ) kint.fetchVisiblePluses();
+						if ( kint.currentPlus !== -1 ) { kint.fetchVisiblePluses();
+                        }
 					}
 				}, 300);
 			}
@@ -292,7 +300,8 @@ if ( typeof kintInitialized === 'undefined' ) {
 			return false;
 		} else if ( kint.hasClass(target, 'kint-parent') ) {
 			kint.toggle(target);
-			if ( kint.currentPlus !== -1 ) kint.fetchVisiblePluses();
+			if ( kint.currentPlus !== -1 ) { kint.fetchVisiblePluses();
+            }
 			return false;
 		} else if ( kint.hasClass(target, 'kint-ide-link') ) {
 			e.preventDefault();
@@ -305,7 +314,7 @@ if ( typeof kintInitialized === 'undefined' ) {
 			if ( kintContainer.nodeName.toLowerCase() === 'footer' ) {
 				kintContainer = kintContainer.previousSibling;
 			} else {
-				while ( kintContainer && !kint.hasClass(kintContainer, 'kint-parent') ) {
+				while ( kintContainer && ! kint.hasClass(kintContainer, 'kint-parent') ) {
 					kintContainer = kintContainer.parentNode;
 				}
 			}
@@ -318,12 +327,14 @@ if ( typeof kintInitialized === 'undefined' ) {
 
 	window.addEventListener("dblclick", function( e ) {
 		var target = e.target;
-		if ( !kint.isSibling(target) ) return;
+		if ( ! kint.isSibling(target) ) { return;
+        }
 
 		if ( target.nodeName.toLowerCase() === 'nav' ) {
 			target.kintTimer = 2;
 			kint.toggleAll(target);
-			if ( kint.currentPlus !== -1 ) kint.fetchVisiblePluses();
+			if ( kint.currentPlus !== -1 ) { kint.fetchVisiblePluses();
+            }
 			e.stopPropagation();
 		}
 	}, false);
@@ -332,11 +343,12 @@ if ( typeof kintInitialized === 'undefined' ) {
 	window.onkeydown = function( e ) { // direct assignment is used to have priority over ex FAYT
 
 		// do nothing if alt/ctrl key is pressed or if we're actually typing somewhere
-		if ( e.target !== document.body || e.altKey || e.ctrlKey ) return;
+		if ( e.target !== document.body || e.altKey || e.ctrlKey ) { return;
+        }
 
-		var keyCode = e.keyCode
+		var keyCode    = e.keyCode
 			, shiftKey = e.shiftKey
-			, i = kint.currentPlus;
+			, i        = kint.currentPlus;
 
 
 		if ( keyCode === 68 ) { // 'd' : toggles navigation on/off
@@ -348,7 +360,8 @@ if ( typeof kintInitialized === 'undefined' ) {
 				return false;
 			}
 		} else {
-			if ( i === -1 ) return;
+			if ( i === -1 ) { return;
+            }
 
 			if ( keyCode === 9 ) { // TAB : moves up/down depending on shift key
 				return kint.keyCallBacks.moveCursor(shiftKey, i);
@@ -380,7 +393,7 @@ if ( typeof kintInitialized === 'undefined' ) {
 			return false;
 		} else if ( keyCode === 39 || keyCode === 37 ) { // ARROW LEFT/RIGHT : respectively hides/shows and traverses
 			var visible = kint.hasClass(kintNode);
-			var hide = keyCode === 37;
+			var hide    = keyCode === 37;
 
 			if ( visible ) {
 				kint.toggleChildren(kintNode, hide); // expand/collapse all children if immediate ones are showing
@@ -392,7 +405,7 @@ if ( typeof kintInitialized === 'undefined' ) {
 					if ( kintNode ) {
 						kintNode = kintNode.previousElementSibling;
 
-						i = -1;
+						i              = -1;
 						var parentPlus = kintNode.querySelector('nav');
 						while ( parentPlus !== kint.visiblePluses[++i] ) {}
 						kint.keyCallBacks.cleanup(i)
@@ -418,8 +431,10 @@ if ( typeof kintInitialized === 'undefined' ) {
 			elements.forEach(function( el ) {
 				var val = parseFloat(el.innerHTML);
 
-				if ( min > val ) min = val;
-				if ( max < val ) max = val;
+				if ( min > val ) { min = val;
+                }
+				if ( max < val ) { max = val;
+                }
 			});
 
 			ratio = 1 - (value - min) / (max - min);
@@ -431,7 +446,9 @@ if ( typeof kintInitialized === 'undefined' ) {
 
 // debug purposes only, removed in minified source
 function clg( i ) {
-	if ( !window.console )return;
+	if ( ! window.console ) { return;
+    }
 	var l = arguments.length, o = 0;
-	while ( o < l )console.log(arguments[o++])
+	while ( o < l ) { console.log(arguments[o++])
+    }
 }

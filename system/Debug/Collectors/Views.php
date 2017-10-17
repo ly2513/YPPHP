@@ -14,15 +14,15 @@ use CodeIgniter\View\RendererInterface;
 /**
  * Views collector
  */
-class Views extends BaseCollector
-{
+class Views extends BaseCollector {
+
 	/**
 	 * Whether this collector has data that can
 	 * be displayed in the Timeline.
 	 *
 	 * @var bool
 	 */
-	protected $hasTimeline = true;
+	protected $hasTimeline = TRUE;
 
 	/**
 	 * Whether this collector needs to display
@@ -30,7 +30,7 @@ class Views extends BaseCollector
 	 *
 	 * @var bool
 	 */
-	protected $hasTabContent = false;
+	protected $hasTabContent = FALSE;
 
 	/**
 	 * Whether this collector has data that
@@ -38,7 +38,7 @@ class Views extends BaseCollector
 	 *
 	 * @var bool
 	 */
-	protected $hasVarData = true;
+	protected $hasVarData = TRUE;
 
 	/**
 	 * The 'title' of this Collector.
@@ -50,6 +50,7 @@ class Views extends BaseCollector
 
 	/**
 	 * Instance of the Renderer service
+     *
 	 * @var RendererInterface
 	 */
 	protected $viewer;
@@ -61,7 +62,7 @@ class Views extends BaseCollector
 	 */
 	public function __construct()
 	{
-	    $this->viewer = Services::renderer(null, true);
+	    $this->viewer = Services::renderer(NULL, TRUE);
 	}
 
 	//--------------------------------------------------------------------
@@ -82,11 +83,11 @@ class Views extends BaseCollector
 		foreach ($rows as $name => $info)
 		{
 			$data[] = [
-				'name' => 'View: '.$info['view'],
-				'component' => 'Views',
-				'start'     => $info['start'],
-				'duration'  => $info['end'] - $info['start']
-			];
+                       'name'      => 'View: '.$info['view'],
+                       'component' => 'Views',
+                       'start'     => $info['start'],
+                       'duration'  => $info['end'] - $info['start'],
+                      ];
 		}
 
 		return $data;
@@ -115,8 +116,8 @@ class Views extends BaseCollector
 	public function getVarData()
 	{
 		return [
-			'View Data' => $this->viewer->getData()
-		];
+                'View Data' => $this->viewer->getData(),
+               ];
 	}
 
 	//--------------------------------------------------------------------

@@ -11,8 +11,8 @@ namespace YP\Core;
 use YP\Core\YP_IncomingRequest as IncomingRequest;
 use YP\Core\YP_Response as Response;
 
-interface YP_FilterInterface
-{
+interface YP_FilterInterface {
+
 
     /**
      * 这过滤器必须能处理任何需要过滤的

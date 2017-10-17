@@ -15,8 +15,8 @@ use YP\Core\YP_IncomingRequest;
  *
  * @package YP\Libraries\Security
  */
-class YP_Security
-{
+class YP_Security {
+
 
     /**
      * CSRF 哈希值
@@ -60,7 +60,7 @@ class YP_Security
      *
      * @var bool
      */
-    protected $CSRFRegenerate = true;
+    protected $CSRFRegenerate = TRUE;
 
     /**
      * Cookie路径
@@ -81,7 +81,7 @@ class YP_Security
      *
      * @var bool
      */
-    protected $cookieSecure = false;
+    protected $cookieSecure = FALSE;
 
     /**
      * 列出安全的文件名称字符
@@ -89,38 +89,38 @@ class YP_Security
      * @var array
      */
     public $filenameBadChars = [
-        '../',
-        '<!--',
-        '-->',
-        '<',
-        '>',
-        "'",
-        '"',
-        '&',
-        '$',
-        '#',
-        '{',
-        '}',
-        '[',
-        ']',
-        '=',
-        ';',
-        '?',
-        '%20',
-        '%22',
-        '%3c', // <
-        '%253c', // <
-        '%3e', // >
-        '%0e', // >
-        '%28', // (
-        '%29', // )
-        '%2528', // (
-        '%26', // &
-        '%24', // $
-        '%3f', // ?
-        '%3b', // ;
-        '%3d'       // =
-    ];
+                                '../',
+                                '<!--',
+                                '-->',
+                                '<',
+                                '>',
+                                "'",
+                                '"',
+                                '&',
+                                '$',
+                                '#',
+                                '{',
+                                '}',
+                                '[',
+                                ']',
+                                '=',
+                                ';',
+                                '?',
+                                '%20',
+                                '%22',
+                                '%3c', // <
+                                '%253c', // <
+                                '%3e', // >
+                                '%0e', // >
+                                '%28', // (
+                                '%29', // )
+                                '%2528', // (
+                                '%26', // &
+                                '%24', // $
+                                '%3f', // ?
+                                '%3b', // ;
+                                '%3d',       // =
+                               ];
 
     /**
      * 构造方法,用于初始化工作
@@ -161,7 +161,7 @@ class YP_Security
             return $this->CSRFSetCookie($request);
         }
         // 判断CSRF Token 是否在$_POST和$_COOKIE数组中？
-        if (!isset($_POST[$this->CSRFTokenName], $_COOKIE[$this->CSRFCookieName]) || $_POST[$this->CSRFTokenName] !== $_COOKIE[$this->CSRFCookieName]) // Do the tokens match?
+        if (! isset($_POST[$this->CSRFTokenName], $_COOKIE[$this->CSRFCookieName]) || $_POST[$this->CSRFTokenName] !== $_COOKIE[$this->CSRFCookieName]) // Do the tokens match?
         {
             throw new \LogicException('The requested is not allowed', 403);
         }
@@ -189,13 +189,13 @@ class YP_Security
     public function CSRFSetCookie(YP_IncomingRequest $request)
     {
         $expire        = time() + $this->CSRFExpire;
-        $secure_cookie = (bool)$this->cookieSecure;
-        if ($secure_cookie && !$request->isSecure()) {
-            return false;
+        $secure_cookie = (bool) $this->cookieSecure;
+        if ($secure_cookie && ! $request->isSecure()) {
+            return FALSE;
         }
         // 设置Cookie
         setcookie($this->CSRFCookieName, $this->CSRFHash, $expire, $this->cookiePath, $this->cookieDomain,
-            $secure_cookie, true);
+            $secure_cookie, TRUE);
         log_message('info', 'CSRF cookie sent');
 
         return $this;
@@ -228,7 +228,7 @@ class YP_Security
      */
     protected function CSRFSetHash()
     {
-        if ($this->CSRFHash === null) {
+        if ($this->CSRFHash === NULL) {
             // 如果cookie存在，我们将使用它的值。我们不一定要在每个页面加载下重新生成它，因为一个页面可能包含嵌入的子页，导致这个特性失败。
             if (isset($_COOKIE[$this->CSRFCookieName]) && is_string($_COOKIE[$this->CSRFCookieName]) && preg_match('#^[0-9a-f]{32}$#iS',
                     $_COOKIE[$this->CSRFCookieName]) === 1
@@ -245,19 +245,19 @@ class YP_Security
     /**
      * 过滤文件名称
      *
-     * @param      $str           输入文件名称
+     * @param $str           输入文件名称
      * @param bool $relative_path 是否保留路径
      *
      * @return string
      */
-    public function sanitizeFilename($str, $relative_path = false)
+    public function sanitizeFilename($str, $relative_path = FALSE)
     {
         $bad = $this->filenameBadChars;
-        if (!$relative_path) {
+        if (! $relative_path) {
             $bad[] = './';
             $bad[] = '/';
         }
-        $str = remove_invisible_characters($str, false);
+        $str = remove_invisible_characters($str, FALSE);
         do {
             $old = $str;
             $str = str_replace($bad, '', $str);

@@ -1,10 +1,11 @@
 <?php
 
-class Kint_Parsers_ClassStatics extends kintParser
-{
+class Kint_Parsers_ClassStatics extends kintParser {
+
 	protected function _parse( & $variable )
 	{
-		if ( !KINT_PHP53 || !is_object( $variable ) ) return false;
+		if ( ! KINT_PHP53 || ! is_object( $variable ) ) { return FALSE;
+        }
 
 		$extendedValue = array();
 
@@ -12,13 +13,13 @@ class Kint_Parsers_ClassStatics extends kintParser
 		// first show static values
 		foreach ( $reflection->getProperties( ReflectionProperty::IS_STATIC ) as $property ) {
 			if ( $property->isPrivate() ) {
-				if ( !method_exists( $property, 'setAccessible' ) ) {
+				if ( ! method_exists( $property, 'setAccessible' ) ) {
 					break;
 				}
-				$property->setAccessible( true );
+				$property->setAccessible( TRUE );
 				$access = "private";
 			} elseif ( $property->isProtected() ) {
-				$property->setAccessible( true );
+				$property->setAccessible( TRUE );
 				$access = "protected";
 			} else {
 				$access = 'public';
@@ -40,7 +41,8 @@ class Kint_Parsers_ClassStatics extends kintParser
 			$extendedValue[]  = $output;
 		}
 
-		if ( empty( $extendedValue ) ) return false;
+		if ( empty( $extendedValue ) ) { return FALSE;
+        }
 
 		$this->value = $extendedValue;
 		$this->type  = 'Static class properties';

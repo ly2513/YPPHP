@@ -13,8 +13,8 @@ namespace YP\Config;
  *
  * @package YP\Config
  */
-class DotEnv
-{
+class DotEnv {
+
     /**
      * 本地.env文件的目录
      *
@@ -32,7 +32,7 @@ class DotEnv
      */
     public function __construct(string $path, $file = '.env')
     {
-        if (!is_string($file)) {
+        if (! is_string($file)) {
             $file = '.env';
         }
         $this->path = rtrim($path, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $file;
@@ -52,11 +52,11 @@ class DotEnv
     {
         // We don't want to enforce the presence of a .env file,
         // they should be optional.
-        if (!is_file($this->path)) {
-            return false;
+        if (! is_file($this->path)) {
+            return FALSE;
         }
         // Ensure file is readable
-        if (!is_readable($this->path)) {
+        if (! is_readable($this->path)) {
             throw new \InvalidArgumentException("The .env file is not readable: {$this->path}");
         }
         $lines = file($this->path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
@@ -67,7 +67,7 @@ class DotEnv
             }
             // If there is an equal sign, then we know we
             // are assigning a variable.
-            if (strpos($line, '=') !== false) {
+            if (strpos($line, '=') !== FALSE) {
                 $this->setVariable($line);
             }
         }
@@ -101,7 +101,7 @@ class DotEnv
     public function normaliseVariable(string $name, string $value = ''): array
     {
         // Split our compound string into it's parts.
-        if (strpos($name, '=') !== false) {
+        if (strpos($name, '=') !== FALSE) {
             list($name, $value) = explode('=', $name, 2);
         }
         $name  = trim($name);
@@ -112,7 +112,10 @@ class DotEnv
         $value = $this->sanitizeValue($value);
         $value = $this->resolveNestedVariables($value);
 
-        return [$name, $value];
+        return [
+                $name,
+                $value,
+               ];
     }
 
     /**
@@ -128,11 +131,11 @@ class DotEnv
      */
     protected function sanitizeValue(string $value): string
     {
-        if (!$value) {
+        if (! $value) {
             return $value;
         }
         // Does it begin with a quote?
-        if (strpbrk($value[0], '"\'') !== false) {
+        if (strpbrk($value[0], '"\'') !== FALSE) {
             // value starts with a quote
             $quote        = $value[0];
             $regexPattern = sprintf('/^
@@ -177,9 +180,9 @@ class DotEnv
      */
     protected function resolveNestedVariables(string $value): string
     {
-        if (strpos($value, '$') !== false) {
+        if (strpos($value, '$') !== FALSE) {
             $loader = $this;
-            $value = preg_replace_callback('/\${([a-zA-Z0-9_]+)}/', function ($matchedPatterns) use ($loader) {
+            $value  = preg_replace_callback('/\${([a-zA-Z0-9_]+)}/', function ($matchedPatterns) use ($loader) {
                 $nestedVariable = $loader->getVariable($matchedPatterns[1]);
                 if (is_null($nestedVariable)) {
                     return $matchedPatterns[0];
@@ -204,7 +207,7 @@ class DotEnv
      */
     protected function getVariable(string $name)
     {
-        switch (true) {
+        switch (TRUE) {
             case array_key_exists($name, $_ENV):
                 return $_ENV[$name];
                 break;
@@ -215,7 +218,7 @@ class DotEnv
                 $value = getenv($name);
 
                 // switch getenv default to null
-                return $value === false ? null : $value;
+                return $value === FALSE ? NULL : $value;
         }
     }
 

@@ -1,15 +1,16 @@
 <?php
 
-class Kint_Parsers_FsPath extends kintParser
-{
+class Kint_Parsers_FsPath extends kintParser {
+
 	protected function _parse( & $variable )
 	{
-		if ( !KINT_PHP53
-			|| !is_string( $variable )
+		if ( ! KINT_PHP53
+			|| ! is_string( $variable )
 			|| strlen( $variable ) > 2048
 			|| preg_match( '[[:?<>"*|]]', $variable )
-			|| !@is_readable( $variable ) # f@#! PHP and its random warnings
-		) return false;
+			|| ! @is_readable( $variable ) # f@#! PHP and its random warnings
+		) { return FALSE;
+        }
 
 		try {
 			$fileInfo = new SplFileInfo( $variable );
@@ -62,7 +63,7 @@ class Kint_Parsers_FsPath extends kintParser
 			$this->value = implode( $flags );
 
 		} catch ( Exception $e ) {
-			return false;
+			return FALSE;
 		}
 
 	}

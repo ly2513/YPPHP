@@ -20,13 +20,15 @@ class RefreshCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName('migrate:refresh')->setDescription('重置并重新运行所有迁移.')->setDefinition([
-            new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
-            new InputOption('force', null, InputOption::VALUE_NONE, '强行在生产环境操作运行.'),
-            new InputOption('path', null, InputOption::VALUE_OPTIONAL, '要执行的迁移文件路径.'),
-            new InputOption('seed', null, InputOption::VALUE_NONE, '指示是否应重新运行随机任务.'),
-            new InputOption('seeder', null, InputOption::VALUE_OPTIONAL, '随机类名称.'),
-        ]);
+        $this->setName('migrate:refresh')->setDescription('重置并重新运行所有迁移.')->setDefinition(
+            [
+             new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
+             new InputOption('force', null, InputOption::VALUE_NONE, '强行在生产环境操作运行.'),
+             new InputOption('path', null, InputOption::VALUE_OPTIONAL, '要执行的迁移文件路径.'),
+             new InputOption('seed', null, InputOption::VALUE_NONE, '指示是否应重新运行随机任务.'),
+             new InputOption('seeder', null, InputOption::VALUE_OPTIONAL, '随机类名称.'),
+            ]
+        );
     }
 
     /**
@@ -55,7 +57,7 @@ class RefreshCommand extends BaseCommand
                 $style     = new SymfonyStyle($input, $output);
                 $confirmed = $style->confirm('Do you really wish to run this command?');
                 unset($style);
-                if (!$confirmed) {
+                if (! $confirmed) {
                     $output->writeln('<comment> Command Cancelled! </comment>');
                     $status = false;
                 } else {
@@ -63,8 +65,8 @@ class RefreshCommand extends BaseCommand
                 }
             }
         }
-        if (!$status) {
-            return;
+        if (! $status) {
+            return ;
         }
         $database = $input->getOption('database');
         $force    = $input->getOption('force');
@@ -72,20 +74,24 @@ class RefreshCommand extends BaseCommand
         $this->call('migrate:reset', ['--database' => $database, '--force' => $force]);
         // 刷新命令本质上只是一些其他迁移命令的简单集合，只是提供了一个方便的包装器来连续执行它们。
         // 我们还将查看是否需要重新生成数据库。
-        $this->call('migrate', [
-            '--database' => $database,
-            '--force'    => $force,
-            '--path'     => $path,
-        ]);
+        $this->call('migrate',
+            [
+             '--database' => $database,
+             '--force'    => $force,
+             '--path'     => $path,
+            ]
+        );
         $seed = $this->getOption('seed') || $this->getOption('seeder');
         if ($seed) {
             $class = $this->getOption('seeder') ? : 'DatabaseSeeder';
             $force = $input->getOption('force');
-            $this->call('db:seed', [
-                '--database' => $database,
-                '--class'    => $class,
-                '--force'    => $force,
-            ]);
+            $this->call('db:seed',
+                [
+                 '--database' => $database,
+                 '--class'    => $class,
+                 '--force'    => $force,
+                ]
+            );
         }
 
         return true;

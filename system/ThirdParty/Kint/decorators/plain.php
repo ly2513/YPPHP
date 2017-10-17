@@ -1,69 +1,101 @@
 <?php
 
-class Kint_Decorators_Plain
-{
+class Kint_Decorators_Plain {
+
 	private static $_enableColors;
 
-	private static $_cliEffects      = array(
+	private static $_cliEffects = array(
 		# effects
-		'bold'             => '1', 'dark' => '2',
-		'italic'           => '3', 'underline' => '4',
-		'blink'            => '5', 'reverse' => '7',
-		'concealed'        => '8', 'default' => '39',
+                                   'bold'             => '1',
+                                   'dark'             => '2',
+                                   'italic'           => '3',
+                                   'underline'        => '4',
+                                   'blink'            => '5',
+                                   'reverse'          => '7',
+                                   'concealed'        => '8',
+                                   'default'          => '39',
 
 		# colors
-		'black'            => '30', 'red' => '31',
-		'green'            => '32', 'yellow' => '33',
-		'blue'             => '34', 'magenta' => '35',
-		'cyan'             => '36', 'light_gray' => '37',
-		'dark_gray'        => '90', 'light_red' => '91',
-		'light_green'      => '92', 'light_yellow' => '93',
-		'light_blue'       => '94', 'light_magenta' => '95',
-		'light_cyan'       => '96', 'white' => '97',
+                                   'black'            => '30',
+                                   'red'              => '31',
+                                   'green'            => '32',
+                                   'yellow'           => '33',
+                                   'blue'             => '34',
+                                   'magenta'          => '35',
+                                   'cyan'             => '36',
+                                   'light_gray'       => '37',
+                                   'dark_gray'        => '90',
+                                   'light_red'        => '91',
+                                   'light_green'      => '92',
+                                   'light_yellow'     => '93',
+                                   'light_blue'       => '94',
+                                   'light_magenta'    => '95',
+                                   'light_cyan'       => '96',
+                                   'white'            => '97',
 
 		# backgrounds
-		'bg_default'       => '49', 'bg_black' => '40',
-		'bg_red'           => '41', 'bg_green' => '42',
-		'bg_yellow'        => '43', 'bg_blue' => '44',
-		'bg_magenta'       => '45', 'bg_cyan' => '46',
-		'bg_light_gray'    => '47', 'bg_dark_gray' => '100',
-		'bg_light_red'     => '101', 'bg_light_green' => '102',
-		'bg_light_yellow'  => '103', 'bg_light_blue' => '104',
-		'bg_light_magenta' => '105', 'bg_light_cyan' => '106',
-		'bg_white'         => '107',
-	);
+                                   'bg_default'       => '49',
+                                   'bg_black'         => '40',
+                                   'bg_red'           => '41',
+                                   'bg_green'         => '42',
+                                   'bg_yellow'        => '43',
+                                   'bg_blue'          => '44',
+                                   'bg_magenta'       => '45',
+                                   'bg_cyan'          => '46',
+                                   'bg_light_gray'    => '47',
+                                   'bg_dark_gray'     => '100',
+                                   'bg_light_red'     => '101',
+                                   'bg_light_green'   => '102',
+                                   'bg_light_yellow'  => '103',
+                                   'bg_light_blue'    => '104',
+                                   'bg_light_magenta' => '105',
+                                   'bg_light_cyan'    => '106',
+                                   'bg_white'         => '107',
+                                  );
 	private static $_utfSymbols      = array(
-		'┌', '═', '┐',
-		'│',
-		'└', '─', '┘',
-	);
+                                        '┌',
+                                        '═',
+                                        '┐',
+                                        '│',
+                                        '└',
+                                        '─',
+                                        '┘',
+                                       );
 	private static $_winShellSymbols = array(
-		"\xda", "\xdc", "\xbf",
-		"\xb3",
-		"\xc0", "\xc4", "\xd9",
-	);
+                                        "\xda",
+                                        "\xdc",
+                                        "\xbf",
+                                        "\xb3",
+                                        "\xc0",
+                                        "\xc4",
+                                        "\xd9",
+                                       );
 	private static $_htmlSymbols     = array(
-		"&#9484;", "&#9604;", "&#9488;",
-		"&#9474;",
-		"&#9492;", "&#9472;", "&#9496;",
-	);
+                                        "&#9484;",
+                                        "&#9604;",
+                                        "&#9488;",
+                                        "&#9474;",
+                                        "&#9492;",
+                                        "&#9472;",
+                                        "&#9496;",
+                                       );
 
 	public static function decorate( kintVariableData $kintVar, $level = 0 )
 	{
 		$output = '';
 		if ( $level === 0 ) {
 			$name          = $kintVar->name ? $kintVar->name : 'literal';
-			$kintVar->name = null;
+			$kintVar->name = NULL;
 
 			$output .= self::_title( $name );
 		}
 
 
-		$space = str_repeat( $s = '    ', $level );
+		$space   = str_repeat( $s = '    ', $level );
 		$output .= $space . self::_drawHeader( $kintVar );
 
 
-		if ( $kintVar->extendedValue !== null ) {
+		if ( $kintVar->extendedValue !== NULL ) {
 			$output .= ' ' . ( $kintVar->type === 'array' ? '[' : '(' ) . PHP_EOL;
 
 
@@ -96,7 +128,7 @@ class Kint_Decorators_Plain
 				'title'
 			);
 
-			if ( !empty( $step['function'] ) ) {
+			if ( ! empty( $step['function'] ) ) {
 				$title .= '    ' . $step['function'];
 				if ( isset( $step['args'] ) ) {
 					$title .= '(';
@@ -110,7 +142,7 @@ class Kint_Decorators_Plain
 
 			$output .= $title;
 
-			if ( !empty( $step['args'] ) ) {
+			if ( ! empty( $step['args'] ) ) {
 				$appendDollar = $step['function'] === '{closure}' ? '' : '$';
 
 				$i = 0;
@@ -132,7 +164,7 @@ class Kint_Decorators_Plain
 				$output .= '    )' . PHP_EOL;
 			}
 
-			if ( !empty( $step['object'] ) ) {
+			if ( ! empty( $step['object'] ) ) {
 				$output .= self::_colorize(
 					'    ' . self::_char( '─', 27 ) . ' Callee object ' . self::_char( '─', 34 ),
 					'title'
@@ -160,13 +192,14 @@ class Kint_Decorators_Plain
 	}
 
 
-	private static function _colorize( $text, $type, $nlAfter = true )
+	private static function _colorize( $text, $type, $nlAfter = TRUE )
 	{
 		$nlAfter = $nlAfter ? PHP_EOL : '';
 
 		switch ( Kint::enabled() ) {
 			case Kint::MODE_PLAIN:
-				if ( !self::$_enableColors ) return $text . $nlAfter;
+				if ( ! self::$_enableColors ) { return $text . $nlAfter;
+                }
 
 				switch ( $type ) {
 					case 'value':
@@ -183,15 +216,16 @@ class Kint_Decorators_Plain
 				return $text . $nlAfter;
 				break;
 			case Kint::MODE_CLI:
-				if ( !self::$_enableColors ) return $text . $nlAfter;
+				if ( ! self::$_enableColors ) { return $text . $nlAfter;
+                }
 
 				$optionsMap = array(
-					'title' => "\x1b[36m", # cyan
-					'type'  => "\x1b[35;1m", # magenta bold
-					'value' => "\x1b[32m", # green
-				);
+                               'title' => "\x1b[36m", # cyan
+                               'type'  => "\x1b[35;1m", # magenta bold
+                               'value' => "\x1b[32m", # green
+                              );
 
-				return $optionsMap[ $type ] . $text . "\x1b[0m" . $nlAfter;
+				return $optionsMap[$type] . $text . "\x1b[0m" . $nlAfter;
 				break;
 			case Kint::MODE_WHITESPACE:
 			default:
@@ -201,16 +235,16 @@ class Kint_Decorators_Plain
 	}
 
 
-	private static function _char( $char, $repeat = null )
+	private static function _char( $char, $repeat = NULL )
 	{
 		switch ( Kint::enabled() ) {
 			case Kint::MODE_PLAIN:
-				$char = self::$_htmlSymbols[ array_search( $char, self::$_utfSymbols, true ) ];
+				$char = self::$_htmlSymbols[array_search( $char, self::$_utfSymbols, TRUE )];
 				break;
 			case Kint::MODE_CLI:
 				$inWindowsShell = PHP_SAPI === 'cli' && DIRECTORY_SEPARATOR !== '/';
 				if ( $inWindowsShell ) {
-					$char = self::$_winShellSymbols[ array_search( $char, self::$_utfSymbols, true ) ];
+					$char = self::$_winShellSymbols[array_search( $char, self::$_utfSymbols, TRUE )];
 				}
 				break;
 			case Kint::MODE_WHITESPACE:
@@ -230,10 +264,10 @@ class Kint_Decorators_Plain
 				self::_char( '┌' ) . self::_char( '─', 78 ) . self::_char( '┐' ) . PHP_EOL
 				. self::_char( '│' ),
 				'title',
-				false
+				FALSE
 			)
 
-			. self::_colorize( str_pad( $escaped, 78 + $lengthDifference, ' ', STR_PAD_BOTH ), 'title', false )
+			. self::_colorize( str_pad( $escaped, 78 + $lengthDifference, ' ', STR_PAD_BOTH ), 'title', FALSE )
 
 			. self::_colorize( self::_char( '│' ) . PHP_EOL
 				. self::_char( '└' ) . self::_char( '─', 78 ) . self::_char( '┘' ),
@@ -255,7 +289,8 @@ class Kint_Decorators_Plain
 		$lastChar = Kint::enabled() === Kint::MODE_PLAIN ? '</pre>' : '';
 
 
-		if ( !Kint::$displayCalledFrom ) return $lastLine . $lastChar;
+		if ( ! Kint::$displayCalledFrom ) { return $lastLine . $lastChar;
+        }
 
 
 		return $lastLine . self::_colorize( 'Called from ' . self::_buildCalleeString( $callee ), 'title' ) . $lastChar;
@@ -270,7 +305,7 @@ class Kint_Decorators_Plain
 			$output .= ' ' . $kintVar->access;
 		}
 
-		if ( $kintVar->name !== null && $kintVar->name !== '' ) {
+		if ( $kintVar->name !== NULL && $kintVar->name !== '' ) {
 			$output .= ' ' . kintParser::escape( $kintVar->name );
 		}
 
@@ -278,18 +313,18 @@ class Kint_Decorators_Plain
 			$output .= ' ' . $kintVar->operator;
 		}
 
-		$output .= ' ' . self::_colorize( $kintVar->type, 'type', false );
+		$output .= ' ' . self::_colorize( $kintVar->type, 'type', FALSE );
 
-		if ( $kintVar->size !== null ) {
+		if ( $kintVar->size !== NULL ) {
 			$output .= ' (' . $kintVar->size . ')';
 		}
 
 
-		if ( $kintVar->value !== null && $kintVar->value !== '' ) {
+		if ( $kintVar->value !== NULL && $kintVar->value !== '' ) {
 			$output .= ' ' . self::_colorize(
 					$kintVar->value, # escape shell
 					'value',
-					false
+					FALSE
 				);
 		}
 
@@ -326,7 +361,7 @@ class Kint_Decorators_Plain
 	{
 		self::$_enableColors =
 			Kint::$cliColors
-			&& ( DIRECTORY_SEPARATOR === '/' || getenv( 'ANSICON' ) !== false || getenv( 'ConEmuANSI' ) === 'ON' );
+			&& ( DIRECTORY_SEPARATOR === '/' || getenv( 'ANSICON' ) !== FALSE || getenv( 'ConEmuANSI' ) === 'ON' );
 
 		return Kint::enabled() === Kint::MODE_PLAIN
 			? '<style>.-kint i{color:#d00;font-style:normal}.-kint u{color:#030;text-decoration:none;font-weight:bold}</style>'

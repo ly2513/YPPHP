@@ -8,8 +8,8 @@
  */
 namespace YP\Core;
 
-class YP_Exceptions
-{
+class YP_Exceptions {
+
     /**
      * 输出缓冲机制的嵌套级别
      *
@@ -79,7 +79,7 @@ class YP_Exceptions
         if (is_cli()) {
             $templates_path .= 'cli/';
         } else {
-            header('HTTP/1.1 500 Internal Server Error', true, 500);
+            header('HTTP/1.1 500 Internal Server Error', TRUE, 500);
             $templates_path .= 'html/';
         }
         $view = $this->determineView($exception, $templates_path);
@@ -105,7 +105,7 @@ class YP_Exceptions
      *
      * @throws \ErrorException
      */
-    public function errorHandler(int $severity, string $message, string $file = null, int $line = null, $context = null)
+    public function errorHandler(int $severity, string $message, string $file = NULL, int $line = NULL, $context = NULL)
     {
         // 将其转换为异常并将其传递给错误异常处理。
         throw new \ErrorException($message, 0, $severity, $file, $line);
@@ -118,7 +118,7 @@ class YP_Exceptions
     {
         $error = error_get_last();
         // 如果我们有一个没有显示的错误，然后转换或异常，并使用异常处理程序显示它到用户。
-        if (!is_null($error)) {
+        if (! is_null($error)) {
             // 致命错误
             if (in_array($error['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE])) {
                 $this->exceptionHandler(new \ErrorException($error['message'], $error['type'], 0, $error['file'],
@@ -147,7 +147,7 @@ class YP_Exceptions
         if ($exception instanceof \OutOfBoundsException) {
             return 'error_404.php';
         } // 允许基于状态代码的自定义视图
-        else if (is_file($template_path . 'error_' . $exception->getCode() . '.php')) {
+        elseif (is_file($template_path . 'error_' . $exception->getCode() . '.php')) {
             return 'error_' . $exception->getCode() . '.php';
         }
 
@@ -176,9 +176,9 @@ class YP_Exceptions
         }
 
         return [
-            $statusCode ?? 500,
-            $exitStatus
-        ];
+                $statusCode ?? 500,
+                $exitStatus,
+               ];
     }
 
     /**
@@ -187,7 +187,6 @@ class YP_Exceptions
      * @param $file
      *
      * @return string
-     *
      */
     public static function cleanPath($file)
     {
@@ -214,7 +213,7 @@ class YP_Exceptions
     {
         if ($bytes < 1024) {
             return $bytes . 'B';
-        } else if ($bytes < 1048576) {
+        } elseif ($bytes < 1048576) {
             return round($bytes / 1024, 2) . 'KB';
         }
 
@@ -224,16 +223,16 @@ class YP_Exceptions
     /**
      * 创建PHP文件的语法高亮版本
      *
-     * @param     $file
-     * @param     $lineNumber
+     * @param $file
+     * @param $lineNumber
      * @param int $lines
      *
      * @return bool|string
      */
     public static function highlightFile($file, $lineNumber, $lines = 15)
     {
-        if (empty ($file) || !is_readable($file)) {
-            return false;
+        if (empty ($file) || ! is_readable($file)) {
+            return FALSE;
         }
         // 设置高亮颜色值
         if (function_exists('ini_set')) {
@@ -246,17 +245,17 @@ class YP_Exceptions
         try {
             $source = file_get_contents($file);
         } catch (\Throwable $e) {
-            return false;
+            return FALSE;
         }
         $source = str_replace(["\r\n", "\r"], "\n", $source);
-        $source = explode("\n", highlight_string($source, true));
+        $source = explode("\n", highlight_string($source, TRUE));
         $source = str_replace('<br />', "\n", $source[1]);
         $source = explode("\n", str_replace("\r\n", "\n", $source));
         // 显示获取的部分
-        $start = $lineNumber - (int)round($lines / 2);
+        $start = $lineNumber - (int) round($lines / 2);
         $start = $start < 0 ? 0 : $start;
         // 获得我们需要显示的线条，同时保留行号
-        $source = array_splice($source, $start, $lines, true);
+        $source = array_splice($source, $start, $lines, TRUE);
         // 用于格式化源行号
         $format = '% ' . strlen($start + $lines) . 'd';
         $out    = '';
@@ -264,7 +263,7 @@ class YP_Exceptions
         $spans = 1;
         foreach ($source as $n => $row) {
             $spans += substr_count($row, '<span') - substr_count($row, '</span');
-            $row = str_replace(["\r", "\n"], ['', ''], $row);
+            $row    = str_replace(["\r", "\n"], ['', ''], $row);
             if (($n + $start + 1) == $lineNumber) {
                 preg_match_all('#<[^>]+>#', $row, $tags);
                 $out .= sprintf("<span class='line highlight'><span class='number'>{$format}</span> %s\n</span>%s",

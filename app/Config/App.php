@@ -10,8 +10,8 @@ namespace Config;
 
 use YP\Config\Config;
 
-class App extends Config
-{
+class App extends Config {
+
     /**
      * 设置基本的网址
      *
@@ -38,7 +38,7 @@ class App extends Config
      */
     public $defaultLocale = 'en';
 
-    public $negotiateLocale = false;
+    public $negotiateLocale = FALSE;
 
     /**
      * 支持的语言环境
@@ -68,11 +68,12 @@ class App extends Config
      *
      * @var bool
      */
-    public $forceGlobalSecureRequests = false;
+    public $forceGlobalSecureRequests = FALSE;
 
     /**
      * session 处理驱动设置
-     * sessionDriver:    设置session存储的驱动,包含文件存储、数据库存储、redis存储, 肯能的值为下面三种
+     * 
+     * sessionDriver: 设置session存储的驱动,包含文件存储、数据库存储、redis存储, 肯能的值为下面三种
      * YP\Libraries\Session\YP_FileHandler
      * YP\Libraries\Session\YP_DatabaseHandler
      * YYP\Libraries\Session\YP_RedisHandler
@@ -110,7 +111,7 @@ class App extends Config
      *
      * @var bool
      */
-    public $sessionMatchIP = false;
+    public $sessionMatchIP = FALSE;
 
     /**
      * 间隔多少秒再生成一次session ID
@@ -124,23 +125,24 @@ class App extends Config
      *
      * @var bool
      */
-    public $sessionRegenerateDestroy = false;
+    public $sessionRegenerateDestroy = FALSE;
 
     /**
      * cookie 相关的属性
+     * 
      * cookiePrefix:   防止cookie碰撞,可以设置Cookie名称前缀
      * cookieDomain:   设置站内cookie
      * cookiePath:     cookie路径,默认值为'/'
      * cookieSecure:   如果存在安全的HTTPS连接, 只要设置这一个属性即可
      * cookieHTTPOnly: Cookie只访问通过http(s)
-     * 注意: 这些设置也会影响到session(除了cookie_prefix,cookie_httponly这两个属性设置)
      *
+     * 注意: 这些设置也会影响到session(除了cookie_prefix,cookie_httponly这两个属性设置)
      */
     public $cookiePrefix   = '';
     public $cookieDomain   = '';
     public $cookiePath     = '/';
-    public $cookieSecure   = false;
-    public $cookieHTTPOnly = false;
+    public $cookieSecure   = FALSE;
+    public $cookieHTTPOnly = FALSE;
 
     /**
      * 反向代理服务器IPS
@@ -154,6 +156,7 @@ class App extends Config
 
     /**
      * 伪造请求,跨站进行攻击
+     *
      * 设置CSRF cookie token ,当设置为true时,token将检查提交的表单数据。
      * CSRFTokenName:  设置token名称
      * CSRFCookieName: 设置cookie名称
@@ -165,11 +168,12 @@ class App extends Config
     public $CSRFTokenName  = 'csrf_test_name';
     public $CSRFCookieName = 'csrf_cookie_name';
     public $CSRFExpire     = 7200;
-    public $CSRFRegenerate = true;
-    public $CSPEnabled     = false;
+    public $CSRFRegenerate = TRUE;
+    public $CSPEnabled     = FALSE;
 
     /**
      * 调试工具栏
+     *
      * 调试工具栏提供了一种查看性能信息的方法
      * 这个页面显示在您的应用程序和状态。默认情况下
      * 不在生产环境中的显示，只显示如果
@@ -177,15 +181,16 @@ class App extends Config
      *
      * @var array
      */
-    public $toolbarCollectors = [
-        'YP\Debug\Toolbar\Collectors\Timers',
-        'YP\Debug\Toolbar\Collectors\Database',
-        'YP\Debug\Toolbar\Collectors\Logs',
-        'YP\Debug\Toolbar\Collectors\Views',
-        //		'YP\Debug\Toolbar\Collectors\Cache',
-        'YP\Debug\Toolbar\Collectors\Files',
-        'YP\Debug\Toolbar\Collectors\Routes',
-    ];
+    public $toolbarCollectors =
+        [
+         'YP\Debug\Toolbar\Collectors\Timers',
+         'YP\Debug\Toolbar\Collectors\Database',
+         'YP\Debug\Toolbar\Collectors\Logs',
+         'YP\Debug\Toolbar\Collectors\Views',
+         //		'YP\Debug\Toolbar\Collectors\Cache',
+         'YP\Debug\Toolbar\Collectors\Files',
+         'YP\Debug\Toolbar\Collectors\Routes',
+        ];
 
     /**
      * 错误视图路径

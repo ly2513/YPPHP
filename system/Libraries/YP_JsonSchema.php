@@ -10,35 +10,35 @@ namespace YP\Libraries;
 
 use Config\Services;
 
-class YP_JsonSchema
-{
+class YP_JsonSchema {
+
     /**
      * json验证文件路径
      *
      * @var null
      */
-    private $path = null;
+    private $path = NULL;
 
     /**
      * 路由
      *
      * @var null
      */
-    private $router = null;
+    private $router = NULL;
 
     /**
      * 当前使用的控制器类
      *
      * @var null
      */
-    private $class = null;
+    private $class = NULL;
 
     /**
      * 当前调用的方法
      *
      * @var null
      */
-    private $method = null;
+    private $method = NULL;
 
     /**
      * 控制器所在的子目录
@@ -52,14 +52,14 @@ class YP_JsonSchema
      *
      * @var null
      */
-    private $validator = null;
+    private $validator = NULL;
 
     /**
      *
      *
      * @var null
      */
-    private $schema = null;
+    private $schema = NULL;
 
     /**
      * 错误信息
@@ -140,24 +140,24 @@ class YP_JsonSchema
     {
         $basicPath = APP_PATH . 'ThirdParty/Json_Schema/';
         $jsonPath  = $basicPath . $this->directory . $this->class;
-        is_dir($jsonPath) or mkdir($jsonPath, 0755, true);
+        is_dir($jsonPath) or mkdir($jsonPath, 0755, TRUE);
         $this->path = $jsonPath . '/' . $this->method . '.json';
         is_file($this->path) or touch($this->path);
         $this->loadSchema();
         // 验证
-        if (!file_exists($this->path)) {
-            $this->errMsg = 'Can Not Found Json Schema File. The ' . $this->path . ' file or directory does not exist';
+        if (! file_exists($this->path)) {
+            $this->errMsg  = 'Can Not Found Json Schema File. The ' . $this->path . ' file or directory does not exist';
             $this->errCode = self::ERROR_NO_EXISTS;
         } else {
             $schemaData = json_decode($this->schema);
-            if (!$schemaData) {
+            if (! $schemaData) {
                 $this->errCode = self::ERROR_SCHEMA_ERROR;
                 $this->errMsg  = 'Invalid Json Schema Data, Please Check Schema JsonData';
 
-                return false;
+                return FALSE;
             }
             $this->validator->check($jsonData, $schemaData);
-            if (!$this->validator->isValid()) {
+            if (! $this->validator->isValid()) {
                 foreach ($this->validator->getErrors() as $error) {
                     $this->errMsg .= sprintf("%s %s\n", $error['property'], $error['message']) . "\r\n";
                 }
@@ -172,7 +172,7 @@ class YP_JsonSchema
      */
     public function isValid()
     {
-        return $this->errMsg ? false : true;
+        return $this->errMsg ? FALSE : TRUE;
     }
 
     /**

@@ -10,8 +10,8 @@ namespace YP\Core;
 
 use YP\Libraries\YP_Message as Message;
 
-class YP_Request extends Message implements YP_RequestInterface
-{
+class YP_Request extends Message implements YP_RequestInterface {
+
 
     /**
      * 客户端的IP地址
@@ -62,28 +62,28 @@ class YP_Request extends Message implements YP_RequestInterface
      */
     public function getIPAddress(): string
     {
-        if (!empty($this->ipAddress)) {
+        if (! empty($this->ipAddress)) {
             return $this->ipAddress;
         }
         // 代理IPs
         $proxy_ips = $this->proxyIPs;
-        if (!empty($this->proxyIPs) && !is_array($this->proxyIPs)) {
+        if (! empty($this->proxyIPs) && ! is_array($this->proxyIPs)) {
             $proxy_ips = explode(',', str_replace(' ', '', $this->proxyIPs));
         }
         // 获取客户端IP地址
         $this->ipAddress = $this->getServer('REMOTE_ADDR');
         if ($proxy_ips) {
             foreach ([
-                         'HTTP_X_FORWARDED_FOR',
-                         'HTTP_CLIENT_IP',
-                         'HTTP_X_CLIENT_IP',
-                         'HTTP_X_CLUSTER_CLIENT_IP'
+                      'HTTP_X_FORWARDED_FOR',
+                      'HTTP_CLIENT_IP',
+                      'HTTP_X_CLIENT_IP',
+                      'HTTP_X_CLUSTER_CLIENT_IP',
                      ] as $header) {
-                if (($spoof = $this->getServer($header)) !== null) {
+                if (($spoof = $this->getServer($header)) !== NULL) {
                     // 获取客户端是通过哪个IP地址来访问我们的
                     sscanf($spoof, '%[^,]', $spoof);
-                    if (!$this->isValidIP($spoof)) {
-                        $spoof = null;
+                    if (! $this->isValidIP($spoof)) {
+                        $spoof = NULL;
                     } else {
                         break;
                     }
@@ -92,7 +92,7 @@ class YP_Request extends Message implements YP_RequestInterface
             if ($spoof) {
                 for ($i = 0, $c = count($this->proxyIPs); $i < $c; $i++) {
                     // 对IP地址进行检测
-                    if (strpos($proxy_ips[$i], '/') === false) {
+                    if (strpos($proxy_ips[$i], '/') === FALSE) {
                         // 对指定的IP地址进行对比
                         if ($proxy_ips[$i] === $this->ipAddress) {
                             $this->ipAddress = $spoof;
@@ -101,13 +101,13 @@ class YP_Request extends Message implements YP_RequestInterface
                         continue;
                     }
                     // 存在子网IP,对子网IP进行校验处理
-                    isset($separator) OR $separator = $this->isValidIP($this->ipAddress, 'ipv6') ? ':' : '.';
+                    isset($separator) or $separator = $this->isValidIP($this->ipAddress, 'ipv6') ? ':' : '.';
                     // 如果代理的IP地址没有匹配到,直接跳过
-                    if (strpos($proxy_ips[$i], $separator) === false) {
+                    if (strpos($proxy_ips[$i], $separator) === FALSE) {
                         continue;
                     }
                     // 将服务端IP地址转换为二进制
-                    if (!isset($ip, $sprintf)) {
+                    if (! isset($ip, $sprintf)) {
                         if ($separator === ':') {
                             // 确保我们有个全IPv6格式的地址
                             $ip = explode(':',
@@ -147,7 +147,7 @@ class YP_Request extends Message implements YP_RequestInterface
                 }
             }
         }
-        if (!$this->isValidIP($this->ipAddress)) {
+        if (! $this->isValidIP($this->ipAddress)) {
             return $this->ipAddress = '0.0.0.0';
         }
 
@@ -162,7 +162,7 @@ class YP_Request extends Message implements YP_RequestInterface
      *
      * @return bool
      */
-    public function isValidIP(string $ip, string $which = null): bool
+    public function isValidIP(string $ip, string $which = NULL): bool
     {
         switch (strtolower($which)) {
             case 'ipv4':
@@ -172,11 +172,11 @@ class YP_Request extends Message implements YP_RequestInterface
                 $which = FILTER_FLAG_IPV6;
                 break;
             default:
-                $which = null;
+                $which = NULL;
                 break;
         }
 
-        return (bool)filter_var($ip, FILTER_VALIDATE_IP, $which);
+        return (bool) filter_var($ip, FILTER_VALIDATE_IP, $which);
     }
 
     /**
@@ -186,7 +186,7 @@ class YP_Request extends Message implements YP_RequestInterface
      *
      * @return string
      */
-    public function getMethod($upper = false): string
+    public function getMethod($upper = FALSE): string
     {
         return ($upper) ? strtoupper($this->method) : strtolower($this->method);
     }
@@ -213,7 +213,7 @@ class YP_Request extends Message implements YP_RequestInterface
      *
      * @return mixed
      */
-    public function getServer($index = null, $filter = null)
+    public function getServer($index = NULL, $filter = NULL)
     {
         return $this->fetchGlobal(INPUT_SERVER, $index, $filter);
     }
@@ -226,7 +226,7 @@ class YP_Request extends Message implements YP_RequestInterface
      *
      * @return mixed
      */
-    public function getEnv($index = null, $filter = null)
+    public function getEnv($index = NULL, $filter = NULL)
     {
         return $this->fetchGlobal(INPUT_ENV, $index, $filter);
     }
@@ -234,13 +234,13 @@ class YP_Request extends Message implements YP_RequestInterface
     /**
      * 用于遍历超全局数组
      *
-     * @param      $type
+     * @param $type
      * @param null $index
      * @param null $filter
      *
      * @return array|mixed|null
      */
-    protected function fetchGlobal($type, $index = null, $filter = null)
+    protected function fetchGlobal($type, $index = NULL, $filter = NULL)
     {
         // 设置过滤器
         if (is_null($filter)) {
@@ -309,25 +309,25 @@ class YP_Request extends Message implements YP_RequestInterface
         // 由于FastCGI和测试问题，我们需要手工代替filter_input()；做简单的数据过滤
         switch ($type) {
             case INPUT_GET:
-                $value = $_GET[$index] ?? null;
+                $value = $_GET[$index] ?? NULL;
                 break;
             case INPUT_POST:
-                $value = $_POST[$index] ?? null;
+                $value = $_POST[$index] ?? NULL;
                 break;
             case INPUT_SERVER:
-                $value = $_SERVER[$index] ?? null;
+                $value = $_SERVER[$index] ?? NULL;
                 break;
             case INPUT_ENV:
-                $value = $_ENV[$index] ?? null;
+                $value = $_ENV[$index] ?? NULL;
                 break;
             case INPUT_COOKIE:
-                $value = $_COOKIE[$index] ?? null;
+                $value = $_COOKIE[$index] ?? NULL;
                 break;
             case INPUT_REQUEST:
-                $value = $_REQUEST[$index] ?? null;
+                $value = $_REQUEST[$index] ?? NULL;
                 break;
             case INPUT_SESSION:
-                $value = $_SESSION[$index] ?? null;
+                $value = $_SESSION[$index] ?? NULL;
                 break;
             default:
                 $value = '';
@@ -345,22 +345,22 @@ class YP_Request extends Message implements YP_RequestInterface
     protected function parseCommand()
     {
         // 查找操作状态
-        $options_found = false;
-        $argc = $this->getServer('argc', FILTER_SANITIZE_NUMBER_INT);
-        $argv = $this->getServer('argv');
+        $options_found = FALSE;
+        $argc          = $this->getServer('argc', FILTER_SANITIZE_NUMBER_INT);
+        $argv          = $this->getServer('argv');
         //
         for ($i = 1; $i < $argc; $i++) {
             // 如果参数中没有'-',就直接将参数添加进来
-            if (!$options_found && strpos($argv[$i], '-') === false) {
+            if (! $options_found && strpos($argv[$i], '-') === FALSE) {
                 $this->segments[] = filter_var($argv[$i], FILTER_SANITIZE_STRING);
                 continue;
             }
-            $options_found = true;
+            $options_found = TRUE;
             if (substr($argv[$i], 0, 1) != '-') {
                 continue;
             }
             $arg   = filter_var(str_replace('-', '', $argv[$i]), FILTER_SANITIZE_STRING);
-            $value = null;
+            $value = NULL;
             //
             if (isset($argv[$i + 1]) && substr($argv[$i + 1], 0, 1) != '-') {
                 $value = filter_var($argv[$i + 1], FILTER_SANITIZE_STRING);

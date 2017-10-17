@@ -22,10 +22,12 @@ class GenCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('thrift:gen')->setDescription('编译thrift文件.')->setDefinition([
-            new InputOption('thrift-path', 'p', InputOption::VALUE_REQUIRED, 'thrift文件目录.'),
-            new InputOption('thrift-dir', 'd', InputOption::VALUE_NONE, '指定将编译好的thrift文件所存放的目录.'),
-        ]);
+        $this->setName('thrift:gen')->setDescription('编译thrift文件.')->setDefinition(
+            [
+             new InputOption('thrift-path', 'p', InputOption::VALUE_REQUIRED, 'thrift文件目录.'),
+             new InputOption('thrift-dir', 'd', InputOption::VALUE_NONE, '指定将编译好的thrift文件所存放的目录.'),
+            ]
+        );
     }
 
     /**
@@ -39,7 +41,7 @@ class GenCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $thriftPath = $input->getOption('thrift-path');
-        if (!$thriftPath) {
+        if (! $thriftPath) {
             $output->writeln(sprintf('请输入需要编译的文件!'));
 
             return false;
@@ -53,7 +55,6 @@ class GenCommand extends Command
         $sourceDir = ROOT_PATH . 'gen-php/';
         $command   = 'thrift -gen php ' . $thriftPath . ' && cp -R ' . $sourceDir . ' ' . $thriftDir . ' && rm -rf ' . ROOT_PATH . 'gen-php';
         // 执行命令
-        
         system($command, $status);
         unset($file, $command);
         if ($status) {
@@ -62,4 +63,5 @@ class GenCommand extends Command
 
         return true;
     }
+    
 }

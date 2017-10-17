@@ -10,8 +10,8 @@ namespace YP;
 
 use Config\Autoload;
 
-class FileLocator
-{
+class FileLocator {
+
     /**
      * 命名空间
      *
@@ -41,16 +41,16 @@ class FileLocator
      *
      * @return string 返回文件的目录或返回为空字符串
      */
-    public function locateFile(string $file, string $folder = null, string $ext = 'php'): string
+    public function locateFile(string $file, string $folder = NULL, string $ext = 'php'): string
     {
         // 确保扩展名在文件名上
-        $file = strpos($file, '.' . $ext) !== false ? $file : $file . '.' . $ext;
+        $file = strpos($file, '.' . $ext) !== FALSE ? $file : $file . '.' . $ext;
         // 将文件夹名从文件名中清除
-        if (!empty($folder)) {
+        if (! empty($folder)) {
             $file = str_replace($folder . '/', '', $file);
         }
         // 如没有命名空间,尝试在app文件夹中查找
-        if (strpos($file, '\\') === false) {
+        if (strpos($file, '\\') === FALSE) {
             return $this->legacyLocate($file, $folder);
         }
         // 规范斜线处理嵌套目录
@@ -61,9 +61,9 @@ class FileLocator
             unset($segments[0]);
         }
         $path = $prefix = $filename = '';
-        while (!empty($segments)) {
+        while (! empty($segments)) {
             $prefix .= empty($prefix) ? ucfirst(array_shift($segments)) : '\\' . ucfirst(array_shift($segments));
-            if (!array_key_exists($prefix, $this->namespaces)) {
+            if (! array_key_exists($prefix, $this->namespaces)) {
                 continue;
             }
             $path     = $this->namespaces[$prefix] . '/';
@@ -72,11 +72,11 @@ class FileLocator
         }
         // 如果我们有一个文件夹名，那么调用函数希望这个文件在该文件夹中，比如“视图”或“库”。
         // @todo Allow it to check with and without the nested folder.
-        if (!empty($folder) && strpos($filename, $folder) === false) {
+        if (! empty($folder) && strpos($filename, $folder) === FALSE) {
             $filename = $folder . '/' . $filename;
         }
         $path .= $filename;
-        if (!$this->requireFile($path)) {
+        if (! $this->requireFile($path)) {
             $path = '';
         }
 
@@ -103,7 +103,7 @@ class FileLocator
     {
         $foundPaths = [];
         // 确保扩展名在文件名上
-        $path = strpos($path, '.' . $ext) !== false ? $path : $path . '.' . $ext;
+        $path = strpos($path, '.' . $ext) !== FALSE ? $path : $path . '.' . $ext;
         foreach ($this->namespaces as $name => $folder) {
             $folder = rtrim($folder, '/') . '/';
             if (file_exists($folder . $path)) {
@@ -126,7 +126,7 @@ class FileLocator
     public function findQualifiedNameFromPath(string $path)
     {
         $path = realpath($path);
-        if (!$path) {
+        if (! $path) {
             return;
         }
         foreach ($this->namespaces as $namespace => $nsPath) {
@@ -161,12 +161,12 @@ class FileLocator
         helper('filesystem');
         foreach ($this->namespaces as $namespace => $nsPath) {
             $fullPath = realpath(rtrim($nsPath, '/') . '/' . $path);
-            if (!is_dir($fullPath)) {
+            if (! is_dir($fullPath)) {
                 continue;
             }
-            $tempFiles = get_filenames($fullPath, true);
+            $tempFiles = get_filenames($fullPath, TRUE);
             //CLI::newLine($tempFiles);
-            if (!count($tempFiles)) {
+            if (! count($tempFiles)) {
                 continue;
             }
             $files = array_merge($files, $tempFiles);
@@ -183,12 +183,15 @@ class FileLocator
      *
      * @return string
      */
-    protected function legacyLocate(string $file, string $folder = null): string
+    protected function legacyLocate(string $file, string $folder = NULL): string
     {
-        $paths = [APP_PATH, BASE_PATH];
+        $paths = [
+                  APP_PATH,
+                  BASE_PATH,
+                 ];
         foreach ($paths as $path) {
             $path .= empty($folder) ? $file : $folder . '/' . $file;
-            if ($this->requireFile($path) === true) {
+            if ($this->requireFile($path) === TRUE) {
                 return $path;
             }
         }

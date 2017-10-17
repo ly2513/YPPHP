@@ -13,16 +13,16 @@ namespace Config;
  *
  * @package Config
  */
-class Validation
-{
+class Validation {
+
     /**
      * 存储包含可用规则的类
      *
      * @var array
      */
     public $ruleSets = [
-        \YP\Libraries\YP_Rules::class,
-    ];
+                        \YP\Libraries\YP_Rules::class,
+                       ];
 
     /**
      * 指定用于显示错误的视图
@@ -30,9 +30,9 @@ class Validation
      * @var array
      */
     public $templates = [
-        'list'   => APP_PATH . 'Views/Validation/list.html',
-        'single' => APP_PATH . 'Views/Validation/single.html'
-    ];
+                         'list'   => APP_PATH . 'Views/Validation/list.html',
+                         'single' => APP_PATH . 'Views/Validation/single.html',
+                        ];
 
     // TODO 在此添加校验规则
 }

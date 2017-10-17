@@ -8,8 +8,8 @@
  */
 namespace Config;
 
-class Log
-{
+class Log {
+
     /**
      * 错误日志记录阈值
      *
@@ -26,7 +26,13 @@ class Log
      *
      * @var int
      */
-    public $threshold = [1,2,3,4,5];
+    public $threshold = [
+                         1,
+                         2,
+                         3,
+                         4,
+                         5,
+                        ];
 
     /**
      * 错误日志的路基
@@ -49,24 +55,24 @@ class Log
      */
     public $handlers = [
         // 被处理的日记级别
-        'YP\Libraries\LogHandlers\YP_FileHandler' => [
+                        'YP\Libraries\LogHandlers\YP_FileHandler' => [
             // 处理程序将处理的日志级别
-            'handles'         => [
-                'critical',
-                'alert',
-                'emergency',
-                'debug',
-                'error',
-                'info',
-                'notice',
-                'warning'
-            ],
-            // 日志目录
-            'path'            => CACHE_PATH . 'Logs/',
-            // 日志文件扩展名称
-            'fileExtension'   => 'log',
-            // 文件的访问权限
-            'filePermissions' => 0644
-        ],
-    ];
+                                                                      'handles'         => [
+                                                                                            'critical',
+                                                                                            'alert',
+                                                                                            'emergency',
+                                                                                            'debug',
+                                                                                            'error',
+                                                                                            'info',
+                                                                                            'notice',
+                                                                                            'warning',
+                                                                                           ],
+                                                                      // 日志目录
+                                                                      'path'            => CACHE_PATH . 'Logs/',
+                                                                      // 日志文件扩展名称
+                                                                      'fileExtension'   => 'log',
+                                                                      // 文件的访问权限
+                                                                      'filePermissions' => 0644,
+                                                                     ],
+                       ];
 }

@@ -39,11 +39,13 @@ class RollbackCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('migrate:rollback')->setDescription('回滚最后一个数据库迁移.')->setDefinition([
-            new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
-            new InputOption('force', null, InputOption::VALUE_NONE, '强行在生产环境操作运行.'),
-            new InputOption('pretend', null, InputOption::VALUE_NONE, '运行的SQL查询.'),
-        ]);
+        $this->setName('migrate:rollback')->setDescription('回滚最后一个数据库迁移.')->setDefinition(
+            [
+             new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
+             new InputOption('force', null, InputOption::VALUE_NONE, '强行在生产环境操作运行.'),
+             new InputOption('pretend', null, InputOption::VALUE_NONE, '运行的SQL查询.'),
+            ]
+        );
     }
 
     /**
@@ -70,7 +72,7 @@ class RollbackCommand extends Command
                 $style     = new SymfonyStyle($input, $output);
                 $confirmed = $style->confirm('Do you really wish to run this command?');
                 unset($style);
-                if (!$confirmed) {
+                if (! $confirmed) {
                     $output->writeln('<comment> Command Cancelled! </comment>');
                     $status = false;
                 } else {
@@ -78,8 +80,8 @@ class RollbackCommand extends Command
                 }
             }
         }
-        if (!$status) {
-            return;
+        if (! $status) {
+            return ;
         }
         $this->migrator->setConnection($input->getOption('database'));
         $pretend = $input->getOption('pretend');

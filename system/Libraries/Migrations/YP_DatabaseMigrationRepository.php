@@ -10,8 +10,8 @@ namespace YP\Libraries\Migrations;
 
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 
-class YP_DatabaseMigrationRepository implements MigrationRepositoryInterface
-{
+class YP_DatabaseMigrationRepository implements MigrationRepositoryInterface {
+
     /**
      * 数据库连接解析器实例
      *
@@ -39,7 +39,7 @@ class YP_DatabaseMigrationRepository implements MigrationRepositoryInterface
      * DatabaseMigrationRepository constructor.
      *
      * @param Resolver $resolver
-     * @param          $table
+     * @param $table
      */
     public function __construct(Resolver $resolver, $table)
     {
@@ -72,21 +72,24 @@ class YP_DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * 记录迁移是否已运行
      *
-     * @param  string $file
-     * @param  int    $batch
+     * @param string $file
+     * @param int    $batch
      *
      * @return void
      */
     public function log($file, $batch)
     {
-        $record = ['migration' => $file, 'batch' => $batch];
+        $record = [
+                   'migration' => $file,
+                   'batch'     => $batch,
+                  ];
         $this->table()->insert($record);
     }
 
     /**
      * 从日志中删除迁移
      *
-     * @param  object $migration
+     * @param object $migration
      *
      * @return void
      */
@@ -176,7 +179,7 @@ class YP_DatabaseMigrationRepository implements MigrationRepositoryInterface
     /**
      * 设置信息源以收集数据
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return void
      */

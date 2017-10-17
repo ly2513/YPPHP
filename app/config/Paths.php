@@ -8,8 +8,8 @@
  */
 namespace Config;
 
-class Paths
-{
+class Paths {
+
     
     /**
      * 框架目录

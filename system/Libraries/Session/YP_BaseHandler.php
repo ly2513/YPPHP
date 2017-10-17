@@ -11,14 +11,13 @@ namespace YP\Libraries\Session;
 use YP\Config\BaseConfig;
 use Psr\Log\LoggerAwareTrait;
 
-
 /**
  * Class BaseHandler 会话处理的基类
  *
  * @package YP\Libraries\Session
  */
-abstract class YP_BaseHandler implements \SessionHandlerInterface
-{
+abstract class YP_BaseHandler implements \SessionHandlerInterface {
+
     use LoggerAwareTrait;
 
     /**
@@ -33,7 +32,7 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface
      *
      * @var bool
      */
-    protected $lock = false;
+    protected $lock = FALSE;
 
     /**
      * Cookie的前缀
@@ -61,10 +60,11 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface
      *
      * @var bool
      */
-    protected $cookieSecure = false;
+    protected $cookieSecure = FALSE;
 
     /**
      * Cookie name to use
+     *
      * @var type
      */
     protected $cookieName;
@@ -74,7 +74,7 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface
      *
      * @var bool
      */
-    protected $matchIP = false;
+    protected $matchIP = FALSE;
 
     /**
      * 当前的session的ID
@@ -117,12 +117,12 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface
     {
         return setcookie(
             $this->cookieName,
-            null,
+            NULL,
             1,
             $this->cookiePath,
             $this->cookieDomain,
             $this->cookieSecure,
-            true
+            TRUE
         );
     }
 
@@ -135,8 +135,8 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface
      */
     protected function lockSession(string $sessionID): bool
     {
-        $this->lock = true;
-        return true;
+        $this->lock = TRUE;
+        return TRUE;
     }
 
     /**
@@ -146,9 +146,9 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface
      */
     protected function releaseLock(): bool
     {
-        $this->lock = false;
+        $this->lock = FALSE;
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -162,6 +162,6 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface
     {
         ini_set('session.save_path', $this->savePath);
 
-        return false;
+        return FALSE;
     }
 }

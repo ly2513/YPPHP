@@ -12,8 +12,8 @@ use YP\Core\YP_IncomingRequest as IncomingRequest;
 use YP\Core\YP_Response as Response;
 use YP\Core\YP_FilterInterface as FilterInterface;
 
-class YP_Filter
-{
+class YP_Filter {
+
 
     /**
      * 将用于检查的处理过的过滤器
@@ -21,9 +21,9 @@ class YP_Filter
      * @var array
      */
     protected $filters = [
-        'before' => [],
-        'after'  => []
-    ];
+                          'before' => [],
+                          'after'  => [],
+                         ];
 
     /**
      * 配置文件
@@ -51,12 +51,12 @@ class YP_Filter
      *
      * @var bool
      */
-    protected $initialized = false;
+    protected $initialized = FALSE;
 
     /**
      * YP_Filter constructor.
      *
-     * @param                    $config
+     * @param $config
      * @param YP_IncomingRequest $request
      * @param YP_Response        $response
      */
@@ -82,11 +82,11 @@ class YP_Filter
             if (is_numeric($alias) && is_string($rules)) {
                 $alias = $rules;
             }
-            if (!array_key_exists($alias, $this->config->aliases)) {
+            if (! array_key_exists($alias, $this->config->aliases)) {
                 throw new \InvalidArgumentException("'{$alias}' filter must have a matching alias defined.");
             }
             $class = new $this->config->aliases[$alias]();
-            if (!$class instanceof FilterInterface) {
+            if (! $class instanceof FilterInterface) {
                 throw new \RuntimeException(get_class($class) . ' 必须实现 YP\Core\YP_FilterInterface 该接口.');
             }
             if ($position == 'before') {
@@ -125,15 +125,15 @@ class YP_Filter
      *
      * @return YP_Filter
      */
-    public function initialize(string $uri = null): self
+    public function initialize(string $uri = NULL): self
     {
-        if ($this->initialized === true) {
+        if ($this->initialized === TRUE) {
             return $this;
         }
         $this->processGlobals($uri);
         $this->processMethods();
         $this->processFilters($uri);
-        $this->initialized = true;
+        $this->initialized = TRUE;
 
         return $this;
     }
@@ -153,16 +153,16 @@ class YP_Filter
      *
      * @param string|null $uri
      */
-    protected function processGlobals(string $uri = null)
+    protected function processGlobals(string $uri = NULL)
     {
-        if (!isset($this->config->globals) || !is_array($this->config->globals)) {
+        if (! isset($this->config->globals) || ! is_array($this->config->globals)) {
             return;
         }
         // 处理前
         if (isset($this->config->globals['before'])) {
             // Take any 'except' routes into consideration
             foreach ($this->config->globals['before'] as $alias => $rules) {
-                if (!is_array($rules) || !array_key_exists('except', $rules)) {
+                if (! is_array($rules) || ! array_key_exists('except', $rules)) {
                     continue;
                 }
                 $rules = $rules['except'];
@@ -184,7 +184,7 @@ class YP_Filter
         if (isset($this->config->globals['after'])) {
             // Take any 'except' routes into consideration
             foreach ($this->config->globals['after'] as $alias => $rules) {
-                if (!is_array($rules) || !array_key_exists('except', $rules)) {
+                if (! is_array($rules) || ! array_key_exists('except', $rules)) {
                     continue;
                 }
                 $rules = $rules['except'];
@@ -212,7 +212,7 @@ class YP_Filter
      */
     protected function processMethods()
     {
-        if (!isset($this->config->methods) || !is_array($this->config->methods)) {
+        if (! isset($this->config->methods) || ! is_array($this->config->methods)) {
             return;
         }
         // 基于CLI的请求,不会设置请求方法
@@ -229,9 +229,9 @@ class YP_Filter
      *
      * @param string|null $uri
      */
-    protected function processFilters(string $uri = null)
+    protected function processFilters(string $uri = NULL)
     {
-        if (!isset($this->config->filters) || !count($this->config->filters)) {
+        if (! isset($this->config->filters) || ! count($this->config->filters)) {
             return;
         }
         $uri     = trim($uri, '/ ');

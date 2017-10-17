@@ -8,8 +8,8 @@
  */
 namespace YP\Libraries;
 
-class YP_FileCollection
-{
+class YP_FileCollection {
+
 
     /**
      * 存放收集上传的文件的数组
@@ -42,14 +42,14 @@ class YP_FileCollection
         $this->populateFiles();
         $name = strtolower($name);
         if ($this->hasFile($name)) {
-            if (strpos($name, '.') !== false) {
+            if (strpos($name, '.') !== FALSE) {
                 $name         = explode('.', $name);
                 $uploadedFile = $this->getValueDotNotationSyntax($name, $this->files);
                 if ($uploadedFile instanceof YP_Upload) {
                     return $uploadedFile;
                 }
 
-                return null;
+                return NULL;
             }
             if (array_key_exists($name, $this->files)) {
                 $uploadedFile = $this->files[$name];
@@ -57,14 +57,14 @@ class YP_FileCollection
                     return $uploadedFile;
                 }
 
-                return null;
+                return NULL;
             }
 
-            return null;
+            return NULL;
 
         }
 
-        return null;
+        return NULL;
     }
 
     /**
@@ -77,17 +77,17 @@ class YP_FileCollection
     public function hasFile(string $fileID): bool
     {
         $this->populateFiles();
-        if (strpos($fileID, '.') !== false) {
+        if (strpos($fileID, '.') !== FALSE) {
             $segments = explode('.', $fileID);
-            $el = $this->files;
+            $el       = $this->files;
             foreach ($segments as $segment) {
-                if (!array_key_exists($segment, $el)) {
-                    return false;
+                if (! array_key_exists($segment, $el)) {
+                    return FALSE;
                 }
                 $el = $el[$segment];
             }
 
-            return true;
+            return TRUE;
         }
 
         return isset($this->files[$fileID]);
@@ -97,7 +97,6 @@ class YP_FileCollection
      * 从$_FILES数组获取上传信息,实例化YP_Upload对象将每一个文件保存为this->files格式
      *
      * 方便files(), file(), and hasFile()这些方法调用
-     *
      */
     protected function populateFiles()
     {
@@ -108,7 +107,7 @@ class YP_FileCollection
             return;
         }
         $this->files = [];
-        $files = $this->fixFilesArray($_FILES);
+        $files       = $this->fixFilesArray($_FILES);
         foreach ($files as $name => $file) {
             $this->files[$name] = $this->createFileObject($file);
         }
@@ -123,10 +122,10 @@ class YP_FileCollection
      */
     protected function createFileObject(array $array)
     {
-        if (!isset($array['name'])) {
+        if (! isset($array['name'])) {
             $output = [];
             foreach ($array as $key => $values) {
-                if (!is_array($values)) {
+                if (! is_array($values)) {
                     continue;
                 }
                 $output[$key] = $this->createFileObject($values);
@@ -135,8 +134,8 @@ class YP_FileCollection
             return $output;
         }
 
-        return new YP_Upload($array['tmp_name'] ?? null, $array['name'] ?? null, $array['type'] ?? null,
-            $array['size'] ?? null, $array['error'] ?? null);
+        return new YP_Upload($array['tmp_name'] ?? NULL, $array['name'] ?? NULL, $array['type'] ?? NULL,
+            $array['size'] ?? NULL, $array['error'] ?? NULL);
     }
 
     /**
@@ -152,7 +151,7 @@ class YP_FileCollection
         foreach ($data as $name => $array) {
             foreach ($array as $field => $value) {
                 $pointer = &$output[$name];
-                if (!is_array($value)) {
+                if (! is_array($value)) {
                     $pointer[$field] = $value;
                     continue;
                 }
@@ -164,7 +163,7 @@ class YP_FileCollection
                     $pointer = &$stack[count($stack) - 1];
                     $pointer = &$pointer[$key];
                     $stack[] = &$pointer;
-                    if (!$iterator->hasChildren()) {
+                    if (! $iterator->hasChildren()) {
                         $pointer[$field] = $value;
                     }
                 }
@@ -193,7 +192,7 @@ class YP_FileCollection
             if (isset($value[$current_index])) {
                 return $value[$current_index];
             } else {
-                return null;
+                return NULL;
             }
         }
     }

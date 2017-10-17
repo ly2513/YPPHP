@@ -32,7 +32,8 @@ var ciDebugBar = {
         // 获取当前tab的显隐性
         var state = document.getElementById(tab).style.display;
 
-        if (tab == undefined) return true;
+        if (tab == undefined) { return true;
+        }
 
         // 隐藏所有的tab
         var tabs = document.querySelectorAll('#debug-bar .tab');
@@ -78,6 +79,7 @@ var ciDebugBar = {
 
     /**
      * 切换数据表的显示
+     *
      * @param obj
      */
     toggleDataTable: function (obj) {
@@ -93,11 +95,11 @@ var ciDebugBar = {
     // 切换工具条到图标
     toggleToolbar: function () {
         var ciIcon = document.getElementById('debug-icon');
-        var ciBar = document.getElementById('debug-bar');
-        var open = ciBar.style.display != 'none';
+        var ciBar  = document.getElementById('debug-bar');
+        var open   = ciBar.style.display != 'none';
 
         ciIcon.style.display = open == true ? 'inline-block' : 'none';
-        ciBar.style.display = open == false ? 'inline-block' : 'none';
+        ciBar.style.display  = open == false ? 'inline-block' : 'none';
 
         // 记住这个网站的其他页面加载
         ciDebugBar.createCookie('debug-bar-state', '', -1);
@@ -106,12 +108,12 @@ var ciDebugBar = {
 
     // 设置页面的初始状态（打开或最小化）
     setToolbarState: function () {
-        var open = ciDebugBar.readCookie('debug-bar-state');
+        var open   = ciDebugBar.readCookie('debug-bar-state');
         var ciIcon = document.getElementById('debug-icon');
-        var ciBar = document.getElementById('debug-bar');
+        var ciBar  = document.getElementById('debug-bar');
 
         ciIcon.style.display = open != 'open' ? 'inline-block' : 'none';
-        ciBar.style.display = open == 'open' ? 'inline-block' : 'none';
+        ciBar.style.display  = open == 'open' ? 'inline-block' : 'none';
     },
 
     /**
@@ -140,7 +142,7 @@ var ciDebugBar = {
     // 读取cookie
     readCookie: function (name) {
         var nameEQ = name + "=";
-        var ca = document.cookie.split(';');
+        var ca     = document.cookie.split(';');
 
         for (var i = 0; i < ca.length; i++) {
             var c = ca[i];

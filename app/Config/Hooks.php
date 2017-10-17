@@ -7,6 +7,7 @@
  * Copyright: 深圳优品未来科技有限公司
  */
 namespace Config;
+
 use YP\Core\YP_Hooks as Hooks;
 
 /**

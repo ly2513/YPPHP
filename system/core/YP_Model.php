@@ -17,8 +17,8 @@ use Illuminate\Database\Capsule\Manager as DB;
  *
  * @package YP\Core
  */
-class YP_Model extends Model
-{
+class YP_Model extends Model {
+
     // 开启软删除
     use SoftDelete;
     // 定义软删除字段
@@ -45,7 +45,7 @@ class YP_Model extends Model
     public static function batchUpdate($multipleData = [], $referenceColumn = '', $table = '')
     {
         if (empty($multipleData)) {
-            return false;
+            return FALSE;
         }
         // column or fields to update
         $updateColumn = array_keys($multipleData[0]);

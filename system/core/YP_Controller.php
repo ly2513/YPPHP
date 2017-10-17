@@ -16,8 +16,8 @@ use YP\Config\Services;
  *
  * @package YP\Core
  */
-class YP_Controller
-{
+class YP_Controller {
+
 
     /**
      * 用于加载帮助函数
@@ -139,11 +139,11 @@ class YP_Controller
      * @param YP_Response         $response
      * @param YP_Log|null         $logger
      */
-    public function __construct(YP_RequestInterface $request, YP_Response $response, YP_Log $logger = null)
+    public function __construct(YP_RequestInterface $request, YP_Response $response, YP_Log $logger = NULL)
     {
         $this->request  = $request;
         $this->response = $response;
-        $this->logger   = is_null($logger) ? Services::log(true) : $logger;
+        $this->logger   = is_null($logger) ? Services::log(TRUE) : $logger;
         $this->logger->info('Controller "' . get_class($this) . '" loaded.');
         if ($this->forceHTTPS > 0) {
             $this->forceHTTPS($this->forceHTTPS);
@@ -158,12 +158,11 @@ class YP_Controller
 
     /**
      * 初始化控制器,用于子类使用
-     *
      */
-    public function initialization() { }
+    public function initialization() 
+    { }
 
     /**
-     *
      * 该方法确保某个方法只通过https请求过来,如果不需要，那么一个重定向会回到这个方法并且HSTS报头将被发送到浏览器的请求会自动发生变换
      *
      * @param int $duration 这个链接的秒数应该被认为是安全的。只有用HSTS报头。默认值为1年
@@ -200,17 +199,17 @@ class YP_Controller
      * 校验请求的参数
      * 如果校验失败,将错误存放到类的$error的属性上
      *
-     * @param            $rules
+     * @param $rules
      * @param array|null $messages
      *
      * @return bool
      */
-    public function validate($rules, array $messages = null): bool
+    public function validate($rules, array $messages = NULL): bool
     {
         $this->validator = Services::validation();
         // 校验路由
         $success = $this->validator->withRequest($this->request)->setRules($rules, $messages)->run();
-        if (!$success) {
+        if (! $success) {
             $this->errors = $this->validator->getErrors();
         }
 
@@ -243,21 +242,22 @@ class YP_Controller
      * @param null  $htmlFile
      * @param array $data
      */
-    public function display($htmlFile = null, $data = [])
+    public function display($htmlFile = NULL, $data = [])
     {
         // 修改模板名称
-        $templateName = !is_null($htmlFile) ? $htmlFile : $this->method;
+        $templateName = ! is_null($htmlFile) ? $htmlFile : $this->method;
         // 模板文件
-        $tempFile = $this->directory . $this->controller . DIRECTORY_SEPARATOR . $templateName . $this->extension;;
+        $tempFile = $this->directory . $this->controller . DIRECTORY_SEPARATOR . $templateName . $this->extension;
+        ;
         // 模板路径
         $htmlPath     = $this->tempPath . $this->directory . $this->controller;
         $tempFilePath = $this->tempPath . $tempFile;
         // 穿件模板目录
-        is_dir($htmlPath) or mkdir($htmlPath, 0777, true);
+        is_dir($htmlPath) or mkdir($htmlPath, 0777, TRUE);
         // 模板文件
         is_file($tempFilePath) or touch($tempFilePath);
         echo $this->twig->render($tempFile, $data);
-        if (!YP_DEBUG) {
+        if (! YP_DEBUG) {
             die;
         }
     }
@@ -265,10 +265,10 @@ class YP_Controller
     /**
      * 分配变量到模板中
      *
-     * @param      $var
+     * @param $var
      * @param null $value
      */
-    public function assign($var, $value = null)
+    public function assign($var, $value = NULL)
     {
         $this->twig->assign($var, $value);
         $this->twig->assign('FRONT_PATH', FRONT_PATH);
@@ -279,7 +279,7 @@ class YP_Controller
      */
     public function setInput()
     {
-        if (!is_object($this->input)) {
+        if (! is_object($this->input)) {
             $this->input = Services::input();
         }
     }
@@ -289,7 +289,7 @@ class YP_Controller
      */
     public function setJsonSchema()
     {
-        if (!is_object($this->jsonSchema)) {
+        if (! is_object($this->jsonSchema)) {
             $this->jsonSchema = Services::schema();
         }
     }
@@ -300,12 +300,12 @@ class YP_Controller
     public function checkSchema()
     {
         $this->jsonSchema->check($this->input->json);
-        if (!$this->jsonSchema->isValid()) {
+        if (! $this->jsonSchema->isValid()) {
             $error = $this->jsonSchema->error();
             $this->callBackWithParamError($error);
         }
 
-        return true;
+        return TRUE;
     }
 
     /**

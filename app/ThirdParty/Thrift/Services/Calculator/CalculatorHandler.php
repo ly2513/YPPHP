@@ -8,8 +8,8 @@
  */
 namespace Services\Calculator;
 
-class CalculatorHandler implements CalculatorIf
-{
+class CalculatorHandler implements CalculatorIf {
+
     protected $log = [];
 
     public function ping()
@@ -54,7 +54,7 @@ class CalculatorHandler implements CalculatorIf
         }
         $log               = new SharedStruct();
         $log->key          = $logid;
-        $log->value        = (string)$val;
+        $log->value        = (string) $val;
         $this->log[$logid] = $log;
 
         return $val;

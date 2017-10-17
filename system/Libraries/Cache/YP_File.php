@@ -8,8 +8,8 @@
  */
 namespace YP\Libraries\Cache;
 
-class YP_File
-{
+class YP_File {
+
     /**
      * Prefixed to all cache names.
      *
@@ -27,7 +27,7 @@ class YP_File
     public function __construct($config)
     {
         $this->prefix = $config->prefix ? : '';
-        $this->path   = !empty($config->path) ? $config->path : WRITEPATH . 'cache';
+        $this->path   = ! empty($config->path) ? $config->path : WRITEPATH . 'cache';
         $this->path   = rtrim($this->path, '/') . '/';
     }
 
@@ -51,14 +51,14 @@ class YP_File
         $key  = $this->prefix . $key;
         $data = $this->getItem($key);
 
-        return is_array($data) ? $data['data'] : false;
+        return is_array($data) ? $data['data'] : FALSE;
     }
 
     /**
      * 保存缓存
      *
      * @param string $key   缓存键名
-     * @param        $value 缓存值
+     * @param $value 缓存值
      * @param int    $ttl   过期时间
      *
      * @return bool
@@ -67,17 +67,17 @@ class YP_File
     {
         $key      = $this->prefix . $key;
         $contents = [
-            'time' => time(),
-            'ttl'  => $ttl,
-            'data' => $value,
-        ];
+                     'time' => time(),
+                     'ttl'  => $ttl,
+                     'data' => $value,
+                    ];
         if ($this->writeFile($this->path . $key, serialize($contents))) {
             chmod($this->path . $key, 0640);
 
-            return true;
+            return TRUE;
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -91,7 +91,7 @@ class YP_File
     {
         $key = $this->prefix . $key;
 
-        return file_exists($this->path . $key) ? unlink($this->path . $key) : false;
+        return file_exists($this->path . $key) ? unlink($this->path . $key) : FALSE;
     }
 
     /**
@@ -106,14 +106,17 @@ class YP_File
     {
         $key  = $this->prefix . $key;
         $data = $this->getItem($key);
-        if ($data === false) {
-            $data = ['data' => 0, 'ttl' => 60];
-        } elseif (!is_int($data['data'])) {
-            return false;
+        if ($data === FALSE) {
+            $data = [
+                     'data' => 0,
+                     'ttl'  => 60,
+                    ];
+        } elseif (! is_int($data['data'])) {
+            return FALSE;
         }
         $new_value = $data['data'] + $offset;
 
-        return $this->save($key, $new_value, $data['ttl']) ? $new_value : false;
+        return $this->save($key, $new_value, $data['ttl']) ? $new_value : FALSE;
     }
 
     /**
@@ -128,14 +131,17 @@ class YP_File
     {
         $key  = $this->prefix . $key;
         $data = $this->getItem($key);
-        if ($data === false) {
-            $data = ['data' => 0, 'ttl' => 60];
-        } elseif (!is_int($data['data'])) {
-            return false;
+        if ($data === FALSE) {
+            $data = [
+                     'data' => 0,
+                     'ttl'  => 60,
+                    ];
+        } elseif (! is_int($data['data'])) {
+            return FALSE;
         }
         $new_value = $data['data'] - $offset;
 
-        return $this->save($key, $new_value, $data['ttl']) ? $new_value : false;
+        return $this->save($key, $new_value, $data['ttl']) ? $new_value : FALSE;
     }
 
     /**
@@ -145,7 +151,7 @@ class YP_File
      */
     public function clean()
     {
-        return $this->deleteFiles($this->path, false, true);
+        return $this->deleteFiles($this->path, FALSE, TRUE);
     }
 
     /**
@@ -168,23 +174,23 @@ class YP_File
     public function getMetaData(string $key)
     {
         $key = $this->prefix . $key;
-        if (!file_exists($this->path . $key)) {
-            return false;
+        if (! file_exists($this->path . $key)) {
+            return FALSE;
         }
         $data = unserialize(file_get_contents($this->path . $key));
         if (is_array($data)) {
             $mtime = filemtime($this->path . $key);
-            if (!isset($data['ttl'])) {
-                return false;
+            if (! isset($data['ttl'])) {
+                return FALSE;
             }
 
             return [
-                'expire' => $mtime + $data['ttl'],
-                'mtime'  => $mtime
-            ];
+                    'expire' => $mtime + $data['ttl'],
+                    'mtime'  => $mtime,
+                   ];
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -206,14 +212,14 @@ class YP_File
      */
     protected function getItem(string $key)
     {
-        if (!is_file($this->path . $key)) {
-            return null;
+        if (! is_file($this->path . $key)) {
+            return NULL;
         }
         $data = unserialize(file_get_contents($this->path . $key));
         if ($data['ttl'] > 0 && time() > $data['time'] + $data['ttl']) {
             unlink($this->path . $key);
 
-            return null;
+            return NULL;
         }
 
         return $data;
@@ -222,20 +228,20 @@ class YP_File
     /**
      * 将缓存写入文件中 如果写入失败,返回FALSE
      *
-     * @param        $path
-     * @param        $data
+     * @param $path
+     * @param $data
      * @param string $mode
      *
      * @return bool
      */
     protected function writeFile($path, $data, $mode = 'wb')
     {
-        if (!$fp = @fopen($path, $mode)) {
-            return false;
+        if (! $fp = @fopen($path, $mode)) {
+            return FALSE;
         }
         flock($fp, LOCK_EX);
         for ($result = $written = 0, $length = strlen($data); $written < $length; $written += $result) {
-            if (($result = fwrite($fp, substr($data, $written))) === false) {
+            if (($result = fwrite($fp, substr($data, $written))) === FALSE) {
                 break;
             }
         }
@@ -248,25 +254,25 @@ class YP_File
     /**
      * 删除缓存文件
      *
-     * @param      $path     文件目录
+     * @param $path     文件目录
      * @param bool $del_dir  删除的目录
      * @param bool $htdocs   如果存在.htaccess and index page files 直接跳过
      * @param int  $_level   当前目录的深度
      *
      * @return bool
      */
-    protected function deleteFiles($path, $del_dir = false, $htdocs = false, $_level = 0)
+    protected function deleteFiles($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
     {
         // Trim the trailing slash
         $path = rtrim($path, '/\\');
-        if (!$current_dir = @opendir($path)) {
-            return false;
+        if (! $current_dir = @opendir($path)) {
+            return FALSE;
         }
-        while (false !== ($filename = @readdir($current_dir))) {
+        while (FALSE !== ($filename = @readdir($current_dir))) {
             if ($filename !== '.' && $filename !== '..') {
                 if (is_dir($path . DIRECTORY_SEPARATOR . $filename) && $filename[0] !== '.') {
                     $this->deleteFiles($path . DIRECTORY_SEPARATOR . $filename, $del_dir, $htdocs, $_level + 1);
-                } elseif ($htdocs !== true || !preg_match('/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i',
+                } elseif ($htdocs !== TRUE || ! preg_match('/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i',
                         $filename)
                 ) {
                     @unlink($path . DIRECTORY_SEPARATOR . $filename);
@@ -275,32 +281,32 @@ class YP_File
         }
         closedir($current_dir);
 
-        return ($del_dir === true && $_level > 0) ? @rmdir($path) : true;
+        return ($del_dir === TRUE && $_level > 0) ? @rmdir($path) : TRUE;
     }
 
     /**
      * 获得目录下的文件信息
      *
-     * @param      $source_dir    原路径
+     * @param $source_dir    原路径
      * @param bool $top_level_only 目录的深度
      * @param bool $_recursion
      *
      * @return array|bool
      */
-    protected function getDirFileInfo($source_dir, $top_level_only = true, $_recursion = false)
+    protected function getDirFileInfo($source_dir, $top_level_only = TRUE, $_recursion = FALSE)
     {
         static $_fileData = [];
-        $relative_path = $source_dir;
+        $relative_path    = $source_dir;
         if ($fp = @opendir($source_dir)) {
             // reset the array and make sure $source_dir has a trailing slash on the initial call
-            if ($_recursion === false) {
+            if ($_recursion === FALSE) {
                 $_fileData  = [];
                 $source_dir = rtrim(realpath($source_dir), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
             }
             // Used to be foreach (scandir($source_dir, 1) as $file), but scandir() is simply not as fast
-            while (false !== ($file = readdir($fp))) {
-                if (is_dir($source_dir . $file) && $file[0] !== '.' && $top_level_only === false) {
-                    $this->getDirFileInfo($source_dir . $file . DIRECTORY_SEPARATOR, $top_level_only, true);
+            while (FALSE !== ($file = readdir($fp))) {
+                if (is_dir($source_dir . $file) && $file[0] !== '.' && $top_level_only === FALSE) {
+                    $this->getDirFileInfo($source_dir . $file . DIRECTORY_SEPARATOR, $top_level_only, TRUE);
                 } elseif ($file[0] !== '.') {
                     $_fileData[$file]                  = $this->getFileInfo($source_dir . $file);
                     $_fileData[$file]['relative_path'] = $relative_path;
@@ -311,21 +317,21 @@ class YP_File
             return $_fileData;
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
      * 获得文件信息
      *
-     * @param       $file   缓存文件路径
+     * @param $file   缓存文件路径
      * @param array $returned_values
      *
      * @return bool
      */
     protected function getFileInfo($file, $returned_values = ['name', 'server_path', 'size', 'date'])
     {
-        if (!file_exists($file)) {
-            return false;
+        if (! file_exists($file)) {
+            return FALSE;
         }
         if (is_string($returned_values)) {
             $returned_values = explode(',', $returned_values);

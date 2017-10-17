@@ -13,15 +13,15 @@ use YP\Config\Services;
 /**
  * Loags collector
  */
-class Logs extends BaseCollector
-{
+class Logs extends BaseCollector {
+
     /**
      * Whether this collector has data that can
      * be displayed in the Timeline.
      *
      * @var bool
      */
-    protected $hasTimeline = false;
+    protected $hasTimeline = FALSE;
 
     /**
      * Whether this collector needs to display
@@ -29,7 +29,7 @@ class Logs extends BaseCollector
      *
      * @var bool
      */
-    protected $hasTabContent = true;
+    protected $hasTabContent = TRUE;
 
     /**
      * The 'title' of this Collector.
@@ -49,15 +49,13 @@ class Logs extends BaseCollector
     public function display(): string
     {
         $parser = \Config\Services::parser(SYSTEM_PATH . 'Debug/Toolbar/Views/');
-        $logger = Services::log(true);
+        $logger = Services::log(TRUE);
         $logs   = $logger->logCache;
-        if (empty($logs) || !is_array($logs)) {
+        if (empty($logs) || ! is_array($logs)) {
             return '<p>Nothing was logged. If you were expecting logged items, ensure that LoggerConfig file has the correct threshold set.</p>';
         }
 
-        return $parser->setData([
-            'logs' => $logs
-        ])->render('_logs.tpl');
+        return $parser->setData(['logs' => $logs])->render('_logs.tpl');
     }
 
     //--------------------------------------------------------------------

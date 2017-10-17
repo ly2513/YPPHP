@@ -15,8 +15,8 @@ use Psr\Log\LoggerAwareTrait;
  *
  * @package YP\Core
  */
-class YP_Session
-{
+class YP_Session {
+
 
     use LoggerAwareTrait;
 
@@ -56,7 +56,7 @@ class YP_Session
      *
      * @var null
      */
-    protected $sessionSavePath = null;
+    protected $sessionSavePath = NULL;
 
     /**
      * 读取会话数据时是否匹配用户的IP地址
@@ -64,7 +64,7 @@ class YP_Session
      *
      * @var bool
      */
-    protected $sessionMatchIP = false;
+    protected $sessionMatchIP = FALSE;
 
     /**
      * 隔多久(秒)再次生成会话ID
@@ -79,7 +79,7 @@ class YP_Session
      *
      * @var bool
      */
-    protected $sessionRegenerateDestroy = false;
+    protected $sessionRegenerateDestroy = FALSE;
 
     /**
      * 用于Cookie的域名
@@ -101,7 +101,7 @@ class YP_Session
      *
      * @var bool
      */
-    protected $cookieSecure = false;
+    protected $cookieSecure = FALSE;
 
     protected $sidRegexp;
 
@@ -145,18 +145,18 @@ class YP_Session
             $this->logger->debug('Session: Initialization under CLI aborted.');
 
             return;
-        } elseif ((bool)ini_get('session.auto_start')) {
+        } elseif ((bool) ini_get('session.auto_start')) {
             $this->logger->error('Session: session.auto_start is enabled in php.ini. Aborting.');
 
             return;
         }
-        if (!$this->driver instanceof \SessionHandlerInterface) {
+        if (! $this->driver instanceof \SessionHandlerInterface) {
             $this->logger->error("Session: Handler '" . $this->driver . "' doesn't implement SessionHandlerInterface. Aborting.");
         }
         $this->configure();
         $this->setSaveHandler();
         // 干净的Cookie
-        if (isset($_COOKIE[$this->sessionCookieName]) && (!is_string($_COOKIE[$this->sessionCookieName]) || !preg_match('#\A' . $this->sidRegexp . '\z#',
+        if (isset($_COOKIE[$this->sessionCookieName]) && (! is_string($_COOKIE[$this->sessionCookieName]) || ! preg_match('#\A' . $this->sidRegexp . '\z#',
                     $_COOKIE[$this->sessionCookieName]))
         ) {
             unset($_COOKIE[$this->sessionCookieName]);
@@ -164,10 +164,10 @@ class YP_Session
         $this->startSession();
         // 会话ID自动更新配置(忽略ajax请求)
         if ((empty($_SERVER['HTTP_X_REQUESTED_WITH']) || strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) !== 'xmlhttprequest') && ($regenerate_time = $this->sessionTimeToUpdate) > 0) {
-            if (!isset($_SESSION['__yp_last_regenerate'])) {
+            if (! isset($_SESSION['__yp_last_regenerate'])) {
                 $_SESSION['__yp_last_regenerate'] = time();
             } elseif ($_SESSION['__yp_last_regenerate'] < (time() - $regenerate_time)) {
-                $this->regenerate((bool)$this->sessionRegenerateDestroy);
+                $this->regenerate((bool) $this->sessionRegenerateDestroy);
             }
         } elseif (isset($_COOKIE[$this->sessionCookieName]) && $_COOKIE[$this->sessionCookieName] === session_id()) {
             // 设置Cookie
@@ -184,8 +184,8 @@ class YP_Session
     public function stop()
     {
         setcookie($this->sessionCookieName, session_id(), 1, $this->cookiePath, $this->cookieDomain,
-            $this->cookieSecure, true);
-        session_regenerate_id(true);
+            $this->cookieSecure, TRUE);
+        session_regenerate_id(TRUE);
     }
 
     /**
@@ -199,11 +199,11 @@ class YP_Session
             ini_set('session.name', $this->sessionCookieName);
         }
         session_set_cookie_params($this->sessionExpiration, $this->cookiePath, $this->cookieDomain, $this->cookieSecure,
-            true);
+            TRUE);
         if (empty($this->sessionExpiration)) {
-            $this->sessionExpiration = (int)ini_get('session.gc_maxlifetime');
+            $this->sessionExpiration = (int) ini_get('session.gc_maxlifetime');
         } else {
-            ini_set('session.gc_maxlifetime', (int)$this->sessionExpiration);
+            ini_set('session.gc_maxlifetime', (int) $this->sessionExpiration);
         }
         // 安全为主
         ini_set('session.use_trans_sid', 0);
@@ -226,22 +226,22 @@ class YP_Session
                     ini_set('session.hash_function', 1);
                     $bits = 160;
                 }
-            } elseif (!in_array($hash_function, hash_algos(), true)) {
+            } elseif (! in_array($hash_function, hash_algos(), TRUE)) {
                 ini_set('session.hash_function', 1);
                 $bits = 160;
-            } elseif (($bits = strlen(hash($hash_function, 'dummy', false)) * 4) < 160) {
+            } elseif (($bits = strlen(hash($hash_function, 'dummy', FALSE)) * 4) < 160) {
                 ini_set('session.hash_function', 1);
                 $bits = 160;
             }
-            $bits_per_character = (int)ini_get('session.hash_bits_per_character');
-            $sid_length         = (int)ceil($bits / $bits_per_character);
+            $bits_per_character = (int) ini_get('session.hash_bits_per_character');
+            $sid_length         = (int) ceil($bits / $bits_per_character);
         } else {
-            $bits_per_character = (int)ini_get('session.sid_bits_per_character');
-            $sid_length         = (int)ini_get('session.sid_length');
+            $bits_per_character = (int) ini_get('session.sid_bits_per_character');
+            $sid_length         = (int) ini_get('session.sid_length');
             if (($sid_length * $bits_per_character) < 160) {
                 $bits = ($sid_length * $bits_per_character);
                 // 添加尽可能多的字符，以达到至少160位
-                $sid_length += (int)ceil((160 % $bits) / $bits_per_character);
+                $sid_length += (int) ceil((160 % $bits) / $bits_per_character);
                 ini_set('session.sid_length', $sid_length);
             }
         }
@@ -264,7 +264,6 @@ class YP_Session
      * 处理临时变量
      *
      * 清除旧的闪存数据
-     *
      */
     protected function initVars()
     {
@@ -289,7 +288,7 @@ class YP_Session
      *
      * @param bool $destroy 旧的会话数据是否被销毁
      */
-    public function regenerate(bool $destroy = false)
+    public function regenerate(bool $destroy = FALSE)
     {
         $_SESSION['__yp_last_regenerate'] = time();
         session_regenerate_id($destroy);
@@ -306,15 +305,15 @@ class YP_Session
     /**
      * 将用户数据设置到会话中
      *
-     * @param      $data  如果$data是字符串,将解析为key,$value为值;$data为数组,期望是键值对数组
+     * @param $data  如果$data是字符串,将解析为key,$value为值;$data为数组,期望是键值对数组
      * @param null $value
      */
-    public function set($data, $value = null)
+    public function set($data, $value = NULL)
     {
         if (is_array($data)) {
             foreach ($data as $key => &$value) {
                 if (is_int($key)) {
-                    $_SESSION[$value] = null;
+                    $_SESSION[$value] = NULL;
                 } else {
                     $_SESSION[$key] = $value;
                 }
@@ -334,10 +333,10 @@ class YP_Session
      *
      * @return array|null  属性值
      */
-    public function get(string $key = null)
+    public function get(string $key = NULL)
     {
         if (isset($key)) {
-            return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+            return isset($_SESSION[$key]) ? $_SESSION[$key] : NULL;
         } elseif (empty($_SESSION)) {
             return [];
         }
@@ -345,7 +344,7 @@ class YP_Session
         $_exclude = array_merge(['__yp_vars'], $this->getFlashKeys(), $this->getTempKeys());
         $keys     = array_keys($_SESSION);
         foreach ($keys as $key) {
-            if (!in_array($key, $_exclude, true)) {
+            if (! in_array($key, $_exclude, TRUE)) {
                 $userData[$key] = $_SESSION[$key];
             }
         }
@@ -409,16 +408,16 @@ class YP_Session
             return session_id();
         }
 
-        return null;
+        return NULL;
     }
 
     /**
      * 将数据设置为只为单个请求持续的会话,完美的使用与使用状态更新消息
      *
-     * @param      $data  属性标识符或属性关联数组
+     * @param $data  属性标识符或属性关联数组
      * @param null $value 如果$data是标量,为属性值
      */
-    public function setFlashData($data, $value = null)
+    public function setFlashData($data, $value = NULL)
     {
         $this->set($data, $value);
         $this->markAsFlashData(is_array($data) ? array_keys($data) : $data);
@@ -431,15 +430,15 @@ class YP_Session
      *
      * @return array|null
      */
-    public function getFlashData(string $key = null)
+    public function getFlashData(string $key = NULL)
     {
         if (isset($key)) {
-            return (isset($_SESSION['__yp_vars'], $_SESSION['__yp_vars'][$key], $_SESSION[$key]) && !is_int($_SESSION['__yp_vars'][$key])) ? $_SESSION[$key] : null;
+            return (isset($_SESSION['__yp_vars'], $_SESSION['__yp_vars'][$key], $_SESSION[$key]) && ! is_int($_SESSION['__yp_vars'][$key])) ? $_SESSION[$key] : NULL;
         }
         $flashData = [];
-        if (!empty($_SESSION['__yp_vars'])) {
+        if (! empty($_SESSION['__yp_vars'])) {
             foreach ($_SESSION['__yp_vars'] as $key => &$value) {
-                is_int($value) OR $flashData[$key] = $_SESSION[$key];
+                is_int($value) or $flashData[$key] = $_SESSION[$key];
             }
         }
 
@@ -467,21 +466,21 @@ class YP_Session
     {
         if (is_array($key)) {
             for ($i = 0, $c = count($key); $i < $c; $i++) {
-                if (!isset($_SESSION[$key[$i]])) {
-                    return false;
+                if (! isset($_SESSION[$key[$i]])) {
+                    return FALSE;
                 }
             }
             $new                   = array_fill_keys($key, 'new');
             $_SESSION['__yp_vars'] = isset($_SESSION['__yp_vars']) ? array_merge($_SESSION['__yp_vars'], $new) : $new;
 
-            return true;
+            return TRUE;
         }
-        if (!isset($_SESSION[$key])) {
-            return false;
+        if (! isset($_SESSION[$key])) {
+            return FALSE;
         }
         $_SESSION['__yp_vars'][$key] = 'new';
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -494,9 +493,9 @@ class YP_Session
         if (empty($_SESSION['__yp_vars'])) {
             return;
         }
-        is_array($key) OR $key = [$key];
+        is_array($key) or $key = [$key];
         foreach ($key as $k) {
-            if (isset($_SESSION['__yp_vars'][$k]) && !is_int($_SESSION['__yp_vars'][$k])) {
+            if (isset($_SESSION['__yp_vars'][$k]) && ! is_int($_SESSION['__yp_vars'][$k])) {
                 unset($_SESSION['__yp_vars'][$k]);
             }
         }
@@ -512,12 +511,12 @@ class YP_Session
      */
     public function getFlashKeys()
     {
-        if (!isset($_SESSION['__yp_vars'])) {
+        if (! isset($_SESSION['__yp_vars'])) {
             return [];
         }
         $keys = [];
         foreach (array_keys($_SESSION['__yp_vars']) as $key) {
-            is_int($_SESSION['__yp_vars'][$key]) OR $keys[] = $key;
+            is_int($_SESSION['__yp_vars'][$key]) or $keys[] = $key;
         }
 
         return $keys;
@@ -526,11 +525,11 @@ class YP_Session
     /**
      * 在会话中设置新数据，并将其设置带有过期时间的临时数据
      *
-     * @param      $data  session数据
+     * @param $data  session数据
      * @param null $value 存储的值
      * @param int  $ttl   过期时间(秒)
      */
-    public function setTempData($data, $value = null, $ttl = 300)
+    public function setTempData($data, $value = NULL, $ttl = 300)
     {
         $this->set($data, $value);
         $this->markAsTempData($data, $ttl);
@@ -543,13 +542,13 @@ class YP_Session
      *
      * @return array|null  session数据的值,如果没找到返回null
      */
-    public function getTempData($key = null)
+    public function getTempData($key = NULL)
     {
         if (isset($key)) {
-            return (isset($_SESSION['__yp_vars'], $_SESSION['__yp_vars'][$key], $_SESSION[$key]) && is_int($_SESSION['__yp_vars'][$key])) ? $_SESSION[$key] : null;
+            return (isset($_SESSION['__yp_vars'], $_SESSION['__yp_vars'][$key], $_SESSION[$key]) && is_int($_SESSION['__yp_vars'][$key])) ? $_SESSION[$key] : NULL;
         }
         $tempData = [];
-        if (!empty($_SESSION['__yp_vars'])) {
+        if (! empty($_SESSION['__yp_vars'])) {
             foreach ($_SESSION['__yp_vars'] as $key => &$value) {
                 is_int($value) && $tempData[$key] = $_SESSION[$key];
             }
@@ -572,7 +571,7 @@ class YP_Session
     /**
      * 将session 数据设置过期时间
      *
-     * @param     $key session数据的键名
+     * @param $key session数据的键名
      * @param int $ttl 过期时间
      *
      * @return bool
@@ -591,21 +590,21 @@ class YP_Session
                 } else {
                     $v += time();
                 }
-                if (!array_key_exists($k, $_SESSION)) {
-                    return false;
+                if (! array_key_exists($k, $_SESSION)) {
+                    return FALSE;
                 }
                 $temp[$k] = $v;
             }
             $_SESSION['__yp_vars'] = isset($_SESSION['__yp_vars']) ? array_merge($_SESSION['__yp_vars'], $temp) : $temp;
 
-            return true;
+            return TRUE;
         }
-        if (!isset($_SESSION[$key])) {
-            return false;
+        if (! isset($_SESSION[$key])) {
+            return FALSE;
         }
         $_SESSION['__yp_vars'][$key] = $ttl;
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -618,7 +617,7 @@ class YP_Session
         if (empty($_SESSION['__yp_vars'])) {
             return;
         }
-        is_array($key) OR $key = [$key];
+        is_array($key) or $key = [$key];
         foreach ($key as $k) {
             if (isset($_SESSION['__yp_vars'][$k]) && is_int($_SESSION['__yp_vars'][$k])) {
                 unset($_SESSION['__yp_vars'][$k]);
@@ -636,7 +635,7 @@ class YP_Session
      */
     public function getTempKeys()
     {
-        if (!isset($_SESSION['__yp_vars'])) {
+        if (! isset($_SESSION['__yp_vars'])) {
             return [];
         }
         $keys = [];
@@ -652,7 +651,7 @@ class YP_Session
      */
     protected function setSaveHandler()
     {
-        session_set_save_handler($this->driver, true);
+        session_set_save_handler($this->driver, TRUE);
     }
 
     /**
@@ -670,6 +669,6 @@ class YP_Session
     {
         setcookie($this->sessionCookieName, session_id(),
             (empty($this->sessionExpiration) ? 0 : time() + $this->sessionExpiration), $this->cookiePath,
-            $this->cookieDomain, $this->cookieSecure, true);
+            $this->cookieDomain, $this->cookieSecure, TRUE);
     }
 }

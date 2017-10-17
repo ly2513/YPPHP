@@ -8,8 +8,8 @@
  */
 namespace YP\Libraries\Cache;
 
-class YP_Dummy
-{
+class YP_Dummy {
+
     /**
      * 初始化file缓存,除file缓存驱动外,redis、memcached在此方法中初始化
      */
@@ -27,7 +27,7 @@ class YP_Dummy
      */
     public function get(string $key)
     {
-        return null;
+        return NULL;
     }
 
     /**
@@ -37,6 +37,6 @@ class YP_Dummy
      */
     public function isSupported(): bool
     {
-        return true;
+        return TRUE;
     }
 }

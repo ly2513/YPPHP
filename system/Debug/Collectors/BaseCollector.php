@@ -11,15 +11,15 @@ namespace YP\Debug\Toolbar\Collectors;
 /**
  * Base Toolbar collector
  */
-class BaseCollector
-{
+class BaseCollector {
+
     /**
      * Whether this collector has data that can
      * be displayed in the Timeline.
      *
      * @var bool
      */
-    protected $hasTimeline = false;
+    protected $hasTimeline = FALSE;
 
     /**
      * Whether this collector needs to display
@@ -27,7 +27,7 @@ class BaseCollector
      *
      * @var bool
      */
-    protected $hasTabContent = false;
+    protected $hasTabContent = FALSE;
 
     /**
      * Whether this collector has data that
@@ -35,7 +35,7 @@ class BaseCollector
      *
      * @var bool
      */
-    protected $hasVarData = false;
+    protected $hasVarData = FALSE;
 
     /**
      * The 'title' of this Collector.
@@ -59,7 +59,7 @@ class BaseCollector
      *
      * @return string
      */
-    public function getTitle($safe = false): string
+    public function getTitle($safe = FALSE): string
     {
         if ($safe) {
             return str_replace(' ', '-', strtolower($this->title));
@@ -85,7 +85,7 @@ class BaseCollector
      */
     public function hasTabContent(): bool
     {
-        return (bool)$this->hasTabContent;
+        return (bool) $this->hasTabContent;
     }
 
     /**
@@ -95,7 +95,7 @@ class BaseCollector
      */
     public function hasTimelineData(): bool
     {
-        return (bool)$this->hasTimeline;
+        return (bool) $this->hasTimeline;
     }
 
     /**
@@ -106,7 +106,7 @@ class BaseCollector
      */
     public function timelineData(): array
     {
-        if (!$this->hasTimeline) {
+        if (! $this->hasTimeline) {
             return [];
         }
 
@@ -121,7 +121,7 @@ class BaseCollector
      */
     public function hasVarData()
     {
-        return (bool)$this->hasVarData;
+        return (bool) $this->hasVarData;
     }
 
     /**
@@ -144,7 +144,7 @@ class BaseCollector
      */
     public function getVarData()
     {
-        return null;
+        return NULL;
     }
 
     /**
@@ -183,9 +183,9 @@ class BaseCollector
      *
      * This makes nicer looking paths for the error output.
      *
-     * @param    string $file
+     * @param string $file
      *
-     * @return    string
+     * @return string
      */
     public function cleanPath($file)
     {

@@ -13,8 +13,8 @@ use Illuminate\Support\Str;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 use YP_MigrationRepositoryInterface;
 
-class YP_Migrator
-{
+class YP_Migrator {
+
     /**
      * 迁移存储库实现
      *
@@ -60,8 +60,8 @@ class YP_Migrator
     /**
      * 在给定路径上运行未完成的迁移
      *
-     * @param  string $path
-     * @param  array  $options
+     * @param string $path
+     * @param array  $options
      *
      * @return void
      */
@@ -80,7 +80,7 @@ class YP_Migrator
     /**
      * 运行一系列迁移
      *
-     * @param       $migrations
+     * @param $migrations
      * @param array $options
      */
     public function runMigrationList($migrations, array $options = [])
@@ -93,8 +93,8 @@ class YP_Migrator
             return;
         }
         $batch   = $this->repository->getNextBatchNumber();
-        $pretend = Arr::get($options, 'pretend', false);
-        $step    = Arr::get($options, 'step', false);
+        $pretend = Arr::get($options, 'pretend', FALSE);
+        $step    = Arr::get($options, 'step', FALSE);
         // 一旦我们有了一系列的迁移，我们将通过它们旋转并运行迁移“up”，从而对数据库进行更改。
         // 然后，我们将记录迁移的运行情况，以便下次执行时不再重复
         foreach ($migrations as $file) {
@@ -136,7 +136,7 @@ class YP_Migrator
      *
      * @return int
      */
-    public function rollback($pretend = false)
+    public function rollback($pretend = FALSE)
     {
         $this->notes = [];
         // 我们希望在上一次迁移操作中执行最后一批迁移。然后，我们将反转这些迁移，
@@ -149,7 +149,7 @@ class YP_Migrator
             // 我们需要扭转这些迁移，使它们“反向”，与它们在“up”上运行的相反。
             // 它允许我们回溯迁移，并适当地逆转运行的整个数据库模式操作
             foreach ($migrations as $migration) {
-                $this->runDown((object)$migration, $pretend);
+                $this->runDown((object) $migration, $pretend);
             }
         }
 
@@ -159,11 +159,11 @@ class YP_Migrator
     /**
      * 将所有当前应用的迁移回滚
      *
-     * @param  bool $pretend
+     * @param bool $pretend
      *
      * @return int
      */
-    public function reset($pretend = false)
+    public function reset($pretend = FALSE)
     {
         $this->notes = [];
         $migrations  = array_reverse($this->repository->getRan());
@@ -172,7 +172,7 @@ class YP_Migrator
             $this->note('<info>Nothing to rollback.</info>');
         } else {
             foreach ($migrations as $migration) {
-                $this->runDown((object)['migration' => $migration], $pretend);
+                $this->runDown((object) ['migration' => $migration], $pretend);
             }
         }
 
@@ -204,7 +204,7 @@ class YP_Migrator
     /**
      * 在给定路径中获取所有迁移文件
      *
-     * @param  string $path
+     * @param string $path
      *
      * @return array
      */
@@ -213,7 +213,7 @@ class YP_Migrator
         // 获取所有的迁移文件
         $files = glob($path . '/*_*.php', 0);
         // 一旦我们有了文件的数组目录中我们会删除扩展走这是我们需要寻找的迁徙时没有运行在数据库文件的基名称
-        if ($files === false) {
+        if ($files === FALSE) {
             return [];
         }
         $files = array_map(function ($file) {
@@ -229,8 +229,8 @@ class YP_Migrator
     /**
      * 在给定路径中的所有迁移文件中都需要
      *
-     * @param  string $path
-     * @param  array  $files
+     * @param string $path
+     * @param array  $files
      *
      * @return void
      */
@@ -244,8 +244,8 @@ class YP_Migrator
     /**
      * 假装在迁移
      *
-     * @param  object $migration
-     * @param  string $method
+     * @param object $migration
+     * @param string $method
      *
      * @return void
      */
@@ -279,7 +279,7 @@ class YP_Migrator
     /**
      * 从文件解析迁移实例
      *
-     * @param  string $file
+     * @param string $file
      *
      * @return object
      */
@@ -330,7 +330,7 @@ class YP_Migrator
      */
     public function setConnection($name)
     {
-        if (!is_null($name)) {
+        if (! is_null($name)) {
             $this->resolver->setDefaultConnection($name);
         }
         $this->repository->setSource($name);

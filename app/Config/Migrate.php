@@ -10,8 +10,8 @@ namespace Config;
 
 use YP\Config\BaseConfig;
 
-class Migrations extends BaseConfig
-{
+class Migrations extends BaseConfig {
+
     /**
      * 启用/禁用迁移
      * 出于安全原因，默认情况下迁移是禁用的。
@@ -19,7 +19,7 @@ class Migrations extends BaseConfig
      *
      * @var bool
      */
-    public $enabled = false;
+    public $enabled = FALSE;
 
     /**
      * 迁移的文件的时间格式

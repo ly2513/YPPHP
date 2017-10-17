@@ -12,8 +12,8 @@ use YP\Core\YP_Filter as Filter;
 use YP\Core\YP_Request as Request;
 use Config\Services;
 
-class YP_CSRF extends Filter
-{
+class YP_CSRF extends Filter {
+
 
     /**
      * 做任何处理这个过滤器需要做。默认情况下，它不应该返回任何在正常执行。但是，当发现异常状态时，它应该返回一个实例

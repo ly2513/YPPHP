@@ -16,9 +16,9 @@ use Config\Database;
  *
  * @package YP\Libraries
  */
-class YP_Eloquent
-{
-    public $capsule = null;
+class YP_Eloquent {
+
+    public $capsule = NULL;
 
     /**
      * YP_Eloquent constructor.

@@ -1,10 +1,11 @@
 <?php
 
-class Kint_Objects_SplFileInfo extends KintObject
-{
+class Kint_Objects_SplFileInfo extends KintObject {
+
 	public function parse( & $variable )
 	{
-		if ( !KINT_PHP53 || !is_object( $variable ) || !$variable instanceof SplFileInfo ) return false;
+		if ( ! KINT_PHP53 || ! is_object( $variable ) || ! $variable instanceof SplFileInfo ) { return FALSE;
+        }
 
 		$this->name  = 'SplFileInfo';
 		$this->value = $variable->getBasename();
@@ -59,12 +60,12 @@ class Kint_Objects_SplFileInfo extends KintObject
 		$path  = $variable->getRealPath();
 
 		return array(
-			'File information' => array(
-				'Full path' => $path,
-				'Type'      => $type,
-				'Size'      => $size,
-				'Flags'     => $flags
-			)
-		);
+                'File information' => array(
+                                       'Full path' => $path,
+                                       'Type'      => $type,
+                                       'Size'      => $size,
+                                       'Flags'     => $flags,
+                                      ),
+               );
 	}
 }

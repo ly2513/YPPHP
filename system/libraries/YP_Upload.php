@@ -8,8 +8,8 @@
  */
 namespace YP\Libraries;
 
-class YP_Upload
-{
+class YP_Upload {
+
     /**
      * 临时文件目录
      *
@@ -64,7 +64,7 @@ class YP_Upload
      *
      * @var bool
      */
-    protected $hasMoved = false;
+    protected $hasMoved = FALSE;
 
     /**
      * YP_Upload constructor.
@@ -78,10 +78,11 @@ class YP_Upload
     public function __construct(
         string $path,
         string $originalName,
-        string $mimeType = null,
-        int $size = null,
+        string $mimeType = NULL,
+        int $size = NULL,
         int $error = 0
-    ) {
+    ) 
+    {
         $this->path             = $path;
         $this->name             = $originalName;
         $this->originalName     = $originalName;
@@ -99,19 +100,19 @@ class YP_Upload
      *
      * @return bool
      */
-    public function move(string $targetPath, string $name = null, bool $overwrite = false)
+    public function move(string $targetPath, string $name = NULL, bool $overwrite = FALSE)
     {
         if ($this->hasMoved) {
             throw new \RuntimeException('The file has already been moved.');
         }
-        if (!$this->isValid()) {
+        if (! $this->isValid()) {
             throw new \RuntimeException('The original file is not a valid file.');
         }
         $targetPath = rtrim($targetPath, '/') . '/';
-        is_dir($targetPath) or mkdir($targetPath, 0777, true);
+        is_dir($targetPath) or mkdir($targetPath, 0777, TRUE);
         $name        = is_null($name) ? $this->getName() : $name;
         $destination = $overwrite ? $this->getDestination($targetPath . $name) : $targetPath . $name;
-        if (!@move_uploaded_file($this->path, $destination)) {
+        if (! @move_uploaded_file($this->path, $destination)) {
             $error = error_get_last();
             throw new \RuntimeException(sprintf('Could not move file %s to %s (%s)', basename($this->path), $targetPath,
                 strip_tags($error['message'])));
@@ -120,9 +121,9 @@ class YP_Upload
         // 上传成功,将相关信息存储起来
         $this->path     = $targetPath;
         $this->name     = $name;
-        $this->hasMoved = true;
+        $this->hasMoved = TRUE;
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -181,15 +182,15 @@ class YP_Upload
     public function getErrorString()
     {
         static $errors = [
-            UPLOAD_ERR_INI_SIZE   => 'The file "%s" exceeds your upload_max_filesize ini directive.',
-            UPLOAD_ERR_FORM_SIZE  => 'The file "%s" exceeds the upload limit defined in your form.',
-            UPLOAD_ERR_PARTIAL    => 'The file "%s" was only partially uploaded.',
-            UPLOAD_ERR_NO_FILE    => 'No file was uploaded.',
-            UPLOAD_ERR_CANT_WRITE => 'The file "%s" could not be written on disk.',
-            UPLOAD_ERR_NO_TMP_DIR => 'File could not be uploaded: missing temporary directory.',
-            UPLOAD_ERR_EXTENSION  => 'File upload was stopped by a PHP extension.',
-        ];
-        $error = is_null($this->error) ? UPLOAD_ERR_OK : $this->error;
+                          UPLOAD_ERR_INI_SIZE   => 'The file "%s" exceeds your upload_max_filesize ini directive.',
+                          UPLOAD_ERR_FORM_SIZE  => 'The file "%s" exceeds the upload limit defined in your form.',
+                          UPLOAD_ERR_PARTIAL    => 'The file "%s" was only partially uploaded.',
+                          UPLOAD_ERR_NO_FILE    => 'No file was uploaded.',
+                          UPLOAD_ERR_CANT_WRITE => 'The file "%s" could not be written on disk.',
+                          UPLOAD_ERR_NO_TMP_DIR => 'File could not be uploaded: missing temporary directory.',
+                          UPLOAD_ERR_EXTENSION  => 'File upload was stopped by a PHP extension.',
+                         ];
+        $error         = is_null($this->error) ? UPLOAD_ERR_OK : $this->error;
 
         return isset($errors[$error]) ? sprintf($errors[$error],
             $this->getName()) : sprintf('The file "%s" was not uploaded due to an unknown error.', $this->getName());
@@ -252,7 +253,7 @@ class YP_Upload
      */
     public function getType(): string
     {
-        if (!is_null($this->mimeType)) {
+        if (! is_null($this->mimeType)) {
             return $this->mimeType;
         }
         if (function_exists('finfo_file')) {
@@ -301,7 +302,7 @@ class YP_Upload
     {
         while (file_exists($destination)) {
             $info = pathinfo($destination);
-            if (strpos($info['filename'], $delimiter) !== false) {
+            if (strpos($info['filename'], $delimiter) !== FALSE) {
                 $parts = explode($delimiter, $info['filename']);
                 if (is_numeric(end($parts))) {
                     $i = end($parts);

@@ -4,8 +4,8 @@ require( '../Kint.class.php' );
 $selectedTheme = isset( $_GET['theme'] ) ? $_GET['theme'] : 'original';
 $allowedThemes = array();
 $dh            = opendir( '../view/compiled' );
-while ( ( $filename = readdir( $dh ) ) !== false ) {
-	if ( strpos( $filename, '.css' ) !== false ) {
+while ( ( $filename = readdir( $dh ) ) !== FALSE ) {
+	if ( strpos( $filename, '.css' ) !== FALSE ) {
 		$allowedThemes[] = str_replace( '.css', '', $filename );
 	}
 }
@@ -16,32 +16,35 @@ if ( in_array( $selectedTheme, $allowedThemes ) ) {
 	Kint::$theme = $selectedTheme;
 }
 
-class BaseUser
-{
+class BaseUser {
+
 	/**
 	 * @return string
 	 */
-	public function getFullName() { }
+	public function getFullName() 
+    { }
 }
 
-class User extends BaseUser
-{
-	CONST DEFAULT_PATH    = 'some/default/path';
-	CONST ROLE_DISALLOWED = 1;
-	CONST ROLE_ALLOWED    = 2;
-	CONST ROLE_FORBIDDEN  = 3;
+class User extends BaseUser {
+
+	const DEFAULT_PATH    = 'some/default/path';
+	const ROLE_DISALLOWED = 1;
+	const ROLE_ALLOWED    = 2;
+	const ROLE_FORBIDDEN  = 3;
 
 	public  $additionalData;
 	private $username = 'demo_username';
 	private $password = 'demo_password';
 	private $createdDate;
 
-	public function __construct() { }
+	public function __construct() 
+    { }
 
 	/**
 	 * Check is user is equal to another user
 	 */
-	public function isEqualTo( BaseUser $user ) { }
+	public function isEqualTo( BaseUser $user ) 
+    { }
 
 	/**
 	 * Get data from this demo class
@@ -50,39 +53,49 @@ class User extends BaseUser
 	 *
 	 * @return array
 	 */
-	public function setUsername( $username ) { }
+	public function setUsername( $username ) 
+    { }
 
 	/**
 	 * Set additional data
 	 *
 	 * @array $data
 	 */
-	public function setAdditionalData( array $data ) { $this->additionalData = $data; }
+	public function setAdditionalData( array $data ) 
+    {
+        $this->additionalData = $data; }
 
 	/**
 	 * @return \DateTime date object
 	 */
-	public function getCreatedDate() { }
+	public function getCreatedDate() 
+    { }
 
 	/**
 	 * @param \DateTime $date
 	 */
-	public function setCreatedDate( DateTime $date ) { $this->createdDate = $date; }
+	public function setCreatedDate( DateTime $date ) 
+    {
+        $this->createdDate = $date; }
 
 	/**
 	 * Dummy method that triggers trace
 	 */
-	public function ensure() { Kint::trace(); }
+	public function ensure() 
+    {
+        Kint::trace(); }
 }
 
-class UserManager
-{
+class UserManager {
+
 	private $user;
 
 	/**
 	 * Get user from manager
 	 */
-	public function getUser() { return $this->user; }
+	public function getUser() 
+    {
+        return $this->user; }
 
 	/**
 	 * Debug specific user
@@ -100,32 +113,34 @@ class UserManager
 	 *
 	 * @void
 	 */
-	public function ensureUser() { $this->user->ensure(); }
+	public function ensureUser() 
+    {
+        $this->user->ensure(); }
 }
 
 $user = new User;
 $user->setAdditionalData( array(
-		'last_login'             => new DateTime(),
-		'current_unix_timestamp' => time(),
-		'random_rgb_color_code'  => '#FF9900',
-		'impressions'            => 60,
-		'nickname'               => 'Someuser',
-	)
+                           'last_login'             => new DateTime(),
+                           'current_unix_timestamp' => time(),
+                           'random_rgb_color_code'  => '#FF9900',
+                           'impressions'            => 60,
+                           'nickname'               => 'Someuser',
+                          )
 );
 $user->setCreatedDate( new DateTime( '2013-10-10' ) );
 $userManager = new UserManager();
 
 for ( $i = 1; $i < 6; $i++ ) {
 	$tabularData[] = array(
-		'date'        => "2013-01-0{$i}",
-		'allowed'     => $i % 3 == 0,
-		'action'      => "action {$i}",
-		'clicks'      => rand( 100, 50000 ),
-		'impressions' => rand( 10000, 500000 ),
-	);
+                      'date'        => "2013-01-0{$i}",
+                      'allowed'     => $i % 3 == 0,
+                      'action'      => "action {$i}",
+                      'clicks'      => rand( 100, 50000 ),
+                      'impressions' => rand( 10000, 500000 ),
+                     );
 
 	if ( $i % 2 == 0 ) {
-		unset( $tabularData[ $i - 1 ]['clicks'] );
+		unset( $tabularData[$i - 1]['clicks'] );
 	}
 }
 
@@ -133,16 +148,19 @@ $nestedArray = array();
 
 for ( $i = 1; $i < 6; $i++ ) {
 	$nestedArray["user group {$i}"] = array(
-		"user {$i}" => array(
-			'name'    => "Name {$i}",
-			'surname' => "Surname {$i}"
-		),
+                                       "user {$i}" => array(
+                                                       'name'    => "Name {$i}",
+                                                       'surname' => "Surname {$i}",
+                                                      ),
 
-		'data'      => array(
-			'conversions' => rand( 100, 5000 ),
-			'spent'       => array( 'currency' => 'EUR', 'amount' => rand( 10000, 500000 ) )
-		),
-	);
+                                       'data'      => array(
+                                                       'conversions' => rand( 100, 5000 ),
+                                                       'spent'       => array(
+                                                                         'currency' => 'EUR',
+                                                                         'amount'   => rand( 10000, 500000 ), 
+                                                                        ),
+                                                      ),
+                                      );
 }
 ?>
 <html>

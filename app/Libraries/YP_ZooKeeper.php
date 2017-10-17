@@ -7,8 +7,8 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-class YP_Zookeeper
-{
+class YP_Zookeeper {
+
     /**
      * Zookeeper对象
      *
@@ -41,7 +41,7 @@ class YP_Zookeeper
      */
     public function set($path, $value)
     {
-        if (!$this->zookeeper->exists($path)) {
+        if (! $this->zookeeper->exists($path)) {
             $this->makePath($path);
             $this->makeNode($path, $value);
         } else {
@@ -52,7 +52,7 @@ class YP_Zookeeper
     /**
      * 创建路径,相当于在Zookeeper上执行 "mkdir -p"
      *
-     * @param        $path  节点的路径
+     * @param $path  节点的路径
      * @param string $value 分配给每个新节点沿路径的值
      */
     public function makePath($path, $value = '')
@@ -62,7 +62,7 @@ class YP_Zookeeper
         $subPath = '';
         while (count($parts) > 1) {
             $subPath .= '/' . array_shift($parts);
-            if (!$this->zookeeper->exists($subPath)) {
+            if (! $this->zookeeper->exists($subPath)) {
                 $this->makeNode($subPath, $value);
             }
         }
@@ -71,8 +71,8 @@ class YP_Zookeeper
     /**
      * 在Zookeeper给定的路径下,创建一个节点
      *
-     * @param       $path   节点的路径
-     * @param       $value  节点的值
+     * @param $path   节点的路径
+     * @param $value  节点的值
      * @param array $params 对于Zookeeper节点是可选参数。默认情况下，创建一个公共节点
      *
      * @return string 返回新创建的节点有效、无效的路径
@@ -81,12 +81,12 @@ class YP_Zookeeper
     {
         if (empty($params)) {
             $params = [
-                [
-                    'perms'  => Zookeeper::PERM_ALL,
-                    'scheme' => 'world',
-                    'id'     => 'anyone',
-                ]
-            ];
+                       [
+                        'perms'  => Zookeeper::PERM_ALL,
+                        'scheme' => 'world',
+                        'id'     => 'anyone',
+                       ],
+                      ];
         }
 
         return $this->zookeeper->create($path, $value, $params);
@@ -101,8 +101,8 @@ class YP_Zookeeper
      */
     public function get($path)
     {
-        if (!$this->zookeeper->exists($path)) {
-            return null;
+        if (! $this->zookeeper->exists($path)) {
+            return NULL;
         }
 
         return $this->zookeeper->get($path);
@@ -134,8 +134,8 @@ class YP_Zookeeper
      */
     public function deleteNode($path)
     {
-        if (!$this->zookeeper->exists($path)) {
-            return null;
+        if (! $this->zookeeper->exists($path)) {
+            return NULL;
         } else {
             return $this->zookeeper->delete($path);
         }
@@ -151,14 +151,14 @@ class YP_Zookeeper
      */
     public function watch($path, $callback)
     {
-        if (!is_callable($callback)) {
-            return null;
+        if (! is_callable($callback)) {
+            return NULL;
         }
         if ($this->zookeeper->exists($path)) {
-            if (!isset($this->callback[$path])) {
+            if (! isset($this->callback[$path])) {
                 $this->callback[$path] = [];
             }
-            if (!in_array($callback, $this->callback[$path])) {
+            if (! in_array($callback, $this->callback[$path])) {
                 $this->callback[$path][] = $callback;
 
                 return $this->zookeeper->get($path, [$this, 'watchCallback']);
@@ -177,8 +177,8 @@ class YP_Zookeeper
      */
     public function watchCallback($event_type, $stat, $path)
     {
-        if (!isset($this->callback[$path])) {
-            return null;
+        if (! isset($this->callback[$path])) {
+            return NULL;
         }
         foreach ($this->callback[$path] as $callback) {
             $this->zookeeper->get($path, [$this, 'watchCallback']);
@@ -190,28 +190,28 @@ class YP_Zookeeper
     /**
      * 删除给定节点的 监听回调事件,当 $callback 为 null 时,删除所有的回调
      *
-     * @param      $path     节点路径
+     * @param $path     节点路径
      * @param null $callback 回调
      *
      * @return bool|null
      */
-    public function cancelWatch($path, $callback = null)
+    public function cancelWatch($path, $callback = NULL)
     {
-        if (!isset($this->callback[$path])) {
-            return null;
+        if (! isset($this->callback[$path])) {
+            return NULL;
         }
         if (empty($callback)) {
             unset($this->callback[$path]);
             $this->zookeeper->get($path); //reset the callback
-            return true;
+            return TRUE;
         } else {
             $key = array_search($callback, $this->callback[$path]);
-            if ($key !== false) {
+            if ($key !== FALSE) {
                 unset($this->callback[$path][$key]);
 
-                return true;
+                return TRUE;
             } else {
-                return null;
+                return NULL;
             }
         }
     }

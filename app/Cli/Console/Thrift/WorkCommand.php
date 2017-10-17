@@ -28,9 +28,11 @@ class WorkCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('thrift:work')->setDescription('启用一个thrift服务.')->setDefinition([
-            new InputOption('thrift-name', 'p', InputOption::VALUE_REQUIRED, 'thrift服务名称.'),
-        ]);
+        $this->setName('thrift:work')->setDescription('启用一个thrift服务.')->setDefinition(
+            [
+             new InputOption('thrift-name', 'p', InputOption::VALUE_REQUIRED, 'thrift服务名称.'),
+            ]
+        );
     }
 
     /**
@@ -44,7 +46,7 @@ class WorkCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $serviceName = $input->getOption('thrift-name');
-        if (!$serviceName) {
+        if (! $serviceName) {
             $output->writeln(sprintf('请输入thrift服务名称!'));
 
             return false;

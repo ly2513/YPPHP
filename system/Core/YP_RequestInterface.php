@@ -10,10 +10,11 @@ namespace YP\Core;
 
 /**
  * Interface YP_RequestInterface
+ *
  * @package YP\Core
  */
-interface YP_RequestInterface
-{
+interface YP_RequestInterface {
+
     /**
      * 获取请求方法
      *
@@ -21,7 +22,7 @@ interface YP_RequestInterface
      *
      * @return string
      */
-    public function getMethod($upper = false): string;
+    public function getMethod($upper = FALSE): string;
 
     /**
      * 遍历$_SERVER超全局数组
@@ -31,7 +32,7 @@ interface YP_RequestInterface
      *
      * @return mixed
      */
-    public function getServer($index = null, $filter = null);
+    public function getServer($index = NULL, $filter = NULL);
     
     /**
      * 获得用户的IP地址
@@ -48,6 +49,6 @@ interface YP_RequestInterface
      *
      * @return bool
      */
-    public function isValidIP(string $ip, string $which = null): bool;
+    public function isValidIP(string $ip, string $which = NULL): bool;
 
 }

@@ -15,8 +15,8 @@ use RedisQueue\ResQueue;
  *
  * @package App\Libraries\Queue
  */
-class YP_Queue
-{
+class YP_Queue {
+
     /**
      * 队列驱动
      * 可能的值: rabbitmq,redis
@@ -79,7 +79,7 @@ class YP_Queue
      *
      * @var array
      */
-    public static $instance = null;
+    public static $instance = NULL;
 
     /**
      * Queue constructor.

@@ -16,8 +16,8 @@ use Thrift\Transport\TSocketPool;
 use Thrift\Transport\TFramedTransport;
 use Thrift\Transport\TBufferedTransport;
 
-class YP_Thrift
-{
+class YP_Thrift {
+
     /**
      * 服务IP
      *
@@ -46,7 +46,7 @@ class YP_Thrift
         $startTime  = $this->getMillisecond();
         $thrift_gen = APP_PATH . 'ThirdParty/Thrift/gen-php';
         $loader     = new ThriftClassLoader();
-//        $loader->registerNamespace('Thrift', $thrift_lib);
+        //        $loader->registerNamespace('Thrift', $thrift_lib);
         $loader->registerDefinition('testname', $thrift_gen);
         $loader->register();
         $socket = new TSocket($this->host, $this->port);
@@ -57,7 +57,7 @@ class YP_Thrift
         $protocol  = new TBinaryProtocol($transport);  #传输格式：二进制格式
         $client    = new \batu\demo\batuThriftClient($protocol);# 构造客户端
         $transport->open();
-        $socket->setDebug(true);
+        $socket->setDebug(TRUE);
         for ($i = 1; $i < 11; $i++) {
             $item      = [];
             $item["a"] = "batu.demo";
@@ -82,7 +82,7 @@ class YP_Thrift
         {
             list($t1, $t2) = explode(' ', microtime());
 
-            return (float)sprintf('%.0f', (floatval($t1) + floatval($t2)) * 1000);
+            return (float) sprintf('%.0f', (floatval($t1) + floatval($t2)) * 1000);
         }
 
         $transport->close();
@@ -112,8 +112,7 @@ class YP_Thrift
     {
         list($t1, $t2) = explode(' ', microtime());
 
-        return (float)sprintf('%.0f', (floatval($t1) + floatval($t2)) * 1000);
+        return (float) sprintf('%.0f', (floatval($t1) + floatval($t2)) * 1000);
     }
 
 }
-

@@ -13,8 +13,8 @@ namespace Config;
  *
  * @package Config
  */
-class Redis
-{
+class Redis {
+
     /**
      * Redis配置
      *
@@ -40,30 +40,30 @@ class Redis
         switch (ENVIRONMENT) {
             case 'prod':
                 $config = [
-                    'host'       => '127.0.0.1',// 主机
-                    'port'       => 6379,       // 端口号
-                    'index'      => '0',        // 数据库下标
-                    'prefix'     => 'zb:',      // 数据表前缀
-                    'persistent' => false,
-                ];
+                           'host'       => '127.0.0.1',// 主机
+                           'port'       => 6379,       // 端口号
+                           'index'      => '0',        // 数据库下标
+                           'prefix'     => 'zb:',      // 数据表前缀
+                           'persistent' => FALSE,
+                          ];
                 break;
             case 'test':
                 $config = [
-                    'host'       => '127.0.0.1',// 主机
-                    'port'       => 6379,       // 端口号
-                    'index'      => '1',        // 数据库下标
-                    'prefix'     => 'zb:',      // 数据表前缀
-                    'persistent' => false,
-                ];
+                           'host'       => '127.0.0.1',// 主机
+                           'port'       => 6379,       // 端口号
+                           'index'      => '1',        // 数据库下标
+                           'prefix'     => 'zb:',      // 数据表前缀
+                           'persistent' => FALSE,
+                          ];
                 break;
             default:
                 $config = [
-                    'host'       => '127.0.0.1',// 主机
-                    'port'       => 6379,       // 端口号
-                    'index'      => '0',        // 数据库下标
-                    'prefix'     => 'zb:',      // 数据表前缀
-                    'persistent' => false,
-                ];
+                           'host'       => '127.0.0.1',// 主机
+                           'port'       => 6379,       // 端口号
+                           'index'      => '0',        // 数据库下标
+                           'prefix'     => 'zb:',      // 数据表前缀
+                           'persistent' => FALSE,
+                          ];
                 break;
         };
         self::$redis = $config;

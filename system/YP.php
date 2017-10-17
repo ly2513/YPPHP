@@ -11,13 +11,12 @@ namespace YP;
 use Config\Cache;
 use YP\Core\YP_Uri as Uri;
 use YP\Core\YP_Hooks as Hooks;
-//use YP\Core\YP_Request as Request;
 use YP\Core\YP_Response as Response;
 use YP\Cli\YP_CliRequest as CliRequest;
 use YP\Core\YP_RouterCollection as RouterCollection;
 
-class YP
-{
+class YP {
+
     /**
      * YP框架版本号
      */
@@ -28,7 +27,7 @@ class YP
      *
      * @var null
      */
-    protected $startTime = null;
+    protected $startTime = NULL;
 
     /**
      * 应用运行的内存
@@ -119,11 +118,11 @@ class YP
      */
     public function __construct($config)
     {
-        $this->startTime = microtime(true) * 1000;
+        $this->startTime = microtime(TRUE) * 1000;
         define('START_TIME', $this->startTime);
         define('VERSION', self::YP_VERSION);
         // 系统分配给PHP的内存
-        $this->startMemory = memory_get_usage(true);
+        $this->startMemory = memory_get_usage(TRUE);
         // 应用配置
         $this->config = $config;
     }
@@ -136,7 +135,7 @@ class YP
         // 设置服务器时区
         date_default_timezone_set($this->config->appTimezone ?? 'UTC');
         // 设置异常处理
-        Config\Services::exceptions($this->config, true)->initialize();
+        Config\Services::exceptions($this->config, TRUE)->initialize();
         // 定义环境常量
         $this->detectEnvironment();
         // 加载环境配置信息
@@ -156,7 +155,7 @@ class YP
      *
      * @param RouterCollection|null $routes
      */
-    public function run(RouterCollection $routes = null)
+    public function run(RouterCollection $routes = NULL)
     {
         // 记录开始时间
         $this->startBenchmark();
@@ -172,21 +171,21 @@ class YP
         // 用不同的方法去修改请求对象
         $this->spoofRequestMethod();
         // TODO 以下注释是暂时的,主要是方便调试
-//        try {
+        //        try {
             // 处理请求
             $this->handleRequest($routes, $cacheConfig);
-//        } catch (\Exception $e) {
-//            // 日志记录异常错误
-//            $logger = Config\Services::log();
-//            $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
-//            // 如果该路由是重定向路由，则以$to作为消息抛出异常
-//            $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
-//            $this->callExit(EXIT_SUCCESS);
-//        } catch (\Exception $e) {// 捕获响应的重定向错误
-//            $this->callExit(EXIT_SUCCESS);
-//        } catch (\RuntimeException $e) {
-//            $this->display404errors($e);
-//        }
+        //        } catch (\Exception $e) {
+        //            // 日志记录异常错误
+        //            $logger = Config\Services::log();
+        //            $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
+        //            // 如果该路由是重定向路由，则以$to作为消息抛出异常
+        //            $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
+        //            $this->callExit(EXIT_SUCCESS);
+        //        } catch (\Exception $e) {// 捕获响应的重定向错误
+        //            $this->callExit(EXIT_SUCCESS);
+        //        } catch (\RuntimeException $e) {
+        //            $this->display404errors($e);
+        //        }
     }
 
     /**
@@ -194,7 +193,7 @@ class YP
      */
     protected function startBenchmark()
     {
-        $this->startTime = microtime(true);
+        $this->startTime = microtime(TRUE);
         $this->benchmark = Config\Services::timer();
         $this->benchmark->start('total_execution', $this->startTime);
         $this->benchmark->start('bootstrap');
@@ -219,7 +218,7 @@ class YP
     protected function getResponseObject()
     {
         $this->response = Config\Services::response($this->config);
-        if (!is_cli()) {
+        if (! is_cli()) {
             $this->response->setProtocolVersion($this->request->getProtocolVersion());
         }
         // 设置状响应态
@@ -234,7 +233,7 @@ class YP
      */
     protected function forceSecureAccess($duration = 31536000)
     {
-        if ($this->config->forceGlobalSecureRequests !== true) {
+        if ($this->config->forceGlobalSecureRequests !== TRUE) {
             return;
         }
         force_https($duration, $this->request, $this->response);
@@ -244,9 +243,9 @@ class YP
      * 处理请求逻辑并触发控制器
      *
      * @param RouterCollection|null $routes
-     * @param                       $cacheConfig
+     * @param $cacheConfig
      */
-    protected function handleRequest(RouterCollection $routes = null, $cacheConfig)
+    protected function handleRequest(RouterCollection $routes = NULL, $cacheConfig)
     {
         $this->tryToRouteIt($routes);
         // 运行 "before" 过滤器
@@ -255,7 +254,7 @@ class YP
         $filters->run($uri, 'before');
         $returned = $this->startController();
         // 关闭已经运行在startController()的控制器
-        if (!is_callable($this->controller)) {
+        if (! is_callable($this->controller)) {
             // 创建控制器
             $controller = $this->createController();
             // 是否有'post_controller_constructor'钩子
@@ -306,7 +305,7 @@ class YP
      */
     protected function detectEnvironment()
     {
-        if (getenv('CI') !== false) {
+        if (getenv('CI') !== FALSE) {
             define('ENVIRONMENT', 'test');
         } else {
             define('ENVIRONMENT', isset($_SERVER['YP_ENV']) ? $_SERVER['YP_ENV'] : 'dev');
@@ -322,7 +321,7 @@ class YP
         if (file_exists(APP_PATH . 'Config/Boot/' . ENVIRONMENT . '.php')) {
             require_once APP_PATH . 'Config/Boot/' . ENVIRONMENT . '.php';
         } else {
-            header('HTTP/1.1 503 Service Unavailable.', true, 503);
+            header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
             echo 'The application environment is not set correctly.';
             exit(1); // EXIT_ERROR
         }
@@ -344,9 +343,9 @@ class YP
      *
      * @param RouteCollection|null $routes
      */
-    protected function tryToRouteIt(RouteCollection $routes = null)
+    protected function tryToRouteIt(RouteCollection $routes = NULL)
     {
-        if (empty($routes) || !$routes instanceof RouteCollection) {
+        if (empty($routes) || ! $routes instanceof RouteCollection) {
             require APP_PATH . 'Config/Routes.php';
         }
         // $routes 已在Config/Routes.php定义
@@ -371,7 +370,7 @@ class YP
      */
     protected function determinePath()
     {
-        if (!empty($this->path)) {
+        if (! empty($this->path)) {
             return $this->path;
         }
 
@@ -398,12 +397,12 @@ class YP
                 throw new \RuntimeException('Controller is empty.');
             } else {
                 // 尝试自动加载当前这个类
-                if (!class_exists($this->controller, true) || $this->method[0] === '_') {
+                if (! class_exists($this->controller, TRUE) || $this->method[0] === '_') {
                     throw new \RuntimeException('Controller or its method is not found.');
-                } else if (!method_exists($this->controller, '_remap') && !is_callable([
-                        $this->controller,
-                        $this->method
-                    ], false)
+                } elseif (! method_exists($this->controller, '_remap') && ! is_callable([
+                                                                                         $this->controller,
+                                                                                         $this->method,
+                                                                                        ], FALSE)
                 ) {
                     throw new \RuntimeException('Controller method is not found.');
                 }
@@ -450,7 +449,7 @@ class YP
      * @param null $cacheConfig
      * @param null $returned
      */
-    protected function gatherOutput($cacheConfig = null, $returned = null)
+    protected function gatherOutput($cacheConfig = NULL, $returned = NULL)
     {
         $this->output = ob_get_contents();
         ob_end_clean();
@@ -494,7 +493,7 @@ class YP
      */
     public static function cache(int $time)
     {
-        self::$cacheTTL = (int)$time;
+        self::$cacheTTL = (int) $time;
     }
 
     /**
@@ -508,7 +507,7 @@ class YP
     {
         if ($cachedResponse = cache()->get($this->generateCacheName($config))) {
             $cachedResponse = unserialize($cachedResponse);
-            if (!is_array($cachedResponse) || !isset($cachedResponse['output']) || !isset($cachedResponse['headers'])) {
+            if (! is_array($cachedResponse) || ! isset($cachedResponse['output']) || ! isset($cachedResponse['headers'])) {
                 throw new \Exception("Error unserializing page cache");
             }
             $headers = $cachedResponse['headers'];
@@ -535,10 +534,10 @@ class YP
     public function getPerformanceStats()
     {
         return [
-            'startTime'   => $this->startTime,
-            'totalTime'   => $this->totalTime,
-            'startMemory' => $this->startMemory
-        ];
+                'startTime'   => $this->startTime,
+                'totalTime'   => $this->totalTime,
+                'startMemory' => $this->startMemory,
+               ];
     }
 
     /**
@@ -577,7 +576,7 @@ class YP
             $uri = new Uri($uri);
         }
         if (isset($_SESSION)) {
-            $_SESSION['_yp_previous_url'] = (string)$uri;
+            $_SESSION['_yp_previous_url'] = (string) $uri;
         }
     }
 

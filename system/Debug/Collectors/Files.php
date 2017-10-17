@@ -11,15 +11,15 @@ namespace YP\Debug\Toolbar\Collectors;
 /**
  * Files collector
  */
-class Files extends BaseCollector
-{
+class Files extends BaseCollector {
+
     /**
      * Whether this collector has data that can
      * be displayed in the Timeline.
      *
      * @var bool
      */
-    protected $hasTimeline = false;
+    protected $hasTimeline = FALSE;
 
     /**
      * Whether this collector needs to display
@@ -27,7 +27,7 @@ class Files extends BaseCollector
      *
      * @var bool
      */
-    protected $hasTabContent = true;
+    protected $hasTabContent = TRUE;
 
     /**
      * The 'title' of this Collector.
@@ -45,7 +45,7 @@ class Files extends BaseCollector
      */
     public function getTitleDetails(): string
     {
-        return '( ' . (int)count(get_included_files()) . ' )';
+        return '( ' . (int) count(get_included_files()) . ' )';
     }
 
     //--------------------------------------------------------------------
@@ -57,31 +57,31 @@ class Files extends BaseCollector
      */
     public function display(): string
     {
-        $parser = \Config\Services::parser(SYSTEM_PATH . 'Debug/Toolbar/Views/');
+        $parser    = \Config\Services::parser(SYSTEM_PATH . 'Debug/Toolbar/Views/');
         $rawFiles  = get_included_files();
         $coreFiles = [];
         $userFiles = [];
         foreach ($rawFiles as $file) {
             $path = $this->cleanPath($file);
-            if (strpos($path, 'SYSTEM_PATH') !== false) {
+            if (strpos($path, 'SYSTEM_PATH') !== FALSE) {
                 $coreFiles[] = [
-                    'name' => basename($file),
-                    'path' => $path
-                ];
+                                'name' => basename($file),
+                                'path' => $path,
+                               ];
             } else {
                 $userFiles[] = [
-                    'name' => basename($file),
-                    'path' => $path
-                ];
+                                'name' => basename($file),
+                                'path' => $path,
+                               ];
             }
         }
         sort($userFiles);
         sort($coreFiles);
 
         return $parser->setData([
-            'coreFiles' => $coreFiles,
-            'userFiles' => $userFiles,
-        ])->render('_files.tpl');
+                                 'coreFiles' => $coreFiles,
+                                 'userFiles' => $userFiles,
+                                ])->render('_files.tpl');
     }
 
     //--------------------------------------------------------------------

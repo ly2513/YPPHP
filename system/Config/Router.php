@@ -9,8 +9,8 @@
 
 // Migrations
 $routes->cli('migrations/(:segment)/(:segment)', '\YP\Commands\MigrationsCommand::$1/$2');
-$routes->cli('migrations/(:segment)',            '\YP\Commands\MigrationsCommand::$1');
-$routes->cli('migrations',                       '\YP\Commands\MigrationsCommand::index');
+$routes->cli('migrations/(:segment)', '\YP\Commands\MigrationsCommand::$1');
+$routes->cli('migrations', '\YP\Commands\MigrationsCommand::index');
 
 // CLI Catchall - uses a _remap to
 $routes->cli('ci(:any)', '\CodeIgniter\CLI\CommandRunner::index/$1');

@@ -13,8 +13,8 @@ namespace YP\Libraries;
  *
  * @package YP\Libraries
  */
-class YP_Rules
-{
+class YP_Rules {
+
     /**
      * 做纯字符检测
      *
@@ -22,7 +22,7 @@ class YP_Rules
      *
      * @return bool
      */
-    public function alpha(string $str = null): bool
+    public function alpha(string $str = NULL): bool
     {
         return ctype_alpha($str);
     }
@@ -34,13 +34,13 @@ class YP_Rules
      *
      * @return bool TRUE:表示有,FALSE:表示没有
      */
-    public function alpha_space(string $value = null): bool
+    public function alpha_space(string $value = NULL): bool
     {
-        if ($value === null) {
-            return true;
+        if ($value === NULL) {
+            return TRUE;
         }
 
-        return (bool)preg_match('/^[A-Z ]+$/i', $value);
+        return (bool) preg_match('/^[A-Z ]+$/i', $value);
     }
 
     /**
@@ -50,9 +50,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function alpha_dash(string $str = null): bool
+    public function alpha_dash(string $str = NULL): bool
     {
-        return (bool)preg_match('/^[a-z0-9_-]+$/i', $str);
+        return (bool) preg_match('/^[a-z0-9_-]+$/i', $str);
     }
 
     /**
@@ -62,9 +62,9 @@ class YP_Rules
      *
      * @return bool TRUE:字符串全部是字母和(或者)数字,FALSE:含有除字母、数字之外的字符
      */
-    public function alpha_numeric(string $str = null): bool
+    public function alpha_numeric(string $str = NULL): bool
     {
-        return ctype_alnum((string)$str);
+        return ctype_alnum((string) $str);
     }
 
     /**
@@ -74,9 +74,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function alpha_numeric_spaces(string $str = null): bool
+    public function alpha_numeric_spaces(string $str = NULL): bool
     {
-        return (bool)preg_match('/^[A-Z0-9 ]+$/i', $str);
+        return (bool) preg_match('/^[A-Z0-9 ]+$/i', $str);
     }
 
     /**
@@ -86,9 +86,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function decimal(string $str = null): bool
+    public function decimal(string $str = NULL): bool
     {
-        return (bool)preg_match('/^[\-+]?[0-9]+\.[0-9]+$/', $str);
+        return (bool) preg_match('/^[\-+]?[0-9]+\.[0-9]+$/', $str);
     }
 
     /**
@@ -98,9 +98,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function integer(string $str = null): bool
+    public function integer(string $str = NULL): bool
     {
-        return (bool)preg_match('/^[\-+]?[0-9]+$/', $str);
+        return (bool) preg_match('/^[\-+]?[0-9]+$/', $str);
     }
 
     /**
@@ -110,9 +110,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function is_natural(string $str = null): bool
+    public function is_natural(string $str = NULL): bool
     {
-        return ctype_digit((string)$str);
+        return ctype_digit((string) $str);
     }
 
     /**
@@ -122,9 +122,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function is_natural_no_zero(string $str = null): bool
+    public function is_natural_no_zero(string $str = NULL): bool
     {
-        return ($str != 0 && ctype_digit((string)$str));
+        return ($str != 0 && ctype_digit((string) $str));
     }
 
     /**
@@ -134,9 +134,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function numeric(string $str = null): bool
+    public function numeric(string $str = NULL): bool
     {
-        return (bool)preg_match('/^[\-+]?[0-9]*\.?[0-9]+$/', $str);
+        return (bool) preg_match('/^[\-+]?[0-9]*\.?[0-9]+$/', $str);
 
     }
 
@@ -149,13 +149,13 @@ class YP_Rules
      *
      * @return bool
      */
-    public function regex_match(string $str = null, string $pattern, array $data): bool
+    public function regex_match(string $str = NULL, string $pattern, array $data): bool
     {
         if (substr($pattern, 0, 1) != '/') {
             $pattern = "/{$pattern}/";
         }
 
-        return (bool)preg_match($pattern, $str);
+        return (bool) preg_match($pattern, $str);
     }
 
     /**
@@ -165,7 +165,7 @@ class YP_Rules
      *
      * @return bool
      */
-    public function timezone(string $str = null): bool
+    public function timezone(string $str = NULL): bool
     {
         return in_array($str, timezone_identifiers_list());
     }
@@ -177,7 +177,7 @@ class YP_Rules
      *
      * @return bool
      */
-    public function valid_base64(string $str = null): bool
+    public function valid_base64(string $str = NULL): bool
     {
         return (base64_encode(base64_decode($str)) === $str);
     }
@@ -189,13 +189,13 @@ class YP_Rules
      *
      * @return bool
      */
-    public function valid_email(string $str = null): bool
+    public function valid_email(string $str = NULL): bool
     {
         if (function_exists('idn_to_ascii') && $atpos = strpos($str, '@')) {
             $str = substr($str, 0, ++$atpos) . idn_to_ascii(substr($str, $atpos));
         }
 
-        return (bool)filter_var($str, FILTER_VALIDATE_EMAIL);
+        return (bool) filter_var($str, FILTER_VALIDATE_EMAIL);
     }
 
     /**
@@ -207,18 +207,18 @@ class YP_Rules
      *
      * @return bool
      */
-    public function valid_emails(string $str = null): bool
+    public function valid_emails(string $str = NULL): bool
     {
-        if (strpos($str, ',') === false) {
+        if (strpos($str, ',') === FALSE) {
             return $this->valid_email(trim($str));
         }
         foreach (explode(',', $str) as $email) {
-            if (trim($email) !== '' && $this->valid_email(trim($email)) === false) {
-                return false;
+            if (trim($email) !== '' && $this->valid_email(trim($email)) === FALSE) {
+                return FALSE;
             }
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -230,7 +230,7 @@ class YP_Rules
      *
      * @return bool
      */
-    public function valid_ip(string $ip = null, string $which = null, array $data): bool
+    public function valid_ip(string $ip = NULL, string $which = NULL, array $data): bool
     {
         switch (strtolower($which)) {
             case 'ipv4':
@@ -240,11 +240,11 @@ class YP_Rules
                 $which = FILTER_FLAG_IPV6;
                 break;
             default:
-                $which = null;
+                $which = NULL;
                 break;
         }
 
-        return (bool)filter_var($ip, FILTER_VALIDATE_IP, $which);
+        return (bool) filter_var($ip, FILTER_VALIDATE_IP, $which);
     }
 
     /**
@@ -254,21 +254,21 @@ class YP_Rules
      *
      * @return bool
      */
-    public function valid_url(string $str = null): bool
+    public function valid_url(string $str = NULL): bool
     {
         if (empty($str)) {
-            return false;
+            return FALSE;
         } elseif (preg_match('/^(?:([^:]*)\:)?\/\/(.+)$/', $str, $matches)) {
             if (empty($matches[2])) {
-                return false;
-            } elseif (!in_array($matches[1], ['http', 'https'], true)) {
-                return false;
+                return FALSE;
+            } elseif (! in_array($matches[1], ['http', 'https'], TRUE)) {
+                return FALSE;
             }
             $str = $matches[2];
         }
         $str = 'http://' . $str;
 
-        return (filter_var($str, FILTER_VALIDATE_URL) !== false);
+        return (filter_var($str, FILTER_VALIDATE_URL) !== FALSE);
     }
 
     /**
@@ -280,9 +280,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function differs(string $str = null, string $field, array $data): bool
+    public function differs(string $str = NULL, string $field, array $data): bool
     {
-        return array_key_exists($field, $data) ? ($str !== $data[$field]) : false;
+        return array_key_exists($field, $data) ? ($str !== $data[$field]) : FALSE;
     }
 
     /**
@@ -294,13 +294,13 @@ class YP_Rules
      *
      * @return bool
      */
-    public function exact_length(string $str = null, string $val, array $data): bool
+    public function exact_length(string $str = NULL, string $val, array $data): bool
     {
-        if (!is_numeric($val)) {
-            return false;
+        if (! is_numeric($val)) {
+            return FALSE;
         }
 
-        return ((int)$val == mb_strlen($str));
+        return ((int) $val == mb_strlen($str));
     }
 
     /**
@@ -312,9 +312,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function greater_than(string $str = null, string $min, array $data): bool
+    public function greater_than(string $str = NULL, string $min, array $data): bool
     {
-        return is_numeric($str) ? ($str > $min) : false;
+        return is_numeric($str) ? ($str > $min) : FALSE;
     }
 
     /**
@@ -326,9 +326,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function greater_than_equal_to(string $str = null, string $min, array $data): bool
+    public function greater_than_equal_to(string $str = NULL, string $min, array $data): bool
     {
-        return is_numeric($str) ? ($str >= $min) : false;
+        return is_numeric($str) ? ($str >= $min) : FALSE;
     }
 
     /**
@@ -340,12 +340,13 @@ class YP_Rules
      *
      * @return bool
      */
-    public function in_list(string $value = null, string $list, array $data): bool
+    public function in_list(string $value = NULL, string $list, array $data): bool
     {
         $list = explode(',', $list);
-        $list = array_map(function ($value) { return trim($value); }, $list);
+        $list = array_map(function ($value) { return trim($value);
+        }, $list);
 
-        return in_array($value, $list, true);
+        return in_array($value, $list, TRUE);
     }
 
     /**
@@ -356,9 +357,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function less_than(string $str = null, string $max): bool
+    public function less_than(string $str = NULL, string $max): bool
     {
-        return is_numeric($str) ? ($str < $max) : false;
+        return is_numeric($str) ? ($str < $max) : FALSE;
     }
 
     /**
@@ -369,9 +370,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function less_than_equal_to(string $str = null, string $max): bool
+    public function less_than_equal_to(string $str = NULL, string $max): bool
     {
-        return is_numeric($str) ? ($str <= $max) : false;
+        return is_numeric($str) ? ($str <= $max) : FALSE;
     }
 
     /**
@@ -383,9 +384,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function matches(string $str = null, string $field, array $data): bool
+    public function matches(string $str = NULL, string $field, array $data): bool
     {
-        return array_key_exists($field, $data) ? ($str === $data[$field]) : false;
+        return array_key_exists($field, $data) ? ($str === $data[$field]) : FALSE;
     }
 
     /**
@@ -397,10 +398,10 @@ class YP_Rules
      *
      * @return bool
      */
-    public function max_length(string $str = null, string $val, array $data): bool
+    public function max_length(string $str = NULL, string $val, array $data): bool
     {
-        if (!is_numeric($val)) {
-            return false;
+        if (! is_numeric($val)) {
+            return FALSE;
         }
 
         return ($val >= mb_strlen($str));
@@ -415,10 +416,10 @@ class YP_Rules
      *
      * @return bool
      */
-    public function min_length(string $str = null, string $val, array $data): bool
+    public function min_length(string $str = NULL, string $val, array $data): bool
     {
-        if (!is_numeric($val)) {
-            return false;
+        if (! is_numeric($val)) {
+            return FALSE;
         }
 
         return ($val <= mb_strlen($str));
@@ -431,9 +432,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function required($str = null): bool
+    public function required($str = NULL): bool
     {
-        return is_array($str) ? (bool)count($str) : (trim($str) !== '');
+        return is_array($str) ? (bool) count($str) : (trim($str) !== '');
     }
 
     /**
@@ -448,21 +449,21 @@ class YP_Rules
      *
      * @return bool
      */
-    public function required_with($str = null, string $fields, array $data): bool
+    public function required_with($str = NULL, string $fields, array $data): bool
     {
         $fields = explode(',', $fields);
         // 判断某个字段是否存在
-        $present = $this->required($data[$str] ?? null);
-        if ($present === true) {
-            return true;
+        $present = $this->required($data[$str] ?? NULL);
+        if ($present === TRUE) {
+            return TRUE;
         }
         // 求交集,过滤交集数组
         $requiredFields = array_intersect($fields, $data);
         $requiredFields = array_filter($requiredFields, function ($item) {
-            return !empty($item);
+            return ! empty($item);
         });
 
-        return !(bool)count($requiredFields);
+        return ! (bool) count($requiredFields);
     }
 
     /**
@@ -477,22 +478,22 @@ class YP_Rules
      *
      * @return bool TRUE:表示不存在,FALSE:存在
      */
-    public function required_without($str = null, string $fields, array $data): bool
+    public function required_without($str = NULL, string $fields, array $data): bool
     {
         $fields = explode(',', $fields);
         // 判断某个字段是否存在
-        $present = $this->required($data[$str] ?? null);
-        if ($present === true) {
-            return true;
+        $present = $this->required($data[$str] ?? NULL);
+        if ($present === TRUE) {
+            return TRUE;
         }
         // 校验字段
         foreach ($fields as $field) {
-            if (!array_key_exists($field, $data)) {
-                return false;
+            if (! array_key_exists($field, $data)) {
+                return FALSE;
             }
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -502,9 +503,9 @@ class YP_Rules
      *
      * @return bool
      */
-    public function is_date(string $str = null)
+    public function is_date(string $str = NULL)
     {
-        return (bool)preg_match('/\\d{4}-\\d{2}-\\d{2}+$/', $str);
+        return (bool) preg_match('/\\d{4}-\\d{2}-\\d{2}+$/', $str);
     }
 
 }

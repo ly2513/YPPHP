@@ -13,15 +13,15 @@ use Config\Services;
 /**
  * Timers collector
  */
-class Timers extends BaseCollector
-{
+class Timers extends BaseCollector {
+
 	/**
 	 * Whether this collector has data that can
 	 * be displayed in the Timeline.
 	 *
 	 * @var bool
 	 */
-	protected $hasTimeline = true;
+	protected $hasTimeline = TRUE;
 
 	/**
 	 * Whether this collector needs to display
@@ -29,7 +29,7 @@ class Timers extends BaseCollector
 	 *
 	 * @var bool
 	 */
-	protected $hasTabContent = false;
+	protected $hasTabContent = FALSE;
 
 	/**
 	 * The 'title' of this Collector.
@@ -51,19 +51,20 @@ class Timers extends BaseCollector
 	{
 		$data = [];
 
-		$benchmark = Services::timer(true);
-		$rows = $benchmark->getTimers(6);
+		$benchmark = Services::timer(TRUE);
+		$rows      = $benchmark->getTimers(6);
 
 		foreach ($rows as $name => $info)
 		{
-			if ($name == 'total_execution') continue;
+			if ($name == 'total_execution') { continue;
+            }
 
 			$data[] = [
-				'name' => ucwords(str_replace('_', ' ', $name)),
-			    'component' => 'Timer',
-			    'start'     => $info['start'],
-			    'duration'  => $info['end'] - $info['start']
-			];
+                       'name'      => ucwords(str_replace('_', ' ', $name)),
+                       'component' => 'Timer',
+                       'start'     => $info['start'],
+                       'duration'  => $info['end'] - $info['start'],
+                      ];
 		}
 
 		return $data;

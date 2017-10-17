@@ -13,8 +13,8 @@ namespace YP\Libraries\Migrations;
  * 
  * @package YP\Libraries\Migrations
  */
-interface YP_MigrationRepositoryInterface
-{
+interface YP_MigrationRepositoryInterface {
+
     /**
      * 给指定的数据包进行迁移
      *
@@ -32,8 +32,8 @@ interface YP_MigrationRepositoryInterface
     /**
      * 记录迁移是否已运行
      *
-     * @param  string $file
-     * @param  int    $batch
+     * @param string $file
+     * @param int    $batch
      *
      * @return void
      */
@@ -42,7 +42,7 @@ interface YP_MigrationRepositoryInterface
     /**
      * 从日志中删除迁移
      *
-     * @param  object $migration
+     * @param object $migration
      *
      * @return void
      */
@@ -72,7 +72,7 @@ interface YP_MigrationRepositoryInterface
     /**
      * 设置信息源用来收集数据
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return void
      */

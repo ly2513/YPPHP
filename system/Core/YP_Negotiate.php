@@ -8,8 +8,8 @@
  */
 namespace YP\Core;
 
-class YP_Negotiate
-{
+class YP_Negotiate {
+
     /**
      * 请求实例
      *
@@ -22,9 +22,9 @@ class YP_Negotiate
      *
      * @param YP_IncomingRequest|null $request
      */
-    public function __construct(YP_IncomingRequest $request = null)
+    public function __construct(YP_IncomingRequest $request = NULL)
     {
-        if (!is_null($request)) {
+        if (! is_null($request)) {
             $this->request = $request;
         }
     }
@@ -51,9 +51,9 @@ class YP_Negotiate
      *
      * @return string
      */
-    public function media(array $supported, bool $strictMatch = false): string
+    public function media(array $supported, bool $strictMatch = FALSE): string
     {
-        return $this->getBestMatch($supported, $this->request->getHeaderLine('accept'), true, $strictMatch);
+        return $this->getBestMatch($supported, $this->request->getHeaderLine('accept'), TRUE, $strictMatch);
     }
 
     /**
@@ -65,7 +65,7 @@ class YP_Negotiate
      */
     public function charset(array $supported): string
     {
-        $match = $this->getBestMatch($supported, $this->request->getHeaderLine('accept-charset'), false, true);
+        $match = $this->getBestMatch($supported, $this->request->getHeaderLine('accept-charset'), FALSE, TRUE);
         // 没匹配成功,使用utf-8作为默认编码
         if (empty($match)) {
             return 'utf-8';
@@ -113,9 +113,9 @@ class YP_Negotiate
      */
     protected function getBestMatch(
         array $supported,
-        string $header = null,
-        bool $enforceTypes = false,
-        bool $strictMatch = false
+        string $header = NULL,
+        bool $enforceTypes = FALSE,
+        bool $strictMatch = FALSE
     ): string
     {
         if (empty($supported)) {
@@ -177,10 +177,10 @@ class YP_Negotiate
                 unset($parameters['q']);
             }
             $results[] = [
-                'value'  => trim($value),
-                'q'      => (float)$quality,
-                'params' => $parameters
-            ];
+                          'value'  => trim($value),
+                          'q'      => (float) $quality,
+                          'params' => $parameters,
+                         ];
         }
         // 排序首先得到最高的结果
         usort($results, function ($a, $b) {
@@ -215,7 +215,7 @@ class YP_Negotiate
      *
      * @return bool
      */
-    protected function match(array $acceptable, string $supported, bool $enforceTypes = false)
+    protected function match(array $acceptable, string $supported, bool $enforceTypes = FALSE)
     {
         $supported = $this->parseHeader($supported);
         if (is_array($supported) && count($supported) == 1) {
@@ -230,7 +230,7 @@ class YP_Negotiate
             return $this->matchTypes($acceptable, $supported);
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -244,15 +244,15 @@ class YP_Negotiate
     protected function matchParameters(array $acceptable, array $supported): bool
     {
         if (count($acceptable['params']) != count($supported['params'])) {
-            return false;
+            return FALSE;
         }
         foreach ($supported['params'] as $label => $value) {
-            if (!isset($acceptable['params'][$label]) || $acceptable['params'][$label] != $value) {
-                return false;
+            if (! isset($acceptable['params'][$label]) || $acceptable['params'][$label] != $value) {
+                return FALSE;
             }
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -269,11 +269,11 @@ class YP_Negotiate
         list($sType, $sSubType) = explode('/', $supported['value']);
         // 如果类型不匹配，就完成了
         if ($aType != $sType) {
-            return false;
+            return FALSE;
         }
         // 如果有星号，返回TRUE(types/*)
         if ($aSubType == '*') {
-            return true;
+            return TRUE;
         }
 
         // 否则，子类型型也必须匹配

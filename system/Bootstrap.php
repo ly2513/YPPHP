@@ -31,15 +31,15 @@ define('CACHE_PATH', rtrim(dirname(__DIR__) . '/cache', '/') . DIRECTORY_SEPARAT
 define('APP_NAMESPACE', 'App');
 // 定义退出的常量的状态码
 //defined('EXIT_SUCCESS')        || define('EXIT_SUCCESS',        0); // 没出错
-defined('EXIT_ERROR')          || define('EXIT_ERROR',          1); // 一般错误
+defined('EXIT_ERROR')          || define('EXIT_ERROR', 1); // 一般错误
 //defined('EXIT_CONFIG')         || define('EXIT_CONFIG',         3); // 配置错误
 //defined('EXIT_UNKNOWN_FILE')   || define('EXIT_UNKNOWN_FILE',   4); // 文件没找到错误
 //defined('EXIT_UNKNOWN_CLASS')  || define('EXIT_UNKNOWN_CLASS',  5); // 不知道类
 //defined('EXIT_UNKNOWN_METHOD') || define('EXIT_UNKNOWN_METHOD', 6); // 不知道类的成员方法
 //defined('EXIT_USER_INPUT')     || define('EXIT_USER_INPUT',     7); // 无效的用户输入
 //defined('EXIT_DATABASE')       || define('EXIT_DATABASE',       8); // 数据库错误
-defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN',      9); // 最低自动分配错误
-defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX',    125); // 最高自动分配错误
+defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9); // 最低自动分配错误
+defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125); // 最高自动分配错误
 
 // 定义composer的自动加载文件路径
 define('COMPOSER_PATH', ROOT_PATH . 'vendor/autoload.php');

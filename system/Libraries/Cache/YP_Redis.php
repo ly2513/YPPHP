@@ -8,8 +8,8 @@
  */
 namespace YP\Libraries\Cache;
 
-class YP_Redis
-{
+class YP_Redis {
+
 
     protected $_options = [];
 
@@ -67,18 +67,18 @@ class YP_Redis
      * @var array
      */
     protected $config = [
-        'host'     => '127.0.0.1',
-        'password' => null,
-        'port'     => 6379,
-        'timeout'  => 0,
-    ];
+                         'host'     => '127.0.0.1',
+                         'password' => NULL,
+                         'port'     => 6379,
+                         'timeout'  => 0,
+                        ];
 
     /**
      * YP_Redis constructor.
      *
      * @param \Config\Cache|null $config
      */
-    public function __construct(\Config\Cache $config = null)
+    public function __construct(\Config\Cache $config = NULL)
     {
         $redisConf = \Config\Cache::$redis;
         // redis前缀
@@ -97,7 +97,7 @@ class YP_Redis
      */
     public function initialize()
     {
-        if (!isset($this->config['host']) || !isset($this->config['port']) || !isset($this->config['persistent'])) {
+        if (! isset($this->config['host']) || ! isset($this->config['port']) || ! isset($this->config['persistent'])) {
             throw new \Exception('Unexpected inconsistency in options');
         }
         $redis = new \Redis();
@@ -106,13 +106,13 @@ class YP_Redis
         } else {
             $success = $redis->connect($this->config['host'], intval($this->config['port']));
         }
-        if (!$success) {
+        if (! $success) {
             throw new \Exception('Could not connect to the Redis server ' . $this->config['host'] . ':' . $this->config['port']);
         }
         // redis权限认证
         if (isset($this->config['auth'])) {
             $success = $redis->auth($this->config['auth']);
-            if (!$success) {
+            if (! $success) {
                 throw new \Exception('Failed to authenticate with the Redis server');
             }
         }
@@ -139,12 +139,13 @@ class YP_Redis
 
     /**
      * 获得redis写对象
+     *
      * @return Redis
      * @throws Exception
      */
     public function getWriteRedis()
     {
-        if (!is_object(self::$_redis_w)) {
+        if (! is_object(self::$_redis_w)) {
             self::$_redis_w = $this->getRedis();
         }
 
@@ -153,6 +154,7 @@ class YP_Redis
 
     /**
      * 获得redis读对象
+     *
      * @return Redis
      * @throws Exception
      */
@@ -164,7 +166,7 @@ class YP_Redis
         if (self::$_master == 1) {
             return $this->getWriteRedis();
         }
-        if (!is_object(self::$_redis_r)) {
+        if (! is_object(self::$_redis_r)) {
             if (array_key_exists('cacheSlave', $this->_options)) {
                 $options = $this->_options['cacheSlave'];
             }
@@ -195,8 +197,8 @@ class YP_Redis
     /**
      * set命令
      *
-     * @param     $key
-     * @param     $value
+     * @param $key
+     * @param $value
      * @param int $period
      *
      * @return bool
@@ -234,7 +236,7 @@ class YP_Redis
             return;
         }
         $keys = $this->getWriteRedis()->keys($this->_key($key));
-        if (!empty($keys)) {
+        if (! empty($keys)) {
             $this->getWriteRedis()->delete($keys);
         }
     }
@@ -242,7 +244,7 @@ class YP_Redis
     /**
      * 删除key
      *
-     * @param        $key
+     * @param $key
      * @param string $id
      */
     public function delete($key, $id = '')
@@ -258,9 +260,9 @@ class YP_Redis
     /**
      * 批量添加哈希TABLE值
      *
-     * @param     $key  表名
-     * @param     $id   标识ID
-     * @param     $data 添加的数据
+     * @param $key  表名
+     * @param $id   标识ID
+     * @param $data 添加的数据
      * @param int $period
      *
      * @return bool
@@ -290,7 +292,7 @@ class YP_Redis
         $fields[] = 'redisFlag';
         $rs       = $this->getReadRedis()->hmGet($this->_key($key, $id), $fields);
 
-        return is_array($rs) && $rs['redisFlag'] === false ? [] : $rs;
+        return is_array($rs) && $rs['redisFlag'] === FALSE ? [] : $rs;
     }
 
     /**
@@ -360,7 +362,7 @@ class YP_Redis
             $redis->expire($this->_key($key, $id), intval($period));
         }
 
-        return true;
+        return TRUE;
     }
 
     public function sadd($key, $id, $arr = [], $period = 0)
@@ -373,7 +375,7 @@ class YP_Redis
             $redis->expire($this->_key($key, $id), intval($period));
         }
 
-        return true;
+        return TRUE;
     }
 
     public function lpush($key, $id, $arr = [], $period = 0)
@@ -386,7 +388,7 @@ class YP_Redis
             $redis->expire($this->_key($key, $id), intval($period));
         }
 
-        return true;
+        return TRUE;
     }
 
     public function ltrim($key, $id, $start, $stop)

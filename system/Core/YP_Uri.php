@@ -8,8 +8,8 @@
  */
 namespace YP\Core;
 
-class YP_Uri
-{
+class YP_Uri {
+
 
     /**
      * 分隔正则常量
@@ -97,27 +97,27 @@ class YP_Uri
      * @var array
      */
     protected $defaultPorts = [
-        'http'  => 80,
-        'https' => 443,
-        'ftp'   => 21,
-        'sftp'  => 22,
-    ];
+                               'http'  => 80,
+                               'https' => 443,
+                               'ftp'   => 21,
+                               'sftp'  => 22,
+                              ];
 
     /**
      * 是否显示密码
      *
      * @var bool
      */
-    protected $showPassword = false;
+    protected $showPassword = FALSE;
 
     /**
      * YP_Uri constructor.
      *
      * @param string|null $uri
      */
-    public function __construct(string $uri = null)
+    public function __construct(string $uri = NULL)
     {
-        if (!is_null($uri)) {
+        if (! is_null($uri)) {
             $this->setURI($uri);
         }
     }
@@ -129,11 +129,11 @@ class YP_Uri
      *
      * @return YP_Uri
      */
-    public function setURI(string $uri = null): self
+    public function setURI(string $uri = NULL): self
     {
-        if (!is_null($uri)) {
+        if (! is_null($uri)) {
             $parts = parse_url($uri);
-            if ($parts === false) {
+            if ($parts === FALSE) {
                 throw new \InvalidArgumentException("Unable to parse URI: {$uri}");
             }
             $this->applyParts($parts);
@@ -159,22 +159,22 @@ class YP_Uri
      *
      * @return string
      */
-    public function getAuthority(bool $ignorePort = false): string
+    public function getAuthority(bool $ignorePort = FALSE): string
     {
         if (empty($this->host)) {
             return '';
         }
         $authority = $this->host;
-        if (!empty($this->getUserInfo())) {
+        if (! empty($this->getUserInfo())) {
             $authority = $this->getUserInfo() . '@' . $authority;
         }
-        if (!empty($this->port) && !$ignorePort) {
+        if (! empty($this->port) && ! $ignorePort) {
             // 获得当前的端口
             if ($this->port != $this->defaultPorts[$this->scheme]) {
                 $authority .= ':' . $this->port;
             }
         }
-        $this->showPassword = false;
+        $this->showPassword = FALSE;
 
         return $authority;
     }
@@ -187,7 +187,7 @@ class YP_Uri
     public function getUserInfo()
     {
         $userInfo = $this->user;
-        if ($this->showPassword === true && !empty($this->password)) {
+        if ($this->showPassword === TRUE && ! empty($this->password)) {
             $userInfo .= ':' . $this->password;
         }
 
@@ -201,7 +201,7 @@ class YP_Uri
      *
      * @return YP_Uri
      */
-    public function showPassword(bool $val = true):self
+    public function showPassword(bool $val = TRUE):self
     {
         $this->showPassword = $val;
 
@@ -338,17 +338,18 @@ class YP_Uri
      * @return string
      */
     public static function createURIString(
-        $scheme = null,
-        $authority = null,
-        $path = null,
-        $query = null,
-        $fragment = null
-    ) {
+        $scheme = NULL,
+        $authority = NULL,
+        $path = NULL,
+        $query = NULL,
+        $fragment = NULL
+    ) 
+    {
         $uri = '';
-        if (!empty($scheme)) {
+        if (! empty($scheme)) {
             $uri .= $scheme . '://';
         }
-        if (!empty($authority)) {
+        if (! empty($authority)) {
             $uri .= $authority;
         }
         if ($path) {
@@ -374,7 +375,7 @@ class YP_Uri
     public function setAuthority(string $str)
     {
         $parts = parse_url($str);
-        if (empty($parts['host']) && !empty($parts['path'])) {
+        if (empty($parts['host']) && ! empty($parts['path'])) {
             $parts['host'] = $parts['path'];
             unset($parts['path']);
         }
@@ -473,10 +474,10 @@ class YP_Uri
      */
     public function setQuery(string $query): self
     {
-        if (strpos($query, '#') !== false) {
+        if (strpos($query, '#') !== FALSE) {
             throw new \InvalidArgumentException('Query strings may not include URI fragments.');
         }
-        if (!empty($query) && strpos($query, '?') === 0) {
+        if (! empty($query) && strpos($query, '?') === 0) {
             $query = substr($query, 1);
         }
         $temp  = explode('&', $query);
@@ -484,7 +485,7 @@ class YP_Uri
         foreach ($temp as $index => $part) {
             list($key, $value) = $this->splitQueryPart($part);
             if (is_null($value)) {
-                $parts[$this->filterQuery($key)] = null;
+                $parts[$this->filterQuery($key)] = NULL;
                 continue;
             }
             $parts[$this->filterQuery($key)] = $this->filterQuery($value);
@@ -505,7 +506,7 @@ class YP_Uri
     {
         $parts = explode('=', $part, 2);
         if (count($parts) === 1) {
-            $parts = null;
+            $parts = NULL;
         }
 
         return $parts;
@@ -548,7 +549,7 @@ class YP_Uri
      *
      * @return YP_Uri
      */
-    public function addQuery(string $key, $value = null): self
+    public function addQuery(string $key, $value = NULL): self
     {
         $this->query[$key] = $value;
 
@@ -582,7 +583,7 @@ class YP_Uri
     {
         $temp = [];
         foreach ($this->query as $key => $value) {
-            if (!in_array($key, $params)) {
+            if (! in_array($key, $params)) {
                 continue;
             }
             $temp[$key] = $value;
@@ -613,7 +614,7 @@ class YP_Uri
      *
      * @return mixed|string
      */
-    protected function filterPath(string $path = null)
+    protected function filterPath(string $path = NULL)
     {
         $orig = $path;
         // 解析路径
@@ -643,19 +644,19 @@ class YP_Uri
      */
     protected function applyParts($parts)
     {
-        if (!empty($parts['host'])) {
+        if (! empty($parts['host'])) {
             $this->host = $parts['host'];
         }
-        if (!empty($parts['user'])) {
+        if (! empty($parts['user'])) {
             $this->user = $parts['user'];
         }
-        if (!empty($parts['path'])) {
+        if (! empty($parts['path'])) {
             $this->path = $this->filterPath($parts['path']);
         }
-        if (!empty($parts['query'])) {
+        if (! empty($parts['query'])) {
             $this->setQuery($parts['query']);
         }
-        if (!empty($parts['fragment'])) {
+        if (! empty($parts['fragment'])) {
             $this->fragment = $this->filterQuery($parts['fragment']);
         }
         //
@@ -666,8 +667,8 @@ class YP_Uri
         }
         // 端口
         if (isset($parts['port'])) {
-            if (!is_null($parts['port'])) {
-                $port = (int)$parts['port'];
+            if (! is_null($parts['port'])) {
+                $port = (int) $parts['port'];
                 if (1 > $port || 0xffff < $port) {
                     throw new \InvalidArgumentException('Ports must be between 1 and 65535');
                 }
@@ -678,7 +679,7 @@ class YP_Uri
             $this->password = $parts['pass'];
         }
         // 对路径进行拆分
-        if (!empty($parts['path'])) {
+        if (! empty($parts['path'])) {
             $this->segments = explode('/', trim($parts['path'], '/'));
         }
     }
@@ -702,12 +703,12 @@ class YP_Uri
         }
         $transformed = clone $relative;
         // 在非严格方法中转换引用
-        if (!empty($relative->getAuthority())) {
+        if (! empty($relative->getAuthority())) {
             $transformed->setAuthority($relative->getAuthority())->setPath($relative->getPath())->setQuery($relative->getQuery());
         } else {
             if ($relative->getPath() == '') {
                 $transformed->setPath($this->getPath());
-                if (!is_null($relative->getQuery())) {
+                if (! is_null($relative->getQuery())) {
                     $transformed->setQuery($relative->getQuery());
                 } else {
                     $transformed->setQuery($this->getQuery());
@@ -738,7 +739,7 @@ class YP_Uri
      */
     protected function mergePaths(YP_Uri $base, YP_Uri $reference)
     {
-        if (!empty($base->getAuthority()) && empty($base->getPath())) {
+        if (! empty($base->getAuthority()) && empty($base->getPath())) {
             return '/' . ltrim($base->getPath(), '/ ');
         }
         $path = explode('/', $base->getPath());
@@ -773,7 +774,7 @@ class YP_Uri
         foreach ($input as $segment) {
             if ($segment == '..') {
                 array_pop($output);
-            } else if ($segment != '.' && $segment != '') {
+            } elseif ($segment != '.' && $segment != '') {
                 array_push($output, $segment);
             }
         }

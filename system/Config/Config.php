@@ -13,8 +13,8 @@ namespace YP\Config;
  *
  * @package YP\Config
  */
-class Config
-{
+class Config {
+
 
     /**
      * 获得环境变量的值及匹配类的属性
@@ -35,10 +35,12 @@ class Config
                 {
                     if ($value = $this->getEnvValue("{$property}.{$key}", $prefix, $shortPrefix))
                     {
-                        if (is_null($value)) continue;
+                        if (is_null($value)) { continue;
+                        }
 
-                        if ($value === 'false')    $value = false;
-                        elseif ($value === 'true') $value = true;
+                        if ($value === 'false') {    $value = FALSE;
+                        } elseif ($value === 'true') { $value = TRUE;
+                        }
 
                         $this->$property[$key] = $value;
                     }
@@ -46,12 +48,14 @@ class Config
             }
             else
             {
-                if (($value = $this->getEnvValue($property, $prefix, $shortPrefix)) !== false )
+                if (($value = $this->getEnvValue($property, $prefix, $shortPrefix)) !== FALSE )
                 {
-                    if (is_null($value)) continue;
+                    if (is_null($value)) { continue;
+                    }
 
-                    if ($value === 'false')    $value = false;
-                    elseif ($value === 'true') $value = true;
+                    if ($value === 'false') {    $value = FALSE;
+                    } elseif ($value === 'true') { $value = TRUE;
+                    }
 
                     $this->$property = $value;
                 }
@@ -70,20 +74,20 @@ class Config
      */
     protected function getEnvValue(string $property, string $prefix, string $shortPrefix)
     {
-        if (($value = getenv("{$shortPrefix}.{$property}")) !== false)
+        if (($value = getenv("{$shortPrefix}.{$property}")) !== FALSE)
         {
             return $value;
         }
-        elseif (($value = getenv("{$prefix}.{$property}")) !== false)
+        elseif (($value = getenv("{$prefix}.{$property}")) !== FALSE)
         {
             return $value;
         }
-        elseif (($value = getenv($property)) !== false && $property != 'path')
+        elseif (($value = getenv($property)) !== FALSE && $property != 'path')
         {
             return $value;
         }
 
-        return null;
+        return NULL;
     }
 
 }

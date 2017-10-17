@@ -1,11 +1,15 @@
 <?php
 
-abstract class KintObject
-{
-	/** @var string type of variable, can be set in inherited object or in static::parse() method */
+abstract class KintObject {
+
+	/**
+ * @var string type of variable, can be set in inherited object or in static::parse() method 
+*/
 	public $name = 'NOT SET';
 
-	/** @var string quick variable value displayed inline */
+	/**
+ * @var string quick variable value displayed inline 
+*/
 	public $value;
 
 	/**

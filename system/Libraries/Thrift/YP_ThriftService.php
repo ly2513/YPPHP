@@ -20,14 +20,12 @@ $loader->registerDefinition('tutorial', GEN_DIR);
 $loader->register();
 
 /**
- *
- *
  * Class ThriftService
  *
  * @package YP\Libraries\Thrift
  */
-class YP_ThriftService
-{
+class YP_ThriftService {
+
     /**
      * IP
      *
@@ -47,7 +45,7 @@ class YP_ThriftService
      *
      * @var object
      */
-    protected $processor = null;
+    protected $processor = NULL;
 
     /**
      * 使用的协议,默认TBinaryProtocol,可更改
@@ -75,7 +73,7 @@ class YP_ThriftService
      *
      * @var null
      */
-    public $log = null;
+    public $log = NULL;
 
     /**
      * 服务文件路径
@@ -99,8 +97,8 @@ class YP_ThriftService
     public function __construct(\Config\ThriftService $config)
     {
         $this->config($config);
-//        call_user_func('onStart', $this);
-//        call_user_func('onConnect', $this);
+        //        call_user_func('onStart', $this);
+        //        call_user_func('onConnect', $this);
     }
 
     /**
@@ -130,7 +128,7 @@ class YP_ThriftService
     public function onStart($class)
     {
         // 检查类是否设置
-        if (!$class) {
+        if (! $class) {
             throw new \Exception('ThriftWorker->class not set');
         }
         self::$class = $class;
@@ -142,14 +140,14 @@ class YP_ThriftService
         $this->includeFile();
         // 检查类是否存在
         $processor_class_name = "\\Services\\" . self::$class . "\\" . self::$class . 'Processor';
-        if (!class_exists($processor_class_name)) {
+        if (! class_exists($processor_class_name)) {
             $this->log->error("Class $processor_class_name not found");
 
             return;
         }
         // 检查类是否存在
         $handler_class_name = "\\Services\\" . self::$class . "\\" . self::$class . 'Handler';
-        if (!class_exists($handler_class_name)) {
+        if (! class_exists($handler_class_name)) {
             $this->log->error("Class $handler_class_name not found");
 
             return;
@@ -195,7 +193,3 @@ class YP_ThriftService
     }
 
 }
-
-
-
-

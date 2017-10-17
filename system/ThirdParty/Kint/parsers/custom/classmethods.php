@@ -1,17 +1,18 @@
 <?php
 
-class Kint_Parsers_ClassMethods extends kintParser
-{
+class Kint_Parsers_ClassMethods extends kintParser {
+
 	private static $cache = array();
 
 	protected function _parse( &$variable )
 	{
-		if ( !KINT_PHP53 || !is_object( $variable ) ) return false;
+		if ( ! KINT_PHP53 || ! is_object( $variable ) ) { return FALSE;
+        }
 
 		$className = get_class( $variable );
 
 		# assuming class definition will not change inside one request
-		if ( !isset( self::$cache[ $className ] ) ) {
+		if ( ! isset( self::$cache[$className] ) ) {
 			$reflection = new ReflectionClass( $variable );
 
 			$public = $private = $protected = array();
@@ -52,11 +53,11 @@ class Kint_Parsers_ClassMethods extends kintParser
 							}
 
 							$defaultValue = 'array(' . implode( ', ', $arrayValues ) . ')';
-						} elseif ( $param->getDefaultValue() === null ) {
+						} elseif ( $param->getDefaultValue() === NULL ) {
 							$defaultValue = 'NULL';
-						} elseif ( $param->getDefaultValue() === false ) {
+						} elseif ( $param->getDefaultValue() === FALSE ) {
 							$defaultValue = 'false';
-						} elseif ( $param->getDefaultValue() === true ) {
+						} elseif ( $param->getDefaultValue() === TRUE ) {
 							$defaultValue = 'true';
 						} elseif ( $param->getDefaultValue() === '' ) {
 							$defaultValue = '""';
@@ -114,37 +115,37 @@ class Kint_Parsers_ClassMethods extends kintParser
 					$output->extendedValue .= "<small>Inherited from <i>{$declaringClassName}</i></small>\n";
 				}
 
-				$fileName = Kint::shortenPath( $method->getFileName() ) . ':' . $method->getStartLine();
+				$fileName               = Kint::shortenPath( $method->getFileName() ) . ':' . $method->getStartLine();
 				$output->extendedValue .= "<small>Defined in {$fileName}</small>";
 
 				$sortName = $access . $method->getName();
 
 				if ( $method->isPrivate() ) {
-					$private[ $sortName ] = $output;
+					$private[$sortName] = $output;
 				} elseif ( $method->isProtected() ) {
-					$protected[ $sortName ] = $output;
+					$protected[$sortName] = $output;
 				} else {
-					$public[ $sortName ] = $output;
+					$public[$sortName] = $output;
 				}
 			}
 
-			if ( !$private && !$protected && !$public ) {
-				self::$cache[ $className ] = false;
+			if ( ! $private && ! $protected && ! $public ) {
+				self::$cache[$className] = FALSE;
 			}
 
 			ksort( $public );
 			ksort( $protected );
 			ksort( $private );
 
-			self::$cache[ $className ] = $public + $protected + $private;
+			self::$cache[$className] = $public + $protected + $private;
 		}
 
-		if ( count( self::$cache[ $className ] ) === 0 ) {
-			return false;
+		if ( count( self::$cache[$className] ) === 0 ) {
+			return FALSE;
 		}
 
-		$this->value = self::$cache[ $className ];
+		$this->value = self::$cache[$className];
 		$this->type  = 'Available methods';
-		$this->size  = count( self::$cache[ $className ] );
+		$this->size  = count( self::$cache[$className] );
 	}
 }

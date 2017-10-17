@@ -22,9 +22,11 @@ class CreateCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('thrift:create')->setDescription('生成thrift文件.')->setDefinition([
-            new InputOption('thrift-name', 'f', InputOption::VALUE_REQUIRED, 'thrift文件名称.'),
-        ]);
+        $this->setName('thrift:create')->setDescription('生成thrift文件.')->setDefinition(
+            [
+             new InputOption('thrift-name', 'f', InputOption::VALUE_REQUIRED, 'thrift文件名称.'),
+            ]
+        );
     }
 
     /**
@@ -38,7 +40,7 @@ class CreateCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $thriftName = $input->getOption('thrift-name');
-        if (!$thriftName) {
+        if (! $thriftName) {
             $output->writeln(sprintf('请输入thrift文件名称!'));
 
             return false;
@@ -47,7 +49,7 @@ class CreateCommand extends Command
         $path       = ThriftClient::$thriftPath;
         is_dir($path) or mkdir($path, 0777, true);
         is_file($path . $thriftName) or touch($path . $thriftName);
-        if (!is_file($path . $thriftName)) {
+        if (! is_file($path . $thriftName)) {
             $output->writeln(sprintf('创建thrift文件失败!'));
         }
 

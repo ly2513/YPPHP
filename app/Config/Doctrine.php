@@ -13,14 +13,14 @@ namespace Config;
  *
  * @package Config
  */
-class Doctrine
-{
+class Doctrine {
+
     /**
      * Doctrine实体管理器
      *
      * @var \Doctrine\ORM\EntityManager|null
      */
-    public $em = null;
+    public $em = NULL;
 
     /**
      * Doctrine constructor.
@@ -45,7 +45,7 @@ class Doctrine
         
         // 设置一些配置
         $config = new \Doctrine\ORM\Configuration;
-        $cache = new \Doctrine\Common\Cache\ArrayCache;
+        $cache  = new \Doctrine\Common\Cache\ArrayCache;
         $config->setMetadataCacheImpl($cache);
         $config->setQueryCacheImpl($cache);
         
@@ -61,18 +61,18 @@ class Doctrine
         $config->setMetadataDriverImpl($yamlDriver);
 
         // 读取数据库配置
-        $db = new Database();
-        $con = (array)$db->getDB();
+        $db  = new Database();
+        $con = (array) $db->getDB();
 
         // 数据库连接信息
         $connectionOptions = [
-            'driver'   => $con['doctrine']['dbdriver'],
-            'user'     => $con['doctrine']['username'],
-            'password' => $con['doctrine']['password'],
-            'host'     => $con['doctrine']['hostname'],
-            'dbname'   => $con['doctrine']['database'],
-            'charset'  => $con['doctrine']['char_set'],
-        ];
+                              'driver'   => $con['doctrine']['dbdriver'],
+                              'user'     => $con['doctrine']['username'],
+                              'password' => $con['doctrine']['password'],
+                              'host'     => $con['doctrine']['hostname'],
+                              'dbname'   => $con['doctrine']['database'],
+                              'charset'  => $con['doctrine']['char_set'],
+                             ];
         // 创建实体管理器
         $em = \Doctrine\ORM\EntityManager::create($connectionOptions, $config);
         // 将实体管理器保存为一个成员，在YP的控制器中使用

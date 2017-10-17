@@ -1,10 +1,11 @@
 <?php
 
-class Kint_Parsers_Timestamp extends kintParser
-{
+class Kint_Parsers_Timestamp extends kintParser {
+
 	private static function _fits( $variable )
 	{
-		if ( !is_string( $variable ) && !is_int( $variable ) ) return false;
+		if ( ! is_string( $variable ) && ! is_int( $variable ) ) { return FALSE;
+        }
 
 		$len = strlen( (int) $variable );
 		return
@@ -18,7 +19,8 @@ class Kint_Parsers_Timestamp extends kintParser
 
 	protected function _parse( & $variable )
 	{
-		if ( !self::_fits( $variable ) ) return false;
+		if ( ! self::_fits( $variable ) ) { return FALSE;
+        }
 
 		$var = strlen( $variable ) === 13 ? substr( $variable, 0, -3 ) : $variable;
 

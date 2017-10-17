@@ -10,8 +10,8 @@ namespace YP\Libraries;
 
 use YP\Core\YP_IncomingRequest as IncomingRequest;
 
-class YP_Validation
-{
+class YP_Validation {
+
     /**
      * 加载带有验证功能的文件。
      *
@@ -92,7 +92,7 @@ class YP_Validation
      *
      * @return bool
      */
-    public function run(array $data = null, string $group = null): bool
+    public function run(array $data = NULL, string $group = NULL): bool
     {
         $data = $data ?? $this->data;
         $this->loadRuleSets();
@@ -110,13 +110,13 @@ class YP_Validation
             }
         }
 
-        return count($this->errors) > 0 ? false : true;
+        return count($this->errors) > 0 ? FALSE : TRUE;
     }
 
     /**
      * 运行验证某个值，返回TRUE或false确定是否成功验证。
      *
-     * @param        $value  验证的值
+     * @param $value  验证的值
      * @param string $rule   验证规则
      * @param array  $errors 错误
      *
@@ -127,9 +127,7 @@ class YP_Validation
         $this->reset();
         $this->setRule('check', $rule, $errors);
 
-        return $this->run([
-            'check' => $value
-        ]);
+        return $this->run(['check' => $value]);
     }
 
     /**
@@ -137,54 +135,54 @@ class YP_Validation
      * 并检查下一个校验参数,这样就可以收集到所有的错误
      *
      * @param string $field
-     * @param        $value
+     * @param $value
      * @param null   $rules
      * @param array  $data
      *
      * @return bool
      */
-    protected function processRules(string $field, $value, $rules = null, array $data)
+    protected function processRules(string $field, $value, $rules = NULL, array $data)
     {
         foreach ($rules as $rule) {
             // 检测参数是否为合法的可调用结构
             $callable = is_callable($rule);
-            $passed   = false;
+            $passed   = FALSE;
             // 规则可以包含最大长度为5的参数,即最多存放5个参数
-            $param = false;
-            if (!$callable && preg_match('/(.*?)\[(.*)\]/', $rule, $match)) {
+            $param = FALSE;
+            if (! $callable && preg_match('/(.*?)\[(.*)\]/', $rule, $match)) {
                 $rule  = $match[1];
                 $param = $match[2];
             }
             // 规则中自定义错误的占位符
-            $error = null;
+            $error = NULL;
             // 如果存在调用函数,将在这进行调用
             if ($callable) {
-                $passed = $param === false ? $rule($value) : $rule($value, $param, $data);
+                $passed = $param === FALSE ? $rule($value) : $rule($value, $param, $data);
             } else {
-                $found = false;
+                $found = FALSE;
                 // 检查我们的规则集
                 foreach ($this->ruleSetInstances as $set) {
-                    if (!method_exists($set, $rule)) {
+                    if (! method_exists($set, $rule)) {
                         continue;
                     }
-                    $found  = true;
-                    $passed = $param === false ? $set->$rule($value, $error) : $set->$rule($value, $param, $data, $error);
+                    $found  = TRUE;
+                    $passed = $param === FALSE ? $set->$rule($value, $error) : $set->$rule($value, $param, $data, $error);
                     break;
                 }
                 // 如果规则在任何地方没有找到，我们应该抛出一个异常，使开发人员可以找到它
-                if (!$found) {
+                if (! $found) {
                     throw new \InvalidArgumentException(lang('Validation.ruleNotFound'));
                 }
             }
             // 如果错误信息不存在,就设置错误信息
-            if ($passed === false) {
+            if ($passed === FALSE) {
                 $this->errors[$field] = is_null($error) ? $this->getErrorMessage($rule, $field) : $error;
 
-                return false;
+                return FALSE;
             }
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -218,9 +216,7 @@ class YP_Validation
     public function setRule(string $field, string $rule, array $errors = [])
     {
         $this->rules[$field] = $rule;
-        $this->customErrors  = array_merge($this->customErrors, [
-            $field => $errors
-        ]);
+        $this->customErrors  = array_merge($this->customErrors, [$field => $errors]);
 
         return $this;
     }
@@ -247,7 +243,7 @@ class YP_Validation
     public function setRules(array $rules, array $errors = []): self
     {
         $this->rules = $rules;
-        if (!empty($errors)) {
+        if (! empty($errors)) {
             $this->customErrors = $errors;
         }
 
@@ -285,10 +281,10 @@ class YP_Validation
      */
     public function getRuleGroup(string $group): array
     {
-        if (!isset($this->config->$group)) {
+        if (! isset($this->config->$group)) {
             throw new \InvalidArgumentException(sprintf(lang('Validation.groupNotFound'), $group));
         }
-        if (!is_array($this->config->$group)) {
+        if (! is_array($this->config->$group)) {
             throw new \InvalidArgumentException(sprintf(lang('Validation.groupNotArray'), $group));
         }
 
@@ -319,7 +315,7 @@ class YP_Validation
      */
     public function listErrors(string $template = 'list'): string
     {
-        if (!array_key_exists($template, $this->config->templates)) {
+        if (! array_key_exists($template, $this->config->templates)) {
             throw new \InvalidArgumentException($template . ' is not a valid Validation template.');
         }
 
@@ -336,10 +332,10 @@ class YP_Validation
      */
     public function showError(string $field, string $template = 'single'): string
     {
-        if (!array_key_exists($field, $this->errors)) {
+        if (! array_key_exists($field, $this->errors)) {
             return '';
         }
-        if (!array_key_exists($template, $this->config->templates)) {
+        if (! array_key_exists($template, $this->config->templates)) {
             throw new \InvalidArgumentException($template . ' is not a valid Validation template.');
         }
 
@@ -367,15 +363,15 @@ class YP_Validation
      *
      * @param string|null $group
      */
-    protected function loadRuleGroup(string $group = null)
+    protected function loadRuleGroup(string $group = NULL)
     {
         if (empty($group)) {
             return;
         }
-        if (!isset($this->config->$group)) {
+        if (! isset($this->config->$group)) {
             throw new \InvalidArgumentException(sprintf(lang('Validation.groupNotFound'), $group));
         }
-        if (!is_array($this->config->$group)) {
+        if (! is_array($this->config->$group)) {
             throw new \InvalidArgumentException(sprintf(lang('Validation.groupNotArray'), $group));
         }
         $this->rules = $this->config->$group;
@@ -405,9 +401,9 @@ class YP_Validation
      *
      * @return string
      */
-    public function getError(string $field = null): string
+    public function getError(string $field = NULL): string
     {
-        if ($field === null && count($this->rules) === 1) {
+        if ($field === NULL && count($this->rules) === 1) {
             reset($this->rules);
             $field = key($this->rules);
         }
@@ -454,7 +450,7 @@ class YP_Validation
      *
      * @return string
      */
-    protected function getErrorMessage(string $rule, string $field, string $param = null): string
+    protected function getErrorMessage(string $rule, string $field, string $param = NULL): string
     {
         // 检查自定义消息是否已被用户定义
         if (isset($this->customErrors[$field][$rule])) {
@@ -492,20 +488,20 @@ class YP_Validation
      *
      * @return string
      */
-    public function render(string $view, $saveData = null): string
+    public function render(string $view, $saveData = NULL): string
     {
-        $start = microtime(true);
+        $start = microtime(TRUE);
         // 将结果存储在这里，即使在视图中调用多个视图，它也不会清除，除非我们自己来清除
-        if ($saveData !== null) {
+        if ($saveData !== NULL) {
             $this->saveData = $saveData;
         }
         $view = str_replace('.html', '', $view) . '.html';
-        if (!file_exists($view)) {
+        if (! file_exists($view)) {
             // 视图文件不存在
             throw new \InvalidArgumentException('View file not found: ' . $view);
         }
         extract($this->viewData);
-        if (!$this->saveData) {
+        if (! $this->saveData) {
             $this->viewData = [];
         }
         ob_start();
@@ -513,7 +509,7 @@ class YP_Validation
         $output = ob_get_contents();
         @ob_end_clean();
         $this->setVar('start_time', $start);
-        $this->setVar('end_time', microtime(true));
+        $this->setVar('end_time', microtime(TRUE));
 
         return $output;
     }
@@ -527,9 +523,9 @@ class YP_Validation
      *
      * @return YP_Validation
      */
-    public function setVar(string $name, $value = null, string $context = null): self
+    public function setVar(string $name, $value = NULL, string $context = NULL): self
     {
-        if (!empty($context)) {
+        if (! empty($context)) {
             $value = esc($value, $context);
         }
         $this->viewData[$name] = $value;

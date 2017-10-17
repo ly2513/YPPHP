@@ -17,8 +17,8 @@ define('EVENT_PRIORITY_HIGH', 10);
  *
  * @package YP\Core
  */
-class YP_Hooks
-{
+class YP_Hooks {
+
     /**
      * 监听数组
      *
@@ -31,7 +31,7 @@ class YP_Hooks
      *
      * @var bool
      */
-    protected static $haveReadFromFile = false;
+    protected static $haveReadFromFile = FALSE;
 
     /**
      * 包含加载事件的文件的路径
@@ -45,10 +45,10 @@ class YP_Hooks
      *
      * @param string|null $file
      */
-    public static function initialize(string $file = null)
+    public static function initialize(string $file = NULL)
     {
         // 不要复写任何东西
-        if (!empty(self::$eventsFile)) {
+        if (! empty(self::$eventsFile)) {
             return;
         }
         // 钩子事件默认路径
@@ -66,21 +66,20 @@ class YP_Hooks
      *  Hooks::on('create', [$myInstance, 'myMethod']);  // 现有的实例方法
      *  Hooks::on('create', function() {});              // 闭包
      *
-     *
-     * @param          $event_name
+     * @param $event_name
      * @param callable $callback
      * @param int      $priority
      */
     public static function on($event_name, callable $callback, $priority = EVENT_PRIORITY_NORMAL)
     {
-        if (!isset(self::$listeners[$event_name])) {
+        if (! isset(self::$listeners[$event_name])) {
             self::$listeners[$event_name] = [
-                true,
-                [$priority],
-                [$callback],
-            ];
+                                             TRUE,
+                                             [$priority],
+                                             [$callback],
+                                            ];
         } else {
-            self::$listeners[$event_name][0]   = false; // 未排序
+            self::$listeners[$event_name][0]   = FALSE; // 未排序
             self::$listeners[$event_name][1][] = $priority;
             self::$listeners[$event_name][2][] = $callback;
         }
@@ -90,7 +89,7 @@ class YP_Hooks
      * 触发钩子事件发生
      * 通过所有的绑定方法运行,直到：1、所有订户已完成 2、方法返回false，在该点执行的用户停止。
      *
-     * @param       $event_name
+     * @param $event_name
      * @param array ...$arguments
      *
      * @return bool
@@ -98,22 +97,22 @@ class YP_Hooks
     public static function trigger($event_name, ...$arguments): bool
     {
         // 从配置文件Config/Hooks中读取所有的钩子事件
-        if (!self::$haveReadFromFile) {
+        if (! self::$haveReadFromFile) {
             self::initialize();
             if (is_file(self::$eventsFile)) {
                 include self::$eventsFile;
             }
-            self::$haveReadFromFile = true;
+            self::$haveReadFromFile = TRUE;
         }
         $listeners = self::listeners($event_name);
         foreach ($listeners as $listener) {
             $result = $listener(...$arguments);
-            if ($result === false) {
-                return false;
+            if ($result === FALSE) {
+                return FALSE;
             }
         }
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -126,15 +125,15 @@ class YP_Hooks
      */
     public static function listeners($event_name): array
     {
-        if (!isset(self::$listeners[$event_name])) {
+        if (! isset(self::$listeners[$event_name])) {
             return [];
         }
         // 未排序
-        if (!self::$listeners[$event_name][0]) {
+        if (! self::$listeners[$event_name][0]) {
             // 进行排序
             array_multisort(self::$listeners[$event_name][1], SORT_NUMERIC, self::$listeners[$event_name][2]);
             // 标记已排序
-            self::$listeners[$event_name][0] = true;
+            self::$listeners[$event_name][0] = TRUE;
         }
 
         return self::$listeners[$event_name][2];
@@ -144,26 +143,26 @@ class YP_Hooks
      * 从事件中移除单个侦听器。
      * 如果找不到监听器，返回FALSE，如果已删除,则返回TRUE
      *
-     * @param          $event_name
+     * @param $event_name
      * @param callable $listener
      *
      * @return bool
      */
     public static function removeListener($event_name, callable $listener): bool
     {
-        if (!isset(self::$listeners[$event_name])) {
-            return false;
+        if (! isset(self::$listeners[$event_name])) {
+            return FALSE;
         }
         foreach (self::$listeners[$event_name][2] as $index => $check) {
             if ($check === $listener) {
                 unset(self::$listeners[$event_name][1][$index]);
                 unset(self::$listeners[$event_name][2][$index]);
 
-                return true;
+                return TRUE;
             }
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -172,9 +171,9 @@ class YP_Hooks
      *
      * @param null $event_name
      */
-    public static function removeAllListeners($event_name = null)
+    public static function removeAllListeners($event_name = NULL)
     {
-        if (!is_null($event_name)) {
+        if (! is_null($event_name)) {
             unset(self::$listeners[$event_name]);
         } else {
             self::$listeners = [];

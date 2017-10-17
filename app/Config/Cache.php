@@ -8,8 +8,8 @@
  */
 namespace Config;
 
-class Cache
-{
+class Cache {
+
     /**
      * 缓存处理类型
      * 可能的值: file,redis,dummy
@@ -42,7 +42,7 @@ class Cache
      *
      * @var bool
      */
-    public $cacheQueryString = false;
+    public $cacheQueryString = FALSE;
 
     /**
      * 缓存前缀
@@ -56,7 +56,7 @@ class Cache
      *
      * @var array
      */
-    public static $redis = null;
+    public static $redis = NULL;
 
     /**
      * 处理缓存方式,key为类的别名,value为处理缓存的类
@@ -64,10 +64,10 @@ class Cache
      * @var array
      */
     public $validHandlers = [
-        'dummy' => \YP\Libraries\Cache\YP_Dummy::class,
-        'file'  => \YP\Libraries\Cache\YP_File::class,
-        'redis' => \YP\Libraries\Cache\YP_Redis::class,
-    ];
+                             'dummy' => \YP\Libraries\Cache\YP_Dummy::class,
+                             'file'  => \YP\Libraries\Cache\YP_File::class,
+                             'redis' => \YP\Libraries\Cache\YP_Redis::class,
+                            ];
 
     /**
      * Cache constructor.

@@ -17,8 +17,8 @@ namespace YP\Libraries\Thrift;
  *
  * @package YP\Libraries\Thrift\Client
  */
-class YP_AddressManager
-{
+class YP_AddressManager {
+
     /**
      * 多少几率去访问故障节点，用来判断节点是否已经恢复
      *
@@ -52,33 +52,35 @@ class YP_AddressManager
      *
      * @var array
      */
-    private static $config = null;
+    private static $config = NULL;
 
     /**
      * 故障节点共享内存fd
      *
      * @var resource
      */
-    private static $badAddressShmFd = null;
+    private static $badAddressShmFd = NULL;
 
     /**
      * 故障的节点列表
      *
      * @var array
      */
-    private static $badAddressList = null;
+    private static $badAddressList = NULL;
 
     /**
      * 信号量的fd
+     *
      * @var resource
      */
-    private static $semFd = null;
+    private static $semFd = NULL;
 
     /**
      * 是否支持共享内存
+     *
      * @var bool
      */
-    protected static $shmEnable = true;
+    protected static $shmEnable = TRUE;
 
     /**
      * 设置/获取 配置
@@ -99,14 +101,14 @@ class YP_AddressManager
      */
     public static function config(array $config = [])
     {
-        if (!empty($config)) {
+        if (! empty($config)) {
             // 初始化配置
             self::$config = $config;
             if (self::$shmEnable && extension_loaded('sysvshm') && extension_loaded('sysvsem')) {
                 // 检查现在配置md5与共享内存中md5是否匹配，用来判断配置是否有更新
                 self::checkConfigMd5();
-            } else if (self::$shmEnable) {
-                self::$shmEnable = false;
+            } elseif (self::$shmEnable) {
+                self::$shmEnable = FALSE;
             }
             // 从共享内存中获得故障节点列表
             self::getBadAddressList();
@@ -126,7 +128,7 @@ class YP_AddressManager
     public static function getOneAddress($key)
     {
         // 配置中没有配置这个服务
-        if (!isset(self::$config[$key])) {
+        if (! isset(self::$config[$key])) {
             throw new \Exception("Address[$key] is not exist!");
         }
         // 总的节点列表
@@ -169,7 +171,7 @@ class YP_AddressManager
      */
     public static function getShmFd()
     {
-        if (!self::$badAddressShmFd && self::$shmEnable) {
+        if (! self::$badAddressShmFd && self::$shmEnable) {
             self::$badAddressShmFd = shm_attach(self::BAD_ASSRESS_LIST_SHM_KEY);
         }
 
@@ -183,7 +185,7 @@ class YP_AddressManager
      */
     public static function getSemFd()
     {
-        if (!self::$semFd && self::$shmEnable) {
+        if (! self::$semFd && self::$shmEnable) {
             self::$semFd = sem_get(self::BAD_ASSRESS_LIST_SHM_KEY);
         }
 
@@ -200,12 +202,12 @@ class YP_AddressManager
     public static function checkConfigMd5()
     {
         // 没有加载扩展
-        if (!self::$shmEnable) {
-            return false;
+        if (! self::$shmEnable) {
+            return FALSE;
         }
         // 获取shm_fd
-        if (!self::getShmFd()) {
-            return false;
+        if (! self::getShmFd()) {
+            return FALSE;
         }
         // 尝试读取md5，可能其它进程已经写入了
         $status         = shm_has_var(self::getShmFd(), self::SHM_CONFIG_MD5);
@@ -213,7 +215,7 @@ class YP_AddressManager
         $config_md5_now = md5(serialize(self::$config));
         // 有md5值，则判断是否与当前md5值相等
         if ($config_md5 === $config_md5_now) {
-            return true;
+            return TRUE;
         }
         self::$badAddressList = [];
         // 清空badAddressList
@@ -229,7 +231,7 @@ class YP_AddressManager
             return $ret;
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -239,20 +241,20 @@ class YP_AddressManager
      *
      * @return array|mixed
      */
-    public static function getBadAddressList($use_cache = true)
+    public static function getBadAddressList($use_cache = TRUE)
     {
         // 还没有初始化故障节点
-        if (null === self::$badAddressList || !$use_cache) {
+        if (NULL === self::$badAddressList || ! $use_cache) {
             $bad_address_list = [];
             if (self::$shmEnable && shm_has_var(self::getShmFd(), self::SHM_BAD_ADDRESS_KEY)) {
                 // 获取故障节点
                 $bad_address_list = shm_get_var(self::getShmFd(), self::SHM_BAD_ADDRESS_KEY);
-                if (!is_array($bad_address_list)) {
+                if (! is_array($bad_address_list)) {
                     // 可能是共享内寻写怀了，重新清空
                     self::getMutex();
                     shm_remove(self::getShmFd());
                     self::releaseMutex();
-                    self::$badAddressShmFd = null;
+                    self::$badAddressShmFd = NULL;
                     self::$badAddressList  = [];
                 } else {
                     self::$badAddressList = $bad_address_list;
@@ -274,10 +276,10 @@ class YP_AddressManager
      */
     public static function kickAddress($address)
     {
-        if (!self::$shmEnable) {
-            return false;
+        if (! self::$shmEnable) {
+            return FALSE;
         }
-        $bad_address_list     = self::getBadAddressList(false);
+        $bad_address_list     = self::getBadAddressList(FALSE);
         $bad_address_list[]   = $address;
         $bad_address_list     = array_unique($bad_address_list);
         self::$badAddressList = $bad_address_list;
@@ -297,13 +299,13 @@ class YP_AddressManager
      */
     public static function recoverAddress($address)
     {
-        if (!self::$shmEnable) {
-            return false;
+        if (! self::$shmEnable) {
+            return FALSE;
         }
-        $bad_address_list      = self::getBadAddressList(false);
+        $bad_address_list      = self::getBadAddressList(FALSE);
         $bad_address_list_flip = is_array($bad_address_list) ? array_flip($bad_address_list) : [];
-        if (!isset($bad_address_list_flip[$address])) {
-            return true;
+        if (! isset($bad_address_list_flip[$address])) {
+            return TRUE;
         }
         unset($bad_address_list_flip[$address]);
         $bad_address_list     = array_keys($bad_address_list_flip);
@@ -324,7 +326,7 @@ class YP_AddressManager
     {
         ($fd = self::getSemFd()) && sem_acquire($fd);
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -336,7 +338,7 @@ class YP_AddressManager
     {
         ($fd = self::getSemFd()) && sem_release($fd);
 
-        return true;
+        return TRUE;
     }
 
 }
@@ -344,15 +346,13 @@ class YP_AddressManager
 // ================ 以下是测试代码 ======================
 if (PHP_SAPI == 'cli' && isset($argv[0]) && $argv[0] == basename(__FILE__)) {
     YP_AddressManager::config([
-        'HelloWorld'        => [
-            '127.0.0.1:9090',
-            '127.0.0.2:9090',
-            '127.0.0.3:9090',
-        ],
-        'HelloWorldService' => [
-            '127.0.0.4:9090'
-        ],
-    ]);
+                               'HelloWorld'        => [
+                                                       '127.0.0.1:9090',
+                                                       '127.0.0.2:9090',
+                                                       '127.0.0.3:9090',
+                                                      ],
+                               'HelloWorldService' => ['127.0.0.4:9090'],
+                              ]);
     echo "\n剔除address 127.0.0.1:9090 127.0.0.2:9090，放入故障address列表\n";
     YP_AddressManager::kickAddress('127.0.0.1:9090');
     YP_AddressManager::kickAddress('127.0.0.2:9090');
@@ -366,11 +366,11 @@ if (PHP_SAPI == 'cli' && isset($argv[0]) && $argv[0] == basename(__FILE__)) {
     var_export(YP_AddressManager::getBadAddressList());
     echo "\n配置有更改，md5会改变，则故障address列表自动清空\n";
     YP_AddressManager::config([
-        'HelloWorld' => [
-            '127.0.0.2:9090',
-            '127.0.0.3:9090',
-        ],
-    ]);
+                               'HelloWorld' => [
+                                                '127.0.0.2:9090',
+                                                '127.0.0.3:9090',
+                                               ],
+                              ]);
     echo "\n打印故障address列表\n";
     var_export(YP_AddressManager::getBadAddressList());
 }

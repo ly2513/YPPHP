@@ -11,8 +11,8 @@ namespace Config;
 // 加载框架的运行时需要加载类
 require SYSTEM_PATH . 'Config/AutoloadConfig.php';
 
-class Autoload extends \YP\Config\AutoloadConfig
-{
+class Autoload extends \YP\Config\AutoloadConfig {
+
     /**
      * Autoload constructor.
      */
@@ -21,12 +21,13 @@ class Autoload extends \YP\Config\AutoloadConfig
         // 执行父类构造方法
         parent::__construct();
         // 命名空间映射
-        $namespaceMap = [
-            'Config'      => APP_PATH . 'Config',
-            'Core'        => APP_PATH . 'Core',
-            'Function'    => APP_PATH . 'Function',
-            APP_NAMESPACE => APP_PATH,
-        ];
+        $namespaceMap =
+            [
+             'Config'      => APP_PATH . 'Config',
+             'Core'        => APP_PATH . 'Core',
+             'Function'    => APP_PATH . 'Function',
+             APP_NAMESPACE => APP_PATH,
+            ];
         $classMap     = [];
         // 将用户设置的命名空间与系统设置的命名空间进行合并
         $this->namespaceMap = array_merge($this->namespaceMap, $namespaceMap);

@@ -39,10 +39,12 @@ class StatusCommand extends BaseCommand
      */
     protected function configure()
     {
-        $this->setName('migrate:status')->setDescription('显示每个迁移的状态.')->setDefinition([
-            new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
-            new InputOption('path', null, InputOption::VALUE_OPTIONAL, '要使用的迁移路径路径.'),
-        ]);
+        $this->setName('migrate:status')->setDescription('显示每个迁移的状态.')->setDefinition(
+            [
+             new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
+             new InputOption('path', null, InputOption::VALUE_OPTIONAL, '要使用的迁移路径路径.'),
+            ]
+        );
     }
 
     /**
@@ -55,12 +57,12 @@ class StatusCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if (!$this->migrator->repositoryExists()) {
+        if (! $this->migrator->repositoryExists()) {
             return $this->error('No migrations found.');
         }
         $this->migrator->setConnection($input->getOption('database'));
         // 设置迁移文件目录
-        if (!is_null($path = $input->getOption('path'))) {
+        if (! is_null($path = $input->getOption('path'))) {
             $path = ROOT_PATH . $path;
         } else {
             $path = $this->getMigrationPath();
@@ -68,10 +70,11 @@ class StatusCommand extends BaseCommand
         $ran        = $this->migrator->getRepository()->getRan();
         $migrations = [];
         foreach ($this->migrator->getMigrationFiles($path) as $migration) {
-            $migrations[] = in_array($migration, $ran) ? ['<info>Y</info>', $migration] : [
-                '<fg=red>N</fg=red>',
-                $migration
-            ];
+            $migrations[] = in_array($migration, $ran) ? ['<info>Y</info>', $migration] :
+                [
+                 '<fg=red>N</fg=red>',
+                 $migration,
+                ];
         }
         if (count($migrations) > 0) {
             $this->table(['Ran?', 'Migration'], $migrations, 'default', $output);

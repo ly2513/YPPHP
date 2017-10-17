@@ -46,11 +46,13 @@ class ResetCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('migrate:reset')->setDescription('回滚所有的迁移操作.')->setDefinition([
-            new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
-            new InputOption('force', null, InputOption::VALUE_NONE, '强行在生产环境操作运行.'),
-            new InputOption('pretend', null, InputOption::VALUE_NONE, '运行的SQL查询.'),
-        ]);
+        $this->setName('migrate:reset')->setDescription('回滚所有的迁移操作.')->setDefinition(
+            [
+             new InputOption('database', null, InputOption::VALUE_OPTIONAL, '要使用的数据库连接.'),
+             new InputOption('force', null, InputOption::VALUE_NONE, '强行在生产环境操作运行.'),
+             new InputOption('pretend', null, InputOption::VALUE_NONE, '运行的SQL查询.'),
+            ]
+        );
     }
 
     /**
@@ -77,7 +79,7 @@ class ResetCommand extends Command
                 $style     = new SymfonyStyle($input, $output);
                 $confirmed = $style->confirm('Do you really wish to run this command?');
                 unset($style);
-                if (!$confirmed) {
+                if (! $confirmed) {
                     $output->writeln('Command Cancelled!');
                     $status = false;
                 } else {
@@ -85,14 +87,14 @@ class ResetCommand extends Command
                 }
             }
         }
-        if (!$status) {
-            return;
+        if (! $status) {
+            return ;
         }
         $this->migrator->setConnection($input->getOption('database'));
-        if (!$this->migrator->repositoryExists()) {
+        if (! $this->migrator->repositoryExists()) {
             $output->writeln('<comment>Migration table not found.</comment>');
 
-            return;
+            return ;
         }
         $pretend = $input->getOption('pretend');
         $this->migrator->reset($pretend);

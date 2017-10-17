@@ -17,8 +17,8 @@ use InvalidArgumentException;
  *
  * @package YP\Libraries\Migrations
  */
-class YP_MigrationCreator
-{
+class YP_MigrationCreator {
+
 
     /**
      * 注册后创建钩子
@@ -30,15 +30,15 @@ class YP_MigrationCreator
     /**
      * 在给定路径上创建一个新的迁移
      *
-     * @param  string $name  迁移名称
-     * @param  string $path  路径
-     * @param  string $table 表名
-     * @param  bool   $create
+     * @param string $name  迁移名称
+     * @param string $path  路径
+     * @param string $table 表名
+     * @param bool   $create
      *
      * @return string
      * @throws \Exception
      */
-    public function create($name, $path, $table = null, $create = false)
+    public function create($name, $path, $table = NULL, $create = FALSE)
     {
         $this->ensureMigrationDoesNotAlreadyExist($name);
         $path = $this->getPath($name, $path);
@@ -53,7 +53,7 @@ class YP_MigrationCreator
     /**
      * 确保使用给定的迁移名称不存在
      *
-     * @param  string $name
+     * @param string $name
      *
      * @return void
      *
@@ -69,8 +69,8 @@ class YP_MigrationCreator
     /**
      * 获取迁移的模板文件
      *
-     * @param  string $table
-     * @param  bool   $create
+     * @param string $table
+     * @param bool   $create
      *
      * @return string
      */
@@ -100,7 +100,7 @@ class YP_MigrationCreator
     {
         $temp = str_replace('DummyClass', $this->getClassName($name), $temp);
         // 在这里，我们将用开发人员指定的表替换表位占用符合，这对于快速从控制台创建一个表创建或更新迁移非常有用，而不是手动输入名称。
-        if (!is_null($table)) {
+        if (! is_null($table)) {
             $temp = str_replace('DummyTable', $table, $temp);
         }
 
@@ -177,13 +177,13 @@ class YP_MigrationCreator
     /**
      * 写入文件的内容
      *
-     * @param  string $path
-     * @param  string $contents
-     * @param  bool   $lock
+     * @param string $path
+     * @param string $contents
+     * @param bool   $lock
      *
      * @return int
      */
-    public function put($path, $contents, $lock = false)
+    public function put($path, $contents, $lock = FALSE)
     {
         return file_put_contents($path, $contents, $lock ? LOCK_EX : 0);
     }
@@ -191,13 +191,13 @@ class YP_MigrationCreator
     /**
      * 获取文件的内容
      *
-     * @param      $path
+     * @param $path
      * @param bool $lock
      *
      * @return string
      * @throws Exception
      */
-    public function get($path, $lock = false)
+    public function get($path, $lock = FALSE)
     {
         if ($this->isFile($path)) {
             return $lock ? $this->sharedGet($path) : file_get_contents($path);

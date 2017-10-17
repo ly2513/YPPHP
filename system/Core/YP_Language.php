@@ -8,8 +8,8 @@
  */
 namespace YP\Core;
 
-class YP_Language
-{
+class YP_Language {
+
     public $language = [];
 
     /**
@@ -17,7 +17,7 @@ class YP_Language
      *
      * @var null|短语
      */
-    public $locale = null;
+    public $locale = NULL;
 
     /**
      * 存放对应的短语
@@ -38,7 +38,7 @@ class YP_Language
      *
      * @var bool
      */
-    public $intlSupport = false;
+    public $intlSupport = FALSE;
 
     /**
      * Language constructor.
@@ -51,7 +51,7 @@ class YP_Language
         // 判断是否存在消息格式化类
         if (class_exists('\MessageFormatter'))
         {
-            $this->intlSupport = true;
+            $this->intlSupport = TRUE;
         };
     }
 
@@ -67,7 +67,7 @@ class YP_Language
     {
         // 解析文件名和实际别名。将加载语言文件和字符串
         list($file, $line) = $this->parseLine($line);
-        $output = isset($this->language[$file][$line]) ? $this->language[$file][$line] : $line;
+        $output            = isset($this->language[$file][$line]) ? $this->language[$file][$line] : $line;
         if (count($args)) {
             $output = $this->formatMessage($output, $args);
         }
@@ -83,22 +83,22 @@ class YP_Language
      */
     public function parseLine($line): array
     {
-        if (strpos($line, '.') === false) {
+        if (strpos($line, '.') === FALSE) {
             return [
-                null,
-                $line
-            ];
+                    NULL,
+                    $line,
+                   ];
         }
         $file = substr($line, 0, strpos($line, '.'));
         $line = substr($line, strlen($file) + 1);
-        if (!array_key_exists($line, $this->language)) {
+        if (! array_key_exists($line, $this->language)) {
             $this->load($file);
         }
 
         return [
-            $file,
-            $this->lan[$line] ?? $line
-        ];
+                $file,
+                $this->lan[$line] ?? $line,
+               ];
     }
 
     /**
@@ -109,7 +109,7 @@ class YP_Language
      *
      * @return array
      */
-    protected function load(string $file, bool $return = false)
+    protected function load(string $file, bool $return = FALSE)
     {
         // 判断是否已调用
         if (in_array($file, $this->loaded)) {
@@ -117,7 +117,7 @@ class YP_Language
         }
         // 实例化一个语言配置对象
         $language = new \YP\Config\Language();
-        if (!array_key_exists($file, $this->language)) {
+        if (! array_key_exists($file, $this->language)) {
             $this->language[$file] = [];
         }
         // 设置需要调用的方法变量

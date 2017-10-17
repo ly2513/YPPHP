@@ -11,12 +11,12 @@
  * Class Data
  * 处理数组
  */
-final class YP_Data
-{
+final class YP_Data {
+
     /**
      * 返回多层栏目
      *
-     * @param        $data     操作的数组
+     * @param $data     操作的数组
      * @param int    $pid      一级PID的值
      * @param string $html     栏目名称前缀
      * @param string $fieldPri 唯一键名，如果是表则是表的主键
@@ -25,14 +25,15 @@ final class YP_Data
      *
      * @return array
      */
-    static public function channelLevel(
+    public static function channelLevel(
         $data,
         $pid = 0,
         $html = "&nbsp;",
         $fieldPri = 'cid',
         $fieldPid = 'pid',
         $level = 1
-    ) {
+    ) 
+    {
         if (empty($data)) {
             return [];
         }
@@ -53,7 +54,7 @@ final class YP_Data
     /**
      * 获得所有子栏目
      *
-     * @param        $data     栏目数据
+     * @param $data     栏目数据
      * @param int    $pid      操作的栏目
      * @param string $html     栏目名前字符
      * @param string $fieldPri 表主键
@@ -62,14 +63,15 @@ final class YP_Data
      *
      * @return array
      */
-    static public function channelList(
+    public static function channelList(
         $data,
         $pid = 0,
         $html = "&nbsp;",
         $fieldPri = 'cid',
         $fieldPid = 'pid',
         $level = 1
-    ) {
+    ) 
+    {
         $data = self::_channelList($data, $pid, $html, $fieldPri, $fieldPid, $level);
         if (empty($data)) {
             return $data;
@@ -78,13 +80,13 @@ final class YP_Data
             if ($m['_level'] == 1) {
                 continue;
             }
-            $data[$n]['_first'] = false;
-            $data[$n]['_end']   = false;
-            if (!isset($data[$n - 1]) || $data[$n - 1]['_level'] != $m['_level']) {
-                $data[$n]['_first'] = true;
+            $data[$n]['_first'] = FALSE;
+            $data[$n]['_end']   = FALSE;
+            if (! isset($data[$n - 1]) || $data[$n - 1]['_level'] != $m['_level']) {
+                $data[$n]['_first'] = TRUE;
             }
             if (isset($data[$n + 1]) && $data[$n]['_level'] > $data[$n + 1]['_level']) {
-                $data[$n]['_end'] = true;
+                $data[$n]['_end'] = TRUE;
             }
         }
         //更新key为栏目主键
@@ -99,7 +101,7 @@ final class YP_Data
     /**
      * 只供channelList方法使用
      *
-     * @param        $data
+     * @param $data
      * @param int    $pid
      * @param string $html
      * @param string $fieldPri
@@ -108,14 +110,15 @@ final class YP_Data
      *
      * @return array
      */
-    static private function _channelList(
+    private static function _channelList(
         $data,
         $pid = 0,
         $html = "&nbsp;",
         $fieldPri = 'cid',
         $fieldPid = 'pid',
         $level = 1
-    ) {
+    ) 
+    {
         if (empty($data)) {
             return [];
         }
@@ -137,16 +140,16 @@ final class YP_Data
     /**
      * 获得树状数据
      *
-     * @param        $data     数据
-     * @param        $title    字段名
+     * @param $data     数据
+     * @param $title    字段名
      * @param string $fieldPri 主键id
      * @param string $fieldPid 父id
      *
      * @return array
      */
-    static public function tree($data, $title, $fieldPri = 'cid', $fieldPid = 'pid')
+    public static function tree($data, $title, $fieldPri = 'cid', $fieldPid = 'pid')
     {
-        if (!is_array($data) || empty($data)) {
+        if (! is_array($data) || empty($data)) {
             return [];
         }
         $arr = \YP_Data::channelList($data, 0, '', $fieldPri, $fieldPid);
@@ -180,14 +183,14 @@ final class YP_Data
     /**
      * 获得所有父级栏目
      *
-     * @param        $data     栏目数据
-     * @param        $sid      子栏目
+     * @param $data     栏目数据
+     * @param $sid      子栏目
      * @param string $fieldPri 唯一键名，如果是表则是表的主键
      * @param string $fieldPid 父ID键名
      *
      * @return array
      */
-    static public function parentChannel($data, $sid, $fieldPri = 'cid', $fieldPid = 'pid')
+    public static function parentChannel($data, $sid, $fieldPri = 'cid', $fieldPid = 'pid')
     {
         if (empty($data)) {
             return $data;
@@ -197,7 +200,7 @@ final class YP_Data
                 if ($v[$fieldPri] == $sid) {
                     $arr[] = $v;
                     $_n    = self::parentChannel($data, $v[$fieldPid], $fieldPri, $fieldPid);
-                    if (!empty($_n)) {
+                    if (! empty($_n)) {
                         $arr = array_merge($arr, $_n);
                     }
                 }
@@ -210,9 +213,9 @@ final class YP_Data
     /**
      * 判断$s_cid是否是$d_cid的子栏目
      *
-     * @param        $data     栏目数据
-     * @param        $sid      子栏目id
-     * @param        $pid      父栏目id
+     * @param $data     栏目数据
+     * @param $sid      子栏目id
+     * @param $pid      父栏目id
      * @param string $fieldPri 主键
      * @param string $fieldPid 父id字段
      *
@@ -224,18 +227,18 @@ final class YP_Data
         foreach ($_data as $c) {
             //目标栏目为源栏目的子栏目
             if ($c[$fieldPri] == $sid) {
-                return true;
+                return TRUE;
             }
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
      * 检测是不否有子栏目
      *
-     * @param        $data     栏目数据
-     * @param        $cid      要判断的栏目cid
+     * @param $data     栏目数据
+     * @param $cid      要判断的栏目cid
      * @param string $fieldPid 父id表字段名
      *
      * @return bool
@@ -244,17 +247,17 @@ final class YP_Data
     {
         foreach ($data as $d) {
             if ($d[$fieldPid] == $cid) {
-                return true;
+                return TRUE;
             }
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
      * 递归实现迪卡尔乘积
      *
-     * @param       $arr 操作的数组
+     * @param $arr 操作的数组
      * @param array $tmp
      *
      * @return array

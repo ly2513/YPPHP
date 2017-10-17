@@ -19,8 +19,8 @@ use YP\Config\Config;
  *
  * @package YP\Libraries\Session
  */
-class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterface
-{
+class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterface {
+
     /**
      * 用于存储的数据库组
      *
@@ -40,7 +40,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
      *
      * @var null
      */
-    protected $db = null;
+    protected $db = NULL;
 
     /**
      * The database type, for locking purposes.
@@ -54,14 +54,14 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
      *
      * @var bool
      */
-    protected $rowExists = false;
+    protected $rowExists = FALSE;
 
     /**
      * Capsule对象
      *
      * @var Capsule|null
      */
-    protected $capsule = null;
+    protected $capsule = NULL;
 
     /**
      * YP_DatabaseHandler constructor.
@@ -90,7 +90,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
      */
     public function open($savePath, $name): bool
     {
-        return true;
+        return TRUE;
 
     }
 
@@ -117,7 +117,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
             }
             $this->createTable();
 
-            return true;
+            return TRUE;
         }
     }
 
@@ -127,7 +127,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
     protected function createTable()
     {
         // 如果表存在,就不创建
-        if (!Capsule::schema()->hasTable($this->table)) {
+        if (! Capsule::schema()->hasTable($this->table)) {
             Capsule::schema()->create($this->table, function ($table) {
                 $table->increments('id');
                 $table->string('session_id')->unique();
@@ -148,7 +148,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
      */
     public function read($sessionID)
     {
-        if ($this->lockSession($sessionID) == false) {
+        if ($this->lockSession($sessionID) == FALSE) {
             $this->fingerprint = md5('');
 
             return '';
@@ -162,8 +162,8 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
             $builder = $builder->where('ip_address', $_SERVER['REMOTE_ADDR']);
         }
         // 记录不存在时
-        if ($result = $builder->first() === null) {
-            $this->rowExists   = false;
+        if ($result = $builder->first() === NULL) {
+            $this->rowExists   = FALSE;
             $this->fingerprint = md5('');
 
             return '';
@@ -175,7 +175,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
             $result = ($this->platform === 'postgre') ? base64_decode(rtrim($result->data)) : $result->data;
         }
         $this->fingerprint = md5($result);
-        $this->rowExists   = true;
+        $this->rowExists   = TRUE;
 
         return $result;
     }
@@ -191,46 +191,46 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
     public function write($sessionID, $sessionData): bool
     {
         $builder = Capsule::table($this->table);
-        if ($this->lock === false) {
+        if ($this->lock === FALSE) {
             return $this->fail();
         } elseif ($sessionID !== $this->sessionID) { // 是否再生成sessionID
-            if (!$this->releaseLock() || !$this->lockSession($sessionID)) {
+            if (! $this->releaseLock() || ! $this->lockSession($sessionID)) {
                 return $this->fail();
             }
-            $this->rowExists = false;
+            $this->rowExists = FALSE;
             $this->sessionID = $sessionID;
         }
-        if ($this->rowExists === false) {
+        if ($this->rowExists === FALSE) {
             $insertData = [
-                'session_id' => $sessionID,
-                'ip_address' => $_SERVER['REMOTE_ADDR'],
-                'created_at' => time(),
-                'updated_at' => time(),
-                'data'       => $this->platform === 'postgre' ? base64_encode($sessionData) : $sessionData
-            ];
-            if (!$builder->insert($insertData)) {
+                           'session_id' => $sessionID,
+                           'ip_address' => $_SERVER['REMOTE_ADDR'],
+                           'created_at' => time(),
+                           'updated_at' => time(),
+                           'data'       => $this->platform === 'postgre' ? base64_encode($sessionData) : $sessionData,
+                          ];
+            if (! $builder->insert($insertData)) {
                 return $this->fail();
             }
             $this->fingerprint = md5($sessionData);
-            $this->rowExists   = true;
+            $this->rowExists   = TRUE;
 
-            return true;
+            return TRUE;
         }
         if ($this->matchIP) {
             $builder = $builder->where('ip_address', $_SERVER['REMOTE_ADDR']);
         }
         $updateData = [
-            'updated_at' => time()
-        ];
+                       'updated_at' => time(),
+                      ];
         if ($this->fingerprint !== md5($sessionData)) {
             $updateData['data'] = ($this->platform === 'postgre') ? base64_encode($sessionData) : $sessionData;
         }
-        if (!$builder->update($updateData)) {
+        if (! $builder->update($updateData)) {
             return $this->fail();
         }
         $this->fingerprint = md5($sessionData);
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -240,7 +240,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
      */
     public function close(): bool
     {
-        return ($this->lock && !$this->releaseLock()) ? $this->fail() : true;
+        return ($this->lock && ! $this->releaseLock()) ? $this->fail() : TRUE;
     }
 
     /**
@@ -257,14 +257,14 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
             if ($this->matchIP) {
                 $builder = $builder->where('ip_address', $_SERVER['REMOTE_ADDR']);
             }
-            if (!$builder->delete()) {
+            if (! $builder->delete()) {
                 return $this->fail();
             }
         }
         if ($this->close()) {
             $this->destroyCookie();
 
-            return true;
+            return TRUE;
         }
 
         return $this->fail();
@@ -279,7 +279,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
      */
     public function gc($maxLifeTime): bool
     {
-        return (Capsule::table($this->table)->delete('timestamp < ' . (time() - $maxLifeTime))) ? true : $this->fail();
+        return (Capsule::table($this->table)->delete('timestamp < ' . (time() - $maxLifeTime))) ? TRUE : $this->fail();
     }
 
     /**
@@ -298,7 +298,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
             if ($querySql) {
                 $this->lock = $arg;
 
-                return true;
+                return TRUE;
             }
 
             return $this->fail();
@@ -308,7 +308,7 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
             if ($querySql) {
                 $this->lock = $arg;
 
-                return true;
+                return TRUE;
             }
 
             return $this->fail();
@@ -324,16 +324,16 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
      */
     protected function releaseLock(): bool
     {
-        if (!$this->lock) {
-            return true;
+        if (! $this->lock) {
+            return TRUE;
         }
         if ($this->platform === 'mysql') {
             $status   = Capsule::select('SELECT RELEASE_LOCK("' . $this->lock . '") AS yp_session_lock');
             $querySql = $status[0]->yp_session_lock;
             if ($querySql) {
-                $this->lock = false;
+                $this->lock = FALSE;
 
-                return true;
+                return TRUE;
             }
 
             return $this->fail();
@@ -341,9 +341,9 @@ class YP_DatabaseHandler extends YP_BaseHandler implements \SessionHandlerInterf
             $status   = Capsule::select('SELECT pg_advisory_unlock' . $this->lock . ')');
             $querySql = $status[0]->yp_session_lock;
             if ($querySql) {
-                $this->lock = false;
+                $this->lock = FALSE;
 
-                return true;
+                return TRUE;
             }
 
             return $this->fail();

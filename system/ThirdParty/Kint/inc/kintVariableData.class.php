@@ -1,26 +1,40 @@
 <?php
 
-class kintVariableData
-{
-	/** @var string */
+class kintVariableData {
+
+	/**
+ * @var string 
+*/
 	public $type;
-	/** @var string */
+	/**
+ * @var string 
+*/
 	public $access;
-	/** @var string */
+	/**
+ * @var string 
+*/
 	public $name;
-	/** @var string */
+	/**
+ * @var string 
+*/
 	public $operator;
-	/** @var int */
+	/**
+ * @var int 
+*/
 	public $size;
 	/**
 	 * @var kintVariableData[] array of kintVariableData objects or strings; displayed collapsed, each element from
 	 * the array is a separate possible representation of the dumped var
 	 */
 	public $extendedValue;
-	/** @var string inline value */
+	/**
+ * @var string inline value 
+*/
 	public $value;
 
-	/** @var kintVariableData[] array of alternative representations for same variable, don't use in custom parsers */
+	/**
+ * @var kintVariableData[] array of alternative representations for same variable, don't use in custom parsers 
+*/
 	public $_alternatives;
 
 	/* *******************************************
@@ -29,15 +43,16 @@ class kintVariableData
 
 	protected static function _detectEncoding( $value )
 	{
-		$ret = null;
+		$ret = NULL;
 		if ( function_exists( 'mb_detect_encoding' ) ) {
 			$mbDetected = mb_detect_encoding( $value );
-			if ( $mbDetected === 'ASCII' ) return 'ASCII';
+			if ( $mbDetected === 'ASCII' ) { return 'ASCII';
+            }
 		}
 
 
-		if ( !function_exists( 'iconv' ) ) {
-			return !empty( $mbDetected ) ? $mbDetected : 'UTF-8';
+		if ( ! function_exists( 'iconv' ) ) {
+			return ! empty( $mbDetected ) ? $mbDetected : 'UTF-8';
 		}
 
 		$md5 = md5( $value );
@@ -65,7 +80,7 @@ class kintVariableData
 		return array_keys( $array ) === range( 0, count( $array ) - 1 );
 	}
 
-	protected static function _strlen( $string, $encoding = null )
+	protected static function _strlen( $string, $encoding = NULL )
 	{
 		if ( function_exists( 'mb_strlen' ) ) {
 			$encoding or $encoding = self::_detectEncoding( $string );
@@ -75,7 +90,7 @@ class kintVariableData
 		}
 	}
 
-	protected static function _substr( $string, $start, $end, $encoding = null )
+	protected static function _substr( $string, $start, $end, $encoding = NULL )
 	{
 		if ( function_exists( 'mb_substr' ) ) {
 			$encoding or $encoding = self::_detectEncoding( $string );

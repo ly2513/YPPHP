@@ -15,8 +15,8 @@ namespace Config;
  *
  * @package Config
  */
-class Queue
-{
+class Queue {
+
     /**
      * 队列驱动
      * 可能的值: rabbitmq,redis
@@ -79,7 +79,7 @@ class Queue
      *
      * @var array
      */
-    public static $instance = null;
+    public static $instance = NULL;
 
     /**
      * 处理缓存方式,key为类的别名,value为处理缓存的类
@@ -107,30 +107,30 @@ class Queue
             switch (ENVIRONMENT) {
                 case 'prod':
                     $config = [
-                        'host'  => '127.0.0.1',  // 主机
-                        'port'  => 5672,         // 端口
-                        'user'  => 'username',   // 账号
-                        'pass'  => 'password',   // 密码
-                        'vhost' => '/'
-                    ];
+                               'host'  => '127.0.0.1',  // 主机
+                               'port'  => 5672,         // 端口
+                               'user'  => 'username',   // 账号
+                               'pass'  => 'password',   // 密码
+                               'vhost' => '/',
+                              ];
                     break;
                 case 'test':
                     $config = [
-                        'host'  => '127.0.0.1',  // 主机
-                        'port'  => 5672,         // 端口
-                        'user'  => 'username',   // 账号
-                        'pass'  => 'password',   // 密码
-                        'vhost' => '/'
-                    ];
+                               'host'  => '127.0.0.1',  // 主机
+                               'port'  => 5672,         // 端口
+                               'user'  => 'username',   // 账号
+                               'pass'  => 'password',   // 密码
+                               'vhost' => '/',
+                              ];
                     break;
                 default:
                     $config = [
-                        'host'  => '127.0.0.1',  // 主机
-                        'port'  => 5672,         // 端口
-                        'user'  => 'username',   // 账号
-                        'pass'  => 'password',   // 密码
-                        'vhost' => '/'
-                    ];
+                               'host'  => '127.0.0.1',  // 主机
+                               'port'  => 5672,         // 端口
+                               'user'  => 'username',   // 账号
+                               'pass'  => 'password',   // 密码
+                               'vhost' => '/',
+                              ];
                     break;
             };
         } else {

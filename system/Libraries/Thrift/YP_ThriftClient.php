@@ -19,8 +19,8 @@ $loader->register();
  *
  * @package YP\Libraries\Thrift
  */
-class YP_ThriftClient
-{
+class YP_ThriftClient {
+
     /**
      * @var string
      */
@@ -33,12 +33,14 @@ class YP_ThriftClient
 
     /**
      * 客户端实例
+     *
      * @var array
      */
     private static $instance = [];
 
     /**
      * 配置
+     *
      * @var array
      */
     public static $config = [];
@@ -91,13 +93,13 @@ class YP_ThriftClient
     /**
      * 获取实例
      *
-     * @param      $serviceName 服务名称
+     * @param $serviceName 服务名称
      * @param bool $newOne      是否强制获取一个新的实例
      *
      * @return mixed
      * @throws \Exception
      */
-    public static function instance($serviceName, $newOne = false)
+    public static function instance($serviceName, $newOne = FALSE)
     {
         if (empty($serviceName)) {
             throw new \Exception('ServiceName can not be empty');
@@ -105,7 +107,7 @@ class YP_ThriftClient
         if ($newOne) {
             unset(self::$instance[$serviceName]);
         }
-        if (!isset(self::$instance[$serviceName])) {
+        if (! isset(self::$instance[$serviceName])) {
             self::$instance[$serviceName] = new ThriftInstance($serviceName);
         }
 
@@ -148,24 +150,25 @@ class YP_ThriftClient
 }
 
 /**
- *
  * thrift异步客户端实例
- * @author liangl
  *
+ * @author liangl
  */
-class ThriftInstance
-{
+class ThriftInstance {
+
     /**
      * 服务名
+     *
      * @var string
      */
     public $serviceName = '';
 
     /**
      * thrift实例
+     *
      * @var array
      */
-    protected $thriftInstance = null;
+    protected $thriftInstance = NULL;
 
     /**
      * 初始化工作
@@ -195,14 +198,17 @@ class ThriftInstance
     {
         // 每次都重新创建一个实例
         $this->thriftInstance = $this->instance();
-        $callback             = [$this->thriftInstance, $method_name];
-        if (!is_callable($callback)) {
+        $callback             = [
+                                 $this->thriftInstance,
+                                 $method_name,
+                                ];
+        if (! is_callable($callback)) {
             throw new \Exception($this->serviceName . '->' . $method_name . ' not callable', 1400);
         }
         // 调用客户端方法
         $ret = call_user_func_array($callback, $arguments);
         // 每次都销毁实例
-        $this->thriftInstance = null;
+        $this->thriftInstance = NULL;
 
         return $ret;
     }
@@ -232,9 +238,9 @@ class ThriftInstance
         // 客户端类名称
         $class_name = "\\Services\\" . $this->serviceName . "\\" . $this->serviceName . "Client";
         // 类不存在则尝试加载
-        if (!class_exists($class_name)) {
+        if (! class_exists($class_name)) {
             $service_dir = $this->includeFile();
-            if (!class_exists($class_name)) {
+            if (! class_exists($class_name)) {
                 throw new \Exception('Class ' . $class_name . ' not found in directory ' . $service_dir);
             }
         }

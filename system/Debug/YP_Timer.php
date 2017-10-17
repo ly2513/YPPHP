@@ -13,8 +13,8 @@ namespace YP\Debug;
  *
  * @package YP\Debug
  */
-class YP_Timer
-{
+class YP_Timer {
+
     /**
      * 存放所有的定时器
      *
@@ -31,12 +31,12 @@ class YP_Timer
      *
      * @return YP_Timer
      */
-    public function start(string $name, float $time = null): self
+    public function start(string $name, float $time = NULL): self
     {
         $this->timers[strtolower($name)] = [
-            'start' => !empty($time) ? $time : microtime(true),
-            'end'   => null,
-        ];
+                                            'start' => ! empty($time) ? $time : microtime(TRUE),
+                                            'end'   => NULL,
+                                           ];
 
         return $this;
     }
@@ -55,7 +55,7 @@ class YP_Timer
         if (empty($this->timers[$name])) {
             throw new \RuntimeException('Cannot stop timer: invalid name given.');
         }
-        $this->timers[$name]['end'] = microtime(true);
+        $this->timers[$name]['end'] = microtime(TRUE);
 
         return $this;
     }
@@ -72,14 +72,14 @@ class YP_Timer
     {
         $name = strtolower($name);
         if (empty($this->timers[$name])) {
-            return null;
+            return NULL;
         }
         $timer = $this->timers[$name];
         if (empty($timer['end'])) {
-            $timer['end'] = microtime(true);
+            $timer['end'] = microtime(TRUE);
         }
 
-        return (float)number_format($timer['end'] - $timer['start'], $decimals);
+        return (float) number_format($timer['end'] - $timer['start'], $decimals);
     }
 
     /**
@@ -95,9 +95,9 @@ class YP_Timer
         $timers = $this->timers;
         foreach ($timers as &$timer) {
             if (empty($timer['end'])) {
-                $timer['end'] = microtime(true);
+                $timer['end'] = microtime(TRUE);
             }
-            $timer['duration'] = (float)number_format($timer['end'] - $timer['start'], $decimals);
+            $timer['duration'] = (float) number_format($timer['end'] - $timer['start'], $decimals);
         }
 
         return $timers;

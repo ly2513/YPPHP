@@ -13,10 +13,9 @@ namespace Config;
      * 此文件允许将URI请求映射到特定的控制器-方法中去
      * 例如:
      * example.com/class/method/id
-     *
      */
 // 实例化路由收集器对象
-$routes = Services::routes(true);
+$routes = Services::routes(TRUE);
 // 先加载系统的路由文件，以便应用程序和环境可以根据需要重写
 if (file_exists(SYSTEM_PATH . 'Config/Routes.php')) {
     require SYSTEM_PATH . 'Config/Routes.php';
@@ -38,14 +37,13 @@ if (file_exists(SYSTEM_PATH . 'Config/Routes.php')) {
  *
  * 设置自动路由
  * $routes->setAutoRoute()
- *
  */
 $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
-$routes->setTranslateURIDashes(false);
+$routes->setTranslateURIDashes(FALSE);
 $routes->set404Override();
-$routes->setAutoRoute(true);
+$routes->setAutoRoute(TRUE);
 
 /**
  * 路由定义,可以通过指定默认路由来提高性能，因为我们不需要扫描目录
@@ -55,9 +53,7 @@ $routes->add('/', 'Home::index');
 /**
  * 额外的路由设置
  * 可根据不同环境设置不同的路由规则
- *
  */
 if (file_exists(APP_PATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
     require APP_PATH . 'Config/' . ENVIRONMENT . '/Routes.php';
 }
-

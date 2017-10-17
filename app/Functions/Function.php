@@ -8,7 +8,7 @@
  */
 use Config\Services;
 
-if (!function_exists('call_back')) {
+if (! function_exists('call_back')) {
     /**
      * 接口返回函数
      *
@@ -21,10 +21,10 @@ if (!function_exists('call_back')) {
         $errorResult = Services::error()->getAllError();
         $msg         = $msg ??  $errorResult[$errCode];
         $data        = [
-            'code' => $errCode,
-            'data' => $data,
-            'msg'  => $msg,
-        ];
+                        'code' => $errCode,
+                        'data' => $data,
+                        'msg'  => $msg,
+                       ];
         echo json_encode($data);
         die();
 
@@ -33,9 +33,9 @@ if (!function_exists('call_back')) {
 /**
  * 设置分页
  *
- * @param     $row          总条数
- * @param     $url          跳转链接
- * @param     $uri_segment  当前页码
+ * @param $row          总条数
+ * @param $url          跳转链接
+ * @param $uri_segment  当前页码
  * @param int $per_page     每页显示多少条
  *
  * @return mixed
@@ -47,7 +47,7 @@ function set_page_config($row, $url, $uri_segment, $per_page = 10)
     $config['per_page']          = $per_page;//每页显示多少条
     $config['uri_segment']       = $uri_segment;
     $config['num_links']         = 2;//数量链接
-    $config['page_query_string'] = true;
+    $config['page_query_string'] = TRUE;
     $config['full_tag_open']     = '<ul class="pagination">';
     $config['full_tag_close']    = '</ul>';
     $config['first_link']        = '首页';
@@ -66,7 +66,7 @@ function set_page_config($row, $url, $uri_segment, $per_page = 10)
     $config['cur_tag_close']     = '</a></li>';
     $config['num_tag_open']      = '<li class="num">';
     $config['num_tag_close']     = '</li>';
-    $config['use_page_numbers']  = true;
+    $config['use_page_numbers']  = TRUE;
 
     return $config;
 }
@@ -74,15 +74,15 @@ function set_page_config($row, $url, $uri_segment, $per_page = 10)
 /**
  * 并行查询 Post
  *
- * @param      $url_array
- * @param  int $wait_usec
+ * @param $url_array
+ * @param int $wait_usec
  *
  * @return array|bool
  */
 function multi_curl_post($url_array, $wait_usec = 0)
 {
-    if (!is_array($url_array)) {
-        return false;
+    if (! is_array($url_array)) {
+        return FALSE;
     }
     $wait_usec = intval($wait_usec);
     $data      = [];
@@ -99,11 +99,11 @@ function multi_curl_post($url_array, $wait_usec = 0)
         curl_setopt($ch, CURLOPT_MAXREDIRS, 7);
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $url_info['data']);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'Content-Length: ' . strlen($url_info['data'])
-        ]);
+                                              'Content-Type: application/json',
+                                              'Content-Length: ' . strlen($url_info['data']),
+                                             ]);
         // 把 curl resource 放进 multi curl handler 里
         curl_multi_add_handle($mh, $ch);
         $handle[$i++] = $ch;
@@ -118,7 +118,7 @@ function multi_curl_post($url_array, $wait_usec = 0)
     // 读取资料
     foreach ($handle as $i => $ch) {
         $content  = curl_multi_getcontent($ch);
-        $data[$i] = (curl_errno($ch) == 0) ? $content : false;
+        $data[$i] = (curl_errno($ch) == 0) ? $content : FALSE;
     }
     // 移除 handle
     foreach ($handle as $ch) {
@@ -141,7 +141,7 @@ function random($length)
     $hash  = '';
     $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
     $max   = strlen($chars) - 1;
-    PHP_VERSION < '4.2.0' && mt_srand((double)microtime() * 1000000);
+    PHP_VERSION < '4.2.0' && mt_srand((double) microtime() * 1000000);
     for ($i = 0; $i < $length; $i++) {
         $hash .= $chars[mt_rand(0, $max)];
     }

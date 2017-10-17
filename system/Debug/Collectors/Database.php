@@ -14,28 +14,28 @@ use Config\Services;
 /**
  * Collector for the Database tab of the Debug Toolbar.
  */
-class Database extends BaseCollector
-{
+class Database extends BaseCollector {
+
 	/**
 	 * Whether this collector has timeline data.
 	 *
 	 * @var boolean
 	 */
-	protected $hasTimeline = true;
+	protected $hasTimeline = TRUE;
 
 	/**
 	 * Whether this collector should display its own tab.
 	 *
 	 * @var boolean
 	 */
-	protected $hasTabContent = true;
+	protected $hasTabContent = TRUE;
 
 	/**
 	 * Whether this collector has data for the Vars tab.
 	 *
 	 * @var boolean
 	 */
-	protected $hasVarData = false;
+	protected $hasVarData = FALSE;
 
 	/**
 	 * The name used to reference this collector in the toolbar.
@@ -100,21 +100,21 @@ class Database extends BaseCollector
 		{
 			// Connection Time
 			$data[] = [
-				'name' => 'Connecting to Database: "'.$alias.'"',
-				'component' => 'Database',
-				'start' => $connection->getConnectStart(),
-				'duration' => $connection->getConnectDuration()
-			];
+                       'name'      => 'Connecting to Database: "'.$alias.'"',
+                       'component' => 'Database',
+                       'start'     => $connection->getConnectStart(),
+                       'duration'  => $connection->getConnectDuration(),
+                      ];
 		}
 
 		foreach (static::$queries as $query)
 		{
 			$data[] = [
-				'name' => 'Query',
-				'component' => 'Database',
-				'start' => $query->getStartTime(true),
-				'duration' => $query->getDuration()
-			];
+                       'name'      => 'Query',
+                       'component' => 'Database',
+                       'start'     => $query->getStartTime(TRUE),
+                       'duration'  => $query->getDuration(),
+                      ];
 		}
 
 		return $data;
@@ -130,16 +130,43 @@ class Database extends BaseCollector
 	public function display(): string
 	{
 		// Key words we want bolded
-		$highlight = ['SELECT', 'DISTINCT', 'FROM', 'WHERE', 'AND', 'LEFT&nbsp;JOIN', 'ORDER&nbsp;BY', 'GROUP&nbsp;BY',
-			'LIMIT', 'INSERT', 'INTO', 'VALUES', 'UPDATE', 'OR&nbsp;', 'HAVING', 'OFFSET', 'NOT&nbsp;IN',
-			'IN', 'LIKE', 'NOT&nbsp;LIKE', 'COUNT', 'MAX', 'MIN', 'ON', 'AS', 'AVG', 'SUM', '(', ')'
-		];
+		$highlight = [
+                      'SELECT',
+                      'DISTINCT',
+                      'FROM',
+                      'WHERE',
+                      'AND',
+                      'LEFT&nbsp;JOIN',
+                      'ORDER&nbsp;BY',
+                      'GROUP&nbsp;BY',
+                      'LIMIT',
+                      'INSERT',
+                      'INTO',
+                      'VALUES',
+                      'UPDATE',
+                      'OR&nbsp;',
+                      'HAVING',
+                      'OFFSET',
+                      'NOT&nbsp;IN',
+                      'IN',
+                      'LIKE',
+                      'NOT&nbsp;LIKE',
+                      'COUNT',
+                      'MAX',
+                      'MIN',
+                      'ON',
+                      'AS',
+                      'AVG',
+                      'SUM',
+                      '(',
+                      ')',
+                     ];
 
 		$parser = \Config\Services::parser(SYSTEM_PATH . 'Debug/Toolbar/Views/');
 
 		$data = [
-			'queries' => []
-		];
+                 'queries' => [],
+                ];
 
 		foreach (static::$queries as $query)
 		{
@@ -151,9 +178,9 @@ class Database extends BaseCollector
 			}
 
 			$data['queries'][] = [
-				'duration' => $query->getDuration(5) * 1000,
-				'sql' => $sql
-			];
+                                  'duration' => $query->getDuration(5) * 1000,
+                                  'sql'      => $sql,
+                                 ];
 		}
 
 		$output = $parser->setData($data)

@@ -1,9 +1,9 @@
 <style type="text/css">
-	<?= preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__.'/toolbar.css')) ?>
+	<?php echo preg_replace('#[\r\n\t ]+#', ' ', file_get_contents(__DIR__.'/toolbar.css')) ?>
 </style>
 
 <script type="text/javascript">
-	<?= file_get_contents(__DIR__.'/toolbar.js') ?>
+	<?php echo file_get_contents(__DIR__.'/toolbar.js') ?>
 </script>
 <div id="debug-icon" style="display:none">
     <a href="#" onclick="ciDebugBar.toggleToolbar();">
@@ -24,12 +24,12 @@
 	<div class="toolbar">
 		<h1><a href="#" onclick="ciDebugBar.toggleToolbar();">Debug Bar</a></h1>
 
-		<span><?= $totalTime ?> ms</span>
-		<span><?= $totalMemory ?> MB</span>
+		<span><?php echo $totalTime ?> ms</span>
+		<span><?php echo $totalMemory ?> MB</span>
 		<span class="ci-label"><a href="javascript: void(0)" data-tab="ci-timeline">Timeline</a></span>
 		<?php foreach ($this->collectors as $c) : ?>
 			<?php if ($c->hasTabContent()) : ?>
-				<span class="ci-label"><a href="javascript: void(0)" data-tab="ci-<?= esc($c->getTitle(true)) ?>"><?= esc($c->getTitle()) ?></a></span>
+				<span class="ci-label"><a href="javascript: void(0)" data-tab="ci-<?php echo esc($c->getTitle(TRUE)) ?>"><?php echo esc($c->getTitle()) ?></a></span>
 			<?php endif; ?>
 		<?php endforeach; ?>
 		<span class="ci-label"><a href="javascript: void(0)" data-tab="ci-vars">Vars</a></span>
@@ -44,12 +44,12 @@
 					<th style="width: 10%">COMPONENT</th>
 					<th style="width: 10%;">DURATION</th>
 					<?php for ($i=0; $i < $segmentCount; $i++) : ?>
-						<th><?= $i * $segmentDuration ?> ms</th>
+						<th><?php echo $i * $segmentDuration ?> ms</th>
 					<?php endfor; ?>
 				</tr>
 			</thead>
 			<tbody>
-				<?= $this->renderTimeline($segmentCount, $segmentDuration, $totalTime) ?>
+				<?php echo $this->renderTimeline($segmentCount, $segmentDuration, $totalTime) ?>
 			</tbody>
 		</table>
 	</div>
@@ -57,10 +57,10 @@
 	<!-- Collector-provided Tabs -->
 	<?php foreach ($this->collectors as $c) : ?>
 		<?php if  ($c->hasTabContent()) : ?>
-			<div id="ci-<?= esc($c->getTitle(true)) ?>" class="tab">
-				<h2><?= esc($c->getTitle()) ?> <span><?= esc($c->getTitleDetails()) ?></span></h2>
+			<div id="ci-<?php echo esc($c->getTitle(TRUE)) ?>" class="tab">
+				<h2><?php echo esc($c->getTitle()) ?> <span><?php echo esc($c->getTitleDetails()) ?></span></h2>
 
-				<?= $c->display() ?>
+				<?php echo $c->display() ?>
 			</div>
 		<?php endif ?>
 	<?php endforeach ?>
@@ -71,27 +71,27 @@
 		<!-- VarData from Collectors -->
 		<?php foreach ($varData as $heading => $items) : ?>
 
-			<a href="#" onclick="ciDebugBar.toggleDataTable('<?= strtolower(str_replace(' ', '-', $heading)) ?>'); return false;">
-				<h2><?= esc($heading) ?></h2>
+			<a href="#" onclick="ciDebugBar.toggleDataTable('<?php echo strtolower(str_replace(' ', '-', $heading)) ?>'); return false;">
+				<h2><?php echo esc($heading) ?></h2>
 			</a>
 
 			<?php if (is_array($items)) : ?>
 
-				<table id="<?= strtolower(str_replace(' ', '-', $heading.'_table')) ?>">
+				<table id="<?php echo strtolower(str_replace(' ', '-', $heading.'_table')) ?>">
 					<tbody>
 					<?php foreach ($items as $key => $value) : ?>
 						<tr>
-							<td><?= esc($key) ?></td>
+							<td><?php echo esc($key) ?></td>
 							<td>
 							<?php
-								if (is_string($value))
+                            if (is_string($value))
 								{
-									echo esc($value);
-								}
-								else
+                                echo esc($value);
+                            }
+                            else
 								{
-									echo print_r($value, true);
-								}
+                                echo print_r($value, TRUE);
+                            }
 							?>
 							</td>
 						</tr>
@@ -115,17 +115,17 @@
 					<tbody>
 					<?php foreach ($_SESSION as $key => $value) : ?>
 						<tr>
-							<td><?= esc($key) ?></td>
+							<td><?php echo esc($key) ?></td>
 							<td>
 							<?php
-								if (is_string($value))
+                            if (is_string($value))
 								{
-									echo esc($value);
-								}
-								else
+                                echo esc($value);
+                            }
+                            else
 								{
-									echo print_r($value, true);
-								}
+                                echo print_r($value, TRUE);
+                            }
 							?>
 							</td>
 						</tr>
@@ -139,7 +139,7 @@
 			<p class="muted">Session doesn't seem to be active.</p>
 		<?php endif; ?>
 
-		<h2>Request <span>( <?= ($request->isSecure() ? 'HTTPS' : 'HTTP').'/'.$request->getProtocolVersion() ?> )</span></h2>
+		<h2>Request <span>( <?php echo ($request->isSecure() ? 'HTTPS' : 'HTTP').'/'.$request->getProtocolVersion() ?> )</span></h2>
 
 		<?php if ($get = $request->getGet()) : ?>
 			<a href="#" onclick="ciDebugBar.toggleDataTable('get'); return false;">
@@ -150,8 +150,8 @@
 				<tbody>
 				<?php foreach ($get as $name => $value) : ?>
 					<tr>
-						<td><?= esc($name) ?></td>
-						<td><?= esc($value) ?></td>
+						<td><?php echo esc($name) ?></td>
+						<td><?php echo esc($value) ?></td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
@@ -167,8 +167,8 @@
 				<tbody>
 				<?php foreach ($post as $name => $value) : ?>
 					<tr>
-						<td><?= esc($name) ?></td>
-						<td><?= is_array($value) ? esc(print_r($value, true)) : esc($value) ?></td>
+						<td><?php echo esc($name) ?></td>
+						<td><?php echo is_array($value) ? esc(print_r($value, TRUE)) : esc($value) ?></td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
@@ -184,12 +184,12 @@
 				<tbody>
 
 				<?php foreach ($headers as $header => $value) : ?>
-					<?php if (empty($value)) continue; ?>
+					<?php if (empty($value)) { continue;} ?>
 					<?php if (! is_array($value)) { $value = [$value]; } ?>
 					<?php foreach ($value as $h) : ?>
 						<tr>
-							<td><?= esc($h->getName()) ?></td>
-							<td><?= esc($h->getValueLine()) ?></td>
+							<td><?php echo esc($h->getName()) ?></td>
+							<td><?php echo esc($h->getValueLine()) ?></td>
 						</tr>
 					<?php endforeach; ?>
 				<?php endforeach; ?>
@@ -206,15 +206,15 @@
 				<tbody>
 				<?php foreach ($get as $name => $value) : ?>
 					<tr>
-						<td><?= esc($name) ?></td>
-						<td><?= esc($value) ?></td>
+						<td><?php echo esc($name) ?></td>
+						<td><?php echo esc($value) ?></td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>
 			</table>
 		<?php endif ?>
 
-		<h2>Response <span>( <?= $response->getStatusCode().' - '. esc($response->getReason()) ?> )</span></h2>
+		<h2>Response <span>( <?php echo $response->getStatusCode().' - '. esc($response->getReason()) ?> )</span></h2>
 
 		<?php if ($headers = $response->getHeaders()) : ?>
 			<a href="#" onclick="ciDebugBar.toggleDataTable('response_headers'); return false;">
@@ -225,8 +225,8 @@
 				<tbody>
 				<?php foreach ($headers as $header => $value) : ?>
 					<tr>
-						<td><?= esc($header) ?></td>
-						<td><?= esc($response->getHeaderLine($header)) ?></td>
+						<td><?php echo esc($header) ?></td>
+						<td><?php echo esc($response->getHeaderLine($header)) ?></td>
 					</tr>
 				<?php endforeach; ?>
 				</tbody>

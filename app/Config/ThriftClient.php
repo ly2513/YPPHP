@@ -8,8 +8,8 @@
  */
 namespace Config;
 
-class ThriftClient
-{
+class ThriftClient {
+
     /**
      * 服务端IP
      *

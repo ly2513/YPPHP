@@ -10,7 +10,6 @@
  * URI路由系统
  *
  * 此文件包含对系统工具的任何路由，如迁移的命令行工具等
- *
  */
 // 迁移路由规则
 $routes->cli('migrations/(:segment)/(:segment)', '\YP\Commands\MigrationsCommand::$1/$2');

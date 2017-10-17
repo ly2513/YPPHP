@@ -1,16 +1,17 @@
 <?php
 
-class Kint_Objects_Closure extends KintObject
-{
+class Kint_Objects_Closure extends KintObject {
+
 	public function parse( & $variable )
 	{
-		if ( !$variable instanceof Closure ) return false;
+		if ( ! $variable instanceof Closure ) { return FALSE;
+        }
 
 		$this->name = 'Closure';
 		$reflection = new ReflectionFunction( $variable );
 		$ret        = array(
-			'Parameters' => array()
-		);
+                       'Parameters' => array(),
+                      );
 		if ( $val = $reflection->getParameters() ) {
 			foreach ( $val as $parameter ) {
 				// todo http://php.net/manual/en/class.reflectionparameter.php

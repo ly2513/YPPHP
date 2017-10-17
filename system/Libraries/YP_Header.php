@@ -8,8 +8,8 @@
  */
 namespace YP\Libraries;
 
-class YP_Header
-{
+class YP_Header {
+
     /**
      * 头部名称
      *
@@ -30,9 +30,9 @@ class YP_Header
      * @param string|null $name
      * @param null        $value
      */
-    public function __construct(string $name = null, $value = null)
+    public function __construct(string $name = NULL, $value = NULL)
     {
-        $this->name = $name;
+        $this->name  = $name;
         $this->value = $value;
     }
 
@@ -77,7 +77,7 @@ class YP_Header
      *
      * @return $this
      */
-    public function setValue($value = null)
+    public function setValue($value = NULL)
     {
         $this->value = $value;
 
@@ -91,7 +91,7 @@ class YP_Header
      *
      * @return $this
      */
-    public function appendValue($value = null)
+    public function appendValue($value = NULL)
     {
         if (! is_array($this->value))
         {
@@ -110,7 +110,7 @@ class YP_Header
      *
      * @return $this
      */
-    public function prependValue($value = null)
+    public function prependValue($value = NULL)
     {
         if (! is_array($this->value))
         {
@@ -134,7 +134,7 @@ class YP_Header
         {
             return $this->value;
         }
-        else if (! is_array($this->value))
+        elseif (! is_array($this->value))
         {
             return '';
         }
@@ -147,12 +147,12 @@ class YP_Header
             {
                 $options[] = $key.'='.$value;
             }
-            else if (is_array($value))
+            elseif (is_array($value))
             {
-                $key = key($value);
+                $key       = key($value);
                 $options[] = $key.'='.$value[$key];
             }
-            else if (is_numeric($key))
+            elseif (is_numeric($key))
             {
                 $options[] = $value;
             }

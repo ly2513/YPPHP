@@ -10,6 +10,11 @@ namespace YP;
 
 use Config\Autoload;
 
+/**
+ * Class FileLocator
+ *
+ * @package YP
+ */
 class FileLocator {
 
     /**
@@ -187,7 +192,7 @@ class FileLocator {
     {
         $paths = [
                   APP_PATH,
-                  BASE_PATH,
+                  SYSTEM_PATH,
                  ];
         foreach ($paths as $path) {
             $path .= empty($folder) ? $file : $folder . '/' . $file;

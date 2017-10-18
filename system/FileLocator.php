@@ -190,10 +190,7 @@ class FileLocator {
      */
     protected function legacyLocate(string $file, string $folder = NULL): string
     {
-        $paths = [
-                  APP_PATH,
-                  SYSTEM_PATH,
-                 ];
+        $paths = [APP_PATH, SYSTEM_PATH];
         foreach ($paths as $path) {
             $path .= empty($folder) ? $file : $folder . '/' . $file;
             if ($this->requireFile($path) === TRUE) {

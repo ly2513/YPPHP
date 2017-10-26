@@ -71,7 +71,7 @@ class FileLocator {
             if (! array_key_exists($prefix, $this->namespaces)) {
                 continue;
             }
-            $path     = $this->namespaces[$prefix] . '/';
+            $path     = $this->namespaces[$prefix] . DIRECTORY_SEPARATOR;
             $filename = implode('/', $segments);
             break;
         }
@@ -110,7 +110,7 @@ class FileLocator {
         // 确保扩展名在文件名上
         $path = strpos($path, '.' . $ext) !== FALSE ? $path : $path . '.' . $ext;
         foreach ($this->namespaces as $name => $folder) {
-            $folder = rtrim($folder, '/') . '/';
+            $folder = rtrim($folder, '/') . DIRECTORY_SEPARATOR;
             if (file_exists($folder . $path)) {
                 $foundPaths[] = $folder . $path;
             }
@@ -165,7 +165,7 @@ class FileLocator {
         $files = [];
         helper('filesystem');
         foreach ($this->namespaces as $namespace => $nsPath) {
-            $fullPath = realpath(rtrim($nsPath, '/') . '/' . $path);
+            $fullPath = realpath(rtrim($nsPath, '/') . DIRECTORY_SEPARATOR . $path);
             if (! is_dir($fullPath)) {
                 continue;
             }
@@ -192,7 +192,7 @@ class FileLocator {
     {
         $paths = [APP_PATH, SYSTEM_PATH];
         foreach ($paths as $path) {
-            $path .= empty($folder) ? $file : $folder . '/' . $file;
+            $path .= empty($folder) ? $file : $folder . DIRECTORY_SEPARATOR . $file;
             if ($this->requireFile($path) === TRUE) {
                 return $path;
             }

@@ -162,3 +162,17 @@ function get_password($length = 6)
 
     return $str;
 }
+
+function xrange($start, $end, $step = 1) {
+    for ($i = $start; $i <= $end; $i += $step) {
+        yield $i;
+    }
+}
+
+function gen() {
+    $ret = (yield 'yield1');
+    var_dump($ret);
+    $ret = (yield 'yield2');
+    var_dump($ret);
+}
+

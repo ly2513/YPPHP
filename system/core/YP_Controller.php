@@ -248,7 +248,6 @@ class YP_Controller {
         $templateName = ! is_null($htmlFile) ? $htmlFile : $this->method;
         // 模板文件
         $tempFile = $this->directory . $this->controller . DIRECTORY_SEPARATOR . $templateName . $this->extension;
-        ;
         // 模板路径
         $htmlPath     = $this->tempPath . $this->directory . $this->controller;
         $tempFilePath = $this->tempPath . $tempFile;

@@ -16,7 +16,7 @@ header("Content-type:text/html;charset=utf-8");
 
 // 加载目录类
 require '../app/Config/Paths.php';
-xhprof_enable();
+//xhprof_enable(XHPROF_FLAGS_MEMORY + XHPROF_FLAGS_CPU + XHPROF_FLAGS_NO_BUILTINS);
 
 // 实例化一个目录对象
 $paths = new Config\Paths();

@@ -23,8 +23,9 @@ class Home extends Controller {
      */
     public function index()
     {
-
-        $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
+        phpinfo();
+//        die;
+//        $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
         
         $time         = microtime(TRUE) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
@@ -34,13 +35,13 @@ class Home extends Controller {
         $this->assign('evn', ENVIRONMENT);
         $this->assign('elapsed_time', $elapsed_time);
         $this->assign('version', VERSION);
-                $xhprof_data = xhprof_disable();
-        include_once $XHPROF_ROOT . "xhprof_lib.php";
+//                $xhprof_data = xhprof_disable();
+//        include_once $XHPROF_ROOT . "xhprof_lib.php";
+//
+//        include_once $XHPROF_ROOT . "xhprof_runs.php";
+//        $xhprof_runs = new \XHProfRuns_Default();
+//        $run_id = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
 
-        include_once $XHPROF_ROOT . "xhprof_runs.php";
-        $xhprof_runs = new \XHProfRuns_Default();
-        $run_id = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
-       
 
         $this->display();
     }

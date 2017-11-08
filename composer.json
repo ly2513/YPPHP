@@ -21,6 +21,11 @@
             "email": "yong.li@szypwl.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "YP\\": "system/"
+        }
+    },
     "repositories": {
         "packagist": {
             "type": "composer",

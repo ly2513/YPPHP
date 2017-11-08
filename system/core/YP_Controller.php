@@ -18,14 +18,6 @@ use YP\Config\Services;
  */
 class YP_Controller {
 
-
-    /**
-     * 用于加载帮助函数
-     *
-     * @var array
-     */
-    protected $helpers = [];
-
     /**
      * 请求对象
      *
@@ -148,9 +140,10 @@ class YP_Controller {
         if ($this->forceHTTPS > 0) {
             $this->forceHTTPS($this->forceHTTPS);
         }
-        $this->loadHelpers();
-        $this->setJsonSchema();
-        $this->setInput();
+        // 加载jsonSchema
+        // $this->setJsonSchema();
+        // $this->setInput();
+        // 初始化子类构造方法
         $this->initialization();
         $this->initTwig();
         $this->url = $this->_getCurrentUrl();
@@ -180,19 +173,6 @@ class YP_Controller {
     public function cachePage(int $time)
     {
         YP::cache($time);
-    }
-
-    /**
-     * 加载帮助文件
-     */
-    protected function loadHelpers()
-    {
-        if (empty($this->helpers)) {
-            return;
-        }
-        foreach ($this->helpers as $helper) {
-            helper($helper);
-        }
     }
 
     /**
@@ -256,9 +236,7 @@ class YP_Controller {
         // 模板文件
         is_file($tempFilePath) or touch($tempFilePath);
         echo $this->twig->render($tempFile, $data);
-        if (! YP_DEBUG) {
-            die;
-        }
+        die;
     }
 
     /**

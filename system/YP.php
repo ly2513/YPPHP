@@ -143,8 +143,9 @@ class YP {
         // 加载环境变量
         // $this->loadEnvironment();
         // 开启session
-        $session = \Config\Services::session();
-        $session->start();
+//        $session = \Config\Services::session();
+//        $session->start();
+        session_start();
         if (YP_DEBUG) {
              require_once SYSTEM_PATH . 'ThirdParty/Kint/Kint.class.php';
         }

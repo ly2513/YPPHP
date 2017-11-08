@@ -23,27 +23,25 @@ class Home extends Controller {
      */
     public function index()
     {
-        phpinfo();
-//        die;
+        echo 1111;
 //        $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
-        
-        $time         = microtime(TRUE) * 1000;
-        $elapsed_time = number_format(($time - START_TIME), 0);
-        $this->assign('title', '你好,Twig模板引擎');
-        $this->assign('view_path', 'app/Views/Home/' . $this->method . $this->extension);
-        $this->assign('controller_path', 'app/Controller/Home.php');
-        $this->assign('evn', ENVIRONMENT);
-        $this->assign('elapsed_time', $elapsed_time);
-        $this->assign('version', VERSION);
-//                $xhprof_data = xhprof_disable();
+//        $time         = microtime(TRUE) * 1000;
+//        $elapsed_time = number_format(($time - START_TIME), 0);
+//        $this->assign('title', '你好,Twig模板引擎');
+//        $this->assign('view_path', 'app/Views/Home/' . $this->method . $this->extension);
+//        $this->assign('controller_path', 'app/Controller/Home.php');
+//        $this->assign('evn', ENVIRONMENT);
+//        $this->assign('elapsed_time', $elapsed_time);
+//        $this->assign('version', VERSION);
+//
+//        $xhprof_data = xhprof_disable();
 //        include_once $XHPROF_ROOT . "xhprof_lib.php";
 //
 //        include_once $XHPROF_ROOT . "xhprof_runs.php";
 //        $xhprof_runs = new \XHProfRuns_Default();
 //        $run_id = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
 
-
-        $this->display();
+//        $this->display();
     }
 
     public function testThrift()

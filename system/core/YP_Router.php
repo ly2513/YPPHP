@@ -44,13 +44,7 @@ class YP_Router {
      * @var string
      */
     protected $method;
-
-    /**
-     * An array of binds that were collected
-     * so they can be sent to closure routes.
-     *
-     * @var array
-     */
+    
     /**
      * 收集的绑定数组，以便它们可以被发送到关闭路由
      *

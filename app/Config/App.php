@@ -187,7 +187,6 @@ class App extends Config {
          'YP\Debug\Toolbar\Collectors\Database',
          'YP\Debug\Toolbar\Collectors\Logs',
          'YP\Debug\Toolbar\Collectors\Views',
-         //		'YP\Debug\Toolbar\Collectors\Cache',
          'YP\Debug\Toolbar\Collectors\Files',
          'YP\Debug\Toolbar\Collectors\Routes',
         ];

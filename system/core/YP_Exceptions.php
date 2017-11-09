@@ -67,10 +67,10 @@ class YP_Exceptions {
         $file    = $exception->getFile();
         $line    = $exception->getLine();
         $trace   = $exception->getTrace();
-        $title   = get_class($exception);
-        if (empty($message)) {
-            $message = '(null)';
-        }
+        $title   = $type;
+//        if (! $message) {
+//            $message = '(null)';
+//        }
         // 设置模板
         $templates_path = $this->viewPath;
         if (empty($templates_path)) {

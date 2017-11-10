@@ -11,6 +11,8 @@ namespace YP\Libraries;
 use YP\Core\YP_IncomingRequest;
 
 /**
+ * 安全处理类
+ * 
  * Class Security
  *
  * @package YP\Libraries\Security

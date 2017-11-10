@@ -9,9 +9,9 @@
 namespace YP\Libraries;
 
 /**
- * Class RequestModel 提供快捷的访问方式
+ * Class YP_Input 提供快捷的访问方式
  *
- * @package APP\Models
+ * @package YP\Libraries
  */
 class YP_Input {
 

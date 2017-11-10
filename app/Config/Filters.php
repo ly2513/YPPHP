@@ -8,6 +8,13 @@
  */
 namespace Config;
 
+/**
+ * 过滤配置类
+ *
+ * Class Filters
+ *
+ * @package Config
+ */
 class Filters
 {
     // 方便更好的阅读，更简单的改变使用的脚本

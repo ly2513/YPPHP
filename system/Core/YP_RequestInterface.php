@@ -9,6 +9,8 @@
 namespace YP\Core;
 
 /**
+ * 请求接口类
+ *
  * Interface YP_RequestInterface
  *
  * @package YP\Core

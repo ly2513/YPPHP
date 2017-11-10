@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\SoftDelete;
 use Illuminate\Database\Capsule\Manager as DB;
 
 /**
- * Class YP_Model 基类控制器
+ * 基类控制器
+ * 
+ * Class YP_Model
  *
  * @package YP\Core
  */

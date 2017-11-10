@@ -11,6 +11,8 @@ namespace YP\Core;
 use Psr\Log\LoggerInterface;
 
 /**
+ * 日志处理类
+ *
  * Class YP_Log
  *
  * @package YP\Core
@@ -356,7 +358,7 @@ class YP_Log implements LoggerInterface {
     protected function cleanFileNames($file)
     {
         $file = str_replace(APP_PATH, 'APP_PATH/', $file);
-        $file = str_replace(BASE_PATH, 'BASE_PATH/', $file);
+        $file = str_replace(SYSTEM_PATH, 'SYSTEM_PATH/', $file);
         $file = str_replace(FRONT_PATH, 'FRONT_PATH/', $file);
 
         return $file;

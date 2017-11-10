@@ -8,6 +8,13 @@
  */
 namespace Config;
 
+/**
+ * 模板引擎twig配置类
+ *
+ * Class Twig
+ *
+ * @package Config
+ */
 class Twig {
 
     /**

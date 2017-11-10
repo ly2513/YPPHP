@@ -11,6 +11,13 @@ namespace Config;
 // 加载框架的运行时需要加载类
 require SYSTEM_PATH . 'Config/AutoloadConfig.php';
 
+/**
+ * 自动加载配置类
+ *
+ * Class Autoload
+ *
+ * @package Config
+ */
 class Autoload extends \YP\Config\AutoloadConfig {
 
     /**

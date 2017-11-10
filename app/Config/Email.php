@@ -8,6 +8,13 @@
  */
 namespace Config;
 
+/**
+ * 邮件配置类
+ *
+ * Class Email
+ *
+ * @package Config
+ */
 class Email {
 
     /**

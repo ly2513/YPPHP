@@ -8,6 +8,11 @@
  */
 namespace YP\Core;
 
+/**
+ * Class YP_Negotiate
+ *
+ * @package YP\Core
+ */
 class YP_Negotiate {
 
     /**

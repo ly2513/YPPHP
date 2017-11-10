@@ -12,6 +12,8 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use Config\Database;
 
 /**
+ * Eloquent 初始化类
+ *
  * Class YP_Eloquent
  *
  * @package YP\Libraries
@@ -58,7 +60,6 @@ class YP_Eloquent {
         // 设置全局访问的连接
         $this->capsule->setAsGlobal();
         $this->capsule->bootEloquent();
-
     }
 
     public function getCapsule()

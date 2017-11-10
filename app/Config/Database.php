@@ -29,10 +29,10 @@ class Database {
         // 主数据库
         $this->db['default'] = [
                                 'driver'    => 'mysql',             // 数据库驱动
-                                'host'      => '',                  // 数据库主机
-                                'database'  => '',                  // 数据库名称
-                                'username'  => '',                  // 用户名
-                                'password'  => '',                  // 密码
+                                'host'      => '127.0.0.1',         // 数据库主机
+                                'database'  => 'zhubao',            // 数据库名称
+                                'username'  => 'root',              // 用户名
+                                'password'  => 'root',              // 密码
                                 'charset'   => 'utf8',              // 字符编码
                                 'collation' => 'utf8_general_ci',   // 排序规则
                                 'prefix'    => '',                  // 表的前缀

@@ -15,7 +15,9 @@ use Config\Services;
 use Config\App;
 
 /**
- * Class YP_DebugToolbar 调试工具类
+ * 调试工具类
+ *
+ * Class YP_DebugToolbar
  *
  * @package APP\Libraries
  */

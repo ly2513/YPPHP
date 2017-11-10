@@ -10,6 +10,13 @@ namespace YP\Libraries;
 
 use Config\Services;
 
+/**
+ * JsonSchema 处理类
+ * 
+ * Class YP_JsonSchema
+ *
+ * @package YP\Libraries
+ */
 class YP_JsonSchema {
 
     /**

@@ -16,6 +16,13 @@ use Thrift\Transport\TSocketPool;
 use Thrift\Transport\TFramedTransport;
 use Thrift\Transport\TBufferedTransport;
 
+/**
+ * thrift 处理类
+ *
+ * Class YP_Thrift
+ *
+ * @package YP\Libraries
+ */
 class YP_Thrift {
 
     /**

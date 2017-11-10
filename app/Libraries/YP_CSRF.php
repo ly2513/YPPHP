@@ -12,6 +12,13 @@ use YP\Core\YP_Filter as Filter;
 use YP\Core\YP_Request as Request;
 use Config\Services;
 
+/**
+ * CSRF处理类
+ *
+ * Class YP_CSRF
+ *
+ * @package App\Libraries
+ */
 class YP_CSRF extends Filter {
 
 

@@ -8,6 +8,13 @@
  */
 namespace YP\Libraries\Cache;
 
+/**
+ * 文件缓存处理类
+ *
+ * Class YP_File
+ *
+ * @package YP\Libraries\Cache
+ */
 class YP_File {
 
     /**

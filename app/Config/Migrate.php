@@ -10,6 +10,13 @@ namespace Config;
 
 use YP\Config\BaseConfig;
 
+/**
+ * 数据迁移配置类
+ *
+ * Class Migrations
+ *
+ * @package Config
+ */
 class Migrations extends BaseConfig {
 
     /**

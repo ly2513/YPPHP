@@ -8,6 +8,13 @@
  */
 namespace YP\Core;
 
+/**
+ * 路由收集类
+ *
+ * Class YP_RouterCollection
+ *
+ * @package YP\Core
+ */
 class YP_RouterCollection {
 
     /**

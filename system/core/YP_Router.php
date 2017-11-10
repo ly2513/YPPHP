@@ -11,7 +11,9 @@ namespace YP\Core;
 use YP\Core\YP_RouterCollection as RouterCollection;
 
 /**
- * Class YP_Router 路由类
+ * 路由类
+ *
+ * Class YP_Router
  *
  * @package YP\Core
  */

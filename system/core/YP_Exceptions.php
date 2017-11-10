@@ -8,6 +8,13 @@
  */
 namespace YP\Core;
 
+/**
+ * 异常处理类
+ *
+ * Class YP_Exceptions
+ *
+ * @package YP\Core
+ */
 class YP_Exceptions {
 
     /**
@@ -68,9 +75,9 @@ class YP_Exceptions {
         $line    = $exception->getLine();
         $trace   = $exception->getTrace();
         $title   = $type;
-//        if (! $message) {
-//            $message = '(null)';
-//        }
+        if (! $message) {
+            $message = '(null)';
+        }
         // 设置模板
         $templates_path = $this->viewPath;
         if (empty($templates_path)) {

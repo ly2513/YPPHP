@@ -7,10 +7,14 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+namespace App\Libraries;
 
 /**
+ * zookeeper处理类
+ *
  * Class YP_Zookeeper
- * 
+ *
+ * @package App\Libraries
  */
 class YP_Zookeeper {
 

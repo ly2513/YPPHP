@@ -13,7 +13,9 @@ use YP\Libraries\YP_Message as Message;
 use YP\Config\ContentSecurityPolicy;
 
 /**
- * Class YP_Response 响应体类
+ * 响应体类
+ * 
+ * Class YP_Response
  *
  * @package YP\Core
  */

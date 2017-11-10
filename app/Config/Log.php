@@ -8,6 +8,13 @@
  */
 namespace Config;
 
+/**
+ * 日志配置类
+ *
+ * Class Log
+ *
+ * @package Config
+ */
 class Log {
 
     /**

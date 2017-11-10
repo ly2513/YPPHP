@@ -10,6 +10,13 @@ namespace Config;
 
 use YP\Config\Config;
 
+/**
+ * 框架配置类
+ *
+ * Class App
+ *
+ * @package Config
+ */
 class App extends Config {
 
     /**

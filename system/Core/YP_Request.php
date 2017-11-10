@@ -10,6 +10,13 @@ namespace YP\Core;
 
 use YP\Libraries\YP_Message as Message;
 
+/**
+ * 请求处理类
+ *
+ * Class YP_Request
+ *
+ * @package YP\Core
+ */
 class YP_Request extends Message implements YP_RequestInterface {
 
 

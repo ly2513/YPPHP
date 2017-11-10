@@ -10,6 +10,13 @@ namespace YP\Libraries;
 
 use YP\Core\YP_IncomingRequest as IncomingRequest;
 
+/**
+ * 数据验证类
+ *
+ * Class YP_Validation
+ *
+ * @package YP\Libraries
+ */
 class YP_Validation {
 
     /**

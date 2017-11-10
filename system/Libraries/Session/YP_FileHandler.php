@@ -10,6 +10,13 @@ namespace YP\Libraries\Session;
 
 use YP\Config\Config;
 
+/**
+ * session 存储文件处理类
+ * 
+ * Class YP_FileHandler
+ *
+ * @package YP\Libraries\Session
+ */
 class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface {
 
     /**

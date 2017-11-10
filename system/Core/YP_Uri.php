@@ -8,6 +8,13 @@
  */
 namespace YP\Core;
 
+/**
+ * uri处理类
+ *
+ * Class YP_Uri
+ *
+ * @package YP\Core
+ */
 class YP_Uri {
 
 

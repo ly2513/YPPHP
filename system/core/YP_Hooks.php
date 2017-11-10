@@ -13,6 +13,8 @@ define('EVENT_PRIORITY_NORMAL', 100);
 define('EVENT_PRIORITY_HIGH', 10);
 
 /**
+ * 钩子文件
+ *
  * Class YP_Hooks
  *
  * @package YP\Core

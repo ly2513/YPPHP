@@ -8,6 +8,13 @@
  */
 namespace YP\Libraries;
 
+/**
+ * 报头处理类
+ *
+ * Class YP_Message
+ *
+ * @package YP\Libraries
+ */
 class YP_Message {
 
     /**

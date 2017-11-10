@@ -8,6 +8,13 @@
  */
 namespace YP\Libraries\Cache;
 
+/**
+ * redis缓存处理
+ *
+ * Class YP_Redis
+ *
+ * @package YP\Libraries\Cache
+ */
 class YP_Redis {
 
 

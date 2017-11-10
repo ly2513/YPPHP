@@ -6,10 +6,16 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-use YP_PHPExclHtml as PHPExclHtml;
+namespace App\Libraries;
+
+use App\Libraries\YP_PHPExclHtml as PHPExclHtml;
 
 /**
- * Class YP_PHPExcel excel封装类
+ * excel封装类
+ *
+ * Class YP_PHPExcel
+ *
+ * @package App\Libraries
  */
 class YP_PHPExcel {
 

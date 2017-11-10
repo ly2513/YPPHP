@@ -8,8 +8,14 @@
  */
 namespace YP\Libraries;
 
+/**
+ * 文件收集处理类
+ *
+ * Class YP_FileCollection
+ *
+ * @package YP\Libraries
+ */
 class YP_FileCollection {
-
 
     /**
      * 存放收集上传的文件的数组

@@ -9,7 +9,9 @@
 namespace Config;
 
 /**
- * Class Validation 自动验证配置
+ * 自动验证配置类
+ *
+ * Class Validation
  *
  * @package Config
  */

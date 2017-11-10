@@ -6,10 +6,14 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+namespace App\Libraries;
 
 /**
- * Class Data
- * 处理数组
+ * 处理数组 (无限极分类、父子级关系)
+ *
+ * Class YP_Data
+ *
+ * @package App\Libraries
  */
 final class YP_Data {
 

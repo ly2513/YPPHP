@@ -10,7 +10,6 @@ namespace App\Controllers;
 
 use YP\Core\YP_Controller as Controller;
 use YP\Config\Services;
-use YP\Libraries\Thrift\AddressManager;
 use YP\Libraries\Thrift\YP_ThriftClient;
 
 class Home extends Controller
@@ -21,7 +20,6 @@ class Home extends Controller
      */
     public function index()
     {
-        echo 111;
 //        $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
@@ -32,6 +30,7 @@ class Home extends Controller
             'elapsed_time' => $elapsed_time,
             'version' => VERSION,
         ];
+        
 //        $xhprof_data = xhprof_disable();
 //        include_once $XHPROF_ROOT . "xhprof_lib.php";
 //        include_once $XHPROF_ROOT . "xhprof_runs.php";
@@ -78,7 +77,6 @@ class Home extends Controller
         //        var_export($client->arecv_sayHello("JERRY"));
         //        echo "\n";
     }
-
     public function testAddress()
     {
         AddressManager::config([

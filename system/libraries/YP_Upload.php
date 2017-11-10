@@ -8,6 +8,13 @@
  */
 namespace YP\Libraries;
 
+/**
+ * 上传类
+ * 
+ * Class YP_Upload
+ *
+ * @package YP\Libraries
+ */
 class YP_Upload {
 
     /**

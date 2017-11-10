@@ -11,6 +11,13 @@ namespace YP\Libraries\Session;
 use YP\Config\Config;
 use YP\Config\Services;
 
+/**
+ * session redis 处理类
+ *
+ * Class YP_RedisHandler
+ *
+ * @package YP\Libraries\Session
+ */
 class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface {
 
     /**

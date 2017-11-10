@@ -15,4 +15,4 @@ ini_set('display_errors', 1);
 define('SHOW_DEBUG_BACKTRACE', TRUE);
 
 // 调试模式 0:关闭调试 1:开始调试
-define('YP_DEBUG', 0);
+define('YP_DEBUG', 1);

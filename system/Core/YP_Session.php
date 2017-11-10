@@ -11,7 +11,9 @@ namespace YP\Core;
 use Psr\Log\LoggerAwareTrait;
 
 /**
- * Class YP_Session session处理类
+ * session处理类
+ *
+ * Class YP_Session
  *
  * @package YP\Core
  */

@@ -6,8 +6,14 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
+namespace App\Libraries;
+
 use Config\Email;
 
+/**
+ * Class YP_Email
+ *
+ */
 class YP_Email {
 
     /**

@@ -8,6 +8,13 @@
  */
 namespace Config;
 
+/**
+ * thrift 配置
+ * 
+ * Class ThriftClient
+ *
+ * @package Config
+ */
 class ThriftClient {
 
     /**

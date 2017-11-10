@@ -8,6 +8,13 @@
  */
 namespace Config;
 
+/**
+ * 缓存配置
+ *
+ * Class Cache
+ *
+ * @package Config
+ */
 class Cache {
 
     /**

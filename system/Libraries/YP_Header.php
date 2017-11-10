@@ -8,6 +8,13 @@
  */
 namespace YP\Libraries;
 
+/**
+ * 请求头处理类
+ *
+ * Class YP_Header
+ *
+ * @package YP\Libraries
+ */
 class YP_Header {
 
     /**

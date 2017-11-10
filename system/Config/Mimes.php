@@ -8,6 +8,13 @@
  */
 namespace YP\Config;
 
+/**
+ * 文件类型配置类
+ *
+ * Class Mimes
+ *
+ * @package YP\Config
+ */
 class Mimes {
 
     /**

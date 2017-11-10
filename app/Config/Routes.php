@@ -8,12 +8,12 @@
  */
 namespace Config;
 
-    /**
-     * URI路由
-     * 此文件允许将URI请求映射到特定的控制器-方法中去
-     * 例如:
-     * example.com/class/method/id
-     */
+/**
+ * URI路由
+ * 此文件允许将URI请求映射到特定的控制器-方法中去
+ * 例如:
+ * example.com/class/method/id
+ */
 // 实例化路由收集器对象
 $routes = Services::routes(TRUE);
 // 先加载系统的路由文件，以便应用程序和环境可以根据需要重写

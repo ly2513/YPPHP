@@ -341,26 +341,6 @@ class Services {
     }
 
     /**
-     * 加载Twig模板引擎
-     *
-     * @param \Config\Twig|null $config
-     * @param bool              $getShared
-     *
-     * @return mixed|\YP\Libraries\YP_Twig
-     */
-    public static function twig(\Config\Twig $config = NULL, $getShared = TRUE)
-    {
-        if ($getShared) {
-            return self::getSharedInstance('twig', $config);
-        }
-        if (! is_object($config)) {
-            $config = new \Config\Twig();
-        }
-
-        return new \YP\Libraries\YP_Twig($config);
-    }
-
-    /**
      * 加载输入处理类
      *
      * @param bool $getShared

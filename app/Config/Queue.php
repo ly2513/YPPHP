@@ -15,7 +15,8 @@ namespace Config;
  *
  * @package Config
  */
-class Queue {
+class Queue
+{
 
     /**
      * 队列驱动
@@ -79,7 +80,7 @@ class Queue {
      *
      * @var array
      */
-    public static $instance = NULL;
+    public static $instance = null;
 
     /**
      * 处理缓存方式,key为类的别名,value为处理缓存的类
@@ -139,5 +140,4 @@ class Queue {
         }
         self::$instance[$this->handlerDrive] = $config;
     }
-
 }

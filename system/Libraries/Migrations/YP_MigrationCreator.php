@@ -17,9 +17,8 @@ use InvalidArgumentException;
  *
  * @package YP\Libraries\Migrations
  */
-class YP_MigrationCreator {
-
-
+class YP_MigrationCreator
+{
     /**
      * 注册后创建钩子
      *
@@ -38,7 +37,7 @@ class YP_MigrationCreator {
      * @return string
      * @throws \Exception
      */
-    public function create($name, $path, $table = NULL, $create = FALSE)
+    public function create($name, $path, $table = null, $create = false)
     {
         $this->ensureMigrationDoesNotAlreadyExist($name);
         $path = $this->getPath($name, $path);
@@ -183,7 +182,7 @@ class YP_MigrationCreator {
      *
      * @return int
      */
-    public function put($path, $contents, $lock = FALSE)
+    public function put($path, $contents, $lock = false)
     {
         return file_put_contents($path, $contents, $lock ? LOCK_EX : 0);
     }
@@ -197,7 +196,7 @@ class YP_MigrationCreator {
      * @return string
      * @throws Exception
      */
-    public function get($path, $lock = FALSE)
+    public function get($path, $lock = false)
     {
         if ($this->isFile($path)) {
             return $lock ? $this->sharedGet($path) : file_get_contents($path);

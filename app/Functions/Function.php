@@ -27,7 +27,6 @@ if (!function_exists('call_back')) {
         ];
         echo json_encode($data);
         die();
-
     }
 }
 /**
@@ -162,6 +161,3 @@ function get_password($length = 6)
 
     return $str;
 }
-
-
-

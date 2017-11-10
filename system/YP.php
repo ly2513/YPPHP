@@ -15,8 +15,13 @@ use YP\Core\YP_Response as Response;
 use YP\Cli\YP_CliRequest as CliRequest;
 use YP\Core\YP_RouterCollection as RouterCollection;
 
-class YP {
-
+/**
+ * Class YP
+ *
+ * @package YP
+ */
+class YP
+{
     /**
      * YP框架版本号
      */
@@ -27,7 +32,7 @@ class YP {
      *
      * @var null
      */
-    protected $startTime = NULL;
+    protected $startTime = null;
 
     /**
      * 应用运行的内存
@@ -118,11 +123,11 @@ class YP {
      */
     public function __construct($config)
     {
-        $this->startTime = microtime(TRUE) * 1000;
+        $this->startTime = microtime(true) * 1000;
         define('START_TIME', $this->startTime);
         define('VERSION', self::YP_VERSION);
         // 系统分配给PHP的内存
-        $this->startMemory = memory_get_usage(TRUE);
+        $this->startMemory = memory_get_usage(true);
         // 应用配置
         $this->config = $config;
     }
@@ -135,7 +140,7 @@ class YP {
         // 设置服务器时区
         date_default_timezone_set($this->config->appTimezone ?? 'UTC');
         // 设置异常处理
-        Config\Services::exceptions($this->config, TRUE)->initialize();
+        Config\Services::exceptions($this->config, true)->initialize();
         // 定义环境常量
         $this->detectEnvironment();
         // 加载环境配置信息
@@ -156,7 +161,7 @@ class YP {
      *
      * @param RouterCollection|null $routes
      */
-    public function run(RouterCollection $routes = NULL)
+    public function run(RouterCollection $routes = null)
     {
         // 记录开始时间
         $this->startBenchmark();
@@ -194,7 +199,7 @@ class YP {
      */
     protected function startBenchmark()
     {
-        $this->startTime = microtime(TRUE);
+        $this->startTime = microtime(true);
         $this->benchmark = Config\Services::timer();
         $this->benchmark->start('total_execution', $this->startTime);
         $this->benchmark->start('bootstrap');
@@ -234,7 +239,7 @@ class YP {
      */
     protected function forceSecureAccess($duration = 31536000)
     {
-        if ($this->config->forceGlobalSecureRequests !== TRUE) {
+        if ($this->config->forceGlobalSecureRequests !== true) {
             return;
         }
         force_https($duration, $this->request, $this->response);
@@ -246,7 +251,7 @@ class YP {
      * @param RouterCollection|null $routes
      * @param $cacheConfig
      */
-    protected function handleRequest(RouterCollection $routes = NULL, $cacheConfig)
+    protected function handleRequest(RouterCollection $routes = null, $cacheConfig)
     {
         $this->tryToRouteIt($routes);
         // 运行 "before" 过滤器
@@ -306,7 +311,7 @@ class YP {
      */
     protected function detectEnvironment()
     {
-        if (getenv('CI') !== FALSE) {
+        if (getenv('CI') !== false) {
             define('ENVIRONMENT', 'test');
         } else {
             define('ENVIRONMENT', isset($_SERVER['YP_ENV']) ? $_SERVER['YP_ENV'] : 'dev');
@@ -322,7 +327,7 @@ class YP {
         if (file_exists(APP_PATH . 'Config/Boot/' . ENVIRONMENT . '.php')) {
             require_once APP_PATH . 'Config/Boot/' . ENVIRONMENT . '.php';
         } else {
-            header('HTTP/1.1 503 Service Unavailable.', TRUE, 503);
+            header('HTTP/1.1 503 Service Unavailable.', true, 503);
             echo 'The application environment is not set correctly.';
             exit(1); // EXIT_ERROR
         }
@@ -344,7 +349,7 @@ class YP {
      *
      * @param RouteCollection|null $routes
      */
-    protected function tryToRouteIt(RouteCollection $routes = NULL)
+    protected function tryToRouteIt(RouteCollection $routes = null)
     {
         if (empty($routes) || ! $routes instanceof RouteCollection) {
             require APP_PATH . 'Config/Routes.php';
@@ -398,12 +403,12 @@ class YP {
                 throw new \RuntimeException('Controller is empty.');
             } else {
                 // 尝试自动加载当前这个类
-                if (! class_exists($this->controller, TRUE) || $this->method[0] === '_') {
+                if (! class_exists($this->controller, true) || $this->method[0] === '_') {
                     throw new \RuntimeException('Controller or its method is not found.');
                 } elseif (! method_exists($this->controller, '_remap') && ! is_callable([
                                                                                          $this->controller,
                                                                                          $this->method,
-                                                                                        ], FALSE)
+                                                                                        ], false)
                 ) {
                     throw new \RuntimeException('Controller method is not found.');
                 }
@@ -436,7 +441,6 @@ class YP {
         if (method_exists($class, '_remap')) {
             $output = $class->_remap($this->method, ...$this->router->params());
         } else {
-
             $output = $class->{$this->method}(...$this->router->params());
         }
         $this->benchmark->stop('controller');
@@ -450,7 +454,7 @@ class YP {
      * @param null $cacheConfig
      * @param null $returned
      */
-    protected function gatherOutput($cacheConfig = NULL, $returned = NULL)
+    protected function gatherOutput($cacheConfig = null, $returned = null)
     {
         $this->output = ob_get_contents();
         ob_end_clean();

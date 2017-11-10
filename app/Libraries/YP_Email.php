@@ -14,8 +14,8 @@ use Config\Email;
  * Class YP_Email
  *
  */
-class YP_Email {
-
+class YP_Email
+{
     /**
      * email对象
      *
@@ -35,7 +35,7 @@ class YP_Email {
      *
      * @var null
      */
-    public $errorInfo = NULL;
+    public $errorInfo = null;
 
     /**
      * YP_Email constructor.
@@ -55,7 +55,7 @@ class YP_Email {
     {
         $this->mail = new \PHPMailer();
         $this->mail->isSMTP();
-        $this->mail->SMTPAuth   = TRUE;
+        $this->mail->SMTPAuth   = true;
         $this->mail->SMTPSecure = $this->mailConf['connectType'];
         $this->mail->Host       = $this->mailConf['host'];
         $this->mail->Username   = $this->mailConf['username'];
@@ -70,7 +70,7 @@ class YP_Email {
         $this->mail->addCC('');
         $this->mail->addBCC('');
 
-        $this->mail->errorInfo = NULL;
+        $this->mail->errorInfo = null;
     }
 
     /**
@@ -87,23 +87,22 @@ class YP_Email {
         //循环处理用户
         $this->mail->clearAddresses();
 
-        foreach($user as $val) {
+        foreach ($user as $val) {
             $this->mail->addAddress($val);
         }
 
         $this->mail->Subject = $title;
         $this->mail->Body    = $message;
 
-        try{
-            if( ! $this->mail->send()){
+        try {
+            if (! $this->mail->send()) {
                 $this->errorInfo = $this->mail->ErrorInfo;
-                return FALSE;
+                return false;
             }
-            return TRUE;
-        }catch(Exception $e){
+            return true;
+        } catch (Exception $e) {
             $this->errorInfo = $e->getMessage();
-            return FALSE;
+            return false;
         }
     }
-    
 }

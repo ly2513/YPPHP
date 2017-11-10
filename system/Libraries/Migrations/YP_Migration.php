@@ -13,8 +13,8 @@ namespace YP\Libraries\Migrations;
  *
  * @package YP\Libraries\Migrations
  */
-abstract class YP_Migration {
-
+abstract class YP_Migration
+{
     /**
      * 数据库连接名称
      *

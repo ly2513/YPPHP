@@ -12,14 +12,14 @@ use YP\Libraries\YP_FileCollection as FileCollection;
 use YP\Core\YP_Request as Request;
 use Config\Services;
 
-class YP_IncomingRequest extends Request { 
-
+class YP_IncomingRequest extends Request
+{
     /**
      * CSRF 标志
      *
      * @var bool
      */
-    protected $enableCSRF = FALSE;
+    protected $enableCSRF = false;
 
     /**
      * 一个 YP_Uri 实例
@@ -78,7 +78,7 @@ class YP_IncomingRequest extends Request {
      * @param null   $uri
      * @param string $body
      */
-    public function __construct($config, $uri = NULL, $body = 'php://input')
+    public function __construct($config, $uri = null, $body = 'php://input')
     {
         // 获得输入流
         if ($body == 'php://input') {
@@ -143,7 +143,7 @@ class YP_IncomingRequest extends Request {
         }
         $this->locale = $locale;
         try {
-            if (class_exists('\Locale', FALSE)) {
+            if (class_exists('\Locale', false)) {
                 \Locale::setDefault($locale);
             }
         } catch (\Exception $e) {
@@ -171,14 +171,14 @@ class YP_IncomingRequest extends Request {
     public function isSecure(): bool
     {
         if (! empty($_SERVER['HTTPS']) && strtolower($_SERVER['HTTPS']) !== 'off') {
-            return TRUE;
+            return true;
         } elseif (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-            return TRUE;
+            return true;
         } elseif (! empty($_SERVER['HTTP_FRONT_END_HTTPS']) && strtolower($_SERVER['HTTP_FRONT_END_HTTPS']) !== 'off') {
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -189,7 +189,7 @@ class YP_IncomingRequest extends Request {
      *
      * @return array|mixed|null
      */
-    public function getVar($index = NULL, $filter = NULL)
+    public function getVar($index = null, $filter = null)
     {
         return $this->fetchGlobal(INPUT_REQUEST, $index, $filter);
     }
@@ -203,7 +203,7 @@ class YP_IncomingRequest extends Request {
      *
      * @return mixed
      */
-    public function getJSON(bool $assoc = FALSE, int $depth = 512, int $options = 0)
+    public function getJSON(bool $assoc = false, int $depth = 512, int $options = 0)
     {
         return json_decode($this->body, $assoc, $depth, $options);
     }
@@ -228,7 +228,7 @@ class YP_IncomingRequest extends Request {
      *
      * @return array|mixed|null
      */
-    public function getGet($index = NULL, $filter = NULL)
+    public function getGet($index = null, $filter = null)
     {
         return $this->fetchGlobal(INPUT_GET, $index, $filter);
     }
@@ -241,7 +241,7 @@ class YP_IncomingRequest extends Request {
      *
      * @return array|mixed|null
      */
-    public function getPost($index = NULL, $filter = NULL)
+    public function getPost($index = null, $filter = null)
     {
         return $this->fetchGlobal(INPUT_POST, $index, $filter);
     }
@@ -254,7 +254,7 @@ class YP_IncomingRequest extends Request {
      *
      * @return array|mixed|null
      */
-    public function getPostGet($index = NULL, $filter = NULL)
+    public function getPostGet($index = null, $filter = null)
     {
         return isset($_POST[$index]) ? $this->getPost($index, $filter) : $this->getGet($index, $filter);
     }
@@ -267,7 +267,7 @@ class YP_IncomingRequest extends Request {
      *
      * @return array|mixed|null
      */
-    public function getCookie($index = NULL, $filter = NULL)
+    public function getCookie($index = null, $filter = null)
     {
         return $this->fetchGlobal(INPUT_COOKIE, $index, $filter);
     }
@@ -279,7 +279,7 @@ class YP_IncomingRequest extends Request {
      *
      * @return array|mixed|null
      */
-    public function getUserAgent($filter = NULL)
+    public function getUserAgent($filter = null)
     {
         return $this->fetchGlobal(INPUT_SERVER, 'HTTP_USER_AGENT', $filter);
     }
@@ -356,7 +356,7 @@ class YP_IncomingRequest extends Request {
         } else {
             $this->isSecure() ? $this->uri->setScheme('https') : $this->uri->setScheme('http');
             //当SERVER_NAME和HTTP_HOST都开放安全的,如果必须选择的话,首先用server-controlled 版本
-            ! empty($_SERVER['SERVER_NAME']) ? (isset($_SERVER['SERVER_NAME']) ? $this->uri->setHost($_SERVER['SERVER_NAME']) : NULL) : (isset($_SERVER['HTTP_HOST']) ? $this->uri->setHost($_SERVER['HTTP_HOST']) : NULL);
+            ! empty($_SERVER['SERVER_NAME']) ? (isset($_SERVER['SERVER_NAME']) ? $this->uri->setHost($_SERVER['SERVER_NAME']) : null) : (isset($_SERVER['HTTP_HOST']) ? $this->uri->setHost($_SERVER['HTTP_HOST']) : null);
             if (! empty($_SERVER['SERVER_PORT'])) {
                 $this->uri->setPort($_SERVER['SERVER_PORT']);
             }
@@ -400,10 +400,10 @@ class YP_IncomingRequest extends Request {
      *
      * @return mixed
      */
-    public function negotiate(string $type, array $supported, bool $strictMatch = FALSE)
+    public function negotiate(string $type, array $supported, bool $strictMatch = false)
     {
         if (is_null($this->negotiate)) {
-            $this->negotiate = Services::negotiator($this, TRUE);
+            $this->negotiate = Services::negotiator($this, true);
         }
         switch (strtolower($type)) {
             case 'media':
@@ -494,7 +494,7 @@ class YP_IncomingRequest extends Request {
     {
         $uris = [];
         $tok  = strtok($uri, '/');
-        while ($tok !== FALSE) {
+        while ($tok !== false) {
             if ((! empty($tok) || $tok === '0') && $tok !== '..') {
                 $uris[] = $tok;
             }

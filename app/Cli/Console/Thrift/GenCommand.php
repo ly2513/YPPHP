@@ -63,5 +63,4 @@ class GenCommand extends Command
 
         return true;
     }
-    
 }

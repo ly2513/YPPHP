@@ -13,9 +13,8 @@ namespace YP\Libraries;
  *
  * @package YP\Libraries
  */
-class YP_Input {
-
-
+class YP_Input
+{
     /**
      * Request 参数
      */
@@ -33,12 +32,12 @@ class YP_Input {
      *
      * 注意 此字段禁止直接使用
      */
-    private $json = NULL;
+    private $json = null;
 
     /**
      * @var null
      */
-    private static $instance = NULL;
+    private static $instance = null;
 
     /**
      * RequestModel constructor.
@@ -72,7 +71,7 @@ class YP_Input {
                 break;
         }
 
-        return isset($this->request[$key]) ? $this->request[$key] : NULL;
+        return isset($this->request[$key]) ? $this->request[$key] : null;
     }
 
     /**
@@ -94,12 +93,12 @@ class YP_Input {
      */
     protected function getAllParam()
     {
-        static  $_PUT   = [];
+        static $_PUT   = [];
         static $_DELETE = [];
         // 获得put的参数
         if ('PUT' == $_SERVER['REQUEST_METHOD']) {
             $_PUT = file_get_contents('php://input');
-            if ($param = json_decode($_PUT, TRUE)) {
+            if ($param = json_decode($_PUT, true)) {
                 $_PUT = $param;
             } else {
                 parse_str(file_get_contents('php://input'), $_PUT);
@@ -107,7 +106,7 @@ class YP_Input {
         }
         if ('DELETE' == $_SERVER['REQUEST_METHOD']) {
             $_DELETE = file_get_contents('php://input');
-            if ($param = json_decode($_DELETE, TRUE)) {
+            if ($param = json_decode($_DELETE, true)) {
                 $_DELETE = $param;
             } else {
                 parse_str(file_get_contents('php://input'), $_DELETE);
@@ -115,13 +114,13 @@ class YP_Input {
         }
         if ('GET' == $_SERVER['REQUEST_METHOD']) {
             $param = file_get_contents('php://input');
-            if ($param = json_decode($param, TRUE)) {
+            if ($param = json_decode($param, true)) {
                 $_GET = array_merge($_GET, $param);
             }
         }
         if ('POST' == $_SERVER['REQUEST_METHOD']) {
             $param = file_get_contents('php://input');
-            if ($param = json_decode($param, TRUE)) {
+            if ($param = json_decode($param, true)) {
                 $_POST = [];
                 $_POST = array_merge($_POST, $param);
             }
@@ -136,7 +135,8 @@ class YP_Input {
  *
  * @package YP\Libraries
  */
-class Input extends \ArrayObject {
+class Input extends \ArrayObject
+{
 
     public function __construct(array $data, $type)
     {
@@ -157,7 +157,7 @@ class Input extends \ArrayObject {
      */
     public function __get($key)
     {
-        return $this->offsetExists($key) ? $this->offsetGet($key) : NULL;
+        return $this->offsetExists($key) ? $this->offsetGet($key) : null;
     }
 
     /**

@@ -10,13 +10,13 @@ namespace YP\Libraries;
 
 /**
  * 上传类
- * 
+ *
  * Class YP_Upload
  *
  * @package YP\Libraries
  */
-class YP_Upload {
-
+class YP_Upload
+{
     /**
      * 临时文件目录
      *
@@ -71,7 +71,7 @@ class YP_Upload {
      *
      * @var bool
      */
-    protected $hasMoved = FALSE;
+    protected $hasMoved = false;
 
     /**
      * YP_Upload constructor.
@@ -85,11 +85,11 @@ class YP_Upload {
     public function __construct(
         string $path,
         string $originalName,
-        string $mimeType = NULL,
-        int $size = NULL,
+        string $mimeType = null,
+        int $size = null,
         int $error = 0
-    ) 
-    {
+    ) {
+    
         $this->path             = $path;
         $this->name             = $originalName;
         $this->originalName     = $originalName;
@@ -107,7 +107,7 @@ class YP_Upload {
      *
      * @return bool
      */
-    public function move(string $targetPath, string $name = NULL, bool $overwrite = FALSE)
+    public function move(string $targetPath, string $name = null, bool $overwrite = false)
     {
         if ($this->hasMoved) {
             throw new \RuntimeException('The file has already been moved.');
@@ -116,21 +116,25 @@ class YP_Upload {
             throw new \RuntimeException('The original file is not a valid file.');
         }
         $targetPath = rtrim($targetPath, '/') . '/';
-        is_dir($targetPath) or mkdir($targetPath, 0777, TRUE);
+        is_dir($targetPath) or mkdir($targetPath, 0777, true);
         $name        = is_null($name) ? $this->getName() : $name;
         $destination = $overwrite ? $this->getDestination($targetPath . $name) : $targetPath . $name;
         if (! @move_uploaded_file($this->path, $destination)) {
             $error = error_get_last();
-            throw new \RuntimeException(sprintf('Could not move file %s to %s (%s)', basename($this->path), $targetPath,
-                strip_tags($error['message'])));
+            throw new \RuntimeException(sprintf(
+                'Could not move file %s to %s (%s)',
+                basename($this->path),
+                $targetPath,
+                strip_tags($error['message'])
+            ));
         }
         @chmod($targetPath, 0777 & ~umask());
         // 上传成功,将相关信息存储起来
         $this->path     = $targetPath;
         $this->name     = $name;
-        $this->hasMoved = TRUE;
+        $this->hasMoved = true;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -199,8 +203,10 @@ class YP_Upload {
                          ];
         $error         = is_null($this->error) ? UPLOAD_ERR_OK : $this->error;
 
-        return isset($errors[$error]) ? sprintf($errors[$error],
-            $this->getName()) : sprintf('The file "%s" was not uploaded due to an unknown error.', $this->getName());
+        return isset($errors[$error]) ? sprintf(
+            $errors[$error],
+            $this->getName()
+        ) : sprintf('The file "%s" was not uploaded due to an unknown error.', $this->getName());
     }
 
     /**
@@ -309,7 +315,7 @@ class YP_Upload {
     {
         while (file_exists($destination)) {
             $info = pathinfo($destination);
-            if (strpos($info['filename'], $delimiter) !== FALSE) {
+            if (strpos($info['filename'], $delimiter) !== false) {
                 $parts = explode($delimiter, $info['filename']);
                 if (is_numeric(end($parts))) {
                     $i = end($parts);

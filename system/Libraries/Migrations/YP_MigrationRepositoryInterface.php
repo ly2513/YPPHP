@@ -10,11 +10,11 @@ namespace YP\Libraries\Migrations;
 
 /**
  * Interface YP_MigrationRepositoryInterface
- * 
+ *
  * @package YP\Libraries\Migrations
  */
-interface YP_MigrationRepositoryInterface {
-
+interface YP_MigrationRepositoryInterface
+{
     /**
      * 给指定的数据包进行迁移
      *

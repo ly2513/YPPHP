@@ -15,8 +15,8 @@ namespace YP\Libraries;
  *
  * @package YP\Libraries
  */
-class YP_FileCollection {
-
+class YP_FileCollection
+{
     /**
      * 存放收集上传的文件的数组
      *
@@ -48,14 +48,14 @@ class YP_FileCollection {
         $this->populateFiles();
         $name = strtolower($name);
         if ($this->hasFile($name)) {
-            if (strpos($name, '.') !== FALSE) {
+            if (strpos($name, '.') !== false) {
                 $name         = explode('.', $name);
                 $uploadedFile = $this->getValueDotNotationSyntax($name, $this->files);
                 if ($uploadedFile instanceof YP_Upload) {
                     return $uploadedFile;
                 }
 
-                return NULL;
+                return null;
             }
             if (array_key_exists($name, $this->files)) {
                 $uploadedFile = $this->files[$name];
@@ -63,14 +63,13 @@ class YP_FileCollection {
                     return $uploadedFile;
                 }
 
-                return NULL;
+                return null;
             }
 
-            return NULL;
-
+            return null;
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -83,17 +82,17 @@ class YP_FileCollection {
     public function hasFile(string $fileID): bool
     {
         $this->populateFiles();
-        if (strpos($fileID, '.') !== FALSE) {
+        if (strpos($fileID, '.') !== false) {
             $segments = explode('.', $fileID);
             $el       = $this->files;
             foreach ($segments as $segment) {
                 if (! array_key_exists($segment, $el)) {
-                    return FALSE;
+                    return false;
                 }
                 $el = $el[$segment];
             }
 
-            return TRUE;
+            return true;
         }
 
         return isset($this->files[$fileID]);
@@ -140,8 +139,13 @@ class YP_FileCollection {
             return $output;
         }
 
-        return new YP_Upload($array['tmp_name'] ?? NULL, $array['name'] ?? NULL, $array['type'] ?? NULL,
-            $array['size'] ?? NULL, $array['error'] ?? NULL);
+        return new YP_Upload(
+            $array['tmp_name'] ?? null,
+            $array['name'] ?? null,
+            $array['type'] ?? null,
+            $array['size'] ?? null,
+            $array['error'] ?? null
+        );
     }
 
     /**
@@ -162,8 +166,10 @@ class YP_FileCollection {
                     continue;
                 }
                 $stack    = [&$pointer];
-                $iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($value),
-                    \RecursiveIteratorIterator::SELF_FIRST);
+                $iterator = new \RecursiveIteratorIterator(
+                    new \RecursiveArrayIterator($value),
+                    \RecursiveIteratorIterator::SELF_FIRST
+                );
                 foreach ($iterator as $key => $value) {
                     array_splice($stack, $iterator->getDepth() + 1);
                     $pointer = &$stack[count($stack) - 1];
@@ -198,7 +204,7 @@ class YP_FileCollection {
             if (isset($value[$current_index])) {
                 return $value[$current_index];
             } else {
-                return NULL;
+                return null;
             }
         }
     }

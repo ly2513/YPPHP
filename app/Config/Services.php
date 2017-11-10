@@ -15,8 +15,8 @@ require SYSTEM_PATH . 'Config/Services.php';
  *
  * @package Config
  */
-class Services extends \YP\Config\Services {
-
+class Services extends \YP\Config\Services
+{
     // TODO 你可以在这里添加你需要加载的的类库,以下仅供参考
     /**
      * 队列
@@ -26,7 +26,7 @@ class Services extends \YP\Config\Services {
      *
      * @return \App\Libraries\YP_Queue|mixed
      */
-    public static function queue(\Config\Queue $config = NULL, $getShared = TRUE)
+    public static function queue(\Config\Queue $config = null, $getShared = true)
     {
         if ($getShared) {
             return parent::getSharedInstance('queue', $config);

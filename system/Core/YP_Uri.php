@@ -15,9 +15,8 @@ namespace YP\Core;
  *
  * @package YP\Core
  */
-class YP_Uri {
-
-
+class YP_Uri
+{
     /**
      * 分隔正则常量
      */
@@ -115,14 +114,14 @@ class YP_Uri {
      *
      * @var bool
      */
-    protected $showPassword = FALSE;
+    protected $showPassword = false;
 
     /**
      * YP_Uri constructor.
      *
      * @param string|null $uri
      */
-    public function __construct(string $uri = NULL)
+    public function __construct(string $uri = null)
     {
         if (! is_null($uri)) {
             $this->setURI($uri);
@@ -136,11 +135,11 @@ class YP_Uri {
      *
      * @return YP_Uri
      */
-    public function setURI(string $uri = NULL): self
+    public function setURI(string $uri = null): self
     {
         if (! is_null($uri)) {
             $parts = parse_url($uri);
-            if ($parts === FALSE) {
+            if ($parts === false) {
                 throw new \InvalidArgumentException("Unable to parse URI: {$uri}");
             }
             $this->applyParts($parts);
@@ -166,7 +165,7 @@ class YP_Uri {
      *
      * @return string
      */
-    public function getAuthority(bool $ignorePort = FALSE): string
+    public function getAuthority(bool $ignorePort = false): string
     {
         if (empty($this->host)) {
             return '';
@@ -181,7 +180,7 @@ class YP_Uri {
                 $authority .= ':' . $this->port;
             }
         }
-        $this->showPassword = FALSE;
+        $this->showPassword = false;
 
         return $authority;
     }
@@ -194,7 +193,7 @@ class YP_Uri {
     public function getUserInfo()
     {
         $userInfo = $this->user;
-        if ($this->showPassword === TRUE && ! empty($this->password)) {
+        if ($this->showPassword === true && ! empty($this->password)) {
             $userInfo .= ':' . $this->password;
         }
 
@@ -208,7 +207,7 @@ class YP_Uri {
      *
      * @return YP_Uri
      */
-    public function showPassword(bool $val = TRUE):self
+    public function showPassword(bool $val = true):self
     {
         $this->showPassword = $val;
 
@@ -328,9 +327,14 @@ class YP_Uri {
      */
     public function __toString()
     {
-        return self::createURIString($this->getScheme(), $this->getAuthority(), $this->getPath(),
+        return self::createURIString(
+            $this->getScheme(),
+            $this->getAuthority(),
+            $this->getPath(),
             // Absolute URIs should use a "/" for an empty path
-            $this->getQuery(), $this->getFragment());
+            $this->getQuery(),
+            $this->getFragment()
+        );
     }
 
     /**
@@ -345,13 +349,13 @@ class YP_Uri {
      * @return string
      */
     public static function createURIString(
-        $scheme = NULL,
-        $authority = NULL,
-        $path = NULL,
-        $query = NULL,
-        $fragment = NULL
-    ) 
-    {
+        $scheme = null,
+        $authority = null,
+        $path = null,
+        $query = null,
+        $fragment = null
+    ) {
+    
         $uri = '';
         if (! empty($scheme)) {
             $uri .= $scheme . '://';
@@ -481,7 +485,7 @@ class YP_Uri {
      */
     public function setQuery(string $query): self
     {
-        if (strpos($query, '#') !== FALSE) {
+        if (strpos($query, '#') !== false) {
             throw new \InvalidArgumentException('Query strings may not include URI fragments.');
         }
         if (! empty($query) && strpos($query, '?') === 0) {
@@ -492,7 +496,7 @@ class YP_Uri {
         foreach ($temp as $index => $part) {
             list($key, $value) = $this->splitQueryPart($part);
             if (is_null($value)) {
-                $parts[$this->filterQuery($key)] = NULL;
+                $parts[$this->filterQuery($key)] = null;
                 continue;
             }
             $parts[$this->filterQuery($key)] = $this->filterQuery($value);
@@ -513,7 +517,7 @@ class YP_Uri {
     {
         $parts = explode('=', $part, 2);
         if (count($parts) === 1) {
-            $parts = NULL;
+            $parts = null;
         }
 
         return $parts;
@@ -528,10 +532,13 @@ class YP_Uri {
      */
     protected function filterQuery($str)
     {
-        return preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]+|%(?![A-Fa-f0-9]{2}))/',
+        return preg_replace_callback(
+            '/(?:[^' . self::CHAR_UNRESERVED . self::CHAR_SUB_DELIMS . '%:@\/\?]+|%(?![A-Fa-f0-9]{2}))/',
             function (array $matches) {
                 return rawurlencode($matches[0]);
-            }, $str);
+            },
+            $str
+        );
     }
 
     /**
@@ -556,7 +563,7 @@ class YP_Uri {
      *
      * @return YP_Uri
      */
-    public function addQuery(string $key, $value = NULL): self
+    public function addQuery(string $key, $value = null): self
     {
         $this->query[$key] = $value;
 
@@ -621,7 +628,7 @@ class YP_Uri {
      *
      * @return mixed|string
      */
-    protected function filterPath(string $path = NULL)
+    protected function filterPath(string $path = null)
     {
         $orig = $path;
         // 解析路径
@@ -636,10 +643,13 @@ class YP_Uri {
             $path = '/' . $path;
         }
         // 字符编码
-        $path = preg_replace_callback('/(?:[^' . self::CHAR_UNRESERVED . ':@&=\+\$,\/;%]+|%(?![A-Fa-f0-9]{2}))/',
+        $path = preg_replace_callback(
+            '/(?:[^' . self::CHAR_UNRESERVED . ':@&=\+\$,\/;%]+|%(?![A-Fa-f0-9]{2}))/',
             function (array $matches) {
                 return rawurlencode($matches[0]);
-            }, $path);
+            },
+            $path
+        );
 
         return $path;
     }
@@ -800,5 +810,4 @@ class YP_Uri {
 
         return $output;
     }
-
 }

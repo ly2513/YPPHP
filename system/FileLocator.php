@@ -15,8 +15,8 @@ use Config\Autoload;
  *
  * @package YP
  */
-class FileLocator {
-
+class FileLocator
+{
     /**
      * 命名空间
      *
@@ -46,16 +46,16 @@ class FileLocator {
      *
      * @return string 返回文件的目录或返回为空字符串
      */
-    public function locateFile(string $file, string $folder = NULL, string $ext = 'php'): string
+    public function locateFile(string $file, string $folder = null, string $ext = 'php'): string
     {
         // 确保扩展名在文件名上
-        $file = strpos($file, '.' . $ext) !== FALSE ? $file : $file . '.' . $ext;
+        $file = strpos($file, '.' . $ext) !== false ? $file : $file . '.' . $ext;
         // 将文件夹名从文件名中清除
         if (! empty($folder)) {
             $file = str_replace($folder . '/', '', $file);
         }
         // 如没有命名空间,尝试在app文件夹中查找
-        if (strpos($file, '\\') === FALSE) {
+        if (strpos($file, '\\') === false) {
             return $this->legacyLocate($file, $folder);
         }
         // 规范斜线处理嵌套目录
@@ -77,7 +77,7 @@ class FileLocator {
         }
         // 如果我们有一个文件夹名，那么调用函数希望这个文件在该文件夹中，比如“视图”或“库”。
         // @todo Allow it to check with and without the nested folder.
-        if (! empty($folder) && strpos($filename, $folder) === FALSE) {
+        if (! empty($folder) && strpos($filename, $folder) === false) {
             $filename = $folder . '/' . $filename;
         }
         $path .= $filename;
@@ -108,7 +108,7 @@ class FileLocator {
     {
         $foundPaths = [];
         // 确保扩展名在文件名上
-        $path = strpos($path, '.' . $ext) !== FALSE ? $path : $path . '.' . $ext;
+        $path = strpos($path, '.' . $ext) !== false ? $path : $path . '.' . $ext;
         foreach ($this->namespaces as $name => $folder) {
             $folder = rtrim($folder, '/') . DIRECTORY_SEPARATOR;
             if (file_exists($folder . $path)) {
@@ -140,8 +140,11 @@ class FileLocator {
                 continue;
             }
             if (mb_strpos($path, $nsPath) === 0) {
-                $className = '\\' . $namespace . '\\' . ltrim(str_replace('/', '\\',
-                        mb_substr($path, mb_strlen($nsPath))), '\\');
+                $className = '\\' . $namespace . '\\' . ltrim(str_replace(
+                    '/',
+                    '\\',
+                    mb_substr($path, mb_strlen($nsPath))
+                ), '\\');
                 // 去除文件的扩展名
                 $className = mb_substr($className, 0, -4);
 
@@ -169,7 +172,7 @@ class FileLocator {
             if (! is_dir($fullPath)) {
                 continue;
             }
-            $tempFiles = get_filenames($fullPath, TRUE);
+            $tempFiles = get_filenames($fullPath, true);
             //CLI::newLine($tempFiles);
             if (! count($tempFiles)) {
                 continue;
@@ -188,12 +191,12 @@ class FileLocator {
      *
      * @return string
      */
-    protected function legacyLocate(string $file, string $folder = NULL): string
+    protected function legacyLocate(string $file, string $folder = null): string
     {
         $paths = [APP_PATH, SYSTEM_PATH];
         foreach ($paths as $path) {
             $path .= empty($folder) ? $file : $folder . DIRECTORY_SEPARATOR . $file;
-            if ($this->requireFile($path) === TRUE) {
+            if ($this->requireFile($path) === true) {
                 return $path;
             }
         }

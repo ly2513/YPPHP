@@ -10,8 +10,13 @@ namespace YP\Libraries\Migrations;
 
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 
-class YP_DatabaseMigrationRepository implements MigrationRepositoryInterface {
-
+/**
+ * Class YP_DatabaseMigrationRepository
+ *
+ * @package YP\Libraries\Migrations
+ */
+class YP_DatabaseMigrationRepository implements MigrationRepositoryInterface
+{
     /**
      * 数据库连接解析器实例
      *

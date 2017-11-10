@@ -18,7 +18,8 @@ require SYSTEM_PATH . 'Config/AutoloadConfig.php';
  *
  * @package Config
  */
-class Autoload extends \YP\Config\AutoloadConfig {
+class Autoload extends \YP\Config\AutoloadConfig
+{
 
     /**
      * Autoload constructor.
@@ -31,7 +32,6 @@ class Autoload extends \YP\Config\AutoloadConfig {
         $namespaceMap =
             [
              'Config'      => APP_PATH . 'Config',
-             'Core'        => APP_PATH . 'Core',
              'Function'    => APP_PATH . 'Function',
              APP_NAMESPACE => APP_PATH,
             ];
@@ -42,5 +42,4 @@ class Autoload extends \YP\Config\AutoloadConfig {
         $this->classMap = array_merge($this->classMap, $classMap);
         unset($namespaceMap, $classMap);
     }
-
 }

@@ -17,9 +17,8 @@ use Psr\Log\LoggerInterface;
  *
  * @package YP\Core
  */
-class YP_Log implements LoggerInterface {
-
-
+class YP_Log implements LoggerInterface
+{
     /**
      * 保存日志的目录
      *
@@ -92,7 +91,7 @@ class YP_Log implements LoggerInterface {
      *
      * @var bool
      */
-    protected $cacheLogs = FALSE;
+    protected $cacheLogs = false;
 
     /**
      * YP_Log constructor.
@@ -237,12 +236,12 @@ class YP_Log implements LoggerInterface {
         }
         // 检查当前日志类型是否立马要记录
         if (! in_array($level, $this->loggableLevels)) {
-            return FALSE;
+            return false;
         }
         // 解析占位符
         $message = $this->interpolate($message, $context);
         if (! is_string($message)) {
-            $message = print_r($message, TRUE);
+            $message = print_r($message, true);
         }
         // 是否开启日志缓存
         if ($this->cacheLogs) {
@@ -265,7 +264,7 @@ class YP_Log implements LoggerInterface {
             }
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -292,17 +291,17 @@ class YP_Log implements LoggerInterface {
             $replace['{' . $key . '}'] = $val;
         }
         // 添加特殊的占位符
-        $replace['{post_vars}'] = '$_POST: ' . print_r($_POST, TRUE);
-        $replace['{get_vars}']  = '$_GET: ' . print_r($_GET, TRUE);
+        $replace['{post_vars}'] = '$_POST: ' . print_r($_POST, true);
+        $replace['{get_vars}']  = '$_GET: ' . print_r($_GET, true);
         $replace['{env}']       = ENVIRONMENT;
         // 记录正在分析的文件
-        if (strpos($message, '{file}') !== FALSE) {
+        if (strpos($message, '{file}') !== false) {
             list($file, $line) = $this->determineFile();
             $replace['{file}'] = $file;
             $replace['{line}'] = $line;
         }
         // 匹配环境变量并标记
-        if (strpos($message, 'env:') !== FALSE) {
+        if (strpos($message, 'env:') !== false) {
             preg_match('/env:[^}]+/', $message, $matches);
             if (count($matches)) {
                 foreach ($matches as $str) {
@@ -312,7 +311,7 @@ class YP_Log implements LoggerInterface {
             }
         }
         if (isset($_SESSION)) {
-            $replace['{session_vars}'] = '$_SESSION: ' . print_r($_SESSION, TRUE);
+            $replace['{session_vars}'] = '$_SESSION: ' . print_r($_SESSION, true);
         }
 
         // 将替换值插入到消息中并返回
@@ -328,8 +327,8 @@ class YP_Log implements LoggerInterface {
     {
         // 通过寻找第一回溯，是不是我们的日志系统部分确定文件和行
         $trace = debug_backtrace();
-        $file  = NULL;
-        $line  = NULL;
+        $file  = null;
+        $line  = null;
         foreach ($trace as $row) {
             if (in_array($row['function'], ['interpolate', 'determineFile', 'log', 'log_message'])) {
                 continue;

@@ -15,8 +15,8 @@ namespace YP\Libraries;
  *
  * @package YP\Libraries
  */
-class YP_Message {
-
+class YP_Message
+{
     /**
      * HTTP 请求头数组
      *
@@ -145,7 +145,7 @@ class YP_Message {
     {
         $orig_name = $this->getHeaderName($name);
         if (! isset($this->headers[$orig_name])) {
-            return NULL;
+            return null;
         }
 
         return $this->headers[$orig_name];
@@ -286,8 +286,10 @@ class YP_Message {
             $version = substr($version, strpos($version, '/') + 1);
         }
         if (! in_array($version, $this->validProtocolVersions)) {
-            throw new \InvalidArgumentException('Invalid HTTP Protocol Version. Must be one of: ' . implode(', ',
-                    $this->validProtocolVersions));
+            throw new \InvalidArgumentException('Invalid HTTP Protocol Version. Must be one of: ' . implode(
+                ', ',
+                $this->validProtocolVersions
+            ));
         }
         $this->protocolVersion = $version;
 

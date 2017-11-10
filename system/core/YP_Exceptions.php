@@ -15,8 +15,8 @@ namespace YP\Core;
  *
  * @package YP\Core
  */
-class YP_Exceptions {
-
+class YP_Exceptions
+{
     /**
      * 输出缓冲机制的嵌套级别
      *
@@ -86,7 +86,7 @@ class YP_Exceptions {
         if (is_cli()) {
             $templates_path .= 'cli/';
         } else {
-            header('HTTP/1.1 500 Internal Server Error', TRUE, 500);
+            header('HTTP/1.1 500 Internal Server Error', true, 500);
             $templates_path .= 'html/';
         }
         $view = $this->determineView($exception, $templates_path);
@@ -112,7 +112,7 @@ class YP_Exceptions {
      *
      * @throws \ErrorException
      */
-    public function errorHandler(int $severity, string $message, string $file = NULL, int $line = NULL, $context = NULL)
+    public function errorHandler(int $severity, string $message, string $file = null, int $line = null, $context = null)
     {
         // 将其转换为异常并将其传递给错误异常处理。
         throw new \ErrorException($message, 0, $severity, $file, $line);
@@ -128,8 +128,13 @@ class YP_Exceptions {
         if (! is_null($error)) {
             // 致命错误
             if (in_array($error['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE])) {
-                $this->exceptionHandler(new \ErrorException($error['message'], $error['type'], 0, $error['file'],
-                    $error['line']));
+                $this->exceptionHandler(new \ErrorException(
+                    $error['message'],
+                    $error['type'],
+                    0,
+                    $error['file'],
+                    $error['line']
+                ));
             }
         }
     }
@@ -173,8 +178,7 @@ class YP_Exceptions {
         $statusCode = abs($exception->getCode());
         if ($statusCode < 100) {
             $exitStatus = $statusCode + EXIT__AUTO_MIN; // 9 is EXIT__AUTO_MIN
-            if ($exitStatus > EXIT__AUTO_MAX) // 125 is EXIT__AUTO_MAX
-            {
+            if ($exitStatus > EXIT__AUTO_MAX) { // 125 is EXIT__AUTO_MAX
                 $exitStatus = EXIT_ERROR; // EXIT_ERROR
             }
             $statusCode = 500;
@@ -238,8 +242,8 @@ class YP_Exceptions {
      */
     public static function highlightFile($file, $lineNumber, $lines = 15)
     {
-        if (empty ($file) || ! is_readable($file)) {
-            return FALSE;
+        if (empty($file) || ! is_readable($file)) {
+            return false;
         }
         // 设置高亮颜色值
         if (function_exists('ini_set')) {
@@ -252,17 +256,17 @@ class YP_Exceptions {
         try {
             $source = file_get_contents($file);
         } catch (\Throwable $e) {
-            return FALSE;
+            return false;
         }
         $source = str_replace(["\r\n", "\r"], "\n", $source);
-        $source = explode("\n", highlight_string($source, TRUE));
+        $source = explode("\n", highlight_string($source, true));
         $source = str_replace('<br />', "\n", $source[1]);
         $source = explode("\n", str_replace("\r\n", "\n", $source));
         // 显示获取的部分
         $start = $lineNumber - (int) round($lines / 2);
         $start = $start < 0 ? 0 : $start;
         // 获得我们需要显示的线条，同时保留行号
-        $source = array_splice($source, $start, $lines, TRUE);
+        $source = array_splice($source, $start, $lines, true);
         // 用于格式化源行号
         $format = '% ' . strlen($start + $lines) . 'd';
         $out    = '';
@@ -273,11 +277,18 @@ class YP_Exceptions {
             $row    = str_replace(["\r", "\n"], ['', ''], $row);
             if (($n + $start + 1) == $lineNumber) {
                 preg_match_all('#<[^>]+>#', $row, $tags);
-                $out .= sprintf("<span class='line highlight'><span class='number'>{$format}</span> %s\n</span>%s",
-                    $n + $start + 1, strip_tags($row), implode('', $tags[0]));
+                $out .= sprintf(
+                    "<span class='line highlight'><span class='number'>{$format}</span> %s\n</span>%s",
+                    $n + $start + 1,
+                    strip_tags($row),
+                    implode('', $tags[0])
+                );
             } else {
-                $out .= sprintf('<span class="line"><span class="number">' . $format . '</span> %s', $n + $start + 1,
-                        $row) . "\n";
+                $out .= sprintf(
+                    '<span class="line"><span class="number">' . $format . '</span> %s',
+                    $n + $start + 1,
+                    $row
+                ) . "\n";
             }
         }
         $out .= str_repeat('</span>', $spans);

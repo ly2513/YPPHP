@@ -14,13 +14,13 @@ use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * 基类控制器
- * 
+ *
  * Class YP_Model
  *
  * @package YP\Core
  */
-class YP_Model extends Model {
-
+class YP_Model extends Model
+{
     // 开启软删除
     use SoftDelete;
     // 定义软删除字段
@@ -33,7 +33,7 @@ class YP_Model extends Model {
     const  UPDATED_AT =   'update_time';
 
     // 设置create_at/update_at 时间格式为 Unix 时间戳,默认为 DateTime 格式数据
-    protected  $dateFormat =   'U';
+    protected $dateFormat =   'U';
 
     /**
      * 批量更新数据
@@ -47,7 +47,7 @@ class YP_Model extends Model {
     public static function batchUpdate($multipleData = [], $referenceColumn = '', $table = '')
     {
         if (empty($multipleData)) {
-            return FALSE;
+            return false;
         }
         // column or fields to update
         $updateColumn = array_keys($multipleData[0]);
@@ -68,5 +68,4 @@ class YP_Model extends Model {
         // Update
         return DB::update(DB::raw($q));
     }
-
 }

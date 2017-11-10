@@ -17,9 +17,8 @@ use App\Libraries\YP_PHPExclHtml as PHPExclHtml;
  *
  * @package App\Libraries
  */
-class YP_PHPExcel {
-
-
+class YP_PHPExcel
+{
     /**
      *  A object of phpExcel
      *
@@ -129,7 +128,7 @@ class YP_PHPExcel {
         //循环读取每个单元格的数据
         $data = [];
         for ($row; $row <= $highestRow; $row++) {
-            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumm . $row, NULL, TRUE, FALSE);
+            $rowData = $sheet->rangeToArray('A' . $row . ':' . $highestColumm . $row, null, true, false);
             $data[]  = $rowData[0];
         }
         $result = $this->unsetNull($this->unsetNull($data));
@@ -226,12 +225,13 @@ class YP_PHPExcel {
         $cl_width     = '';
         if ($this->excelObj->getActiveSheet()->getColumnDimensions()) {
             foreach ($this->excelObj->getActiveSheet()->getColumnDimensions() as $key => $columnDimension) {
-                if (($width = \PHPExcel_Shared_Drawing::cellDimensionToPixels($columnDimension->getWidth(),
-                        $defaultFont)) >= 0 && in_array($key, $column)
+                if (($width = \PHPExcel_Shared_Drawing::cellDimensionToPixels(
+                    $columnDimension->getWidth(),
+                    $defaultFont
+                )) >= 0 && in_array($key, $column)
                 ) {
                     $cl_width           = $cl_width + ($width);
                     $columnLength[$key] = $width;
-
                 }
             }
         } else {
@@ -248,8 +248,10 @@ class YP_PHPExcel {
                 $sheet->getColumnDimension($col)->setWidth(20);
             }
             foreach ($this->excelObj->getActiveSheet()->getColumnDimensions() as $key => $columnDimension) {
-                if (($width = \PHPExcel_Shared_Drawing::cellDimensionToPixels($columnDimension->getWidth(),
-                        $defaultFont)) >= 0 && in_array($key, $column)
+                if (($width = \PHPExcel_Shared_Drawing::cellDimensionToPixels(
+                    $columnDimension->getWidth(),
+                    $defaultFont
+                )) >= 0 && in_array($key, $column)
                 ) {
                     $cl_width           = $cl_width + ($width);
                     $columnLength[$key] = $width;
@@ -353,8 +355,11 @@ class YP_PHPExcel {
                 foreach ($vo as $key => $item) {
                     // 设置数据格式
                     // $this->excelObj->setActiveSheetIndex($this->sheet)->setCellValue($keys[$j] . $this->dataRow, $item);
-                    $this->excelObj->setActiveSheetIndex($this->sheet)->setCellValueExplicit($keys[$j] . $this->dataRow,
-                        $item, \PHPExcel_Cell_DataType::TYPE_STRING);
+                    $this->excelObj->setActiveSheetIndex($this->sheet)->setCellValueExplicit(
+                        $keys[$j] . $this->dataRow,
+                        $item,
+                        \PHPExcel_Cell_DataType::TYPE_STRING
+                    );
                     $j++;
                 }
                 $this->dataRow++;
@@ -552,7 +557,7 @@ class YP_PHPExcel {
         $styleArray = [
                        'font'    => [
                                      'name'  => '微软雅黑',
-                                     'bold'  => TRUE,
+                                     'bold'  => true,
                                      'size'  => '9',
                                      'color' => ['rgb' => 'ffffff'],
                                     ],
@@ -593,7 +598,7 @@ class YP_PHPExcel {
         $styleArray = [
                        'font'      => [
                                        'name'  => '微软雅黑',
-                                       'bold'  => TRUE,
+                                       'bold'  => true,
                                        'size'  => '9',
                                        'color' => ['rgb' => '373737'],
                                       ],
@@ -878,7 +883,7 @@ class YP_PHPExcel {
             $divisor = intval($number / 26.01);
             $char    = chr(64 + $number % 26);
             $charNum = ($char == '@') ? 'Z' : $char;
-            if($divisor < 27){
+            if ($divisor < 27) {
                 $charNumber = chr(64 + $divisor);
                 $char       = $divisor == 0 ? $charNum : $charNumber . $charNum;
             } else {
@@ -966,5 +971,4 @@ class YP_PHPExcel {
     {
         return $this->excelObj;
     }
-    
 }

@@ -14,13 +14,13 @@ use YP\Config\ContentSecurityPolicy;
 
 /**
  * 响应体类
- * 
+ *
  * Class YP_Response
  *
  * @package YP\Core
  */
-class YP_Response extends Message {
-
+class YP_Response extends Message
+{
     /**
      * HTTP 状态码
      *
@@ -114,7 +114,7 @@ class YP_Response extends Message {
      *
      * @var bool
      */
-    protected $CSPEnabled = FALSE;
+    protected $CSPEnabled = false;
 
     /**
      * 内容安全策略对象
@@ -149,14 +149,14 @@ class YP_Response extends Message {
      *
      * @var bool
      */
-    protected $cookieSecure = FALSE;
+    protected $cookieSecure = false;
 
     /**
      * Cookie只能通过HTTP(s)访问标识
      *
      * @var bool
      */
-    protected $cookieHTTPOnly = FALSE;
+    protected $cookieHTTPOnly = false;
 
     /**
      * YP_Response constructor.
@@ -168,9 +168,9 @@ class YP_Response extends Message {
         // 设置不缓存,同时确保设置Cache-control在响应头里
         $this->noCache();
         // 判断是否执行内容安全策略
-        if ($config->CSPEnabled === TRUE) {
+        if ($config->CSPEnabled === true) {
             $this->CSP        = new ContentSecurityPolicy();
-            $this->CSPEnabled = TRUE;
+            $this->CSPEnabled = true;
         }
         $this->cookiePrefix   = $config->cookiePrefix;
         $this->cookieDomain   = $config->cookieDomain;
@@ -355,7 +355,7 @@ class YP_Response extends Message {
     public function send(): self
     {
         // 如果正在执行内容安全策略，需要构建它的头文件
-        if ($this->CSPEnabled === TRUE) {
+        if ($this->CSPEnabled === true) {
             $this->CSP->finalize($this);
         }
         $this->sendHeaders();
@@ -380,11 +380,14 @@ class YP_Response extends Message {
             $this->setDate(\DateTime::createFromFormat('U', time()));
         }
         // HTTP状态
-        header(sprintf('HTTP/%s %s %s', $this->protocolVersion, $this->statusCode, $this->reason), TRUE,
-            $this->statusCode);
+        header(
+            sprintf('HTTP/%s %s %s', $this->protocolVersion, $this->statusCode, $this->reason),
+            true,
+            $this->statusCode
+        );
         // 发送所有的响应头
         foreach ($this->getHeaders() as $name => $values) {
-            header($name . ': ' . $this->getHeaderLine($name), FALSE, $this->statusCode);
+            header($name . ': ' . $this->getHeaderLine($name), false, $this->statusCode);
         }
 
         return $this;
@@ -411,11 +414,13 @@ class YP_Response extends Message {
      *
      * @throws \Exception
      */
-    public function redirect(string $uri, string $method = 'auto', int $code = NULL)
+    public function redirect(string $uri, string $method = 'auto', int $code = null)
     {
         // 如果是IIS服务器,用refresh做最好的兼容
-        if ($method === 'auto' && isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'],
-                'Microsoft-IIS') !== FALSE
+        if ($method === 'auto' && isset($_SERVER['SERVER_SOFTWARE']) && strpos(
+            $_SERVER['SERVER_SOFTWARE'],
+            'Microsoft-IIS'
+        ) !== false
         ) {
             $method = 'refresh';
         } elseif ($method !== 'refresh' && (empty($code) || ! is_numeric($code))) {
@@ -459,10 +464,10 @@ class YP_Response extends Message {
         $domain = '',
         $path = '/',
         $prefix = '',
-        $secure = FALSE,
-        $http_only = FALSE
-    ) 
-    {
+        $secure = false,
+        $http_only = false
+    ) {
+    
         if (is_array($name)) {
             // always leave 'name' in last place, as the loop will break otherwise, due to $$item
             foreach (['value', 'expire', 'domain', 'path', 'prefix', 'secure', 'httponly', 'name'] as $item) {
@@ -480,10 +485,10 @@ class YP_Response extends Message {
         if ($path === '/' && $this->cookiePath !== '/') {
             $path = $this->cookiePath;
         }
-        if ($secure === FALSE && $this->cookieSecure === TRUE) {
+        if ($secure === false && $this->cookieSecure === true) {
             $secure = $this->cookieSecure;
         }
-        if ($http_only === FALSE && $this->cookieHTTPOnly !== FALSE) {
+        if ($http_only === false && $this->cookieHTTPOnly !== false) {
             $http_only = $this->cookieHTTPOnly;
         }
         if (! is_numeric($expire)) {
@@ -501,12 +506,12 @@ class YP_Response extends Message {
      * @param string $data     下载的数据
      * @param bool   $setMime  是否尝试发送实际MIME类型
      */
-    public function download(string $filename = '', $data = '', bool $setMime = FALSE)
+    public function download(string $filename = '', $data = '', bool $setMime = false)
     {
         if ($filename === '' || $data === '') {
             return;
-        } elseif ($data === NULL) {
-            if (! @is_file($filename) || ($file_size = @filesize($filename)) === FALSE) {
+        } elseif ($data === null) {
+            if (! @is_file($filename) || ($file_size = @filesize($filename)) === false) {
                 return;
             }
             $filepath = $filename;
@@ -519,7 +524,7 @@ class YP_Response extends Message {
         $mime      = 'application/octet-stream';
         $x         = explode('.', $filename);
         $extension = end($x);
-        if ($setMime === TRUE) {
+        if ($setMime === true) {
             if (count($x) === 1 or $extension === '') {
                 // 如果要检测MIME类型,需要一个文件扩展名
                 return;
@@ -527,17 +532,19 @@ class YP_Response extends Message {
             $mime = Mimes::guessTypeFromExtension($extension);
         }
         // 对安卓系统下载进行处理
-        if (count($x) !== 1 && isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/Android\s(1|2\.[01])/',
-                $_SERVER['HTTP_USER_AGENT'])
+        if (count($x) !== 1 && isset($_SERVER['HTTP_USER_AGENT']) && preg_match(
+            '/Android\s(1|2\.[01])/',
+            $_SERVER['HTTP_USER_AGENT']
+        )
         ) {
             $x[count($x) - 1] = strtoupper($extension);
             $filename         = implode('.', $x);
         }
-        if ($data === NULL && ($fp = @fopen($filepath, 'rb')) === FALSE) {
+        if ($data === null && ($fp = @fopen($filepath, 'rb')) === false) {
             return;
         }
         // 干净的输出缓冲器
-        if (ob_get_level() !== 0 && @ob_end_clean() === FALSE) {
+        if (ob_get_level() !== 0 && @ob_end_clean() === false) {
             @ob_clean();
         }
         // 生成服务器响应头部
@@ -548,15 +555,14 @@ class YP_Response extends Message {
         header('Content-Length: ' . $file_size);
         header('Cache-Control: private, no-transform, no-store, must-revalidate');
         // If we have raw data - just dump it
-        if ($data !== NULL) {
+        if ($data !== null) {
             exit($data);
         }
         // Flush 1MB chunks of data
-        while (! feof($fp) && ($data = fread($fp, 1048576)) !== FALSE) {
+        while (! feof($fp) && ($data = fread($fp, 1048576)) !== false) {
             echo $data;
         }
         fclose($fp);
         exit;
     }
-
 }

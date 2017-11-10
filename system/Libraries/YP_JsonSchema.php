@@ -12,40 +12,40 @@ use Config\Services;
 
 /**
  * JsonSchema 处理类
- * 
+ *
  * Class YP_JsonSchema
  *
  * @package YP\Libraries
  */
-class YP_JsonSchema {
-
+class YP_JsonSchema
+{
     /**
      * json验证文件路径
      *
      * @var null
      */
-    private $path = NULL;
+    private $path = null;
 
     /**
      * 路由
      *
      * @var null
      */
-    private $router = NULL;
+    private $router = null;
 
     /**
      * 当前使用的控制器类
      *
      * @var null
      */
-    private $class = NULL;
+    private $class = null;
 
     /**
      * 当前调用的方法
      *
      * @var null
      */
-    private $method = NULL;
+    private $method = null;
 
     /**
      * 控制器所在的子目录
@@ -59,14 +59,14 @@ class YP_JsonSchema {
      *
      * @var null
      */
-    private $validator = NULL;
+    private $validator = null;
 
     /**
      *
      *
      * @var null
      */
-    private $schema = NULL;
+    private $schema = null;
 
     /**
      * 错误信息
@@ -145,9 +145,9 @@ class YP_JsonSchema {
      */
     public function check(\StdClass $jsonData)
     {
-        $basicPath = APP_PATH . 'ThirdParty/Json_Schema/';
+        $basicPath = APP_PATH . 'ThirdParty/JsonSchema/';
         $jsonPath  = $basicPath . $this->directory . $this->class;
-        is_dir($jsonPath) or mkdir($jsonPath, 0755, TRUE);
+        is_dir($jsonPath) or mkdir($jsonPath, 0755, true);
         $this->path = $jsonPath . '/' . $this->method . '.json';
         is_file($this->path) or touch($this->path);
         $this->loadSchema();
@@ -161,7 +161,7 @@ class YP_JsonSchema {
                 $this->errCode = self::ERROR_SCHEMA_ERROR;
                 $this->errMsg  = 'Invalid Json Schema Data, Please Check Schema JsonData';
 
-                return FALSE;
+                return false;
             }
             $this->validator->check($jsonData, $schemaData);
             if (! $this->validator->isValid()) {
@@ -179,7 +179,7 @@ class YP_JsonSchema {
      */
     public function isValid()
     {
-        return $this->errMsg ? FALSE : TRUE;
+        return $this->errMsg ? false : true;
     }
 
     /**

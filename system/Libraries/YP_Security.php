@@ -12,14 +12,13 @@ use YP\Core\YP_IncomingRequest;
 
 /**
  * 安全处理类
- * 
+ *
  * Class Security
  *
  * @package YP\Libraries\Security
  */
-class YP_Security {
-
-
+class YP_Security
+{
     /**
      * CSRF 哈希值
      *
@@ -62,7 +61,7 @@ class YP_Security {
      *
      * @var bool
      */
-    protected $CSRFRegenerate = TRUE;
+    protected $CSRFRegenerate = true;
 
     /**
      * Cookie路径
@@ -83,7 +82,7 @@ class YP_Security {
      *
      * @var bool
      */
-    protected $cookieSecure = FALSE;
+    protected $cookieSecure = false;
 
     /**
      * 列出安全的文件名称字符
@@ -163,8 +162,7 @@ class YP_Security {
             return $this->CSRFSetCookie($request);
         }
         // 判断CSRF Token 是否在$_POST和$_COOKIE数组中？
-        if (! isset($_POST[$this->CSRFTokenName], $_COOKIE[$this->CSRFCookieName]) || $_POST[$this->CSRFTokenName] !== $_COOKIE[$this->CSRFCookieName]) // Do the tokens match?
-        {
+        if (! isset($_POST[$this->CSRFTokenName], $_COOKIE[$this->CSRFCookieName]) || $_POST[$this->CSRFTokenName] !== $_COOKIE[$this->CSRFCookieName]) { // Do the tokens match?
             throw new \LogicException('The requested is not allowed', 403);
         }
         // 删除CSRF token,避免污染$_POST数组
@@ -193,11 +191,18 @@ class YP_Security {
         $expire        = time() + $this->CSRFExpire;
         $secure_cookie = (bool) $this->cookieSecure;
         if ($secure_cookie && ! $request->isSecure()) {
-            return FALSE;
+            return false;
         }
         // 设置Cookie
-        setcookie($this->CSRFCookieName, $this->CSRFHash, $expire, $this->cookiePath, $this->cookieDomain,
-            $secure_cookie, TRUE);
+        setcookie(
+            $this->CSRFCookieName,
+            $this->CSRFHash,
+            $expire,
+            $this->cookiePath,
+            $this->cookieDomain,
+            $secure_cookie,
+            true
+        );
         log_message('info', 'CSRF cookie sent');
 
         return $this;
@@ -230,10 +235,12 @@ class YP_Security {
      */
     protected function CSRFSetHash()
     {
-        if ($this->CSRFHash === NULL) {
+        if ($this->CSRFHash === null) {
             // 如果cookie存在，我们将使用它的值。我们不一定要在每个页面加载下重新生成它，因为一个页面可能包含嵌入的子页，导致这个特性失败。
-            if (isset($_COOKIE[$this->CSRFCookieName]) && is_string($_COOKIE[$this->CSRFCookieName]) && preg_match('#^[0-9a-f]{32}$#iS',
-                    $_COOKIE[$this->CSRFCookieName]) === 1
+            if (isset($_COOKIE[$this->CSRFCookieName]) && is_string($_COOKIE[$this->CSRFCookieName]) && preg_match(
+                '#^[0-9a-f]{32}$#iS',
+                $_COOKIE[$this->CSRFCookieName]
+            ) === 1
             ) {
                 return $this->CSRFHash = $_COOKIE[$this->CSRFCookieName];
             }
@@ -252,14 +259,14 @@ class YP_Security {
      *
      * @return string
      */
-    public function sanitizeFilename($str, $relative_path = FALSE)
+    public function sanitizeFilename($str, $relative_path = false)
     {
         $bad = $this->filenameBadChars;
         if (! $relative_path) {
             $bad[] = './';
             $bad[] = '/';
         }
-        $str = remove_invisible_characters($str, FALSE);
+        $str = remove_invisible_characters($str, false);
         do {
             $old = $str;
             $str = str_replace($bad, '', $str);

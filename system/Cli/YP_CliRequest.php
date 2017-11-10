@@ -16,8 +16,8 @@ use Config\App;
  *
  * @package YP\Cli
  */
-class YP_CliRequest extends Request { 
-
+class YP_CliRequest extends Request
+{
     /**
      * 存储段我们 CLI“URI” 命令
      *
@@ -39,9 +39,9 @@ class YP_CliRequest extends Request {
      */
     public function __construct(App $config)
     {
-        parent::__construct($config, NULL);
+        parent::__construct($config, null);
         // 不终止脚本, 当CLI终端消失
-        ignore_user_abort(TRUE);
+        ignore_user_abort(true);
         $this->parseCommand();
     }
 
@@ -81,7 +81,7 @@ class YP_CliRequest extends Request {
             return $this->options[$key];
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -97,7 +97,7 @@ class YP_CliRequest extends Request {
         $out = '';
         foreach ($this->options as $name => $value) {
             // 如果有一个空间，我们需要组会通过正确
-            if (strpos($value, ' ') !== FALSE) {
+            if (strpos($value, ' ') !== false) {
                 $value = '"' . $value . '"';
             }
             $out .= "-{$name} $value ";
@@ -112,22 +112,22 @@ class YP_CliRequest extends Request {
     protected function parseCommand()
     {
         // 由于我们自己构建了选项，所以一旦我们找到第一个破折号，就停止将它添加到段数组中
-        $options_found = FALSE;
+        $options_found = false;
         $argc          = $this->getServer('argc', FILTER_SANITIZE_NUMBER_INT);
         $argv          = $this->getServer('argv');
         //
         for ($i = 1; $i < $argc; $i++) {
             // 如果参数开始时没有“-”，则将其添加到我们的段中。
-            if (! $options_found && strpos($argv[$i], '-') === FALSE) {
+            if (! $options_found && strpos($argv[$i], '-') === false) {
                 $this->segments[] = filter_var($argv[$i], FILTER_SANITIZE_STRING);
                 continue;
             }
-            $options_found = TRUE;
+            $options_found = true;
             if (substr($argv[$i], 0, 1) != '-') {
                 continue;
             }
             $arg   = filter_var(str_replace('-', '', $argv[$i]), FILTER_SANITIZE_STRING);
-            $value = NULL;
+            $value = null;
             //
             if (isset($argv[$i + 1]) && substr($argv[$i + 1], 0, 1) != '-') {
                 $value = filter_var($argv[$i + 1], FILTER_SANITIZE_STRING);

@@ -12,13 +12,13 @@ use YP\Config\Config;
 
 /**
  * session 存储文件处理类
- * 
+ *
  * Class YP_FileHandler
  *
  * @package YP\Libraries\Session
  */
-class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface {
-
+class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface
+{
     /**
      * 保存session文件的路径
      *
@@ -75,7 +75,7 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
     public function open($savePath, $name): bool
     {
         if (! is_dir($savePath)) {
-            if (! mkdir($savePath, 0700, TRUE)) {
+            if (! mkdir($savePath, 0700, true)) {
                 throw new \Exception('Session: 配置的保存目录 "' . $this->savePath . '" 不是个目录或者目录不存在或者不能创建.');
             }
         } elseif (! is_writable($savePath)) {
@@ -85,7 +85,7 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
         // 使用session cookie的名称作为前缀,避免冲突
         $this->filePath = $this->savePath . '/' . $name . ($this->matchIP ? md5($_SERVER['REMOTE_ADDR']) : '');
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -97,19 +97,19 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
      */
     public function read($sessionID)
     {
-        if ($this->fileHandle === NULL) {
+        if ($this->fileHandle === null) {
             $this->fileNew = ! file_exists($this->filePath . $sessionID);
-            if (($this->fileHandle = fopen($this->filePath . $sessionID, 'c+b')) === FALSE) {
+            if (($this->fileHandle = fopen($this->filePath . $sessionID, 'c+b')) === false) {
                 $this->logger->error('Session: 不能打开文件 "' . $this->filePath . $sessionID . '".');
 
-                return FALSE;
+                return false;
             }
-            if (flock($this->fileHandle, LOCK_EX) === FALSE) {
+            if (flock($this->fileHandle, LOCK_EX) === false) {
                 $this->logger->error('Session: 不能获得文件锁 "' . $this->filePath . $sessionID . '."');
                 fclose($this->fileHandle);
-                $this->fileHandle = NULL;
+                $this->fileHandle = null;
 
-                return FALSE;
+                return false;
             }
             $this->sessionID = $sessionID;
             if ($this->fileNew) {
@@ -123,7 +123,7 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
         }
         $session_data = '';
         for ($read = 0, $length = filesize($this->filePath . $sessionID); $read < $length; $read += strlen($buffer)) {
-            if (($buffer = fread($this->fileHandle, $length - $read)) === FALSE) {
+            if (($buffer = fread($this->fileHandle, $length - $read)) === false) {
                 break;
             }
             $session_data .= $buffer;
@@ -144,13 +144,13 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
     public function write($sessionID, $sessionData): bool
     {
         // 如果sessionID没匹配到,调用session_regenerate_id()重新生成一个
-        if ($sessionID !== $this->sessionID && (! $this->close() || $this->read($sessionID) === FALSE)) {
-            return FALSE;
+        if ($sessionID !== $this->sessionID && (! $this->close() || $this->read($sessionID) === false)) {
+            return false;
         }
         if (! is_resource($this->fileHandle)) {
-            return FALSE;
+            return false;
         } elseif ($this->fingerprint === md5($sessionData)) {
-            return ($this->fileNew) ? TRUE : touch($this->filePath . $sessionID);
+            return ($this->fileNew) ? true : touch($this->filePath . $sessionID);
         }
         if (! $this->fileNew) {
             ftruncate($this->fileHandle, 0);
@@ -158,7 +158,7 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
         }
         if (($length = strlen($sessionData)) > 0) {
             for ($written = 0; $written < $length; $written += $result) {
-                if (($result = fwrite($this->fileHandle, substr($sessionData, $written))) === FALSE) {
+                if (($result = fwrite($this->fileHandle, substr($sessionData, $written))) === false) {
                     break;
                 }
             }
@@ -166,12 +166,12 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
                 $this->fingerprint = md5(substr($sessionData, 0, $written));
                 $this->logger->error('Session: Unable to write data.');
 
-                return FALSE;
+                return false;
             }
         }
         $this->fingerprint = md5($sessionData);
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -184,12 +184,12 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
         if (is_resource($this->fileHandle)) {
             flock($this->fileHandle, LOCK_UN);
             fclose($this->fileHandle);
-            $this->fileHandle = $this->fileNew = $this->sessionID = NULL;
+            $this->fileHandle = $this->fileNew = $this->sessionID = null;
 
-            return TRUE;
+            return true;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -202,14 +202,14 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
     public function destroy($session_id): bool
     {
         if ($this->close()) {
-            return file_exists($this->filePath . $session_id) ? (unlink($this->filePath . $session_id) && $this->destroyCookie()) : TRUE;
-        } elseif ($this->filePath !== NULL) {
+            return file_exists($this->filePath . $session_id) ? (unlink($this->filePath . $session_id) && $this->destroyCookie()) : true;
+        } elseif ($this->filePath !== null) {
             clearstatcache();
 
-            return file_exists($this->filePath . $session_id) ? (unlink($this->filePath . $session_id) && $this->destroyCookie()) : TRUE;
+            return file_exists($this->filePath . $session_id) ? (unlink($this->filePath . $session_id) && $this->destroyCookie()) : true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -221,25 +221,28 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface 
      */
     public function gc($maxLifeTime): bool
     {
-        if (! is_dir($this->savePath) || ($directory = opendir($this->savePath)) === FALSE) {
+        if (! is_dir($this->savePath) || ($directory = opendir($this->savePath)) === false) {
             $this->logger->debug("Session: 垃圾收集器无法在当前目录下列出文件 '" . $this->savePath . "'.");
 
-            return FALSE;
+            return false;
         }
         $ts      = time() - $maxLifeTime;
-        $pattern = sprintf('/^%s[0-9a-f]{%d}$/', preg_quote($this->cookieName, '/'),
-            ($this->matchIP === TRUE ? 72 : 40));
-        while (($file = readdir($directory)) !== FALSE) {
+        $pattern = sprintf(
+            '/^%s[0-9a-f]{%d}$/',
+            preg_quote($this->cookieName, '/'),
+            ($this->matchIP === true ? 72 : 40)
+        );
+        while (($file = readdir($directory)) !== false) {
             // 如果文件名与此模式不匹配，它不是会话文件
             $mTime  = filemtime($this->savePath . '/' . $file);
             $status = preg_match($pattern, $file) || ! is_file($this->savePath . '/' . $file) || $mTime;
-            if (! $status === FALSE || $mTime > $ts) {
+            if (! $status === false || $mTime > $ts) {
                 continue;
             }
             unlink($this->savePath . '/' . $file);
         }
         closedir($directory);
 
-        return TRUE;
+        return true;
     }
 }

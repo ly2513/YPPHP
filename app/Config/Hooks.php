@@ -20,7 +20,6 @@ use YP\Core\YP_Hooks as Hooks;
  */
 
 // 调试工具栏侦听器。如果删除，将不再收集它们。
-if (ENVIRONMENT != 'prod')
-{
+if (ENVIRONMENT != 'prod') {
     Hooks::on('DBQuery', 'YP\Debug\Toolbar\Collectors\Database::collect');
 }

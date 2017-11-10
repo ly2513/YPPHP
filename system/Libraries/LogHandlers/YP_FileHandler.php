@@ -15,9 +15,8 @@ namespace YP\Libraries\LogHandlers;
  *
  * @package YP\Libraries\LogHandlers
  */
-class YP_FileHandler implements YP_HandlerInterface {
-
-
+class YP_FileHandler implements YP_HandlerInterface
+{
     /**
      * 保存日志的文件夹
      *
@@ -62,7 +61,7 @@ class YP_FileHandler implements YP_HandlerInterface {
     {
         $this->handles = $config['handles'] ?? [];
         $this->path    = $config['path'] ?? CACHE_PATH . 'Logs/';
-        is_dir($this->path) or mkdir($this->path, 0777, TRUE);
+        is_dir($this->path) or mkdir($this->path, 0777, true);
         $this->fileExtension   = $config['fileExtension'] ?? 'php';
         $this->fileExtension   = ltrim($this->fileExtension, '.');
         $this->filePermissions = $config['filePermissions'] ?? 0644;
@@ -108,7 +107,7 @@ class YP_FileHandler implements YP_HandlerInterface {
         $filepath = $this->path . 'log-' . date('Y-m-d') . '.' . $this->fileExtension;
         $msg      = '';
         if (! file_exists($filepath)) {
-            $new_file = TRUE;
+            $new_file = true;
             // 只为php文件添加保护
             if ($this->fileExtension === 'php') {
                 $msg .= "<?php defined('APP_PATH') OR exit('No direct script access allowed'); ?>\n\n";
@@ -116,11 +115,11 @@ class YP_FileHandler implements YP_HandlerInterface {
             touch($filepath);
         }
         if (! $fp = @fopen($filepath, 'ab')) {
-            return FALSE;
+            return false;
         }
         // 实例化与附加的初始日期日期时间是微秒, 这个格式需要适当的支持
-        if (strpos($this->dateFormat, 'u') !== FALSE) {
-            $micro_time_full  = microtime(TRUE);
+        if (strpos($this->dateFormat, 'u') !== false) {
+            $micro_time_full  = microtime(true);
             $micro_time_short = sprintf("%06d", ($micro_time_full - floor($micro_time_full)) * 1000000);
             $date             = new \DateTime(date('Y-m-d H:i:s.' . $micro_time_short, $micro_time_full));
             $date             = $date->format($this->dateFormat);
@@ -130,17 +129,16 @@ class YP_FileHandler implements YP_HandlerInterface {
         $msg .= strtoupper($level) . ' - ' . $date . ' --> ' . $message . "\n";
         flock($fp, LOCK_EX);
         for ($written = 0, $length = strlen($msg); $written < $length; $written += $result) {
-            if (($result = fwrite($fp, substr($msg, $written))) === FALSE) {
+            if (($result = fwrite($fp, substr($msg, $written))) === false) {
                 break;
             }
         }
         flock($fp, LOCK_UN);
         fclose($fp);
-        if (isset($new_file) && $new_file === TRUE) {
+        if (isset($new_file) && $new_file === true) {
             chmod($filepath, $this->filePermissions);
         }
 
         return is_int($result);
     }
-
 }

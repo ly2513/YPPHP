@@ -15,7 +15,8 @@ namespace Config;
  *
  * @package Config
  */
-class Twig {
+class Twig
+{
 
     /**
      *  模板扩展名
@@ -43,13 +44,12 @@ class Twig {
      *
      * @var bool
      */
-    public $debug = FALSE;
+    public $debug = false;
 
     /**
      * 是否开启自动刷新
      *
      * @var bool
      */
-    public $auto_reload = TRUE;
-    
+    public $auto_reload = true;
 }

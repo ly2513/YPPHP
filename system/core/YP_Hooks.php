@@ -19,8 +19,8 @@ define('EVENT_PRIORITY_HIGH', 10);
  *
  * @package YP\Core
  */
-class YP_Hooks {
-
+class YP_Hooks
+{
     /**
      * 监听数组
      *
@@ -33,7 +33,7 @@ class YP_Hooks {
      *
      * @var bool
      */
-    protected static $haveReadFromFile = FALSE;
+    protected static $haveReadFromFile = false;
 
     /**
      * 包含加载事件的文件的路径
@@ -47,7 +47,7 @@ class YP_Hooks {
      *
      * @param string|null $file
      */
-    public static function initialize(string $file = NULL)
+    public static function initialize(string $file = null)
     {
         // 不要复写任何东西
         if (! empty(self::$eventsFile)) {
@@ -76,12 +76,12 @@ class YP_Hooks {
     {
         if (! isset(self::$listeners[$event_name])) {
             self::$listeners[$event_name] = [
-                                             TRUE,
+                                             true,
                                              [$priority],
                                              [$callback],
                                             ];
         } else {
-            self::$listeners[$event_name][0]   = FALSE; // 未排序
+            self::$listeners[$event_name][0]   = false; // 未排序
             self::$listeners[$event_name][1][] = $priority;
             self::$listeners[$event_name][2][] = $callback;
         }
@@ -104,17 +104,17 @@ class YP_Hooks {
             if (is_file(self::$eventsFile)) {
                 include self::$eventsFile;
             }
-            self::$haveReadFromFile = TRUE;
+            self::$haveReadFromFile = true;
         }
         $listeners = self::listeners($event_name);
         foreach ($listeners as $listener) {
             $result = $listener(...$arguments);
-            if ($result === FALSE) {
-                return FALSE;
+            if ($result === false) {
+                return false;
             }
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -135,7 +135,7 @@ class YP_Hooks {
             // 进行排序
             array_multisort(self::$listeners[$event_name][1], SORT_NUMERIC, self::$listeners[$event_name][2]);
             // 标记已排序
-            self::$listeners[$event_name][0] = TRUE;
+            self::$listeners[$event_name][0] = true;
         }
 
         return self::$listeners[$event_name][2];
@@ -153,18 +153,18 @@ class YP_Hooks {
     public static function removeListener($event_name, callable $listener): bool
     {
         if (! isset(self::$listeners[$event_name])) {
-            return FALSE;
+            return false;
         }
         foreach (self::$listeners[$event_name][2] as $index => $check) {
             if ($check === $listener) {
                 unset(self::$listeners[$event_name][1][$index]);
                 unset(self::$listeners[$event_name][2][$index]);
 
-                return TRUE;
+                return true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -173,7 +173,7 @@ class YP_Hooks {
      *
      * @param null $event_name
      */
-    public static function removeAllListeners($event_name = NULL)
+    public static function removeAllListeners($event_name = null)
     {
         if (! is_null($event_name)) {
             unset(self::$listeners[$event_name]);

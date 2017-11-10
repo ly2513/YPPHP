@@ -13,8 +13,8 @@ use Illuminate\Support\Str;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
 use YP_MigrationRepositoryInterface;
 
-class YP_Migrator {
-
+class YP_Migrator
+{
     /**
      * 迁移存储库实现
      *
@@ -93,8 +93,8 @@ class YP_Migrator {
             return;
         }
         $batch   = $this->repository->getNextBatchNumber();
-        $pretend = Arr::get($options, 'pretend', FALSE);
-        $step    = Arr::get($options, 'step', FALSE);
+        $pretend = Arr::get($options, 'pretend', false);
+        $step    = Arr::get($options, 'step', false);
         // 一旦我们有了一系列的迁移，我们将通过它们旋转并运行迁移“up”，从而对数据库进行更改。
         // 然后，我们将记录迁移的运行情况，以便下次执行时不再重复
         foreach ($migrations as $file) {
@@ -136,7 +136,7 @@ class YP_Migrator {
      *
      * @return int
      */
-    public function rollback($pretend = FALSE)
+    public function rollback($pretend = false)
     {
         $this->notes = [];
         // 我们希望在上一次迁移操作中执行最后一批迁移。然后，我们将反转这些迁移，
@@ -163,7 +163,7 @@ class YP_Migrator {
      *
      * @return int
      */
-    public function reset($pretend = FALSE)
+    public function reset($pretend = false)
     {
         $this->notes = [];
         $migrations  = array_reverse($this->repository->getRan());
@@ -213,7 +213,7 @@ class YP_Migrator {
         // 获取所有的迁移文件
         $files = glob($path . '/*_*.php', 0);
         // 一旦我们有了文件的数组目录中我们会删除扩展走这是我们需要寻找的迁徙时没有运行在数据库文件的基名称
-        if ($files === FALSE) {
+        if ($files === false) {
             return [];
         }
         $files = array_map(function ($file) {

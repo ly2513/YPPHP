@@ -13,7 +13,8 @@ namespace Config;
  *
  * @package Config
  */
-class Error {
+class Error
+{
 
     protected $errorCode = [];
 
@@ -32,5 +33,4 @@ class Error {
 
         return $this->errorCode;
     }
-    
 }

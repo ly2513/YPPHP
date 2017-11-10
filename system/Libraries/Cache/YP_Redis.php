@@ -15,9 +15,8 @@ namespace YP\Libraries\Cache;
  *
  * @package YP\Libraries\Cache
  */
-class YP_Redis {
-
-
+class YP_Redis
+{
     protected $_options = [];
 
     /**
@@ -75,7 +74,7 @@ class YP_Redis {
      */
     protected $config = [
                          'host'     => '127.0.0.1',
-                         'password' => NULL,
+                         'password' => null,
                          'port'     => 6379,
                          'timeout'  => 0,
                         ];
@@ -85,7 +84,7 @@ class YP_Redis {
      *
      * @param \Config\Cache|null $config
      */
-    public function __construct(\Config\Cache $config = NULL)
+    public function __construct(\Config\Cache $config = null)
     {
         $redisConf = \Config\Cache::$redis;
         // redis前缀
@@ -299,7 +298,7 @@ class YP_Redis {
         $fields[] = 'redisFlag';
         $rs       = $this->getReadRedis()->hmGet($this->_key($key, $id), $fields);
 
-        return is_array($rs) && $rs['redisFlag'] === FALSE ? [] : $rs;
+        return is_array($rs) && $rs['redisFlag'] === false ? [] : $rs;
     }
 
     /**
@@ -369,7 +368,7 @@ class YP_Redis {
             $redis->expire($this->_key($key, $id), intval($period));
         }
 
-        return TRUE;
+        return true;
     }
 
     public function sadd($key, $id, $arr = [], $period = 0)
@@ -382,7 +381,7 @@ class YP_Redis {
             $redis->expire($this->_key($key, $id), intval($period));
         }
 
-        return TRUE;
+        return true;
     }
 
     public function lpush($key, $id, $arr = [], $period = 0)
@@ -395,7 +394,7 @@ class YP_Redis {
             $redis->expire($this->_key($key, $id), intval($period));
         }
 
-        return TRUE;
+        return true;
     }
 
     public function ltrim($key, $id, $start, $stop)

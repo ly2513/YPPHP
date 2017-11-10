@@ -17,8 +17,8 @@ use YP\Core\YP_RouterCollection as RouterCollection;
  *
  * @package YP\Core
  */
-class YP_Router {
-
+class YP_Router
+{
     /**
      * 路由收集器对象
      *
@@ -68,21 +68,21 @@ class YP_Router {
      *
      * @var bool
      */
-    protected $translateURIDashes = FALSE;
+    protected $translateURIDashes = false;
 
     /**
      * 这路由已匹配当前的请求
      *
      * @var null
      */
-    protected $matchedRoute = NULL;
+    protected $matchedRoute = null;
 
     /**
      * 在路由中检测到的区域设置
      *
      * @var string
      */
-    protected $detectedLocale = NULL;
+    protected $detectedLocale = null;
 
     /**
      * Router constructor.
@@ -104,12 +104,14 @@ class YP_Router {
      * @return string
      * @throws \Exception
      */
-    public function handle(string $uri = NULL)
+    public function handle(string $uri = null)
     {
         // 如果找不到一个匹配的URI，那么一切使用默认配置
         if (empty($uri)) {
-            return strpos($this->controller,
-                '\\') === FALSE ? $this->collection->getDefaultNamespace() . $this->controller : $this->controller;
+            return strpos(
+                $this->controller,
+                '\\'
+            ) === false ? $this->collection->getDefaultNamespace() . $this->controller : $this->controller;
         }
         if ($this->checkRoutes($uri)) {
             return $this->controller;
@@ -163,7 +165,7 @@ class YP_Router {
             return $route;
         }
 
-        return NULL;
+        return null;
     }
 
     /**
@@ -218,7 +220,7 @@ class YP_Router {
      *
      * @return YP_Router
      */
-    public function setTranslateURIDashes($val = FALSE): self
+    public function setTranslateURIDashes($val = false): self
     {
         $this->translateURIDashes = (bool) $val;
 
@@ -259,11 +261,11 @@ class YP_Router {
         // 获取路由收集器中的所有路由
         $routes = $this->collection->getRoutes();
         if (empty($routes)) {
-            return FALSE;
+            return false;
         }
         // 通过遍历路由进行相应的通配符匹配
         foreach ($routes as $key => $val) {
-            if (strpos($key, '{locale}') !== FALSE) {
+            if (strpos($key, '{locale}') !== false) {
                 // 搜索占位符
                 $localeSegment = array_search('{locale}', explode('/', $key));
                 // 使用正则表达式进行匹配
@@ -287,16 +289,16 @@ class YP_Router {
                                            $val,
                                           ];
 
-                    return TRUE;
+                    return true;
                 } else { // 使用默认的方法来引用
                     // 支持子目录功能资源路由,如$routes->resource('Admin/Admins');
-                    if (strpos($val, '$') !== FALSE && strpos($key, '(') !== FALSE && strpos($key, '/') !== FALSE) {
+                    if (strpos($val, '$') !== false && strpos($key, '(') !== false && strpos($key, '/') !== false) {
                         $replacekey = str_replace('/(.*)', '', $key);
                         $val        = preg_replace('#^' . $key . '$#', $val, $uri);
                         $val        = str_replace($replacekey, str_replace("/", "\\", $replacekey), $val);
-                    } elseif (strpos($val, '$') !== FALSE && strpos($key, '(') !== FALSE) {
+                    } elseif (strpos($val, '$') !== false && strpos($key, '(') !== false) {
                         $val = preg_replace('#^' . $key . '$#', $val, $uri);
-                    } elseif (strpos($key, '/') !== FALSE) {
+                    } elseif (strpos($key, '/') !== false) {
                         $val = str_replace('/', '\\', $val);
                     }
                 }
@@ -310,11 +312,11 @@ class YP_Router {
                                        $val,
                                       ];
 
-                return TRUE;
+                return true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -347,9 +349,12 @@ class YP_Router {
             include_once $file;
         }
         // 必须检测长度是否超过1,由于默认情况下是'\',确保控制器存储的是限定的类名
-        if (strpos($this->controller, '\\') === FALSE && strlen($this->collection->getDefaultNamespace()) > 1) {
-            $this->controller = str_replace('/', '\\',
-                $this->collection->getDefaultNamespace() . $this->directory . $this->controller);
+        if (strpos($this->controller, '\\') === false && strlen($this->collection->getDefaultNamespace()) > 1) {
+            $this->controller = str_replace(
+                '/',
+                '\\',
+                $this->collection->getDefaultNamespace() . $this->directory . $this->controller
+            );
         }
     }
 
@@ -368,10 +373,13 @@ class YP_Router {
         $directory_override = isset($this->directory);
         // 循环遍历$segments,将返回找到控制器或者目录不存在
         while ($c-- > 0) {
-            $test = $this->directory . ucfirst($this->translateURIDashes === TRUE ? str_replace('-', '_',
-                    $segments[0]) : $segments[0]);
-            if (! file_exists(APP_PATH . 'Controllers/' . $test . '.php') && $directory_override === FALSE && is_dir(APP_PATH . 'Controllers/' . $this->directory . ucfirst($segments[0]))) {
-                $this->setDirectory(array_shift($segments), TRUE);
+            $test = $this->directory . ucfirst($this->translateURIDashes === true ? str_replace(
+                '-',
+                '_',
+                $segments[0]
+            ) : $segments[0]);
+            if (! file_exists(APP_PATH . 'Controllers/' . $test . '.php') && $directory_override === false && is_dir(APP_PATH . 'Controllers/' . $this->directory . ucfirst($segments[0]))) {
+                $this->setDirectory(array_shift($segments), true);
                 continue;
             }
 
@@ -388,10 +396,10 @@ class YP_Router {
      * @param string|null $dir
      * @param bool        $append
      */
-    protected function setDirectory(string $dir = NULL, $append = FALSE)
+    protected function setDirectory(string $dir = null, $append = false)
     {
         $dir = ucfirst($dir);
-        if ($append !== TRUE || empty($this->directory)) {
+        if ($append !== true || empty($this->directory)) {
             $this->directory = str_replace('.', '', trim($dir, '/')) . '/';
         } else {
             $this->directory .= str_replace('.', '', trim($dir, '/')) . '/';
@@ -411,13 +419,13 @@ class YP_Router {
 
             return;
         }
-        if ($this->translateURIDashes === TRUE) {
+        if ($this->translateURIDashes === true) {
             $segments[0] = str_replace('-', '_', $segments[0]);
             if (isset($segments[1])) {
                 $segments[1] = str_replace('-', '_', $segments[1]);
             }
         }
-        list($controller, $method) = array_pad(explode('::', $segments[0]), 2, NULL);
+        list($controller, $method) = array_pad(explode('::', $segments[0]), 2, null);
         $this->controller          = $controller;
         // $this->method 已经设置了默认值,所以不要用空值来覆盖默认值
         if (! empty($method)) {

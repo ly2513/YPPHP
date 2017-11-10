@@ -15,8 +15,8 @@ namespace App\Libraries;
  *
  * @package App\Libraries
  */
-final class YP_Data {
-
+final class YP_Data
+{
     /**
      * 返回多层栏目
      *
@@ -36,8 +36,8 @@ final class YP_Data {
         $fieldPri = 'cid',
         $fieldPid = 'pid',
         $level = 1
-    ) 
-    {
+    ) {
+    
         if (empty($data)) {
             return [];
         }
@@ -47,8 +47,14 @@ final class YP_Data {
                 $arr[$v[$fieldPri]]           = $v;
                 $arr[$v[$fieldPri]]['_level'] = $level;
                 $arr[$v[$fieldPri]]['_html']  = str_repeat($html, $level - 1);
-                $arr[$v[$fieldPri]]["_data"]  = self::channelLevel($data, $v[$fieldPri], $html, $fieldPri, $fieldPid,
-                    $level + 1);
+                $arr[$v[$fieldPri]]["_data"]  = self::channelLevel(
+                    $data,
+                    $v[$fieldPri],
+                    $html,
+                    $fieldPri,
+                    $fieldPid,
+                    $level + 1
+                );
             }
         }
 
@@ -74,8 +80,8 @@ final class YP_Data {
         $fieldPri = 'cid',
         $fieldPid = 'pid',
         $level = 1
-    ) 
-    {
+    ) {
+    
         $data = self::_channelList($data, $pid, $html, $fieldPri, $fieldPid, $level);
         if (empty($data)) {
             return $data;
@@ -84,13 +90,13 @@ final class YP_Data {
             if ($m['_level'] == 1) {
                 continue;
             }
-            $data[$n]['_first'] = FALSE;
-            $data[$n]['_end']   = FALSE;
+            $data[$n]['_first'] = false;
+            $data[$n]['_end']   = false;
             if (! isset($data[$n - 1]) || $data[$n - 1]['_level'] != $m['_level']) {
-                $data[$n]['_first'] = TRUE;
+                $data[$n]['_first'] = true;
             }
             if (isset($data[$n + 1]) && $data[$n]['_level'] > $data[$n + 1]['_level']) {
-                $data[$n]['_end'] = TRUE;
+                $data[$n]['_end'] = true;
             }
         }
         //更新key为栏目主键
@@ -121,8 +127,8 @@ final class YP_Data {
         $fieldPri = 'cid',
         $fieldPid = 'pid',
         $level = 1
-    ) 
-    {
+    ) {
+    
         if (empty($data)) {
             return [];
         }
@@ -231,11 +237,11 @@ final class YP_Data {
         foreach ($_data as $c) {
             //目标栏目为源栏目的子栏目
             if ($c[$fieldPri] == $sid) {
-                return TRUE;
+                return true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -251,11 +257,11 @@ final class YP_Data {
     {
         foreach ($data as $d) {
             if ($d[$fieldPid] == $cid) {
-                return TRUE;
+                return true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -281,5 +287,4 @@ final class YP_Data {
 
         return $n_arr;
     }
-
 }

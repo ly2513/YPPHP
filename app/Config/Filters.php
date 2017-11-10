@@ -31,7 +31,7 @@ class Filters
           [
             // 'csrf'
           ],
-         'after'  => 
+         'after'  =>
           [
             'toolbar'
           ]

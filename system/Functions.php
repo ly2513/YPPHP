@@ -18,18 +18,20 @@ if (! function_exists('P')) {
      * @param $arr   打印的数据
      * @param bool $isDie 是否打断点
      */
-    function P($arr, $isDie = FALSE)
+    function P($arr, $isDie = false)
     {
         if (is_bool($arr)) {
             var_dump($arr);
         } elseif (is_null($arr)) {
-            var_dump(NULL);
+            var_dump(null);
         } else {
             if (is_cli()) {
                 print_r($arr);
             } else {
-                echo "<pre style='position:relative;z-index:1000;padding:10px;border-radius:5px;background:#F5F5F5;border:1px solid #aaa;font-size:14px;line-height:18px;opacity:0.9;'>" . print_r($arr,
-                        TRUE) . "</pre>";
+                echo "<pre style='position:relative;z-index:1000;padding:10px;border-radius:5px;background:#F5F5F5;border:1px solid #aaa;font-size:14px;line-height:18px;opacity:0.9;'>" . print_r(
+                    $arr,
+                    true
+                ) . "</pre>";
             }
         }
         if ($isDie) {
@@ -56,12 +58,12 @@ if (! function_exists('helper')) {
      */
     function helper($filenames)//: string
     {
-        $loader = Services::locator(TRUE);
+        $loader = Services::locator(true);
         if (! is_array($filenames)) {
             $filenames = [$filenames];
         }
         foreach ($filenames as $filename) {
-            if (strpos($filename, '_helper') === FALSE) {
+            if (strpos($filename, '_helper') === false) {
                 $filename .= '_helper';
             }
             $path = $loader->locateFile($filename, 'Helpers');
@@ -80,26 +82,31 @@ if (! function_exists('force_https')) {
      * @param Request|null  $request
      * @param Response|null $response
      */
-    function force_https(int $duration = 31536000, Request $request = NULL, Response $response = NULL)
+    function force_https(int $duration = 31536000, Request $request = null, Response $response = null)
     {
         if (is_null($request)) {
-            $request = Services::request(NULL, TRUE);
+            $request = Services::request(null, true);
         }
         if (is_null($response)) {
-            $response = Services::response(NULL, TRUE);
+            $response = Services::response(null, true);
         }
         if ($request->isSecure()) {
             return;
         }
         // 如果会话库已加载，为安全起见,则应重新生成会话ID
-        if (class_exists('Session', FALSE)) {
-            Services::session(NULL, TRUE)->regenerate();
+        if (class_exists('Session', false)) {
+            Services::session(null, true)->regenerate();
         }
         $uri = $request->uri;
         $uri->setScheme('https');
         // 绝对的URI应该用“/”为一个空的路径
-        $uri = \YP\Core\YP_Uri::createURIString($uri->getScheme(), $uri->getAuthority(TRUE), $uri->getPath(),
-            $uri->getQuery(), $uri->getFragment());
+        $uri = \YP\Core\YP_Uri::createURIString(
+            $uri->getScheme(),
+            $uri->getAuthority(true),
+            $uri->getPath(),
+            $uri->getQuery(),
+            $uri->getFragment()
+        );
         // 设置一个HSTS报头
         $response->setHeader('Strict-Transport-Security', 'max-age=' . $duration);
         $response->redirect($uri);
@@ -125,7 +132,7 @@ if (! function_exists('log_message')) {
             return $logger->log($level, $message, $context);
         }
 
-        return Services::log(TRUE)->log($level, $message, $context);
+        return Services::log(true)->log($level, $message, $context);
     }
 }
 if (! function_exists('esc')) {
@@ -139,7 +146,7 @@ if (! function_exists('esc')) {
      *
      * @return mixed
      */
-    function esc($data, $context = 'html', $encoding = NULL)
+    function esc($data, $context = 'html', $encoding = null)
     {
         if (is_array($data)) {
             foreach ($data as $key => &$value) {
@@ -181,7 +188,7 @@ if (! function_exists('cache')) {
      *
      * @return mixed
      */
-    function cache(string $key = NULL)
+    function cache(string $key = null)
     {
         $cache = \Config\Services::cache();
         // 参数为空,直接返回缓存对象
@@ -203,7 +210,7 @@ if (! function_exists('lang')) {
      *
      * @return array|string
      */
-    function lang(string $line, array $args = [], string $locale = NULL)
+    function lang(string $line, array $args = [], string $locale = null)
     {
         return \Config\Services::language($locale)->getLine($line, $args);
     }
@@ -241,7 +248,7 @@ if (! function_exists('get_rand')) {
                 $proSum -= $proCur;
             }
         }
-        unset ($proArr);
+        unset($proArr);
 
         return $result;
     }
@@ -256,7 +263,7 @@ if (! function_exists('site_url')) {
      *
      * @return string
      */
-    function site_url($path = '', string $scheme = NULL, \Config\App $altConfig = NULL): string
+    function site_url($path = '', string $scheme = null, \Config\App $altConfig = null): string
     {
         // 通过"/"将$path数组的参数拼接起来
         if (is_array($path)) {
@@ -290,7 +297,7 @@ if (! function_exists('base_url')) {
      *
      * @return string
      */
-    function base_url($path = '', string $scheme = NULL): string
+    function base_url($path = '', string $scheme = null): string
     {
         // 通过"/"将$path数组的参数拼接起来
         if (is_array($path)) {
@@ -334,7 +341,7 @@ if (! function_exists('service')) {
     function service(string $name, ...$params)
     {
         // 确认是否分享实例
-        array_push($params, TRUE);
+        array_push($params, true);
 
         return Services::$name(...$params);
     }
@@ -349,7 +356,7 @@ if (! function_exists('remove_invisible_characters')) {
      *
      * @return mixed
      */
-    function remove_invisible_characters($str, $url_encoded = TRUE)
+    function remove_invisible_characters($str, $url_encoded = true)
     {
         $non_display_ables = [];
         // 每一个控制字符，除了换行符、回车、水平制表符

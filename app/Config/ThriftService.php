@@ -8,7 +8,8 @@
  */
 namespace Config;
 
-class ThriftService {
+class ThriftService
+{
 
     /**
      * Thrift 服务端 IP

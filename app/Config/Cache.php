@@ -15,7 +15,8 @@ namespace Config;
  *
  * @package Config
  */
-class Cache {
+class Cache
+{
 
     /**
      * 缓存处理类型
@@ -49,7 +50,7 @@ class Cache {
      *
      * @var bool
      */
-    public $cacheQueryString = FALSE;
+    public $cacheQueryString = false;
 
     /**
      * 缓存前缀
@@ -63,7 +64,7 @@ class Cache {
      *
      * @var array
      */
-    public static $redis = NULL;
+    public static $redis = null;
 
     /**
      * 处理缓存方式,key为类的别名,value为处理缓存的类

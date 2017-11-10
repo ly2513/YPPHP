@@ -19,8 +19,8 @@ $loader->register();
  *
  * @package YP\Libraries\Thrift
  */
-class YP_ThriftClient {
-
+class YP_ThriftClient
+{
     /**
      * @var string
      */
@@ -99,7 +99,7 @@ class YP_ThriftClient {
      * @return mixed
      * @throws \Exception
      */
-    public static function instance($serviceName, $newOne = FALSE)
+    public static function instance($serviceName, $newOne = false)
     {
         if (empty($serviceName)) {
             throw new \Exception('ServiceName can not be empty');
@@ -154,7 +154,8 @@ class YP_ThriftClient {
  *
  * @author liangl
  */
-class ThriftInstance {
+class ThriftInstance
+{
 
     /**
      * 服务名
@@ -168,7 +169,7 @@ class ThriftInstance {
      *
      * @var array
      */
-    protected $thriftInstance = NULL;
+    protected $thriftInstance = null;
 
     /**
      * 初始化工作
@@ -208,7 +209,7 @@ class ThriftInstance {
         // 调用客户端方法
         $ret = call_user_func_array($callback, $arguments);
         // 每次都销毁实例
-        $this->thriftInstance = NULL;
+        $this->thriftInstance = null;
 
         return $ret;
     }

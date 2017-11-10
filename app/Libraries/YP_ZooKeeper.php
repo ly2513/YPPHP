@@ -16,7 +16,8 @@ namespace App\Libraries;
  *
  * @package App\Libraries
  */
-class YP_Zookeeper {
+class YP_Zookeeper
+{
 
     /**
      * Zookeeper对象
@@ -111,7 +112,7 @@ class YP_Zookeeper {
     public function get($path)
     {
         if (! $this->zookeeper->exists($path)) {
-            return NULL;
+            return null;
         }
 
         return $this->zookeeper->get($path);
@@ -144,7 +145,7 @@ class YP_Zookeeper {
     public function deleteNode($path)
     {
         if (! $this->zookeeper->exists($path)) {
-            return NULL;
+            return null;
         } else {
             return $this->zookeeper->delete($path);
         }
@@ -161,7 +162,7 @@ class YP_Zookeeper {
     public function watch($path, $callback)
     {
         if (! is_callable($callback)) {
-            return NULL;
+            return null;
         }
         if ($this->zookeeper->exists($path)) {
             if (! isset($this->callback[$path])) {
@@ -187,7 +188,7 @@ class YP_Zookeeper {
     public function watchCallback($event_type, $stat, $path)
     {
         if (! isset($this->callback[$path])) {
-            return NULL;
+            return null;
         }
         foreach ($this->callback[$path] as $callback) {
             $this->zookeeper->get($path, [$this, 'watchCallback']);
@@ -204,23 +205,23 @@ class YP_Zookeeper {
      *
      * @return bool|null
      */
-    public function cancelWatch($path, $callback = NULL)
+    public function cancelWatch($path, $callback = null)
     {
         if (! isset($this->callback[$path])) {
-            return NULL;
+            return null;
         }
         if (empty($callback)) {
             unset($this->callback[$path]);
             $this->zookeeper->get($path); //reset the callback
-            return TRUE;
+            return true;
         } else {
             $key = array_search($callback, $this->callback[$path]);
-            if ($key !== FALSE) {
+            if ($key !== false) {
                 unset($this->callback[$path][$key]);
 
-                return TRUE;
+                return true;
             } else {
-                return NULL;
+                return null;
             }
         }
     }

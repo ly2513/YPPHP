@@ -13,9 +13,9 @@ namespace YP\Config;
  *
  * @package YP\Config
  */
-class ContentSecurityPolicy {
-
-    public $reportOnly = FALSE;
+class ContentSecurityPolicy
+{
+    public $reportOnly = false;
 
     public $defaultSrc = 'none';
 
@@ -25,27 +25,27 @@ class ContentSecurityPolicy {
 
     public $imageSrc = 'self';
 
-    public $base_uri = NULL;
+    public $base_uri = null;
 
-    public $childSrc = NULL;
+    public $childSrc = null;
 
     public $connectSrc = 'self';
 
-    public $fontSrc = NULL;
+    public $fontSrc = null;
 
-    public $formAction = NULL;
+    public $formAction = null;
 
-    public $frameAncestors = NULL;
+    public $frameAncestors = null;
 
-    public $mediaSrc = NULL;
+    public $mediaSrc = null;
 
-    public $objectSrc = NULL;
+    public $objectSrc = null;
 
-    public $pluginTypes = NULL;
+    public $pluginTypes = null;
 
-    public $reportURI = NULL;
+    public $reportURI = null;
 
-    public $sandbox = FALSE;
+    public $sandbox = false;
 
-    public $upgradeInsecureRequests = FALSE;
+    public $upgradeInsecureRequests = false;
 }

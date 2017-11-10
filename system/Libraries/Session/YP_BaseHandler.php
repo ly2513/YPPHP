@@ -16,8 +16,8 @@ use Psr\Log\LoggerAwareTrait;
  *
  * @package YP\Libraries\Session
  */
-abstract class YP_BaseHandler implements \SessionHandlerInterface {
-
+abstract class YP_BaseHandler implements \SessionHandlerInterface
+{
     use LoggerAwareTrait;
 
     /**
@@ -32,7 +32,7 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface {
      *
      * @var bool
      */
-    protected $lock = FALSE;
+    protected $lock = false;
 
     /**
      * Cookie的前缀
@@ -60,7 +60,7 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface {
      *
      * @var bool
      */
-    protected $cookieSecure = FALSE;
+    protected $cookieSecure = false;
 
     /**
      * Cookie name to use
@@ -74,7 +74,7 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface {
      *
      * @var bool
      */
-    protected $matchIP = FALSE;
+    protected $matchIP = false;
 
     /**
      * 当前的session的ID
@@ -117,12 +117,12 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface {
     {
         return setcookie(
             $this->cookieName,
-            NULL,
+            null,
             1,
             $this->cookiePath,
             $this->cookieDomain,
             $this->cookieSecure,
-            TRUE
+            true
         );
     }
 
@@ -135,8 +135,8 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface {
      */
     protected function lockSession(string $sessionID): bool
     {
-        $this->lock = TRUE;
-        return TRUE;
+        $this->lock = true;
+        return true;
     }
 
     /**
@@ -146,9 +146,9 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface {
      */
     protected function releaseLock(): bool
     {
-        $this->lock = FALSE;
+        $this->lock = false;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -162,6 +162,6 @@ abstract class YP_BaseHandler implements \SessionHandlerInterface {
     {
         ini_set('session.save_path', $this->savePath);
 
-        return FALSE;
+        return false;
     }
 }

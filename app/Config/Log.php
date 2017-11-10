@@ -15,7 +15,8 @@ namespace Config;
  *
  * @package Config
  */
-class Log {
+class Log
+{
 
     /**
      * 错误日志记录阈值

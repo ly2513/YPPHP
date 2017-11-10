@@ -17,7 +17,8 @@ use YP\Config\BaseConfig;
  *
  * @package Config
  */
-class Migrations extends BaseConfig {
+class Migrations extends BaseConfig
+{
 
     /**
      * 启用/禁用迁移
@@ -26,7 +27,7 @@ class Migrations extends BaseConfig {
      *
      * @var bool
      */
-    public $enabled = FALSE;
+    public $enabled = false;
 
     /**
      * 迁移的文件的时间格式
@@ -58,5 +59,4 @@ class Migrations extends BaseConfig {
      * @var string
      */
     public $migratePath = APP_PATH . '/ThirdParty/Migrate';
-
 }

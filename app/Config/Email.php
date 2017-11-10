@@ -15,7 +15,8 @@ namespace Config;
  *
  * @package Config
  */
-class Email {
+class Email
+{
 
     /**
      * 邮箱服务器
@@ -74,7 +75,7 @@ class Email {
      *
      * @var bool
      */
-    public $isHTML = TRUE;
+    public $isHTML = true;
 
     /**
      * 非html邮件客户端的纯文本正文
@@ -89,5 +90,4 @@ class Email {
      * @var string
      */
     public $connectType = 'ssl';
-
 }

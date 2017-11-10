@@ -15,8 +15,8 @@ namespace YP\Config;
  *
  * @package YP\Config
  */
-class AutoloadConfig {
-
+class AutoloadConfig
+{
     /**
      * 命名空间映射数组
      * 将命名空间作为key,路径作为value
@@ -52,5 +52,4 @@ class AutoloadConfig {
                            'YP\Libraries\YP_Eloquent' => SYSTEM_PATH . 'Libraries/YP_Eloquent.php',
                           ];
     }
-
 }

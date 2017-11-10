@@ -15,8 +15,8 @@ namespace Illuminate\Database\Eloquent;
  *
  * @package YP\Libraries
  */
-trait SoftDelete {
-
+trait SoftDelete
+{
     use SoftDeletes;
 
     /**
@@ -36,7 +36,7 @@ trait SoftDelete {
      */
     public function trashed()
     {
-        return $this->{$this->getDeletedAtColumn()} ? TRUE : FALSE;
+        return $this->{$this->getDeletedAtColumn()} ? true : false;
     }
 
     /**
@@ -49,16 +49,16 @@ trait SoftDelete {
         // If the restoring event does not return false, we will proceed with this
         // restore operation. Otherwise, we bail out so the developer will stop
         // the restore totally. We will clear the deleted timestamp and save.
-        if ($this->fireModelEvent('restoring') === FALSE) {
-            return FALSE;
+        if ($this->fireModelEvent('restoring') === false) {
+            return false;
         }
         $this->{$this->getDeletedAtColumn()} = SoftDeleteScope::DELETED_NORMAL;
         // Once we have saved the model, we will fire the "restored" event so this
         // developer will do anything they need to after a restore operation is
         // totally finished. Then we will return the result of the save call.
-        $this->exists = TRUE;
+        $this->exists = true;
         $result       = $this->save();
-        $this->fireModelEvent('restored', FALSE);
+        $this->fireModelEvent('restored', false);
 
         return $result;
     }
@@ -82,7 +82,8 @@ trait SoftDelete {
  *
  * @package YP\Libraries
  */
-class SoftDeleteScope extends SoftDeletingScope {
+class SoftDeleteScope extends SoftDeletingScope
+{
 
     // 新增的关于deleted_at 值的定义
     const DELETED_NORMAL = 0;
@@ -90,6 +91,9 @@ class SoftDeleteScope extends SoftDeletingScope {
 
     /**
      * 获取正常数据
+     *
+     * @param Builder $builder
+     * @param Model   $model
      */
     public function apply(Builder $builder, Model $model)
     {
@@ -101,7 +105,7 @@ class SoftDeleteScope extends SoftDeletingScope {
     /**
      * 只获取软删除数据
      *
-     * @return bool
+     * @param Builder $builder
      */
     public function addOnlyTrashed(Builder $builder)
     {
@@ -116,7 +120,7 @@ class SoftDeleteScope extends SoftDeletingScope {
     /**
      * 恢复被删除的数据
      *
-     * @return bool
+     * @param Builder $builder
      */
     public function addRestore(Builder $builder)
     {
@@ -126,11 +130,11 @@ class SoftDeleteScope extends SoftDeletingScope {
             return $builder->update([$builder->getModel()->getDeletedAtColumn() => self::DELETED_NORMAL]);
         });
     }
-
+    
     /**
      * 软删除 delete
      *
-     * @return bool/null
+     * @param Builder $builder
      */
     public function extend(Builder $builder)
     {
@@ -145,5 +149,4 @@ class SoftDeleteScope extends SoftDeletingScope {
                                     ]);
         });
     }
-
 }

@@ -8,8 +8,13 @@
  */
 namespace YP\Core;
 
-class YP_CacheFactory {
-
+/**
+ * Class YP_CacheFactory
+ *
+ * @package YP\Core
+ */
+class YP_CacheFactory
+{
     /**
      * 创建缓存处理程序
      *
@@ -19,7 +24,7 @@ class YP_CacheFactory {
      *
      * @return mixed
      */
-    public static function getHandler($config, string $handler = NULL, string $backup = NULL)
+    public static function getHandler($config, string $handler = null, string $backup = null)
     {
         // 判断是否存在相应的处理程序
         if (! isset($config->validHandlers) || ! is_array($config->validHandlers)) {
@@ -46,5 +51,4 @@ class YP_CacheFactory {
 
         return $adapter;
     }
-
 }

@@ -11,9 +11,8 @@ namespace YP\Core;
 use YP\Core\YP_IncomingRequest as IncomingRequest;
 use YP\Core\YP_Response as Response;
 
-interface YP_FilterInterface {
-
-
+interface YP_FilterInterface
+{
     /**
      * 这过滤器必须能处理任何需要过滤的
      * 默认情况下，在正常执行期间,它不应该返回任何东西。当一个异常被发现时，它应该返回一个YP\Core\YP_IncomingRequest实例

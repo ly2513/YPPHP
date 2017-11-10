@@ -15,7 +15,7 @@ namespace Config;
  * example.com/class/method/id
  */
 // 实例化路由收集器对象
-$routes = Services::routes(TRUE);
+$routes = Services::routes(true);
 // 先加载系统的路由文件，以便应用程序和环境可以根据需要重写
 if (file_exists(SYSTEM_PATH . 'Config/Routes.php')) {
     require SYSTEM_PATH . 'Config/Routes.php';
@@ -41,9 +41,9 @@ if (file_exists(SYSTEM_PATH . 'Config/Routes.php')) {
 $routes->setDefaultNamespace('App\Controllers');
 $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
-$routes->setTranslateURIDashes(FALSE);
+$routes->setTranslateURIDashes(false);
 $routes->set404Override();
-$routes->setAutoRoute(TRUE);
+$routes->setAutoRoute(true);
 
 /**
  * 路由定义,可以通过指定默认路由来提高性能，因为我们不需要扫描目录

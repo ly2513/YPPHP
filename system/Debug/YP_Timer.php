@@ -13,8 +13,8 @@ namespace YP\Debug;
  *
  * @package YP\Debug
  */
-class YP_Timer {
-
+class YP_Timer
+{
     /**
      * 存放所有的定时器
      *
@@ -31,11 +31,11 @@ class YP_Timer {
      *
      * @return YP_Timer
      */
-    public function start(string $name, float $time = NULL): self
+    public function start(string $name, float $time = null): self
     {
         $this->timers[strtolower($name)] = [
-                                            'start' => ! empty($time) ? $time : microtime(TRUE),
-                                            'end'   => NULL,
+                                            'start' => ! empty($time) ? $time : microtime(true),
+                                            'end'   => null,
                                            ];
 
         return $this;
@@ -55,7 +55,7 @@ class YP_Timer {
         if (empty($this->timers[$name])) {
             throw new \RuntimeException('Cannot stop timer: invalid name given.');
         }
-        $this->timers[$name]['end'] = microtime(TRUE);
+        $this->timers[$name]['end'] = microtime(true);
 
         return $this;
     }
@@ -72,11 +72,11 @@ class YP_Timer {
     {
         $name = strtolower($name);
         if (empty($this->timers[$name])) {
-            return NULL;
+            return null;
         }
         $timer = $this->timers[$name];
         if (empty($timer['end'])) {
-            $timer['end'] = microtime(TRUE);
+            $timer['end'] = microtime(true);
         }
 
         return (float) number_format($timer['end'] - $timer['start'], $decimals);
@@ -95,7 +95,7 @@ class YP_Timer {
         $timers = $this->timers;
         foreach ($timers as &$timer) {
             if (empty($timer['end'])) {
-                $timer['end'] = microtime(TRUE);
+                $timer['end'] = microtime(true);
             }
             $timer['duration'] = (float) number_format($timer['end'] - $timer['start'], $decimals);
         }

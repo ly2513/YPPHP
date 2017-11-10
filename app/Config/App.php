@@ -17,7 +17,8 @@ use YP\Config\Config;
  *
  * @package Config
  */
-class App extends Config {
+class App extends Config
+{
 
     /**
      * 设置基本的网址
@@ -45,7 +46,7 @@ class App extends Config {
      */
     public $defaultLocale = 'en';
 
-    public $negotiateLocale = FALSE;
+    public $negotiateLocale = false;
 
     /**
      * 支持的语言环境
@@ -75,11 +76,11 @@ class App extends Config {
      *
      * @var bool
      */
-    public $forceGlobalSecureRequests = FALSE;
+    public $forceGlobalSecureRequests = false;
 
     /**
      * session 处理驱动设置
-     * 
+     *
      * sessionDriver: 设置session存储的驱动,包含文件存储、数据库存储、redis存储, 肯能的值为下面三种
      * YP\Libraries\Session\YP_FileHandler
      * YP\Libraries\Session\YP_DatabaseHandler
@@ -118,7 +119,7 @@ class App extends Config {
      *
      * @var bool
      */
-    public $sessionMatchIP = FALSE;
+    public $sessionMatchIP = false;
 
     /**
      * 间隔多少秒再生成一次session ID
@@ -132,11 +133,11 @@ class App extends Config {
      *
      * @var bool
      */
-    public $sessionRegenerateDestroy = FALSE;
+    public $sessionRegenerateDestroy = false;
 
     /**
      * cookie 相关的属性
-     * 
+     *
      * cookiePrefix:   防止cookie碰撞,可以设置Cookie名称前缀
      * cookieDomain:   设置站内cookie
      * cookiePath:     cookie路径,默认值为'/'
@@ -148,8 +149,8 @@ class App extends Config {
     public $cookiePrefix   = '';
     public $cookieDomain   = '';
     public $cookiePath     = '/';
-    public $cookieSecure   = FALSE;
-    public $cookieHTTPOnly = FALSE;
+    public $cookieSecure   = false;
+    public $cookieHTTPOnly = false;
 
     /**
      * 反向代理服务器IPS
@@ -175,8 +176,8 @@ class App extends Config {
     public $CSRFTokenName  = 'csrf_test_name';
     public $CSRFCookieName = 'csrf_cookie_name';
     public $CSRFExpire     = 7200;
-    public $CSRFRegenerate = TRUE;
-    public $CSPEnabled     = FALSE;
+    public $CSRFRegenerate = true;
+    public $CSPEnabled     = false;
 
     /**
      * 调试工具栏
@@ -221,5 +222,4 @@ class App extends Config {
      * @var string
      */
     public $salt = '';
-
 }

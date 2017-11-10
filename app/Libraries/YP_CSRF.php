@@ -19,9 +19,8 @@ use Config\Services;
  *
  * @package App\Libraries
  */
-class YP_CSRF extends Filter {
-
-
+class YP_CSRF extends Filter
+{
     /**
      * 做任何处理这个过滤器需要做。默认情况下，它不应该返回任何在正常执行。但是，当发现异常状态时，它应该返回一个实例
      * 如果是这样，脚本执行结束，响应将被发送回客户端，允许错误页面、重定向，等
@@ -30,8 +29,7 @@ class YP_CSRF extends Filter {
      */
     public function before(Request $request)
     {
-        if (is_cli())
-        {
+        if (is_cli()) {
             return;
         }
 
@@ -49,5 +47,4 @@ class YP_CSRF extends Filter {
     public function after(Request $request, Response $response)
     {
     }
-
 }

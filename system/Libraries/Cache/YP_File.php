@@ -15,8 +15,8 @@ namespace YP\Libraries\Cache;
  *
  * @package YP\Libraries\Cache
  */
-class YP_File {
-
+class YP_File
+{
     /**
      * Prefixed to all cache names.
      *
@@ -43,7 +43,6 @@ class YP_File {
      */
     public function initialize()
     {
-
     }
 
     /**
@@ -58,7 +57,7 @@ class YP_File {
         $key  = $this->prefix . $key;
         $data = $this->getItem($key);
 
-        return is_array($data) ? $data['data'] : FALSE;
+        return is_array($data) ? $data['data'] : false;
     }
 
     /**
@@ -81,10 +80,10 @@ class YP_File {
         if ($this->writeFile($this->path . $key, serialize($contents))) {
             chmod($this->path . $key, 0640);
 
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -98,7 +97,7 @@ class YP_File {
     {
         $key = $this->prefix . $key;
 
-        return file_exists($this->path . $key) ? unlink($this->path . $key) : FALSE;
+        return file_exists($this->path . $key) ? unlink($this->path . $key) : false;
     }
 
     /**
@@ -113,17 +112,17 @@ class YP_File {
     {
         $key  = $this->prefix . $key;
         $data = $this->getItem($key);
-        if ($data === FALSE) {
+        if ($data === false) {
             $data = [
                      'data' => 0,
                      'ttl'  => 60,
                     ];
         } elseif (! is_int($data['data'])) {
-            return FALSE;
+            return false;
         }
         $new_value = $data['data'] + $offset;
 
-        return $this->save($key, $new_value, $data['ttl']) ? $new_value : FALSE;
+        return $this->save($key, $new_value, $data['ttl']) ? $new_value : false;
     }
 
     /**
@@ -138,17 +137,17 @@ class YP_File {
     {
         $key  = $this->prefix . $key;
         $data = $this->getItem($key);
-        if ($data === FALSE) {
+        if ($data === false) {
             $data = [
                      'data' => 0,
                      'ttl'  => 60,
                     ];
         } elseif (! is_int($data['data'])) {
-            return FALSE;
+            return false;
         }
         $new_value = $data['data'] - $offset;
 
-        return $this->save($key, $new_value, $data['ttl']) ? $new_value : FALSE;
+        return $this->save($key, $new_value, $data['ttl']) ? $new_value : false;
     }
 
     /**
@@ -158,7 +157,7 @@ class YP_File {
      */
     public function clean()
     {
-        return $this->deleteFiles($this->path, FALSE, TRUE);
+        return $this->deleteFiles($this->path, false, true);
     }
 
     /**
@@ -182,13 +181,13 @@ class YP_File {
     {
         $key = $this->prefix . $key;
         if (! file_exists($this->path . $key)) {
-            return FALSE;
+            return false;
         }
         $data = unserialize(file_get_contents($this->path . $key));
         if (is_array($data)) {
             $mtime = filemtime($this->path . $key);
             if (! isset($data['ttl'])) {
-                return FALSE;
+                return false;
             }
 
             return [
@@ -197,7 +196,7 @@ class YP_File {
                    ];
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -220,13 +219,13 @@ class YP_File {
     protected function getItem(string $key)
     {
         if (! is_file($this->path . $key)) {
-            return NULL;
+            return null;
         }
         $data = unserialize(file_get_contents($this->path . $key));
         if ($data['ttl'] > 0 && time() > $data['time'] + $data['ttl']) {
             unlink($this->path . $key);
 
-            return NULL;
+            return null;
         }
 
         return $data;
@@ -244,11 +243,11 @@ class YP_File {
     protected function writeFile($path, $data, $mode = 'wb')
     {
         if (! $fp = @fopen($path, $mode)) {
-            return FALSE;
+            return false;
         }
         flock($fp, LOCK_EX);
         for ($result = $written = 0, $length = strlen($data); $written < $length; $written += $result) {
-            if (($result = fwrite($fp, substr($data, $written))) === FALSE) {
+            if (($result = fwrite($fp, substr($data, $written))) === false) {
                 break;
             }
         }
@@ -268,19 +267,21 @@ class YP_File {
      *
      * @return bool
      */
-    protected function deleteFiles($path, $del_dir = FALSE, $htdocs = FALSE, $_level = 0)
+    protected function deleteFiles($path, $del_dir = false, $htdocs = false, $_level = 0)
     {
         // Trim the trailing slash
         $path = rtrim($path, '/\\');
         if (! $current_dir = @opendir($path)) {
-            return FALSE;
+            return false;
         }
-        while (FALSE !== ($filename = @readdir($current_dir))) {
+        while (false !== ($filename = @readdir($current_dir))) {
             if ($filename !== '.' && $filename !== '..') {
                 if (is_dir($path . DIRECTORY_SEPARATOR . $filename) && $filename[0] !== '.') {
                     $this->deleteFiles($path . DIRECTORY_SEPARATOR . $filename, $del_dir, $htdocs, $_level + 1);
-                } elseif ($htdocs !== TRUE || ! preg_match('/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i',
-                        $filename)
+                } elseif ($htdocs !== true || ! preg_match(
+                    '/^(\.htaccess|index\.(html|htm|php)|web\.config)$/i',
+                    $filename
+                )
                 ) {
                     @unlink($path . DIRECTORY_SEPARATOR . $filename);
                 }
@@ -288,7 +289,7 @@ class YP_File {
         }
         closedir($current_dir);
 
-        return ($del_dir === TRUE && $_level > 0) ? @rmdir($path) : TRUE;
+        return ($del_dir === true && $_level > 0) ? @rmdir($path) : true;
     }
 
     /**
@@ -300,20 +301,20 @@ class YP_File {
      *
      * @return array|bool
      */
-    protected function getDirFileInfo($source_dir, $top_level_only = TRUE, $_recursion = FALSE)
+    protected function getDirFileInfo($source_dir, $top_level_only = true, $_recursion = false)
     {
         static $_fileData = [];
         $relative_path    = $source_dir;
         if ($fp = @opendir($source_dir)) {
             // reset the array and make sure $source_dir has a trailing slash on the initial call
-            if ($_recursion === FALSE) {
+            if ($_recursion === false) {
                 $_fileData  = [];
                 $source_dir = rtrim(realpath($source_dir), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
             }
             // Used to be foreach (scandir($source_dir, 1) as $file), but scandir() is simply not as fast
-            while (FALSE !== ($file = readdir($fp))) {
-                if (is_dir($source_dir . $file) && $file[0] !== '.' && $top_level_only === FALSE) {
-                    $this->getDirFileInfo($source_dir . $file . DIRECTORY_SEPARATOR, $top_level_only, TRUE);
+            while (false !== ($file = readdir($fp))) {
+                if (is_dir($source_dir . $file) && $file[0] !== '.' && $top_level_only === false) {
+                    $this->getDirFileInfo($source_dir . $file . DIRECTORY_SEPARATOR, $top_level_only, true);
                 } elseif ($file[0] !== '.') {
                     $_fileData[$file]                  = $this->getFileInfo($source_dir . $file);
                     $_fileData[$file]['relative_path'] = $relative_path;
@@ -324,7 +325,7 @@ class YP_File {
             return $_fileData;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -338,7 +339,7 @@ class YP_File {
     protected function getFileInfo($file, $returned_values = ['name', 'server_path', 'size', 'date'])
     {
         if (! file_exists($file)) {
-            return FALSE;
+            return false;
         }
         if (is_string($returned_values)) {
             $returned_values = explode(',', $returned_values);

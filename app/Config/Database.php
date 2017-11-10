@@ -15,7 +15,8 @@ namespace Config;
  *
  * @package Config
  */
-class Database {
+class Database
+{
 
     /**
      * 数据库数组
@@ -47,18 +48,17 @@ class Database {
                                  'database' => '',
                                  'dbdriver' => 'mysqli',
                                  'dbprefix' => '',
-                                 'pconnect' => FALSE,
-                                 'db_debug' => TRUE,
-                                 'cache_on' => FALSE,
+                                 'pconnect' => false,
+                                 'db_debug' => true,
+                                 'cache_on' => false,
                                  'cachedir' => '',
                                  'char_set' => 'utf8',
                                  'dbcollat' => 'utf8_general_ci',
                                  'swap_pre' => '',
-                                 'autoinit' => FALSE,
-                                 'stricton' => FALSE,
+                                 'autoinit' => false,
+                                 'stricton' => false,
                                 ];
 
         return $this->db;
     }
-
 }

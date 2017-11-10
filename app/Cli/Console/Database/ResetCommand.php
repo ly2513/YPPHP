@@ -70,11 +70,15 @@ class ResetCommand extends Command
             if ($input->getOption('force')) {
                 $status = true;
             } else {
-                $output->writeln('<comment>' . str_repeat('*',
-                        strlen('Application In Production!') + 12) . '</comment>');
+                $output->writeln('<comment>' . str_repeat(
+                    '*',
+                    strlen('Application In Production!') + 12
+                ) . '</comment>');
                 $output->writeln('<comment>*      Application In Production!     *</comment>');
-                $output->writeln('<comment>' . str_repeat('*',
-                        strlen('Application In Production!') + 12) . '</comment>');
+                $output->writeln('<comment>' . str_repeat(
+                    '*',
+                    strlen('Application In Production!') + 12
+                ) . '</comment>');
                 $output->writeln('');
                 $style     = new SymfonyStyle($input, $output);
                 $confirmed = $style->confirm('Do you really wish to run this command?');

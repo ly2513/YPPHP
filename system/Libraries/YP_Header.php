@@ -15,8 +15,8 @@ namespace YP\Libraries;
  *
  * @package YP\Libraries
  */
-class YP_Header {
-
+class YP_Header
+{
     /**
      * 头部名称
      *
@@ -37,7 +37,7 @@ class YP_Header {
      * @param string|null $name
      * @param null        $value
      */
-    public function __construct(string $name = NULL, $value = NULL)
+    public function __construct(string $name = null, $value = null)
     {
         $this->name  = $name;
         $this->value = $value;
@@ -84,7 +84,7 @@ class YP_Header {
      *
      * @return $this
      */
-    public function setValue($value = NULL)
+    public function setValue($value = null)
     {
         $this->value = $value;
 
@@ -98,10 +98,9 @@ class YP_Header {
      *
      * @return $this
      */
-    public function appendValue($value = NULL)
+    public function appendValue($value = null)
     {
-        if (! is_array($this->value))
-        {
+        if (! is_array($this->value)) {
             $this->value = [$this->value];
         }
 
@@ -117,10 +116,9 @@ class YP_Header {
      *
      * @return $this
      */
-    public function prependValue($value = NULL)
+    public function prependValue($value = null)
     {
-        if (! is_array($this->value))
-        {
+        if (! is_array($this->value)) {
             $this->value = [$this->value];
         }
 
@@ -137,30 +135,21 @@ class YP_Header {
      */
     public function getValueLine(): string
     {
-        if (is_string($this->value))
-        {
+        if (is_string($this->value)) {
             return $this->value;
-        }
-        elseif (! is_array($this->value))
-        {
+        } elseif (! is_array($this->value)) {
             return '';
         }
 
         $options = [];
 
-        foreach ($this->value as $key => $value)
-        {
-            if (is_string($key) && ! is_array($value))
-            {
+        foreach ($this->value as $key => $value) {
+            if (is_string($key) && ! is_array($value)) {
                 $options[] = $key.'='.$value;
-            }
-            elseif (is_array($value))
-            {
+            } elseif (is_array($value)) {
                 $key       = key($value);
                 $options[] = $key.'='.$value[$key];
-            }
-            elseif (is_numeric($key))
-            {
+            } elseif (is_numeric($key)) {
                 $options[] = $value;
             }
         }

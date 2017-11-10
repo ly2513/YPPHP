@@ -14,7 +14,6 @@ use YP\Libraries\Thrift\YP_ThriftClient;
 
 class Home extends Controller
 {
-
     /**
      * 网站信息
      */
@@ -125,7 +124,6 @@ class Home extends Controller
 
     public function testEmail()
     {
-
     }
 
     public function testQueue()
@@ -148,5 +146,4 @@ class Home extends Controller
         // string(6) "yield2" (the var_dump of the ->send() return value)
         var_dump($gen->send('ret2')); // string(4) "ret2"   (again from within gen)
     }
-
 }

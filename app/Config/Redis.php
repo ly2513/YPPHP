@@ -13,7 +13,8 @@ namespace Config;
  *
  * @package Config
  */
-class Redis {
+class Redis
+{
 
     /**
      * Redis配置
@@ -44,7 +45,7 @@ class Redis {
                            'port'       => 6379,       // 端口号
                            'index'      => '0',        // 数据库下标
                            'prefix'     => 'zb:',      // 数据表前缀
-                           'persistent' => FALSE,
+                           'persistent' => false,
                           ];
                 break;
             case 'test':
@@ -53,7 +54,7 @@ class Redis {
                            'port'       => 6379,       // 端口号
                            'index'      => '1',        // 数据库下标
                            'prefix'     => 'zb:',      // 数据表前缀
-                           'persistent' => FALSE,
+                           'persistent' => false,
                           ];
                 break;
             default:
@@ -62,7 +63,7 @@ class Redis {
                            'port'       => 6379,       // 端口号
                            'index'      => '0',        // 数据库下标
                            'prefix'     => 'zb:',      // 数据表前缀
-                           'persistent' => FALSE,
+                           'persistent' => false,
                           ];
                 break;
         };

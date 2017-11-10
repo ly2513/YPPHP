@@ -20,7 +20,6 @@ use YP\Config\Services;
  */
 class YP_Controller
 {
-
     /**
      * 请求对象
      *
@@ -149,7 +148,9 @@ class YP_Controller
     /**
      * 初始化控制器,用于子类使用
      */
-    public function initialization() { }
+    public function initialization()
+    {
+    }
 
     /**
      * 该方法确保某个方法只通过https请求过来,如果不需要，那么一个重定向会回到这个方法并且HSTS报头将被发送到浏览器的请求会自动发生变换
@@ -228,8 +229,8 @@ class YP_Controller
         is_dir($config['cache_dir']) or mkdir($config['cache_dir'], 0777, true);
         is_dir($config['template_dir']) or mkdir($config['template_dir'], 0777, true);
         // 实例化一个文件加载系统
-        $loader = new \Twig_Loader_Filesystem ($config['template_dir']);
-        $twig   = new \Twig_Environment ($loader, [
+        $loader = new \Twig_Loader_Filesystem($config['template_dir']);
+        $twig   = new \Twig_Environment($loader, [
             'cache'       => $config['cache_dir'],
             'debug'       => $config['debug'],
             'auto_reload' => $config['auto_reload'],
@@ -323,5 +324,4 @@ class YP_Controller
     {
         return DIRECTORY_SEPARATOR . $this->directory . $this->controller . DIRECTORY_SEPARATOR . $this->method;
     }
-
 }

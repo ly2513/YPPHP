@@ -13,12 +13,11 @@ namespace YP\Config;
  *
  * @package YP\Config
  */
-class Config {
-
-
+class Config
+{
     /**
      * 获得环境变量的值及匹配类的属性
-     * 
+     *
      * Config constructor.
      */
     public function __construct()
@@ -27,34 +26,33 @@ class Config {
         $prefix      = get_class($this);
         $shortPrefix = strtolower(substr($prefix, strrpos($prefix, '\\') + 1));
 
-        foreach ($properties as $property)
-        {
-            if (is_array($this->$property))
-            {
-                foreach ($this->$property as $key => $val)
-                {
-                    if ($value = $this->getEnvValue("{$property}.{$key}", $prefix, $shortPrefix))
-                    {
-                        if (is_null($value)) { continue;
+        foreach ($properties as $property) {
+            if (is_array($this->$property)) {
+                foreach ($this->$property as $key => $val) {
+                    if ($value = $this->getEnvValue("{$property}.{$key}", $prefix, $shortPrefix)) {
+                        if (is_null($value)) {
+                            continue;
                         }
 
-                        if ($value === 'false') {    $value = FALSE;
-                        } elseif ($value === 'true') { $value = TRUE;
+                        if ($value === 'false') {
+                            $value = false;
+                        } elseif ($value === 'true') {
+                            $value = true;
                         }
 
                         $this->$property[$key] = $value;
                     }
                 }
-            }
-            else
-            {
-                if (($value = $this->getEnvValue($property, $prefix, $shortPrefix)) !== FALSE )
-                {
-                    if (is_null($value)) { continue;
+            } else {
+                if (($value = $this->getEnvValue($property, $prefix, $shortPrefix)) !== false) {
+                    if (is_null($value)) {
+                        continue;
                     }
 
-                    if ($value === 'false') {    $value = FALSE;
-                    } elseif ($value === 'true') { $value = TRUE;
+                    if ($value === 'false') {
+                        $value = false;
+                    } elseif ($value === 'true') {
+                        $value = true;
                     }
 
                     $this->$property = $value;
@@ -74,20 +72,14 @@ class Config {
      */
     protected function getEnvValue(string $property, string $prefix, string $shortPrefix)
     {
-        if (($value = getenv("{$shortPrefix}.{$property}")) !== FALSE)
-        {
+        if (($value = getenv("{$shortPrefix}.{$property}")) !== false) {
             return $value;
-        }
-        elseif (($value = getenv("{$prefix}.{$property}")) !== FALSE)
-        {
+        } elseif (($value = getenv("{$prefix}.{$property}")) !== false) {
             return $value;
-        }
-        elseif (($value = getenv($property)) !== FALSE && $property != 'path')
-        {
+        } elseif (($value = getenv($property)) !== false && $property != 'path') {
             return $value;
         }
 
-        return NULL;
+        return null;
     }
-
 }

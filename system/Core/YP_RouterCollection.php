@@ -15,8 +15,8 @@ namespace YP\Core;
  *
  * @package YP\Core
  */
-class YP_RouterCollection {
-
+class YP_RouterCollection
+{
     /**
      * 设置默认的命名空间
      *
@@ -50,14 +50,14 @@ class YP_RouterCollection {
      *
      * @var bool
      */
-    protected $translateURIDashes = FALSE;
+    protected $translateURIDashes = false;
 
     /**
      * 自动路由
      *
      * @var bool
      */
-    protected $autoRoute = TRUE;
+    protected $autoRoute = true;
 
     /**
      * 当路由无法匹配时将显示的可调用404
@@ -116,21 +116,21 @@ class YP_RouterCollection {
      *
      * @var null
      */
-    protected $group = NULL;
+    protected $group = null;
 
     /**
      * 当前子域
      *
      * @var null
      */
-    protected $currentSubdomain = NULL;
+    protected $currentSubdomain = null;
 
     /**
      * 在创建期间,存储已用操作
      *
      * @var null
      */
-    protected $currentOptions = NULL;
+    protected $currentOptions = null;
 
     /**
      * YP_RouterCollection constructor.
@@ -149,7 +149,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function addPlaceholder(string $placeholder, string $pattern = NULL): self
+    public function addPlaceholder(string $placeholder, string $pattern = null): self
     {
         if (! is_array($placeholder)) {
             $placeholder = [$placeholder => $pattern];
@@ -238,7 +238,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function set404Override($callable = NULL): self
+    public function set404Override($callable = null): self
     {
         $this->override404 = $callable;
 
@@ -355,7 +355,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function map(array $routes = [], array $options = NULL): self
+    public function map(array $routes = [], array $options = null): self
     {
         foreach ($routes as $from => $to) {
             $this->add($from, $to, $options);
@@ -374,7 +374,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function add(string $from, $to, array $options = NULL): self
+    public function add(string $from, $to, array $options = null): self
     {
         $this->create($from, $to, $options);
 
@@ -417,7 +417,7 @@ class YP_RouterCollection {
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -488,7 +488,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function resource(string $name, array $options = NULL): self
+    public function resource(string $name, array $options = null): self
     {
         // 为了允许资源的路由被定制，我们需要用新的名字来存储
         $new_name = ucfirst($name);
@@ -503,8 +503,10 @@ class YP_RouterCollection {
         }
         // 确保 捕获的参数来回引用
         $id      = '(' . trim($id, '()') . ')';
-        $methods = isset($options['only']) ? is_string($options['only']) ? explode(',',
-            $options['only']) : $options['only'] : [
+        $methods = isset($options['only']) ? is_string($options['only']) ? explode(
+            ',',
+            $options['only']
+        ) : $options['only'] : [
                                                     'listAll',
                                                     'show',
                                                     'create',
@@ -552,7 +554,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function match(array $verbs = [], string $from, $to, array $options = NULL): self
+    public function match(array $verbs = [], string $from, $to, array $options = null): self
     {
         foreach ($verbs as $verb) {
             $verb = strtolower($verb);
@@ -571,7 +573,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function get(string $from, $to, array $options = NULL): self
+    public function get(string $from, $to, array $options = null): self
     {
         if ($this->HTTPVerb == 'get') {
             $this->create($from, $to, $options);
@@ -589,7 +591,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function post(string $from, $to, array $options = NULL): self
+    public function post(string $from, $to, array $options = null): self
     {
         if ($this->HTTPVerb == 'post') {
             $this->create($from, $to, $options);
@@ -607,7 +609,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function put(string $from, $to, array $options = NULL): self
+    public function put(string $from, $to, array $options = null): self
     {
         if ($this->HTTPVerb == 'put') {
             $this->create($from, $to, $options);
@@ -625,7 +627,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function delete(string $from, $to, array $options = NULL): self
+    public function delete(string $from, $to, array $options = null): self
     {
         if ($this->HTTPVerb == 'delete') {
             $this->create($from, $to, $options);
@@ -643,7 +645,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function head(string $from, $to, array $options = NULL): self
+    public function head(string $from, $to, array $options = null): self
     {
         if ($this->HTTPVerb == 'head') {
             $this->create($from, $to, $options);
@@ -661,7 +663,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function patch(string $from, $to, array $options = NULL): self
+    public function patch(string $from, $to, array $options = null): self
     {
         if ($this->HTTPVerb == 'patch') {
             $this->create($from, $to, $options);
@@ -679,7 +681,7 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function options(string $from, $to, array $options = NULL): self
+    public function options(string $from, $to, array $options = null): self
     {
         if ($this->HTTPVerb == 'options') {
             $this->create($from, $to, $options);
@@ -697,10 +699,9 @@ class YP_RouterCollection {
      *
      * @return YP_RouterCollection
      */
-    public function cli(string $from, $to, array $options = NULL): self
+    public function cli(string $from, $to, array $options = null): self
     {
-        if ($this->HTTPVerb == 'cli')
-        {
+        if ($this->HTTPVerb == 'cli') {
             $this->create($from, $to, $options);
         }
 
@@ -761,7 +762,7 @@ class YP_RouterCollection {
         }
 
         // 说明没找到目标路由
-        return FALSE;
+        return false;
     }
 
     /**
@@ -772,7 +773,7 @@ class YP_RouterCollection {
      *
      * @return string
      */
-    protected function fillRouteParams(string $from, array $params = NULL): string
+    protected function fillRouteParams(string $from, array $params = null): string
     {
         // 在原路由中找到所有的返回引用
         preg_match_all('/\(([^)]+)\)/', $from, $matches);
@@ -799,7 +800,7 @@ class YP_RouterCollection {
      * @param $to
      * @param array|null $options
      */
-    protected function create(string $from, $to, array $options = NULL)
+    protected function create(string $from, $to, array $options = null)
     {
         $prefix = is_null($this->group) ? '' : $this->group . '/';
         $from   = filter_var($prefix . $from, FILTER_SANITIZE_STRING);
@@ -836,7 +837,7 @@ class YP_RouterCollection {
             $from = str_ireplace(':' . $tag, $pattern, $from);
         }
         // 如果没有找到相应的命名空间，请添加默认命名空间
-        if (is_string($to) && strpos($to, '\\') === FALSE) {
+        if (is_string($to) && strpos($to, '\\') === false) {
             $namespace = $options['namespace'] ?? $this->defaultNamespace;
             $to        = trim($namespace, '\\') . '\\' . $to;
         }
@@ -871,15 +872,15 @@ class YP_RouterCollection {
         }
         // 路由可以被限制到任何子域。在这种情况下，确实需要一个子域存在。
         if (! empty($this->currentSubdomain) && in_array('*', $sub_domains)) {
-            return TRUE;
+            return true;
         }
         foreach ($sub_domains as $sub_domain) {
             if ($sub_domain == $this->currentSubdomain) {
-                return TRUE;
+                return true;
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -903,7 +904,7 @@ class YP_RouterCollection {
         // 如果最左边只有一个参数,那么就没有子域名了
         if (count($host) == 1) {
             // 返回FALSE,表示没有子域名
-            return FALSE;
+            return false;
         }
 
         return array_shift($host);

@@ -15,8 +15,8 @@ namespace YP\Config;
  *
  * @package YP\Config
  */
-class Mimes {
-
+class Mimes
+{
     /**
      * MIME类型的扩展映射
      *
@@ -485,7 +485,7 @@ class Mimes {
     {
         $extension = trim(strtolower($extension), '. ');
         if (! array_key_exists($extension, self::$mimes)) {
-            return NULL;
+            return null;
         }
 
         return is_array(self::$mimes[$extension]) ? self::$mimes[$extension][0] : self::$mimes[$extension];
@@ -509,6 +509,6 @@ class Mimes {
             }
         }
 
-        return NULL;
+        return null;
     }
 }

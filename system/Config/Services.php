@@ -15,8 +15,8 @@ namespace YP\Config;
  *
  * @package YP\Config
  */
-class Services {
-
+class Services
+{
     /**
      * 服务类加载
      *
@@ -31,7 +31,7 @@ class Services {
      *
      * @return \Yp\Autoload
      */
-    public static function autoload($getShared = TRUE)
+    public static function autoload($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('autoload');
@@ -48,7 +48,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Exceptions
      */
-    public static function exceptions(\Config\App $config = NULL, $getShared = TRUE)
+    public static function exceptions(\Config\App $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('exceptions', $config);
@@ -67,7 +67,7 @@ class Services {
      *
      * @return mixed|\YP\FileLocator
      */
-    public static function locator($getShared = TRUE)
+    public static function locator($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('locator');
@@ -83,7 +83,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Log
      */
-    public static function log($getShared = TRUE)
+    public static function log($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('log');
@@ -100,7 +100,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_IncomingRequest
      */
-    public static function request(\Config\App $config = NULL, $getShared = TRUE)
+    public static function request(\Config\App $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('request', $config);
@@ -120,7 +120,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Response
      */
-    public static function response(\Config\App $config = NULL, $getShared = TRUE)
+    public static function response(\Config\App $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('response', $config);
@@ -139,7 +139,7 @@ class Services {
      *
      * @return mixed|\YP\Debug\Timer
      */
-    public static function timer($getShared = TRUE)
+    public static function timer($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('timer');
@@ -155,7 +155,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_RouterCollection
      */
-    public static function routes($getShared = TRUE)
+    public static function routes($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('routes');
@@ -172,13 +172,13 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Router
      */
-    public static function router(\YP\Core\YP_RouterCollection $routes = NULL, $getShared = TRUE)
+    public static function router(\YP\Core\YP_RouterCollection $routes = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('router', $routes);
         }
         if (empty($routes)) {
-            $routes = self::routes(TRUE);
+            $routes = self::routes(true);
         }
 
         return new \YP\Core\YP_Router($routes);
@@ -192,7 +192,7 @@ class Services {
      *
      * @return mixed|\YP\Libraries\Security
      */
-    public static function security(\Config\App $config = NULL, $getShared = TRUE)
+    public static function security(\Config\App $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('security', $config);
@@ -213,7 +213,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Filter
      */
-    public static function filters($config = NULL, $getShared = TRUE)
+    public static function filters($config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('filters', $config);
@@ -233,7 +233,7 @@ class Services {
      *
      * @return mixed
      */
-    public static function cache(\Config\Cache $config = NULL, $getShared = TRUE)
+    public static function cache(\Config\Cache $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('cache', $config);
@@ -253,7 +253,7 @@ class Services {
      *
      * @return \Config\Database|mixed
      */
-    public static function database(\Config\Database $config = NULL, $getShared = TRUE)
+    public static function database(\Config\Database $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('database', $config);
@@ -273,7 +273,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Language
      */
-    public static function language(string $locale = NULL, $getShared = TRUE)
+    public static function language(string $locale = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('language', $locale);
@@ -291,7 +291,7 @@ class Services {
      *
      * @return mixed|\YP\Cli\YP_CLIRequest
      */
-    public static function cliRequest(\Config\App $config = NULL, $getShared = TRUE)
+    public static function cliRequest(\Config\App $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('cliRequest', $config);
@@ -311,7 +311,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Uri
      */
-    public static function uri($uri = NULL, $getShared = TRUE)
+    public static function uri($uri = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('uri', $uri);
@@ -328,7 +328,7 @@ class Services {
      *
      * @return mixed|\YP\Debug\Toolbar
      */
-    public static function toolbar(\Config\App $config = NULL, $getShared = TRUE)
+    public static function toolbar(\Config\App $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('toolbar', $config);
@@ -347,7 +347,7 @@ class Services {
      *
      * @return mixed|\YP\Libraries\YP_Input
      */
-    public static function input($getShared = TRUE)
+    public static function input($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('input');
@@ -363,7 +363,7 @@ class Services {
      *
      * @return mixed|\YP\Libraries\YP_JsonSchema
      */
-    public static function schema($getShared = TRUE)
+    public static function schema($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('schema');
@@ -379,7 +379,7 @@ class Services {
      *
      * @return \Config\Error|mixed
      */
-    protected static function error($getShared = TRUE)
+    protected static function error($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('error');
@@ -396,7 +396,7 @@ class Services {
      *
      * @return mixed|\YP\Libraries\YP_Validation
      */
-    public static function validation(\Config\Validation $config = NULL, $getShared = TRUE)
+    public static function validation(\Config\Validation $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('validation', $config);
@@ -416,7 +416,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Session
      */
-    public static function session(\Config\App $config = NULL, $getShared = TRUE)
+    public static function session(\Config\App $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('session', $config);
@@ -424,7 +424,7 @@ class Services {
         if (! is_object($config)) {
             $config = new \Config\App();
         }
-        $logger     = self::log(TRUE);
+        $logger     = self::log(true);
         $driverName = $config->sessionDriver;
         $driver     = new $driverName($config);
         $driver->setLogger($logger);
@@ -445,7 +445,7 @@ class Services {
      *
      * @return mixed|\YP\Core\YP_Negotiate
      */
-    public static function negotiator(\YP\Core\YP_IncomingRequest $request = NULL, $getShared = TRUE)
+    public static function negotiator(\YP\Core\YP_IncomingRequest $request = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('negotiator', $request);
@@ -464,7 +464,7 @@ class Services {
      *
      * @return mixed|\YP\Libraries\YP_Pagination
      */
-    public static function pagination($getShared = TRUE)
+    public static function pagination($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('pagination');
@@ -480,7 +480,7 @@ class Services {
      *
      * @return mixed|\YP\Libraries\YP_Eloquent
      */
-    public static function eloquent($getShared = TRUE)
+    public static function eloquent($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('eloquent');
@@ -497,7 +497,7 @@ class Services {
      *
      * @return mixed
      */
-    public static function redis(\Config\Cache $config = NULL, $getShared = TRUE)
+    public static function redis(\Config\Cache $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('redis', $config);
@@ -517,7 +517,7 @@ class Services {
      *
      * @return mixed|\YP\Libraries\YP_ThriftClient
      */
-    public static function thriftClient(\Config\ThriftClient $config = NULL, $getShared = TRUE)
+    public static function thriftClient(\Config\ThriftClient $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('thriftClient', $config);
@@ -537,7 +537,7 @@ class Services {
      *
      * @return mixed|\YP\Libraries\Thrift\YP_ThriftService
      */
-    public static function thriftService(\Config\ThriftService $config = NULL, $getShared = TRUE)
+    public static function thriftService(\Config\ThriftService $config = null, $getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('thriftService', $config);
@@ -557,7 +557,7 @@ class Services {
      *
      * @return mixed|\Thrift\ClassLoader\ThriftClassLoader
      */
-    public static function thriftClassLoader($getShared = TRUE)
+    public static function thriftClassLoader($getShared = true)
     {
         if ($getShared) {
             return self::getSharedInstance('thriftClassLoader');
@@ -579,7 +579,7 @@ class Services {
     {
         if (! isset(static::$instances[$key])) {
             // 确保$getShared为false;
-            array_push($params, FALSE);
+            array_push($params, false);
             static::$instances[$key] = static::$key(...$params);
         }
 
@@ -605,5 +605,4 @@ class Services {
     {
         return static::$instances;
     }
-
 }

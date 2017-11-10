@@ -28,38 +28,61 @@ class GenerateEntitiesCommand extends \Doctrine\ORM\Tools\Console\Command\Genera
             ->setDescription('从映射信息生成实体类和方法.')
             ->setDefinition(array(
                 new InputOption(
-                    'filter', NULL, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                    'filter',
+                    null,
+                    InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                     'A string pattern used to match entities that should be processed.'
                 ),
                 new InputArgument(
-                    'dest-path', InputArgument::REQUIRED, 'The path to generate your entity classes.'
+                    'dest-path',
+                    InputArgument::REQUIRED,
+                    'The path to generate your entity classes.'
                 ),
                 new InputOption(
-                    'generate-annotations', NULL, InputOption::VALUE_OPTIONAL,
-                    'Flag to define if generator should generate annotation metadata on entities.', FALSE
+                    'generate-annotations',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Flag to define if generator should generate annotation metadata on entities.',
+                    false
                 ),
                 new InputOption(
-                    'generate-methods', NULL, InputOption::VALUE_OPTIONAL,
-                    'Flag to define if generator should generate stub methods on entities.', TRUE
+                    'generate-methods',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Flag to define if generator should generate stub methods on entities.',
+                    true
                 ),
                 new InputOption(
-                    'regenerate-entities', NULL, InputOption::VALUE_OPTIONAL,
-                    'Flag to define if generator should regenerate entity if it exists.', FALSE
+                    'regenerate-entities',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Flag to define if generator should regenerate entity if it exists.',
+                    false
                 ),
                 new InputOption(
-                    'update-entities', NULL, InputOption::VALUE_OPTIONAL,
-                    'Flag to define if generator should only update entity if it exists.', TRUE
+                    'update-entities',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Flag to define if generator should only update entity if it exists.',
+                    true
                 ),
                 new InputOption(
-                    'extend', NULL, InputOption::VALUE_REQUIRED,
+                    'extend',
+                    null,
+                    InputOption::VALUE_REQUIRED,
                     'Defines a base class to be extended by generated entity classes.'
                 ),
                 new InputOption(
-                    'num-spaces', NULL, InputOption::VALUE_REQUIRED,
-                    'Defines the number of indentation spaces', 4
+                    'num-spaces',
+                    null,
+                    InputOption::VALUE_REQUIRED,
+                    'Defines the number of indentation spaces',
+                    4
                 ),
                 new InputOption(
-                    'no-backup', NULL, InputOption::VALUE_NONE,
+                    'no-backup',
+                    null,
+                    InputOption::VALUE_NONE,
                     'Flag to define if generator should avoid backuping existing entity file if it exists.'
                 ),
             ))

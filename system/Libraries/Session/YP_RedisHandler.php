@@ -18,8 +18,8 @@ use YP\Config\Services;
  *
  * @package YP\Libraries\Session
  */
-class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface {
-
+class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
+{
     /**
      * redis 对象
      *
@@ -46,7 +46,7 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
      *
      * @var bool
      */
-    protected $keyExists = FALSE;
+    protected $keyExists = false;
 
     /**
      * session生存时间
@@ -69,16 +69,16 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
             isset($matches[3]) or $matches[3]                                         = '';
             $this->savePath                                                           = [
                                                                                          'host'     => $matches[1],
-                                                                                         'port'     => empty($matches[2]) ? NULL : $matches[2],
-                                                                                         'password' => preg_match('#auth=([^\s&]+)#', $matches[3], $match) ? $match[1] : NULL,
-                                                                                         'database' => preg_match('#database=(\d+)#', $matches[3], $match) ? (int) $match[1] : NULL,
-                                                                                         'timeout'  => preg_match('#timeout=(\d+\.\d+)#', $matches[3], $match) ? (float) $match[1] : NULL,
+                                                                                         'port'     => empty($matches[2]) ? null : $matches[2],
+                                                                                         'password' => preg_match('#auth=([^\s&]+)#', $matches[3], $match) ? $match[1] : null,
+                                                                                         'database' => preg_match('#database=(\d+)#', $matches[3], $match) ? (int) $match[1] : null,
+                                                                                         'timeout'  => preg_match('#timeout=(\d+\.\d+)#', $matches[3], $match) ? (float) $match[1] : null,
                                                                                         ];
             preg_match('#prefix=([^\s&]+)#', $matches[3], $match) && $this->keyPrefix = $match[1];
         } else {
             throw new \Exception('Session: redis配置格式有问题: ' . $this->savePath);
         }
-        if ($this->matchIP === TRUE) {
+        if ($this->matchIP === true) {
             $this->keyPrefix .= $_SERVER['REMOTE_ADDR'] . ':';
         }
         $this->sessionExpiration = $config->sessionExpiration;
@@ -95,7 +95,7 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
     public function open($save_path, $name)
     {
         if (empty($this->savePath)) {
-            return FALSE;
+            return false;
         }
         $redis = new \Redis();
         if (! $redis->connect($this->savePath['host'], $this->savePath['port'], $this->savePath['timeout'])) {
@@ -107,10 +107,10 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
         } else {
             $this->redis = $redis;
 
-            return TRUE;
+            return true;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -125,13 +125,13 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
         if (isset($this->redis) && $this->lockSession($sessionID)) {
             $this->sessionID                            = $sessionID;
             $session_data                               = $this->redis->get($this->keyPrefix . $sessionID);
-            is_string($session_data) ? $this->keyExists = TRUE : $session_data = '';
+            is_string($session_data) ? $this->keyExists = true : $session_data = '';
             $this->fingerprint                          = md5($session_data);
 
             return $session_data;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -145,31 +145,31 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
     public function write($sessionID, $sessionData)
     {
         if (! isset($this->redis)) {
-            return FALSE;
+            return false;
         } elseif ($sessionID !== $this->sessionID) {// 重新生成sessionID
             if (! $this->releaseLock() || ! $this->lockSession($sessionID)) {
-                return FALSE;
+                return false;
             }
-            $this->keyExists = FALSE;
+            $this->keyExists = false;
             $this->sessionID = $sessionID;
         }
         if (isset($this->lockKey)) {
             $this->redis->setTimeout($this->lockKey, 300);
-            if ($this->fingerprint !== ($fingerprint = md5($sessionData)) || $this->keyExists === FALSE) {
+            if ($this->fingerprint !== ($fingerprint = md5($sessionData)) || $this->keyExists === false) {
                 if ($this->redis->set($this->keyPrefix . $sessionID, $sessionData, $this->sessionExpiration)) {
                     $this->fingerprint = $fingerprint;
-                    $this->keyExists   = TRUE;
+                    $this->keyExists   = true;
 
-                    return TRUE;
+                    return true;
                 }
 
-                return FALSE;
+                return false;
             }
 
             return $this->redis->setTimeout($this->keyPrefix . $sessionID, $this->sessionExpiration);
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -184,18 +184,18 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
                 if ($this->redis->ping() === '+PONG') {
                     isset($this->lockKey) && $this->redis->delete($this->lockKey);
                     if (! $this->redis->close()) {
-                        return FALSE;
+                        return false;
                     }
                 }
             } catch (\RedisException $e) {
                 $this->logger->error('Session: redis关闭出现异常: ' . $e->getMessage());
             }
-            $this->redis = NULL;
+            $this->redis = null;
 
-            return TRUE;
+            return true;
         }
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -209,13 +209,13 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
     {
         if (isset($this->redis, $this->lockKey)) {
             if (($result = $this->redis->delete($this->keyPrefix . $sessionID)) !== 1) {
-                $this->logger->debug('Session: 正常删除返回1,然而现在返回 ' . var_export($result, TRUE) . ' .');
+                $this->logger->debug('Session: 正常删除返回1,然而现在返回 ' . var_export($result, true) . ' .');
             }
 
             return $this->destroyCookie();
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -227,7 +227,7 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
      */
     public function gc($maxLifeTime)
     {
-        return TRUE;
+        return true;
     }
 
     /**
@@ -254,7 +254,7 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
             if (! $this->redis->setex($lock_key, 300, time())) {
                 $this->logger->error('Session: 试图获取锁时出错 ' . $this->keyPrefix . $sessionID);
 
-                return FALSE;
+                return false;
             }
             $this->lockKey = $lock_key;
             break;
@@ -262,13 +262,13 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
         if ($attempt === 30) {
             log_message('error', 'Session: 通过30次尝试最终无法获得锁 ' . $this->keyPrefix . $sessionID . '.');
 
-            return FALSE;
+            return false;
         } elseif ($ttl === -1) {
             log_message('debug', 'Session: 没有过期时间锁定 ' . $this->keyPrefix . $sessionID . ' .');
         }
-        $this->lock = TRUE;
+        $this->lock = true;
 
-        return TRUE;
+        return true;
     }
 
     /**
@@ -282,12 +282,12 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
             if (! $this->redis->delete($this->lockKey)) {
                 $this->logger->error('Session: 释放锁的时候出错了 ' . $this->lockKey);
 
-                return FALSE;
+                return false;
             }
-            $this->lockKey = NULL;
-            $this->lock    = FALSE;
+            $this->lockKey = null;
+            $this->lock    = false;
         }
 
-        return TRUE;
+        return true;
     }
 }

@@ -28,33 +28,50 @@ class ConvertMappingCommand extends \Doctrine\ORM\Tools\Console\Command\ConvertM
             ->setDescription('在支持格式之间转换映射信息.')
             ->setDefinition(array(
                 new InputOption(
-                    'filter', NULL, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                    'filter',
+                    null,
+                    InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                     'A string pattern used to match entities that should be processed.'
                 ),
                 new InputArgument(
-                    'to-type', InputArgument::REQUIRED, 'The mapping type to be converted.'
+                    'to-type',
+                    InputArgument::REQUIRED,
+                    'The mapping type to be converted.'
                 ),
                 new InputArgument(
-                    'dest-path', InputArgument::REQUIRED,
+                    'dest-path',
+                    InputArgument::REQUIRED,
                     'The path to generate your entities classes.'
                 ),
                 new InputOption(
-                    'force', NULL, InputOption::VALUE_NONE,
+                    'force',
+                    null,
+                    InputOption::VALUE_NONE,
                     'Force to overwrite existing mapping files.'
                 ),
                 new InputOption(
-                    'from-database', NULL, NULL, 'Whether or not to convert mapping information from existing database.'
+                    'from-database',
+                    null,
+                    null,
+                    'Whether or not to convert mapping information from existing database.'
                 ),
                 new InputOption(
-                    'extend', NULL, InputOption::VALUE_OPTIONAL,
+                    'extend',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
                     'Defines a base class to be extended by generated entity classes.'
                 ),
                 new InputOption(
-                    'num-spaces', NULL, InputOption::VALUE_OPTIONAL,
-                    'Defines the number of indentation spaces', 4
+                    'num-spaces',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
+                    'Defines the number of indentation spaces',
+                    4
                 ),
                 new InputOption(
-                    'namespace', NULL, InputOption::VALUE_OPTIONAL,
+                    'namespace',
+                    null,
+                    InputOption::VALUE_OPTIONAL,
                     'Defines a namespace for the generated entity classes, if converted from database.'
                 ),
             ))
@@ -84,4 +101,3 @@ EOT
             );
     }
 }
-

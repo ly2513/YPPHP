@@ -8,7 +8,8 @@
  */
 namespace YP\Config;
 
-class Language {
+class Language
+{
 
     /**
      * 存放缓存短语
@@ -41,8 +42,9 @@ class Language {
     /**
      * Language constructor.
      */
-    public function __construct() 
-    { }
+    public function __construct()
+    {
+    }
 
     /**
      * 初始化缓存短语
@@ -135,5 +137,4 @@ class Language {
 
         return $this->migrations;
     }
-
 }

@@ -28,16 +28,22 @@ class UpdateCommand extends \Doctrine\ORM\Tools\Console\Command\SchemaTool\Updat
             )
             ->setDefinition(array(
                 new InputOption(
-                    'complete', NULL, InputOption::VALUE_NONE,
+                    'complete',
+                    null,
+                    InputOption::VALUE_NONE,
                     'If defined, all assets of the database which are not relevant to the current metadata will be dropped.'
                 ),
 
                 new InputOption(
-                    'dump-sql', NULL, InputOption::VALUE_NONE,
+                    'dump-sql',
+                    null,
+                    InputOption::VALUE_NONE,
                     'Dumps the generated SQL statements to the screen (does not execute them).'
                 ),
                 new InputOption(
-                    'force', NULL, InputOption::VALUE_NONE,
+                    'force',
+                    null,
+                    InputOption::VALUE_NONE,
                     'Causes the generated SQL statements to be physically executed against your database.'
                 ),
             ));

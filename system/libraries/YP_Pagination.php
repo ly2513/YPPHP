@@ -15,8 +15,8 @@ use Config\Services;
  *
  * @package YP\Libraries
  */
-class YP_Pagination {
-
+class YP_Pagination
+{
     /**
      * 分页链接的基础的URL
      *
@@ -71,7 +71,7 @@ class YP_Pagination {
      *
      * @var bool
      */
-    protected $use_page_numbers = FALSE;
+    protected $use_page_numbers = false;
 
     /**
      * 第一页链接
@@ -223,7 +223,7 @@ class YP_Pagination {
      *
      * @var bool
      */
-    protected $page_query_string = FALSE;
+    protected $page_query_string = false;
 
     /**
      * 当前页码参数,查询字符串分割参数
@@ -237,7 +237,7 @@ class YP_Pagination {
      *
      * @var bool true: 显示页码 false: 不显示
      */
-    protected $display_pages = TRUE;
+    protected $display_pages = true;
 
     /**
      * 设置链接样式属性
@@ -258,14 +258,14 @@ class YP_Pagination {
      *
      * @var bool  true: 保留 false: 不保留
      */
-    protected $reuse_query_string = TRUE;
+    protected $reuse_query_string = true;
 
     /**
      * 是否使用全局URL后缀标志
      *
      * @var bool true: 使用 false: 不使用
      */
-    protected $use_global_url_suffix = FALSE;
+    protected $use_global_url_suffix = false;
 
     /**
      * 数字分页属性
@@ -342,10 +342,10 @@ class YP_Pagination {
                 $this->$key = $val;
             }
         }
-        if ($this->enable_query_strings === TRUE) {
-            $this->page_query_string = TRUE;
+        if ($this->enable_query_strings === true) {
+            $this->page_query_string = true;
         }
-        if ($this->use_global_url_suffix === TRUE) {
+        if ($this->use_global_url_suffix === true) {
             $this->suffix = $this->url_suffix;
         }
 
@@ -374,7 +374,7 @@ class YP_Pagination {
             show_error('数字链接的个数必须是非负的整数');
         }
         // 保留任何现有的查询字符串项目
-        if ($this->reuse_query_string === TRUE) {
+        if ($this->reuse_query_string === true) {
             $get = $this->request->getGet();
             // 删除控制器、方法和老式的路由
             unset($get['c'], $get['m'], $get[$this->query_string_segment]);
@@ -386,9 +386,9 @@ class YP_Pagination {
         $base_url         = trim($this->base_url);
         $first_url        = $this->first_url;
         $query_string     = '';
-        $query_string_sep = (strpos($base_url, '?') === FALSE) ? '?' : '&amp;';
+        $query_string_sep = (strpos($base_url, '?') === false) ? '?' : '&amp;';
         // 是否使用查询字符串,所谓查询字符串就是用 '&' 符连接所有的查询参数
-        if ($this->page_query_string === TRUE) {
+        if ($this->page_query_string === true) {
             // 如果自定义first_url没有指定，我们将创建一个从base_url
             if ($first_url === '') {
                 $first_url = $base_url;
@@ -408,7 +408,7 @@ class YP_Pagination {
             }
             // Does the base_url have the query string in it?
             // If we're supposed to save it, remove it so we can append it later.
-            if ($this->reuse_query_string === TRUE && ($base_query_pos = strpos($base_url, '?')) !== FALSE) {
+            if ($this->reuse_query_string === true && ($base_query_pos = strpos($base_url, '?')) !== false) {
                 $base_url = substr($base_url, 0, $base_query_pos);
             }
             if ($first_url === '') {
@@ -419,7 +419,7 @@ class YP_Pagination {
         // 当前页码数值
         $base_page = ($this->use_page_numbers) ? 1 : 0;
         // 是否使用查询字符串
-        if ($this->page_query_string === TRUE) {
+        if ($this->page_query_string === true) {
             $this->cur_page = $this->request->getGet($this->query_string_segment);
         } else {
             // 如果uri段一个都没定义,就默认为url段的最后一个
@@ -461,13 +461,13 @@ class YP_Pagination {
         // 输出页码
         $output = '';
         // 渲染第一页链接
-        if ($this->first_link !== FALSE && $this->cur_page > ($this->num_links + 1 + ! $this->num_links)) {
+        if ($this->first_link !== false && $this->cur_page > ($this->num_links + 1 + ! $this->num_links)) {
             // Take the general parameters, and squeeze this pagination-page attr in for JS frameworks.
             $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, 1);
             $output    .= $this->first_tag_open . '<a href="' . $first_url . '"' . $attributes . $this->_attr_rel('start') . '>' . $this->first_link . '</a>' . $this->first_tag_close;
         }
         // 渲染上一页链接
-        if ($this->prev_link !== FALSE && $this->cur_page !== 1) {
+        if ($this->prev_link !== false && $this->cur_page !== 1) {
             $i          = ($this->use_page_numbers) ? $uri_page_number - 1 : $uri_page_number - $this->per_page;
             $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
             if ($i === $base_page) {
@@ -477,10 +477,9 @@ class YP_Pagination {
                 $append  = $this->prefix . $i . $this->suffix;
                 $output .= $this->prev_tag_open . '<a href="' . $base_url . $append . '"' . $attributes . $this->_attr_rel('prev') . '>' . $this->prev_link . '</a>' . $this->prev_tag_close;
             }
-
         }
         // 渲染页码
-        if ($this->display_pages !== FALSE) {
+        if ($this->display_pages !== false) {
             // 写数字链接
             for ($loop = $start - 1; $loop <= $end; $loop++) {
                 $i          = ($this->use_page_numbers) ? $loop : ($loop * $this->per_page) - $this->per_page;
@@ -500,13 +499,13 @@ class YP_Pagination {
             }
         }
         // 渲染下一页链接
-        if ($this->next_link !== FALSE && $this->cur_page < $num_pages) {
+        if ($this->next_link !== false && $this->cur_page < $num_pages) {
             $i          = ($this->use_page_numbers) ? $this->cur_page + 1 : $this->cur_page * $this->per_page;
             $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
             $output    .= $this->next_tag_open . '<a href="' . $base_url . $this->prefix . $i . $this->suffix . '"' . $attributes . $this->_attr_rel('next') . '>' . $this->next_link . '</a>' . $this->next_tag_close;
         }
         // 渲染最后一页链接
-        if ($this->last_link !== FALSE && ($this->cur_page + $this->num_links + ! $this->num_links) < $num_pages) {
+        if ($this->last_link !== false && ($this->cur_page + $this->num_links + ! $this->num_links) < $num_pages) {
             $i          = ($this->use_page_numbers) ? $num_pages : ($num_pages * $this->per_page) - $this->per_page;
             $attributes = sprintf('%s %s="%d"', $this->_attributes, $this->data_page_attr, (int) $i);
             $output    .= $this->last_tag_open . '<a href="' . $base_url . $this->prefix . $i . $this->suffix . '"' . $attributes . '>' . $this->last_link . '</a>' . $this->last_tag_close;
@@ -540,8 +539,8 @@ class YP_Pagination {
         // Set the base page index for starting page number
         $base_page = $this->use_page_numbers ? 1 : 0;
         // 设置当前页
-        if ($this->page_query_string === TRUE or $this->page_query_string === TRUE) {
-            if ( $this->request->getGet($this->query_string_segment) != $base_page) {
+        if ($this->page_query_string === true or $this->page_query_string === true) {
+            if ($this->request->getGet($this->query_string_segment) != $base_page) {
                 $this->cur_page = $this->request->getGet($this->query_string_segment);
                 // Prep the current page - no funny business!
                 $this->cur_page = (int) $this->cur_page;
@@ -585,7 +584,7 @@ class YP_Pagination {
         $end   = (($this->cur_page + $this->num_links) < $num_pages) ? $this->cur_page + $this->num_links : $num_pages;
         // Is pagination being used over GET or POST?  If get, add a per_page query
         // string. If post, add a trailing slash to the base URL if needed
-        if ($this->enable_query_strings === TRUE or $this->page_query_string === TRUE) {
+        if ($this->enable_query_strings === true or $this->page_query_string === true) {
             $this->base_url = rtrim($this->base_url) . '&' . $this->query_string_segment . '=';
         } else {
             $this->base_url = rtrim($this->base_url, '/') . '/';
@@ -593,12 +592,12 @@ class YP_Pagination {
         // 输出分页
         $output = '';
         // 渲染第一页链接
-        if ($this->first_link !== FALSE and $this->cur_page > ($this->num_links + 1)) {
+        if ($this->first_link !== false and $this->cur_page > ($this->num_links + 1)) {
             $first_url = ($this->first_url == '') ? $this->base_url : $this->first_url;
             $output   .= $this->first_tag_open . '<a ' . " onclick='ajax_page(0);return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $this->first_link . '</a>' . $this->first_tag_close;
         }
         // Render the "previous" link
-        if ($this->prev_link !== FALSE and $this->cur_page != 1) {
+        if ($this->prev_link !== false and $this->cur_page != 1) {
             if ($this->use_page_numbers) {
                 $i = $uri_page_number - 1;
             } else {
@@ -610,10 +609,9 @@ class YP_Pagination {
                 $i       = ($i == 0) ? '' : $this->prefix . $i . $this->suffix;
                 $output .= $this->prev_tag_open . '<a ' . " onclick='ajax_page({$i});return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $this->prev_link . '</a>' . $this->prev_tag_close;
             }
-
         }
         // 渲染页码
-        if ($this->display_pages !== FALSE) {
+        if ($this->display_pages !== false) {
             // 写数字链接
             for ($loop = $start - 1; $loop <= $end; $loop++) {
                 if ($this->use_page_numbers) {
@@ -637,7 +635,7 @@ class YP_Pagination {
             }
         }
         // 渲染下一页链接
-        if ($this->next_link !== FALSE and $this->cur_page < $num_pages) {
+        if ($this->next_link !== false and $this->cur_page < $num_pages) {
             if ($this->use_page_numbers) {
                 $i = $this->cur_page + 1;
             } else {
@@ -647,7 +645,7 @@ class YP_Pagination {
             $output .= $this->next_tag_open . '<a ' . " onclick='ajax_page({$ajax_p});return false;'" . $this->anchor_class . 'href="javascript:void(0)">' . $this->next_link . '</a>' . $this->next_tag_close;
         }
         // 渲染最后一页链接
-        if ($this->last_link !== FALSE and ($this->cur_page + $this->num_links) < $num_pages) {
+        if ($this->last_link !== false and ($this->cur_page + $this->num_links) < $num_pages) {
             if ($this->use_page_numbers) {
                 $i = $num_pages;
             } else {
@@ -672,7 +670,7 @@ class YP_Pagination {
      */
     protected function _parse_attributes($attributes)
     {
-        isset($attributes['rel']) or $attributes['rel'] = TRUE;
+        isset($attributes['rel']) or $attributes['rel'] = true;
         $this->_link_types                              = ($attributes['rel']) ? ['start' => 'start', 'prev' => 'prev', 'next' => 'next'] : [];
         unset($attributes['rel']);
         $this->_attributes = '';
@@ -698,5 +696,4 @@ class YP_Pagination {
 
         return '';
     }
-
 }

@@ -15,7 +15,8 @@ namespace Config;
  *
  * @package Config
  */
-class Validation {
+class Validation
+{
 
     /**
      * 存储包含可用规则的类

@@ -8,8 +8,13 @@
  */
 namespace YP\Core;
 
-class YP_Language {
-
+/**
+ * Class YP_Language
+ *
+ * @package YP\Core
+ */
+class YP_Language
+{
     public $language = [];
 
     /**
@@ -17,7 +22,7 @@ class YP_Language {
      *
      * @var null|短语
      */
-    public $locale = NULL;
+    public $locale = null;
 
     /**
      * 存放对应的短语
@@ -38,7 +43,7 @@ class YP_Language {
      *
      * @var bool
      */
-    public $intlSupport = FALSE;
+    public $intlSupport = false;
 
     /**
      * Language constructor.
@@ -49,9 +54,8 @@ class YP_Language {
     {
         $this->locale = $locale;
         // 判断是否存在消息格式化类
-        if (class_exists('\MessageFormatter'))
-        {
-            $this->intlSupport = TRUE;
+        if (class_exists('\MessageFormatter')) {
+            $this->intlSupport = true;
         };
     }
 
@@ -83,9 +87,9 @@ class YP_Language {
      */
     public function parseLine($line): array
     {
-        if (strpos($line, '.') === FALSE) {
+        if (strpos($line, '.') === false) {
             return [
-                    NULL,
+                    null,
                     $line,
                    ];
         }
@@ -109,7 +113,7 @@ class YP_Language {
      *
      * @return array
      */
-    protected function load(string $file, bool $return = FALSE)
+    protected function load(string $file, bool $return = false)
     {
         // 判断是否已调用
         if (in_array($file, $this->loaded)) {
@@ -135,21 +139,18 @@ class YP_Language {
      * 高级格式化短语
      *
      * @param string|array $message Message.
-     * @param array	       $args    Arguments.
+     * @param array        $args    Arguments.
      *
      * @return string|array Returns formatted message.
      */
     protected function formatMessage($message, array $args = [])
     {
-        if (! $this->intlSupport || ! count($args))
-        {
+        if (! $this->intlSupport || ! count($args)) {
             return $message;
         }
 
-        if (is_array($message))
-        {
-            foreach ($message as $index => $value)
-            {
+        if (is_array($message)) {
+            foreach ($message as $index => $value) {
                 $message[$index] = $this->formatMessage($value, $args);
             }
             return $message;
@@ -157,5 +158,4 @@ class YP_Language {
 
         return \MessageFormatter::formatMessage($this->locale, $message, $args);
     }
-
 }

@@ -24,8 +24,8 @@ $loader->register();
  *
  * @package YP\Libraries\Thrift
  */
-class YP_ThriftService {
-
+class YP_ThriftService
+{
     /**
      * IP
      *
@@ -45,7 +45,7 @@ class YP_ThriftService {
      *
      * @var object
      */
-    protected $processor = NULL;
+    protected $processor = null;
 
     /**
      * 使用的协议,默认TBinaryProtocol,可更改
@@ -73,7 +73,7 @@ class YP_ThriftService {
      *
      * @var null
      */
-    public $log = NULL;
+    public $log = null;
 
     /**
      * 服务文件路径
@@ -191,5 +191,4 @@ class YP_ThriftService {
             require_once $file;
         }
     }
-
 }

@@ -13,14 +13,15 @@ namespace Config;
  *
  * @package Config
  */
-class Doctrine {
+class Doctrine
+{
 
     /**
      * Doctrine实体管理器
      *
      * @var \Doctrine\ORM\EntityManager|null
      */
-    public $em = NULL;
+    public $em = null;
 
     /**
      * Doctrine constructor.

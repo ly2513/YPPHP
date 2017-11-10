@@ -8,8 +8,13 @@
  */
 namespace YP;
 
-class Autoload {
-
+/**
+ * Class Autoload
+ *
+ * @package YP
+ */
+class Autoload
+{
     /**
      * 命名空间映射数组
      * 将命名空间作为key,路径作为value
@@ -53,15 +58,15 @@ class Autoload {
         // 设置加载文件的后缀
         spl_autoload_extensions('.php,.inc');
         // 加载类
-        spl_autoload_register([$this, 'loadClass'], TRUE, TRUE);
+        spl_autoload_register([$this, 'loadClass'], true, true);
         // 加载框架运行必要的类
         $config = is_array($this->classMap) ? $this->classMap : [];
         spl_autoload_register(function ($class) use ($config) {
             if (! array_key_exists($class, $config)) {
-                return FALSE;
+                return false;
             }
             include_once $config[$class];
-        }, TRUE, TRUE);
+        }, true, true);
     }
 
     /**
@@ -92,8 +97,8 @@ class Autoload {
      */
     protected function loadInNamespace($class)
     {
-        if (strpos($class, '\\') === FALSE) {
-            return FALSE;
+        if (strpos($class, '\\') === false) {
+            return false;
         }
         foreach ($this->namespaceMap as $namespace => $directories) {
             if (is_string($directories)) {
@@ -111,7 +116,7 @@ class Autoload {
         }
 
         // 没找到映射文件
-        return FALSE;
+        return false;
     }
 
     /**
@@ -123,8 +128,8 @@ class Autoload {
      */
     protected function loadLegacy($class)
     {
-        if (strpos('\\', $class) !== FALSE) {
-            return FALSE;
+        if (strpos('\\', $class) !== false) {
+            return false;
         }
         // 加载应用的控制器、类库、模型
         $paths = [
@@ -140,7 +145,7 @@ class Autoload {
             }
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -159,7 +164,7 @@ class Autoload {
             return $file;
         }
 
-        return FALSE;
+        return false;
     }
 
     /**
@@ -177,5 +182,4 @@ class Autoload {
 
         return $filename;
     }
-
 }

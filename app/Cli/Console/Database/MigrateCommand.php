@@ -99,7 +99,8 @@ class MigrateCommand extends BaseCommand
         } else {
             $path = $this->getMigrationPath();
         }
-        $this->migrator->run($path, 
+        $this->migrator->run(
+            $path,
             [
              'pretend' => $pretend,
              'step'    => $input->getOption('step'),
@@ -121,5 +122,4 @@ class MigrateCommand extends BaseCommand
 
         return true;
     }
-    
 }

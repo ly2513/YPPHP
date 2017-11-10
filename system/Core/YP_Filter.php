@@ -12,9 +12,8 @@ use YP\Core\YP_IncomingRequest as IncomingRequest;
 use YP\Core\YP_Response as Response;
 use YP\Core\YP_FilterInterface as FilterInterface;
 
-class YP_Filter {
-
-
+class YP_Filter
+{
     /**
      * 将用于检查的处理过的过滤器
      *
@@ -51,7 +50,7 @@ class YP_Filter {
      *
      * @var bool
      */
-    protected $initialized = FALSE;
+    protected $initialized = false;
 
     /**
      * YP_Filter constructor.
@@ -125,15 +124,15 @@ class YP_Filter {
      *
      * @return YP_Filter
      */
-    public function initialize(string $uri = NULL): self
+    public function initialize(string $uri = null): self
     {
-        if ($this->initialized === TRUE) {
+        if ($this->initialized === true) {
             return $this;
         }
         $this->processGlobals($uri);
         $this->processMethods();
         $this->processFilters($uri);
-        $this->initialized = TRUE;
+        $this->initialized = true;
 
         return $this;
     }
@@ -153,7 +152,7 @@ class YP_Filter {
      *
      * @param string|null $uri
      */
-    protected function processGlobals(string $uri = NULL)
+    protected function processGlobals(string $uri = null)
     {
         if (! isset($this->config->globals) || ! is_array($this->config->globals)) {
             return;
@@ -229,7 +228,7 @@ class YP_Filter {
      *
      * @param string|null $uri
      */
-    protected function processFilters(string $uri = NULL)
+    protected function processFilters(string $uri = null)
     {
         if (! isset($this->config->filters) || ! count($this->config->filters)) {
             return;
@@ -266,5 +265,4 @@ class YP_Filter {
             }
         }
     }
-
 }

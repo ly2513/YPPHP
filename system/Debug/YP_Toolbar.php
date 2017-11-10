@@ -15,8 +15,8 @@ use YP\Config\Config;
  *
  * @package YP\Debug
  */
-class YP_Toolbar {
-
+class YP_Toolbar
+{
     /**
      * 收集器
      *
@@ -98,8 +98,10 @@ class YP_Toolbar {
             $output .= "<td colspan='{$segmentCount}' style='overflow: hidden'>";
             $offset  = ((($row['start'] - $this->startTime) * 1000) / $displayTime) * 100;
             $length  = (($row['duration'] * 1000) / $displayTime) * 100;
-            $output .= "<span class='timer' style='left: {$offset}%; width: {$length}%;' title='" . number_format($length,
-                    2) . "%'></span>";
+            $output .= "<span class='timer' style='left: {$offset}%; width: {$length}%;' title='" . number_format(
+                $length,
+                2
+            ) . "%'></span>";
             $output .= "</td>";
             $output .= "</tr>";
         }

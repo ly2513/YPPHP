@@ -12,7 +12,7 @@ error_reporting(-1);
 ini_set('display_errors', 1);
 
 // 跟踪调试
-define('SHOW_DEBUG_BACKTRACE', TRUE);
+define('SHOW_DEBUG_BACKTRACE', true);
 
 // 调试模式 0:关闭调试 1:开始调试
 define('YP_DEBUG', 1);

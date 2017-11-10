@@ -48,11 +48,15 @@ class RefreshCommand extends BaseCommand
             if ($input->getOption('force')) {
                 $status = true;
             } else {
-                $output->writeln('<comment>' . str_repeat('*',
-                        strlen('Application In Production!') + 12) . '</comment>');
+                $output->writeln('<comment>' . str_repeat(
+                    '*',
+                    strlen('Application In Production!') + 12
+                ) . '</comment>');
                 $output->writeln('<comment>*      Application In Production!     *</comment>');
-                $output->writeln('<comment>' . str_repeat('*',
-                        strlen('Application In Production!') + 12) . '</comment>');
+                $output->writeln('<comment>' . str_repeat(
+                    '*',
+                    strlen('Application In Production!') + 12
+                ) . '</comment>');
                 $output->writeln('');
                 $style     = new SymfonyStyle($input, $output);
                 $confirmed = $style->confirm('Do you really wish to run this command?');
@@ -74,7 +78,8 @@ class RefreshCommand extends BaseCommand
         $this->call('migrate:reset', ['--database' => $database, '--force' => $force]);
         // 刷新命令本质上只是一些其他迁移命令的简单集合，只是提供了一个方便的包装器来连续执行它们。
         // 我们还将查看是否需要重新生成数据库。
-        $this->call('migrate',
+        $this->call(
+            'migrate',
             [
              '--database' => $database,
              '--force'    => $force,
@@ -85,7 +90,8 @@ class RefreshCommand extends BaseCommand
         if ($seed) {
             $class = $this->getOption('seeder') ? : 'DatabaseSeeder';
             $force = $input->getOption('force');
-            $this->call('db:seed',
+            $this->call(
+                'db:seed',
                 [
                  '--database' => $database,
                  '--class'    => $class,

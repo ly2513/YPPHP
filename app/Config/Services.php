@@ -8,7 +8,7 @@
  */
 namespace Config;
 
-//require SYSTEM_PATH . 'Config/Services.php';
+require SYSTEM_PATH . 'Config/Services.php';
 
 /**
  * Class Services  服务类

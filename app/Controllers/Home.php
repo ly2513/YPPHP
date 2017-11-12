@@ -12,29 +12,36 @@ use YP\Core\YP_Controller as Controller;
 use YP\Config\Services;
 use YP\Libraries\Thrift\YP_ThriftClient;
 
+/**
+ * 框架默认控制器
+ *
+ * Class Home
+ *
+ * @package App\Controllers
+ */
 class Home extends Controller
 {
     /**
-     * 网站信息
+     * 框架首页信息
      */
     public function index()
     {
-//        $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
+        //        $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
-        $data = [
-            'view_path' => 'app/Views/' . $this->controller . '/' . $this->method . $this->extension,
+        $data         = [
+            'view_path'       => 'app/Views/' . $this->controller . '/' . $this->method . $this->extension,
             'controller_path' => 'app/Controller/' . $this->controller . '.php',
-            'evn' => ENVIRONMENT,
-            'elapsed_time' => $elapsed_time,
-            'version' => VERSION,
+            'evn'             => ENVIRONMENT,
+            'elapsed_time'    => $elapsed_time,
+            'version'         => VERSION,
+            'doc_url'         => 'https://ly2513.gitbooks.io/youpin/content/'
         ];
-        
-//        $xhprof_data = xhprof_disable();
-//        include_once $XHPROF_ROOT . "xhprof_lib.php";
-//        include_once $XHPROF_ROOT . "xhprof_runs.php";
-//        $xhprof_runs = new \XHProfRuns_Default();
-//        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
+        //        $xhprof_data = xhprof_disable();
+        //        include_once $XHPROF_ROOT . "xhprof_lib.php";
+        //        include_once $XHPROF_ROOT . "xhprof_runs.php";
+        //        $xhprof_runs = new \XHProfRuns_Default();
+        //        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
         $this->display($data);
     }
 
@@ -76,6 +83,7 @@ class Home extends Controller
         //        var_export($client->arecv_sayHello("JERRY"));
         //        echo "\n";
     }
+
     public function testAddress()
     {
         AddressManager::config([

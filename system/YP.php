@@ -145,8 +145,6 @@ class YP
         $this->detectEnvironment();
         // 加载环境配置信息
         $this->bootstrapEnvironment();
-        // 加载环境变量
-        // $this->loadEnvironment();
         // 开启session
         $session = \Config\Services::session();
         $session->start();
@@ -331,17 +329,6 @@ class YP
             echo 'The application environment is not set correctly.';
             exit(1); // EXIT_ERROR
         }
-    }
-
-    /**
-     * 加载当前常量的服务器配置
-     */
-    protected function loadEnvironment()
-    {
-        // 通过.env 文件,加载环境配置
-        require SYSTEM_PATH . 'Config/DotEnv.php';
-        $env = new DotEnv(ROOT_PATH);
-        $env->load();
     }
 
     /**

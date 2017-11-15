@@ -140,8 +140,7 @@ class YP_Controller
         // $this->setInput();
         // 初始化子类构造方法
         $this->initialization();
-        // $this->initTwig();
-        $this->_setRouter();
+        $this->initTwig();
         $this->url = $this->_getCurrentUrl();
     }
 
@@ -194,64 +193,73 @@ class YP_Controller
     }
 
     /**
-     *  路由信息
+     * 初始化Twig模板引擎
      */
-    private function _setRouter()
+    public function initTwig()
     {
+        // TWig配置信息
+        $config = new \Config\Twig();
         // 获得当前路由信息
         $router           = Services::router();
         $this->directory  = $router->directory();
-        $this->controller = explode('\\', $router->controllerName());
-        $this->controller = end($this->controller);
+        $controller       = explode('\\', $router->controllerName());
+        $this->controller = end($controller);
         $this->method     = $router->methodName();
+        $this->extension  = $config->extension ?? $this->extension;
+        // 缓存目录
+        $config->cache_dir = $config->cache_dir . $this->directory . $this->controller . DIRECTORY_SEPARATOR;
+        $loader            = new \Twig_Loader_Filesystem($config->template_dir);
+        $this->twig        = new \Twig_Environment($loader, [
+            'cache'       => $config->cache_dir,
+            'debug'       => $config->debug,
+            'auto_reload' => $config->auto_reload,
+        ]);
+        $this->tempPath    = $config->template_dir;
     }
 
     /**
      * 视图渲染
      *
-     * @param array  $data     渲染的数据
-     * @param string $htmlFile 渲染的模板
-     * @param bool   $return   true返回 false直接输出页面
-     *
-     * @return string|void
-     * @throws Throwable
-     * @throws Twig_Error_Runtime
+     * @param null  $htmlFile
+     * @param array $data
      */
-    public function display($data = [], $htmlFile = null, $return = false)
+    public function display($htmlFile = null, $data = [])
     {
-        // TWig配置信息
-        $config   = new \Config\Twig();
-        $tempPath = $config->template_dir;
-        // 缓存目录
-        $config->cache_dir = $config->cache_dir . $this->directory . $this->controller . DIRECTORY_SEPARATOR;
-        $this->extension   = $config->extension ?? $this->extension;
-        $config            = (array)$config;
-        is_dir($config['cache_dir']) or mkdir($config['cache_dir'], 0777, true);
-        is_dir($config['template_dir']) or mkdir($config['template_dir'], 0777, true);
-        // 实例化一个文件加载系统
-        $loader = new \Twig_Loader_Filesystem($config['template_dir']);
-        $twig   = new \Twig_Environment($loader, [
-            'cache'       => $config['cache_dir'],
-            'debug'       => $config['debug'],
-            'auto_reload' => $config['auto_reload'],
-        ]);
         // 修改模板名称
         $templateName = !is_null($htmlFile) ? $htmlFile : $this->method;
         // 模板文件
         $tempFile = $this->directory . $this->controller . DIRECTORY_SEPARATOR . $templateName . $this->extension;
         // 模板路径
-        $htmlPath     = $tempPath . $this->directory . $this->controller;
-        $tempFilePath = $tempPath . $tempFile;
+        $htmlPath     = $this->tempPath . $this->directory . $this->controller;
+        $tempFilePath = $this->tempPath . $tempFile;
         // 穿件模板目录
         is_dir($htmlPath) or mkdir($htmlPath, 0777, true);
         // 模板文件
         is_file($tempFilePath) or touch($tempFilePath);
-        $template = $twig->loadTemplate($this->_getTemplateName($tempFile));
+        echo $this->render($tempFile, $data);
+        die;
+        if (!YP_DEBUG) {
+            die;
+        }
+    }
+
+    /**
+     * 模版渲染
+     *
+     * @param string $template 模板名
+     * @param array  $data     变量数组
+     * @param bool   $return   true返回 false直接输出页面
+     *
+     * @return string
+     */
+    protected function render($template, $data = [], $return = false)
+    {
+        $template = $this->twig->loadTemplate($this->_getTemplateName($template));
+        $data     = array_merge($this->tempData, $data);
         if ($return === true) {
             return $template->render($data);
         } else {
-            echo $template->display($data);
-            die;
+            return $template->display($data);
         }
     }
 

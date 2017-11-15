@@ -11,6 +11,7 @@ namespace App\Controllers;
 use YP\Core\YP_Controller as Controller;
 use YP\Config\Services;
 use YP\Libraries\Thrift\YP_ThriftClient;
+use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * 框架默认控制器
@@ -26,7 +27,16 @@ class Home extends Controller
      */
     public function index()
     {
-        //        $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
+                $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
+
+                DB::select('select * from zb_sys_sms');
+                
+                $xhprof_data = xhprof_disable();
+                include_once $XHPROF_ROOT . "xhprof_lib.php";
+                include_once $XHPROF_ROOT . "xhprof_runs.php";
+                $xhprof_runs = new \XHProfRuns_Default();
+                $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
+
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
         $data         = [

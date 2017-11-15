@@ -150,7 +150,7 @@ class YP
         $session->start();
         // session_start();
         if (YP_DEBUG) {
-             require_once SYSTEM_PATH . 'ThirdParty/Kint/Kint.class.php';
+            require_once SYSTEM_PATH . 'ThirdParty/Kint/Kint.class.php';
         }
     }
 
@@ -175,21 +175,14 @@ class YP
         // 用不同的方法去修改请求对象
         $this->spoofRequestMethod();
         // TODO 以下注释是暂时的,主要是方便调试
-        //        try {
+        try {
             // 处理请求
             $this->handleRequest($routes, $cacheConfig);
-        //        } catch (\Exception $e) {
-        //            // 日志记录异常错误
-        //            $logger = Config\Services::log();
-        //            $logger->info('REDIRECTED ROUTE at ' . $e->getMessage());
-        //            // 如果该路由是重定向路由，则以$to作为消息抛出异常
-        //            $this->response->redirect($e->getMessage(), 'auto', $e->getCode());
-        //            $this->callExit(EXIT_SUCCESS);
-        //        } catch (\Exception $e) {// 捕获响应的重定向错误
-        //            $this->callExit(EXIT_SUCCESS);
-        //        } catch (\RuntimeException $e) {
-        //            $this->display404errors($e);
-        //        }
+        } catch (\Exception $e) {
+            // 日志记录异常错误
+            $logger = Config\Services::log();
+            $logger->error('异常错误 ' . $e);
+        }
     }
 
     /**
@@ -222,7 +215,7 @@ class YP
     protected function getResponseObject()
     {
         $this->response = Config\Services::response($this->config);
-        if (! is_cli()) {
+        if (!is_cli()) {
             $this->response->setProtocolVersion($this->request->getProtocolVersion());
         }
         // 设置状响应态
@@ -247,7 +240,7 @@ class YP
      * 处理请求逻辑并触发控制器
      *
      * @param RouterCollection|null $routes
-     * @param $cacheConfig
+     * @param                       $cacheConfig
      */
     protected function handleRequest(RouterCollection $routes = null, $cacheConfig)
     {
@@ -258,7 +251,7 @@ class YP
         $filters->run($uri, 'before');
         $returned = $this->startController();
         // 关闭已经运行在startController()的控制器
-        if (! is_callable($this->controller)) {
+        if (!is_callable($this->controller)) {
             // 创建控制器
             $controller = $this->createController();
             // 是否有'post_controller_constructor'钩子
@@ -338,7 +331,7 @@ class YP
      */
     protected function tryToRouteIt(RouteCollection $routes = null)
     {
-        if (empty($routes) || ! $routes instanceof RouteCollection) {
+        if (empty($routes) || !$routes instanceof RouteCollection) {
             require APP_PATH . 'Config/Routes.php';
         }
         // $routes 已在Config/Routes.php定义
@@ -363,7 +356,7 @@ class YP
      */
     protected function determinePath()
     {
-        if (! empty($this->path)) {
+        if (!empty($this->path)) {
             return $this->path;
         }
 
@@ -379,10 +372,10 @@ class YP
     {
         $this->benchmark->start('controller');
         $this->benchmark->start('controller_constructor');
-
         // 闭包路由
         if (is_object($this->controller) && (get_class($this->controller) == 'Closure')) {
             $controller = $this->controller;
+
             return $controller(...$this->router->params());
         } else {
             // 没有指定控制器
@@ -390,12 +383,12 @@ class YP
                 throw new \RuntimeException('Controller is empty.');
             } else {
                 // 尝试自动加载当前这个类
-                if (! class_exists($this->controller, true) || $this->method[0] === '_') {
+                if (!class_exists($this->controller, true) || $this->method[0] === '_') {
                     throw new \RuntimeException('Controller or its method is not found.');
-                } elseif (! method_exists($this->controller, '_remap') && ! is_callable([
-                                                                                         $this->controller,
-                                                                                         $this->method,
-                                                                                        ], false)
+                } elseif (!method_exists($this->controller, '_remap') && !is_callable([
+                        $this->controller,
+                        $this->method,
+                    ], false)
                 ) {
                     throw new \RuntimeException('Controller method is not found.');
                 }
@@ -485,7 +478,7 @@ class YP
      */
     public static function cache(int $time)
     {
-        self::$cacheTTL = (int) $time;
+        self::$cacheTTL = (int)$time;
     }
 
     /**
@@ -499,7 +492,7 @@ class YP
     {
         if ($cachedResponse = cache()->get($this->generateCacheName($config))) {
             $cachedResponse = unserialize($cachedResponse);
-            if (! is_array($cachedResponse) || ! isset($cachedResponse['output']) || ! isset($cachedResponse['headers'])) {
+            if (!is_array($cachedResponse) || !isset($cachedResponse['output']) || !isset($cachedResponse['headers'])) {
                 throw new \Exception("Error unserializing page cache");
             }
             $headers = $cachedResponse['headers'];
@@ -526,10 +519,10 @@ class YP
     public function getPerformanceStats()
     {
         return [
-                'startTime'   => $this->startTime,
-                'totalTime'   => $this->totalTime,
-                'startMemory' => $this->startMemory,
-               ];
+            'startTime'   => $this->startTime,
+            'totalTime'   => $this->totalTime,
+            'startMemory' => $this->startMemory,
+        ];
     }
 
     /**
@@ -568,7 +561,7 @@ class YP
             $uri = new Uri($uri);
         }
         if (isset($_SESSION)) {
-            $_SESSION['_yp_previous_url'] = (string) $uri;
+            $_SESSION['_yp_previous_url'] = (string)$uri;
         }
     }
 

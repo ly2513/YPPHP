@@ -237,7 +237,6 @@ class YP_Controller
         // 模板文件
         is_file($tempFilePath) or touch($tempFilePath);
         echo $this->render($tempFile, $data);
-        die;
         if (!YP_DEBUG) {
             die;
         }

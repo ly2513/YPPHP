@@ -150,10 +150,10 @@
 				<tbody>
 				<?php foreach ($get as $name => $value) : ?>
 					<tr>
-						<?php if ($name != 'SN_') : ?>
+
 							<td><?= esc($name) ?></td>
 							<td><?= esc($value) ?></td>
-						<?php endif; ?>
+						
 					</tr>
 				<?php endforeach; ?>
 				</tbody>

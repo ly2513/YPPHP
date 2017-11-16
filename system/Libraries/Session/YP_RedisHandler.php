@@ -114,13 +114,13 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
 
         return false;
     }
-
+    
     /**
      * 读取session数据
      *
      * @param string $sessionID sessionID
      *
-     * @return bool|string  序列化的session数据
+     * @return string 序列化的session数据
      */
     public function read($sessionID)
     {

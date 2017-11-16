@@ -55,7 +55,7 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface
     public function __construct(Config $config)
     {
         parent::__construct($config);
-        if (! empty($config->sessionSavePath)) {
+        if (!empty($config->sessionSavePath)) {
             $this->savePath = rtrim($config->sessionSavePath, '/\\');
             ini_set('session.save_path', $config->sessionSavePath);
         } else {
@@ -74,11 +74,11 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface
      */
     public function open($savePath, $name): bool
     {
-        if (! is_dir($savePath)) {
-            if (! mkdir($savePath, 0700, true)) {
+        if (!is_dir($savePath)) {
+            if (!mkdir($savePath, 0700, true)) {
                 throw new \Exception('Session: 配置的保存目录 "' . $this->savePath . '" 不是个目录或者目录不存在或者不能创建.');
             }
-        } elseif (! is_writable($savePath)) {
+        } elseif (!is_writable($savePath)) {
             throw new \Exception('Session: 配置的保存目录 "' . $this->savePath . '", PHP程序不能写入.');
         }
         $this->savePath = $savePath;
@@ -87,18 +87,18 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface
 
         return true;
     }
-
+    
     /**
      * 读取Session
      *
      * @param string $sessionID sessionId
      *
-     * @return bool|string
+     * @return string
      */
     public function read($sessionID)
     {
         if ($this->fileHandle === null) {
-            $this->fileNew = ! file_exists($this->filePath . $sessionID);
+            $this->fileNew = !file_exists($this->filePath . $sessionID);
             if (($this->fileHandle = fopen($this->filePath . $sessionID, 'c+b')) === false) {
                 $this->logger->error('Session: 不能打开文件 "' . $this->filePath . $sessionID . '".');
 
@@ -144,15 +144,15 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface
     public function write($sessionID, $sessionData): bool
     {
         // 如果sessionID没匹配到,调用session_regenerate_id()重新生成一个
-        if ($sessionID !== $this->sessionID && (! $this->close() || $this->read($sessionID) === false)) {
+        if ($sessionID !== $this->sessionID && (!$this->close() || $this->read($sessionID) === false)) {
             return false;
         }
-        if (! is_resource($this->fileHandle)) {
+        if (!is_resource($this->fileHandle)) {
             return false;
         } elseif ($this->fingerprint === md5($sessionData)) {
             return ($this->fileNew) ? true : touch($this->filePath . $sessionID);
         }
-        if (! $this->fileNew) {
+        if (!$this->fileNew) {
             ftruncate($this->fileHandle, 0);
             rewind($this->fileHandle);
         }
@@ -162,7 +162,7 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface
                     break;
                 }
             }
-            if (! is_int($result)) {
+            if (!is_int($result)) {
                 $this->fingerprint = md5(substr($sessionData, 0, $written));
                 $this->logger->error('Session: Unable to write data.');
 
@@ -221,22 +221,19 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface
      */
     public function gc($maxLifeTime): bool
     {
-        if (! is_dir($this->savePath) || ($directory = opendir($this->savePath)) === false) {
+        if (!is_dir($this->savePath) || ($directory = opendir($this->savePath)) === false) {
             $this->logger->debug("Session: 垃圾收集器无法在当前目录下列出文件 '" . $this->savePath . "'.");
 
             return false;
         }
         $ts      = time() - $maxLifeTime;
-        $pattern = sprintf(
-            '/^%s[0-9a-f]{%d}$/',
-            preg_quote($this->cookieName, '/'),
-            ($this->matchIP === true ? 72 : 40)
-        );
+        $pattern = sprintf('/^%s[0-9a-f]{%d}$/', preg_quote($this->cookieName, '/'),
+            ($this->matchIP === true ? 72 : 40));
         while (($file = readdir($directory)) !== false) {
             // 如果文件名与此模式不匹配，它不是会话文件
             $mTime  = filemtime($this->savePath . '/' . $file);
-            $status = preg_match($pattern, $file) || ! is_file($this->savePath . '/' . $file) || $mTime;
-            if (! $status === false || $mTime > $ts) {
+            $status = preg_match($pattern, $file) || !is_file($this->savePath . '/' . $file) || $mTime;
+            if (!$status === false || $mTime > $ts) {
                 continue;
             }
             unlink($this->savePath . '/' . $file);

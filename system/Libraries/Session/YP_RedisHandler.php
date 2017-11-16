@@ -65,7 +65,9 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
         parent::__construct($config);
         if (empty($this->savePath)) {
             throw new \Exception('Session: 没有配置redis.');
+
         } elseif (preg_match('#(?:tcp://)?([^:?]+)(?:\:(\d+))?(\?.+)?#', $this->savePath, $matches)) {
+            ini_set('session.save_path', $this->savePath);
             isset($matches[3]) or $matches[3]                                         = '';
             $this->savePath                                                           = [
                                                                                          'host'     => $matches[1],
@@ -131,7 +133,7 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
             return $session_data;
         }
 
-        return false;
+        return '';
     }
 
     /**
@@ -153,6 +155,7 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
             $this->keyExists = false;
             $this->sessionID = $sessionID;
         }
+
         if (isset($this->lockKey)) {
             $this->redis->setTimeout($this->lockKey, 300);
             if ($this->fingerprint !== ($fingerprint = md5($sessionData)) || $this->keyExists === false) {
@@ -259,6 +262,7 @@ class YP_RedisHandler extends YP_BaseHandler implements \SessionHandlerInterface
             $this->lockKey = $lock_key;
             break;
         } while (++$attempt < 30);
+        
         if ($attempt === 30) {
             log_message('error', 'Session: 通过30次尝试最终无法获得锁 ' . $this->keyPrefix . $sessionID . '.');
 

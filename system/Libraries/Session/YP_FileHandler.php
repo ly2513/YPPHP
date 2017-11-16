@@ -102,14 +102,14 @@ class YP_FileHandler extends YP_BaseHandler implements \SessionHandlerInterface
             if (($this->fileHandle = fopen($this->filePath . $sessionID, 'c+b')) === false) {
                 $this->logger->error('Session: 不能打开文件 "' . $this->filePath . $sessionID . '".');
 
-                return false;
+                return '';
             }
             if (flock($this->fileHandle, LOCK_EX) === false) {
                 $this->logger->error('Session: 不能获得文件锁 "' . $this->filePath . $sessionID . '."');
                 fclose($this->fileHandle);
                 $this->fileHandle = null;
 
-                return false;
+                return '';
             }
             $this->sessionID = $sessionID;
             if ($this->fileNew) {

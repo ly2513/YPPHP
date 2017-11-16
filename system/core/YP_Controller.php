@@ -106,6 +106,13 @@ class YP_Controller
     protected $directory;
 
     /**
+     * 模板数据
+     *
+     * @var array
+     */
+    protected $tempData = [];
+
+    /**
      * 当前控制器
      *
      * @var
@@ -277,6 +284,23 @@ class YP_Controller
         }
 
         return $template;
+    }
+
+    /**
+     * 分配变量到模板中
+     *
+     * @param $var
+     * @param null $value
+     */
+    public function assign($var, $value = NULL)
+    {
+        if (is_array($var)) {
+            foreach ($var as $key => $val) {
+                $this->tempData[$key] = $val;
+            }
+        } else {
+            $this->tempData[$var] = $value;
+        }
     }
 
     /**

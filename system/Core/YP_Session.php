@@ -427,7 +427,7 @@ class YP_Session
     }
 
     /**
-     * 将数据设置为只为单个请求持续的会话,完美的使用与使用状态更新消息
+     * 为每次请求设置session数据
      *
      * @param $data  属性标识符或属性关联数组
      * @param null $value 如果$data是标量,为属性值
@@ -439,7 +439,8 @@ class YP_Session
     }
 
     /**
-     * 从会话中检索一个或多个'闪存'数据项。
+     * 从会话中检索一个或多个Flash数据项。
+     * 如果该项目的关键参数为空，返回所有flashData。
      *
      * @param string|null $key
      *

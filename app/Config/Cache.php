@@ -25,7 +25,7 @@ class Cache
      * @var string
      */
     public $handler = 'file';
-    //    public $handler = 'redis';
+//        public $handler = 'redis';
     /**
      * 备份处理
      *
@@ -82,6 +82,47 @@ class Cache
      */
     public function __construct()
     {
-        self::$redis == Redis::$redis;
+        $this->getRedis();
+    }
+
+    /**
+     * 获得redis配置
+     *
+     * @return mixed
+     */
+    protected function getRedis()
+    {
+        switch (ENVIRONMENT) {
+            case 'prod':
+                $config = [
+                    'host'       => '127.0.0.1',// 主机
+                    'port'       => 6379,       // 端口号
+                    'index'      => '0',        // 数据库下标
+                    'prefix'     => 'zb:',      // 数据表前缀
+                    'persistent' => false,
+                ];
+                break;
+            case 'test':
+                $config = [
+                    'host'       => '127.0.0.1',// 主机
+                    'port'       => 6379,       // 端口号
+                    'index'      => '1',        // 数据库下标
+                    'prefix'     => 'zb:',      // 数据表前缀
+                    'persistent' => false,
+                    'auth'       => 'un12345!QWEASD901'
+                ];
+                break;
+            default:
+                $config = [
+                    'host'       => '127.0.0.1',// 主机
+                    'port'       => 6379,       // 端口号
+                    'index'      => '0',        // 数据库下标
+                    'prefix'     => 'zb:',      // 数据表前缀
+                    'persistent' => false,
+                ];
+                break;
+        };
+
+        self::$redis = $config;
     }
 }

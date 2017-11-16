@@ -147,8 +147,9 @@ class YP
         $this->bootstrapEnvironment();
         // 开启session
         $session = \Config\Services::session();
-        $session->start();
-        // session_start();
+        if ( ! isset($_SESSION)) {
+            $session->start();
+        }
         if (YP_DEBUG) {
             require_once SYSTEM_PATH . 'ThirdParty/Kint/Kint.class.php';
         }

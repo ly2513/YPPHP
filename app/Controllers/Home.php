@@ -27,32 +27,21 @@ class Home extends Controller
      */
     public function index()
     {
-                $XHPROF_ROOT  =  dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
-
-                DB::select('select * from zb_sys_sms');
-                
-                $xhprof_data = xhprof_disable();
-                include_once $XHPROF_ROOT . "xhprof_lib.php";
-                include_once $XHPROF_ROOT . "xhprof_runs.php";
-                $xhprof_runs = new \XHProfRuns_Default();
-                $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
-
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
-        $data         = [
-            'view_path'       => 'app/Views/' . $this->controller . '/' . $this->method . $this->extension,
-            'controller_path' => 'app/Controller/' . $this->controller . '.php',
-            'evn'             => ENVIRONMENT,
-            'elapsed_time'    => $elapsed_time,
-            'version'         => VERSION,
-            'doc_url'         => 'https://ly2513.gitbooks.io/youpin/content/'
-        ];
+        $this->assign('view_path', 'app/Views/' . $this->controller . '/' . $this->method . $this->extension);
+        $this->assign('controller_path', 'app/Controller/' . $this->controller . '.php');
+        $this->assign('evn', ENVIRONMENT);
+        $this->assign('elapsed_time', $elapsed_time);
+        $this->assign('version', VERSION);
+        $this->assign('doc_url', 'https://ly2513.gitbooks.io/youpin/content/');
         //        $xhprof_data = xhprof_disable();
         //        include_once $XHPROF_ROOT . "xhprof_lib.php";
         //        include_once $XHPROF_ROOT . "xhprof_runs.php";
         //        $xhprof_runs = new \XHProfRuns_Default();
         //        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
-        $this->display($data);
+        
+        $this->display();
     }
 
     public function testThrift()

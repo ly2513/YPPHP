@@ -225,6 +225,7 @@ class YP_Session
         ini_set('session.use_strict_mode', 1);
         ini_set('session.use_cookies', 1);
         ini_set('session.use_only_cookies', 1);
+
         $this->configureSidLength();
     }
 
@@ -236,6 +237,7 @@ class YP_Session
         if (PHP_VERSION_ID < 70100) {
             $bits          = 160;
             $hash_function = ini_get('session.hash_function');
+            var_dump($hash_function);
             if (ctype_digit($hash_function)) {
                 if ($hash_function !== '1') {
                     ini_set('session.hash_function', 1);
@@ -675,7 +677,7 @@ class YP_Session
      */
     protected function startSession()
     {
-        session_start();
+        @session_start();
     }
 
     /**

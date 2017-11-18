@@ -108,7 +108,7 @@ class App extends Config
     /**
      * 如果是文件驱动,该值为存储的session文件的路径(仅支持绝对路径), 建议配置的值: CACHE_PATH . '/Session'
      * 如果是数据库驱动,则该属性值为存储session的表名, 值随便,建议采用相同的表的前缀
-     * 如果是redis驱动,则为主机和端口 如: tcp://127.0.0.1:6379
+     * 如果是redis驱动,则为主机和端口 如: tcp://127.0.0.1:6379 或者 tcp://127.0.0.1:6379?auth=password
      *
      * @var string
      */

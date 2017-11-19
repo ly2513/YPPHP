@@ -103,7 +103,7 @@ class App extends Config
      *
      * @var int
      */
-    public $sessionExpiration = 0;
+    public $sessionExpiration = 7200;
 
     /**
      * 如果是文件驱动,该值为存储的session文件的路径(仅支持绝对路径), 建议配置的值: CACHE_PATH . '/Session'

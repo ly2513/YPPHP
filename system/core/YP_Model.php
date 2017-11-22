@@ -23,6 +23,7 @@ class YP_Model extends Model
 {
     // 开启软删除
     use SoftDelete;
+    
     // 定义软删除字段
     const  DELETED_AT =   'is_delete';
 

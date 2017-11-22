@@ -104,17 +104,17 @@ class YP_FileHandler implements YP_HandlerInterface
      */
     public function handle($level, $message): bool
     {
-        $filepath = $this->path . 'log-' . date('Y-m-d') . '.' . $this->fileExtension;
+        $filePath = $this->path . 'log-' . date('Y-m-d') . '.' . $this->fileExtension;
         $msg      = '';
-        if (! file_exists($filepath)) {
+        if (! file_exists($filePath)) {
             $new_file = true;
             // 只为php文件添加保护
             if ($this->fileExtension === 'php') {
                 $msg .= "<?php defined('APP_PATH') OR exit('No direct script access allowed'); ?>\n\n";
             }
-            touch($filepath);
+            touch($filePath);
         }
-        if (! $fp = @fopen($filepath, 'ab')) {
+        if (! $fp = @fopen($filePath, 'ab')) {
             return false;
         }
         // 实例化与附加的初始日期日期时间是微秒, 这个格式需要适当的支持
@@ -136,7 +136,7 @@ class YP_FileHandler implements YP_HandlerInterface
         flock($fp, LOCK_UN);
         fclose($fp);
         if (isset($new_file) && $new_file === true) {
-            chmod($filepath, $this->filePermissions);
+            chmod($filePath, $this->filePermissions);
         }
 
         return is_int($result);

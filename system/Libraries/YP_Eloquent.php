@@ -61,6 +61,9 @@ class YP_Eloquent
         $this->capsule->bootEloquent();
     }
 
+    /**
+     * @return null
+     */
     public function getCapsule()
     {
         return $this->capsule;

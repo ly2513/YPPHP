@@ -25,7 +25,7 @@
   public
   |____index.php
   |      |---- 框架入口
-  |____static
+  |____Static
          |---- 前端静态资源目录
   artisan
          |---- 框架的命令工具

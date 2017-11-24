@@ -39,7 +39,7 @@ class YP_Toolbar
     public function __construct(Config $config)
     {
         foreach ($config->toolbarCollectors as $collector) {
-            if (! class_exists($collector)) {
+            if (!class_exists($collector)) {
                 // @todo Log this!
                 continue;
             }
@@ -66,8 +66,10 @@ class YP_Toolbar
         $totalTime       = $totalTime * 1000;
         $totalMemory     = number_format((memory_get_peak_usage() - $startMemory) / 1048576, 3);
         $segmentDuration = $this->roundTo($totalTime / 7, 5);
-        $segmentCount    = (int) ceil($totalTime / $segmentDuration);
+        $segmentCount    = (int)ceil($totalTime / $segmentDuration);
         $varData         = $this->collectVarData();
+
+        $sqlLog          = \YP\YP::$sqlLog;
         ob_start();
         include(__DIR__ . '/Views/toolbar.tpl.php');
         $output = ob_get_contents();
@@ -96,12 +98,10 @@ class YP_Toolbar
             $output .= "<td>{$row['component']}</td>";
             $output .= "<td style='text-align: right'>" . number_format($row['duration'] * 1000, 2) . " ms</td>";
             $output .= "<td colspan='{$segmentCount}' style='overflow: hidden'>";
-            $offset  = ((($row['start'] - $this->startTime) * 1000) / $displayTime) * 100;
-            $length  = (($row['duration'] * 1000) / $displayTime) * 100;
-            $output .= "<span class='timer' style='left: {$offset}%; width: {$length}%;' title='" . number_format(
-                $length,
-                2
-            ) . "%'></span>";
+            $offset = ((($row['start'] - $this->startTime) * 1000) / $displayTime) * 100;
+            $length = (($row['duration'] * 1000) / $displayTime) * 100;
+            $output .= "<span class='timer' style='left: {$offset}%; width: {$length}%;' title='" . number_format($length,
+                    2) . "%'></span>";
             $output .= "</td>";
             $output .= "</tr>";
         }
@@ -119,7 +119,7 @@ class YP_Toolbar
         $data = [];
         // 收集
         foreach ($this->collectors as $collector) {
-            if (! $collector->hasTimelineData()) {
+            if (!$collector->hasTimelineData()) {
                 continue;
             }
             $data = array_merge($data, $collector->timelineData());
@@ -138,7 +138,7 @@ class YP_Toolbar
     {
         $data = [];
         foreach ($this->collectors as $collector) {
-            if (! $collector->hasVarData()) {
+            if (!$collector->hasVarData()) {
                 continue;
             }
             $data = array_merge($data, $collector->getVarData());
@@ -150,7 +150,7 @@ class YP_Toolbar
     /**
      * 四舍五入取增量值
      *
-     * @param $number
+     * @param     $number
      * @param int $increments
      *
      * @return float

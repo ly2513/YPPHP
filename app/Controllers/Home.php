@@ -27,7 +27,7 @@ class Home extends Controller
      */
     public function index()
     {
-        
+        \SmsModel::select('*')->get()->toArray();
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
         $this->assign('view_path', 'app/Views/' . $this->controller . '/' . $this->method . $this->extension);
@@ -41,8 +41,12 @@ class Home extends Controller
         //        include_once $XHPROF_ROOT . "xhprof_runs.php";
         //        $xhprof_runs = new \XHProfRuns_Default();
         //        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
-        
         $this->display();
+    }
+
+    public function testEloquent()
+    {
+        P(\SmsModel::select('*')->toSql());
     }
 
     public function testThrift()

@@ -112,9 +112,19 @@ class YP
     protected static $cacheTTL = 0;
 
     /**
-     * @var
+     * 模板路径
+     *
+     * @var string
      */
-    protected $path;
+    protected $path = '';
+
+    /**
+     * 记录所执行的SQL语句
+     *
+     * @var array
+     */
+    public static $sqlLog = [];
+
 
     /**
      * YP constructor.
@@ -250,6 +260,9 @@ class YP
         $filters = Config\Services::filters();
         $uri     = $this->request instanceof CliRequest ? $this->request->getPath() : $this->request->uri->getPath();
         $filters->run($uri, 'before');
+
+        // 收集SQL开始
+        YP_DEBUG ? \Illuminate\Database\Capsule\Manager::enableQueryLog() : '';
         $returned = $this->startController();
         // 关闭已经运行在startController()的控制器
         if (!is_callable($this->controller)) {
@@ -263,6 +276,8 @@ class YP
             $this->benchmark->stop('controller_constructor');
             $this->benchmark->stop('controller');
         }
+        // 收集SQL结束
+        YP_DEBUG ? self::$sqlLog = \Illuminate\Database\Capsule\Manager::getQueryLog() : '';
         // 如果返回的是一个字符串，那么控制器输出的东西，可能是一个视图，而不是直接输出。可以单独发送所以可能用于输出。
         $this->gatherOutput($cacheConfig, $returned);
         // 运行 "after" 过滤器

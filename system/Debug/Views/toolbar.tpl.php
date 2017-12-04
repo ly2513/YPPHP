@@ -99,7 +99,6 @@
                 </tr>
                 </thead>
                 <tbody>
-
                 <?php foreach ($sqlLog as $heading => $items) : ?>
                     <tr>
                         <td style="width:50%"><?php echo esc($items['query']) ?></td>

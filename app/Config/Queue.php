@@ -52,7 +52,7 @@ class Queue
      *
      * @var string
      */
-    public $logPath = CACHE_PATH . '/Log/';
+    public $logPath = CACHE_PATH . 'Log/';
 
     /**
      * 设置如果失败将执行的次数

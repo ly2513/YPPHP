@@ -27,7 +27,6 @@ class Home extends Controller
      */
     public function index()
     {
-        \SmsModel::select('*')->get()->toArray();
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
         $this->assign('view_path', 'app/Views/' . $this->controller . '/' . $this->method . $this->extension);

@@ -28,6 +28,9 @@ define('ROOT_PATH', __DIR__ . DIRECTORY_SEPARATOR);
 // 定义应用路径
 define('APP_PATH', rtrim(ROOT_PATH . 'app', '/') . DIRECTORY_SEPARATOR);
 
+// 日志目录
+define('CACHE_PATH', rtrim(ROOT_PATH . 'cache', '/') . DIRECTORY_SEPARATOR);
+
 // 定义框架路径
 defined('SYSTEM_PATH') ? : define('SYSTEM_PATH', rtrim(ROOT_PATH . 'system', '/') . DIRECTORY_SEPARATOR);
 
@@ -83,6 +86,8 @@ $artisans = [
 //    new \Cli\Console\Database\ResetCommand(),
 //    new \Cli\Console\Database\RollbackCommand(),
 //    new \Cli\Console\Database\StatusCommand(),
+    // 队列命令
+    new \Cli\Console\Queue\CreateJobCommand(),
 ];
 $app->addCommands($artisans);
 $app->run();

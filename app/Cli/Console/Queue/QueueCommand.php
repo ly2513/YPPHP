@@ -9,7 +9,7 @@
 namespace Cli\Console\Queue;
 
 use Symfony\Component\Console\Command\Command;
-use Con\Queue;
+use Config\Queue;
 
 class QueueCommand extends Command
 {
@@ -27,7 +27,6 @@ class QueueCommand extends Command
     private function initQueueConf()
     {
         // 队列配置
-        //        require APPLICATION_ROOT . 'Config/queue.php';
         $_SERVER['QUEUE']         = Queue::$queue;
         $_SERVER['COUNT']         = Queue::$count;
         $_SERVER['REDIS_BACKEND'] = Queue::$host . ':' . Queue::$port;

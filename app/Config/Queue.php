@@ -8,6 +8,7 @@
  */
 namespace Config;
 
+use Config\Redis;
 /**
  * 队列配置文件
  *
@@ -31,49 +32,87 @@ class Queue
      *
      * @var int
      */
-    public $sleep = 1;
+    public static $sleep = 1;
 
     /**
      * 指定当前的Worker只负责处理default队列 ,如果设置 * ,就是处理所有队列,也可以使用',',如'list1,list2,list3'。
      *
      * @var string
      */
-    public $queue = 'default';
+    public static $queue = 'default';
+
+    /**
+     * redis host
+     *
+     * @var string
+     */
+    public static $host = '127.0.0.1';
+
+    /**
+     * redis 端口
+     *
+     * @var string
+     */
+    public static $port = '6379';
 
     /**
      * 设定Worker数量
      *
      * @var int
      */
-    public $count = 1;
+    public static $count = 1;
+
+    /**
+     * @var int
+     */
+    public static $logging = 1;
+
+    /**
+     * @var int
+     */
+    public static $verbose = 1;
+
+    /**
+     * 比较详细的Log， VVERBOSE=1 debug 的时候可以打开来看
+     *
+     * @var int
+     */
+    public static $vVerbose = 1;
+
+    /**
+     * 如果你是简单 worker,可以指定 PIDFILE 把pid写入
+     *
+     * @var string
+     */
+    public static $pidfile = '';
 
     /**
      * 设置日志目录
      *
      * @var string
      */
-    public $logPath = CACHE_PATH . 'Log/';
+    public static $logPath = CACHE_PATH . 'Log/';
 
     /**
      * 设置如果失败将执行的次数
      *
      * @var int
      */
-    public $executionTimes = 3;
+    public static $executionTimes = 3;
 
     /**
      * 研发组邮箱,用英文半角分号隔开
      *
      * @var string
      */
-    public $emailGroup = '626375290@qq.com';
+    public static $emailGroup = '626375290@qq.com';
 
     /**
      * 队列任务处理目录
      *
      * @var string
      */
-    public $jobPath = APP_PATH . 'ThirdParty/Queue/';
+    public static $jobPath = APP_PATH . 'ThirdParty/Queue/';
 
     /**
      * 配置数组
@@ -136,7 +175,8 @@ class Queue
             };
         } else {
             // redis 配置
-            $config = Redis::$redis;
+            self::$host = Redis::$redis['host'];
+            self::$port = Redis::$redis['port'];
         }
         self::$instance[$this->handlerDrive] = $config;
     }

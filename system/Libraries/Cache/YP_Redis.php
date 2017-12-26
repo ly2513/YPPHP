@@ -90,7 +90,7 @@ class YP_Redis
         // redis前缀
         self::$_prefix = $config->prefix ? : $redisConf['prefix'];
         // 初始化redis配置
-        if (isset(\Config\Cache::$redis)) {
+        if ($redisConf) {
             $this->config = array_merge($this->config, $redisConf);
         }
     }

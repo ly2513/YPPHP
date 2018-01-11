@@ -88,8 +88,8 @@ class App extends Config
      *
      * @var string
      */
-//    public $sessionDriver = 'YP\Libraries\Session\YP_FileHandler';
-    public $sessionDriver = 'YP\Libraries\Session\YP_RedisHandler';
+    public $sessionDriver = 'YP\Libraries\Session\YP_FileHandler';
+//    public $sessionDriver = 'YP\Libraries\Session\YP_RedisHandler';
 
     /**
      * 设置session名称
@@ -112,8 +112,8 @@ class App extends Config
      *
      * @var string
      */
-//    public $sessionSavePath = CACHE_PATH . 'Session';
-    public $sessionSavePath = 'tcp://127.0.0.1:6379';
+    public $sessionSavePath = CACHE_PATH . 'Session';
+//    public $sessionSavePath = 'tcp://127.0.0.1:6379';
 
 
     /**

@@ -27,6 +27,8 @@ class Home extends Controller
      */
     public function index()
     {
+
+        $XHPROF_ROOT  = dirname(__DIR__) . '/xhprof/';
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
         $this->assign('view_path', 'app/Views/' . $this->controller . '/' . $this->method . $this->extension);
@@ -35,11 +37,12 @@ class Home extends Controller
         $this->assign('elapsed_time', $elapsed_time);
         $this->assign('version', VERSION);
         $this->assign('doc_url', 'https://ly2513.gitbooks.io/youpin/content/');
-        //        $xhprof_data = xhprof_disable();
-        //        include_once $XHPROF_ROOT . "xhprof_lib.php";
-        //        include_once $XHPROF_ROOT . "xhprof_runs.php";
-        //        $xhprof_runs = new \XHProfRuns_Default();
-        //        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
+        $xhprof_data = xhprof_disable();
+        include_once $XHPROF_ROOT . "xhprof_lib.php";
+        include_once $XHPROF_ROOT . "xhprof_runs.php";
+        $xhprof_runs = new \XHProfRuns_Default();
+        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
+        P(1111);
         $this->display();
     }
 

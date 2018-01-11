@@ -28,7 +28,7 @@ class Home extends Controller
     public function index()
     {
 
-        $XHPROF_ROOT  = dirname(__DIR__) . '/xhprof/';
+        $XHPROF_ROOT  = dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
         $this->assign('view_path', 'app/Views/' . $this->controller . '/' . $this->method . $this->extension);
@@ -42,7 +42,8 @@ class Home extends Controller
         include_once $XHPROF_ROOT . "xhprof_runs.php";
         $xhprof_runs = new \XHProfRuns_Default();
         $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
-        P(1111);
+
+
         $this->display();
     }
 

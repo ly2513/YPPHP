@@ -157,7 +157,7 @@ class YP_IncomingRequest extends Request
      *
      * @return bool
      */
-    public function isAJAX(): bool
+    public function isAjax(): bool
     {
         return (! empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
     }

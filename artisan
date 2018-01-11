@@ -41,14 +41,12 @@ require ROOT_PATH . 'vendor/autoload.php';
 function do_doctrine_load($className) {
     $className = str_replace('\\', '/', $className);
     $path = APP_PATH . 'ThirdParty/Doctrine/Entity/' . $className . '.php';
+    if (!file_exists($path)) { // 加载配置文件
+        $path = APP_PATH  . $className . '.php';
+    }
+    // 加载文件
     if (file_exists($path)) {
         require $path;
-    }else{
-        // 加载配置文件
-        $path = APP_PATH  . $className . '.php';
-        if (file_exists($path)) {
-            require $path;
-        }
     }
 }
 

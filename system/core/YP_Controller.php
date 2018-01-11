@@ -202,7 +202,7 @@ class YP_Controller
     /**
      * 初始化Twig模板引擎
      */
-    public function initTwig()
+    protected function initTwig()
     {
         // TWig配置信息
         $config = new \Config\Twig();
@@ -306,7 +306,7 @@ class YP_Controller
     /**
      * json_schema 参数验证
      */
-    public function setInput()
+    protected function setInput()
     {
         if (!is_object($this->input)) {
             $this->input = Services::input();
@@ -316,7 +316,7 @@ class YP_Controller
     /**
      * 初始化json_schema对象
      */
-    public function setJsonSchema()
+    protected function setJsonSchema()
     {
         if (!is_object($this->jsonSchema)) {
             $this->jsonSchema = Services::schema();
@@ -342,7 +342,7 @@ class YP_Controller
      *
      * @param string $msg 异常信息, 可以不传,默认按照错误码信息返回
      */
-    public function callBackWithParamError($msg = '')
+    protected function callBackWithParamError($msg = '')
     {
         // set_status_header(400);
         call_back(4, [], explode("\n\r", $msg));

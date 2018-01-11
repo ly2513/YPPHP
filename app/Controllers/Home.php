@@ -28,7 +28,7 @@ class Home extends Controller
     public function index()
     {
 
-        $XHPROF_ROOT  = dirname(__DIR__) . '/xhprof/';
+        $XHPROF_ROOT  = dirname(ROOT_PATH) . '/xhprof/xhprof_lib/utils/';
         $time         = microtime(true) * 1000;
         $elapsed_time = number_format(($time - START_TIME), 0);
         $this->assign('view_path', 'app/Views/' . $this->controller . '/' . $this->method . $this->extension);

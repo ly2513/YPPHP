@@ -446,7 +446,7 @@ class YP_Response extends Message
     }
 
     /**
-     * 设置Cookie
+     
      *
      * @param $name      Cookie 名称
      * @param string $value     Cookie 值

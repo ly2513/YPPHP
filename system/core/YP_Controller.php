@@ -142,7 +142,7 @@ class YP_Controller
         if ($this->forceHTTPS > 0) {
             $this->forceHTTPS($this->forceHTTPS);
         }
-        // 加载jsonSchema
+        // TODO 暂时注释 加载jsonSchema
         // $this->setJsonSchema();
         // $this->setInput();
         $this->initTwig();

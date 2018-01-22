@@ -135,7 +135,7 @@ class YP_Controller
      */
     public function __construct(YP_RequestInterface $request, YP_Response $response, YP_Log $logger = null)
     {
-        $this->request  = $request;
+        $this->request  = is_cli() ?  $request : Services::request();
         $this->response = $response;
         $this->logger   = is_null($logger) ? Services::log(true) : $logger;
         $this->logger->info('Controller "' . get_class($this) . '" loaded.');

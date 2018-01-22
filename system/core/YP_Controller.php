@@ -145,9 +145,9 @@ class YP_Controller
         // 加载jsonSchema
         // $this->setJsonSchema();
         // $this->setInput();
+        $this->initTwig();
         // 初始化子类构造方法
         $this->initialization();
-        $this->initTwig();
         $this->url = $this->_getCurrentUrl();
     }
 

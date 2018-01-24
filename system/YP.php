@@ -125,7 +125,6 @@ class YP
      */
     public static $sqlLog = [];
 
-
     /**
      * YP constructor.
      *
@@ -157,7 +156,7 @@ class YP
         $this->bootstrapEnvironment();
         // 开启session
         $session = \Config\Services::session();
-        if ( ! isset($_SESSION)) {
+        if (!isset($_SESSION)) {
             $session->start();
         }
         if (YP_DEBUG) {
@@ -189,7 +188,11 @@ class YP
         try {
             // 处理请求
             $this->handleRequest($routes, $cacheConfig);
-        } catch (\Exception $e) {
+        }
+            //        catch (\RuntimeException $e) {
+            //            $this->display404errors($e);
+            //        }
+        catch (\Exception $e) {
             // 日志记录异常错误
             $logger = Config\Services::log();
             $logger->error('异常错误 ' . $e);
@@ -260,7 +263,6 @@ class YP
         $filters = Config\Services::filters();
         $uri     = $this->request instanceof CliRequest ? $this->request->getPath() : $this->request->uri->getPath();
         $filters->run($uri, 'before');
-
         // 收集SQL开始
         YP_DEBUG ? \Illuminate\Database\Capsule\Manager::enableQueryLog() : '';
         $returned = $this->startController();
@@ -442,6 +444,47 @@ class YP
         $this->benchmark->stop('controller');
 
         return $output;
+    }
+
+    /**
+     * 显示404页面
+     *
+     * @param \RuntimeException $e
+     */
+    protected function display404errors(\RuntimeException $e)
+    {
+        // 有404的覆盖吗
+        if ($override = $this->router->get404Override()) {
+            if ($override instanceof \Closure) {
+                echo $override();
+            } else if (is_array($override)) {
+                $this->benchmark->start('controller');
+                $this->benchmark->start('controller_constructor');
+                $this->controller = $override[0];
+                $this->method     = $override[1];
+                unset($override);
+                $controller = $this->createController();
+                $this->runController($controller);
+            }
+            $this->gatherOutput();
+            $this->sendResponse();
+
+            return;
+        }
+        // 显示404错误
+        $this->response->setStatusCode(404);
+        if (ENVIRONMENT !== 'test') {
+            if (ob_get_level() > 0) {
+                ob_end_flush();
+            }
+        } else {
+            // 在测试的时候，一个是PHPUnit，另一个是测试用例
+            if (ob_get_level() > 2) {
+                ob_end_flush();
+            }
+        }
+        throw new \RuntimeException(lang('HTTP.pageNotFound'));
+
     }
 
     /**

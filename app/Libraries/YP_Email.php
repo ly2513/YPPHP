@@ -100,7 +100,7 @@ class YP_Email
                 return false;
             }
             return true;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->errorInfo = $e->getMessage();
             return false;
         }

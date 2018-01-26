@@ -18,12 +18,7 @@ if (!defined('ROOT_PATH')) {
  */
 function load_class($class)
 {
-//    $className = str_replace('\\', '/', $class);
-//    $className = str_ireplace('.php', '', $className);
     $className = str_ireplace('.php', '', $class);
-    //    echo $className;
-    //    echo PHP_EOL;
-    //    $file      = APP_PATH . 'ThirdParty/Queue/Job/' . $className;
     $files     = [
         APP_PATH . 'ThirdParty/Queue/Job/',
         APP_PATH . 'Libraries/',

@@ -52,8 +52,9 @@ function do_doctrine_load($className) {
 }
 
 spl_autoload_register('do_doctrine_load');
+
 //  加载队列任务文件
-//require APP_PATH . 'ThirdParty/Queue/autoload.php';
+require APP_PATH . 'ThirdParty/Queue/autoload.php';
 
 //加载 Doctrine 以及 Doctrine 的 DB连接
 $doctrine  = new \Config\Doctrine();

@@ -20,7 +20,6 @@ function load_class($class)
 {
     $className = str_ireplace('.php', '', $class);
     $files     = [
-        APP_PATH . 'ThirdParty/Queue/Job/',
         APP_PATH . 'Libraries/',
         APP_PATH . 'Config/',
     ];

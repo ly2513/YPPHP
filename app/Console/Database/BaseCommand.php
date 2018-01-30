@@ -56,7 +56,7 @@ class BaseCommand extends Command
     protected function getDefaultConfirmCallback()
     {
         return function () {
-            return ENVIRONMENT == 'production';
+            return ENVIRONMENT == 'prod';
         };
     }
 

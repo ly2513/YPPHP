@@ -35,11 +35,13 @@ class ListenCommand extends QueueCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-//       $a =  system('ps aux | grep php');
+       $a =  system('ps aux | grep php');
 //       $a =  system('ps -ef | grep php');
         
 //       exec('ps aux | egrep php',$a,$b);
-//        var_dump($a);
+        var_dump($a);
+        $b = explode('  ', $a);
+        print_r($b);
 //        var_dump($b);
 //        $works = Worker::all();
 

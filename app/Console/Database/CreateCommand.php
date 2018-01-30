@@ -56,6 +56,7 @@ class CreateCommand extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->repository = new YP_DatabaseMigrationRepository();
         $this->repository->setSource($input->getOption('database'));
         $this->repository->createRepository();
         $output->writeln(sprintf('迁移表创建成功!'));

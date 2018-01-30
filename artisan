@@ -81,7 +81,7 @@ $artisans = [
     new \Console\Thrift\GenCommand(),
     new \Console\Thrift\WorkCommand(),
     // migrations 命令
-//    new \Console\Database\CreateCommand(),
+    new \Console\Database\CreateCommand(),
 //    new \Console\Database\MigrateCommand(),
 //    new \Console\Database\MigrateMakeCommand(),
 //    new \Console\Database\RefreshCommand(),

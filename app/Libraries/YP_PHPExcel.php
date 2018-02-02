@@ -97,6 +97,13 @@ class YP_PHPExcel
     private $imgPositionY = 0;
 
     /**
+     * 合并单元格的数量
+     *
+     * @var int
+     */
+    private $mergeCellNum = 1;
+
+    /**
      * YP_PHPExcel constructor.
      */
     public function __construct()
@@ -111,8 +118,8 @@ class YP_PHPExcel
     /**
      * 获取主体数据
      *
-     * @param $excelUrl 读取的excel的位置
-     * @param int|定位 $row      定位 从第几行开始读取
+     * @param        $excelUrl 读取的excel的位置
+     * @param int    $row      定位 从第几行开始读取
      *
      * @return mixed
      */
@@ -134,9 +141,9 @@ class YP_PHPExcel
         $result = $this->unsetNull($this->unsetNull($data));
         if ($result) {
             $returnData = [
-                           'rowNum' => $cols,
-                           'data'   => $result,
-                          ];
+                'rowNum' => $cols,
+                'data'   => $result,
+            ];
 
             return $returnData;
         }
@@ -155,6 +162,16 @@ class YP_PHPExcel
     }
 
     /**
+     * 设置合并单元格数量
+     *
+     * @param int $cellNum
+     */
+    public function setMergeCellNum($cellNum = 1)
+    {
+        $this->mergeCellNum = $cellNum;
+    }
+
+    /**
      * 设置下载时文件名
      *
      * @param string $fileName
@@ -170,7 +187,7 @@ class YP_PHPExcel
      * @param int    $num
      * @param string $title
      *
-     * @throws PHPExcel_Exception
+     * @throws \PHPExcel_Exception
      */
     public function setSheet($num = 0, $title = 'sheet')
     {
@@ -194,6 +211,11 @@ class YP_PHPExcel
         $this->height = $height;
     }
 
+    /**
+     * 获取当前操作的sheet
+     *
+     * @return \PHPExcel_Worksheet
+     */
     public function getActiveSheet()
     {
         return $this->excelObj->getActiveSheet();
@@ -202,10 +224,10 @@ class YP_PHPExcel
     /**
      * 添加图片logo
      *
-     * @param $url
+     * @param        $url
      * @param string $imageName
      *
-     * @throws PHPExcel_Exception
+     * @throws \PHPExcel_Exception
      */
     public function setImage($url, $imageName = 'Logo')
     {
@@ -216,19 +238,17 @@ class YP_PHPExcel
         // 应该给出图片的高度
         // 经过计算 图片应给出宽高250*105
         $column       = [
-                         'A',
-                         'B',
-                         'C',
-                        ];
+            'A',
+            'B',
+            'C',
+        ];
         $columnLength = [];
         $defaultFont  = $this->excelObj->getDefaultStyle()->getFont();
         $cl_width     = '';
         if ($this->excelObj->getActiveSheet()->getColumnDimensions()) {
             foreach ($this->excelObj->getActiveSheet()->getColumnDimensions() as $key => $columnDimension) {
-                if (($width = \PHPExcel_Shared_Drawing::cellDimensionToPixels(
-                    $columnDimension->getWidth(),
-                    $defaultFont
-                )) >= 0 && in_array($key, $column)
+                if (($width = \PHPExcel_Shared_Drawing::cellDimensionToPixels($columnDimension->getWidth(),
+                        $defaultFont)) >= 0 && in_array($key, $column)
                 ) {
                     $cl_width           = $cl_width + ($width);
                     $columnLength[$key] = $width;
@@ -236,22 +256,20 @@ class YP_PHPExcel
             }
         } else {
             $column = [
-                       'A',
-                       'B',
-                       'C',
-                       'D',
-                       'E',
-                       'F',
-                      ];
+                'A',
+                'B',
+                'C',
+                'D',
+                'E',
+                'F',
+            ];
             $sheet  = $this->excelObj->setActiveSheetIndex($this->sheet);
             foreach ($column as $col) {
                 $sheet->getColumnDimension($col)->setWidth(20);
             }
             foreach ($this->excelObj->getActiveSheet()->getColumnDimensions() as $key => $columnDimension) {
-                if (($width = \PHPExcel_Shared_Drawing::cellDimensionToPixels(
-                    $columnDimension->getWidth(),
-                    $defaultFont
-                )) >= 0 && in_array($key, $column)
+                if (($width = \PHPExcel_Shared_Drawing::cellDimensionToPixels($columnDimension->getWidth(),
+                        $defaultFont)) >= 0 && in_array($key, $column)
                 ) {
                     $cl_width           = $cl_width + ($width);
                     $columnLength[$key] = $width;
@@ -259,7 +277,7 @@ class YP_PHPExcel
             }
         }
         //判断文件是否存在
-        if (! file_exists($url)) {
+        if (!file_exists($url)) {
             return;
         }
         //计算出上传图片宽高
@@ -338,7 +356,7 @@ class YP_PHPExcel
      * @param array $headerData 需要替换的数组
      * @param int   $reportType 报表类型
      *
-     * @throws PHPExcel_Exception
+     * @throws \PHPExcel_Exception
      */
     public function dataExcel($data, $headerData = [], $reportType = 1)
     {
@@ -346,7 +364,7 @@ class YP_PHPExcel
         $keys = $this->getCharByNumber($data, $headerData, $reportType);
         // 1:普通报表头部处理 其他:订阅报表表头部处理
         $reportType == 1 ? $this->createHeader($headerData, $keys) : $this->createReportHeader($headerData, $keys);
-        if (! empty($data)) {
+        if (!empty($data)) {
             $dataRow = $this->headRow + 1;
             // 将数据写入单元格
             foreach ($data as $i => $vo) {
@@ -355,11 +373,8 @@ class YP_PHPExcel
                 foreach ($vo as $key => $item) {
                     // 设置数据格式
                     // $this->excelObj->setActiveSheetIndex($this->sheet)->setCellValue($keys[$j] . $this->dataRow, $item);
-                    $this->excelObj->setActiveSheetIndex($this->sheet)->setCellValueExplicit(
-                        $keys[$j] . $this->dataRow,
-                        $item,
-                        \PHPExcel_Cell_DataType::TYPE_STRING
-                    );
+                    $this->excelObj->setActiveSheetIndex($this->sheet)->setCellValueExplicit($keys[$j] . $this->dataRow,
+                        $item, \PHPExcel_Cell_DataType::TYPE_STRING);
                     $j++;
                 }
                 $this->dataRow++;
@@ -376,7 +391,7 @@ class YP_PHPExcel
      *
      * @param $name
      *
-     * @throws PHPExcel_Reader_Exception
+     * @throws \PHPExcel_Reader_Exception
      */
     public function outPutExcel($name)
     {
@@ -398,9 +413,9 @@ class YP_PHPExcel
     /**
      * 将excel保存到本地
      *
-     * @param $path  保存文件的路径
+     * @param $path 保存文件的路径
      *
-     * @throws PHPExcel_Reader_Exception
+     * @throws \PHPExcel_Reader_Exception
      */
     public function saveExcelFile($path)
     {
@@ -411,7 +426,7 @@ class YP_PHPExcel
     /**
      * 预览excel
      *
-     * @throws PHPExcel_Writer_Exception
+     * @return mixed
      */
     public function outPutHtmlExcel()
     {
@@ -428,7 +443,7 @@ class YP_PHPExcel
      * @param $keys
      *
      * @return array
-     * @throws PHPExcel_Exception
+     * @throws \PHPExcel_Exception
      */
     private function createHeader($header, $keys)
     {
@@ -437,28 +452,56 @@ class YP_PHPExcel
         }
         //组合数据
         $arr = [];
+        $i   = $flag = 0;
         foreach ($header as $key => $value) {
-            $arr[$keys[$key]] = $value;
+            // $arr[$keys[$key]] = $value;
+            if (is_array($value)) {
+                foreach ($value as $k => $v) {
+                    $arr[$keys[$i]][$this->headRow]     = $key;
+                    $arr[$keys[$i]][$this->headRow + 1] = $v;
+                    $i++;
+                }
+                $flag = 1;
+            } else {
+                $arr[$keys[$i]][$this->headRow] = $value;
+                $i++;
+            }
+
         }
         // 获得数据开始行
-        $this->dataRow = $this->headRow + 1;
+        $this->dataRow = !$flag ? $this->headRow + 1 : $this->headRow + 2;
         $sheet         = $this->excelObj->setActiveSheetIndex($this->sheet);
+        P(array_keys($arr));
         foreach ($arr as $vKey => $vValue) {
             // 设置标题区域格式
-            $sheet->setCellValue($vKey . $this->headRow, $vValue);
+            //  $sheet->setCellValue($vKey . $this->headRow, $vValue);
+            if (is_array($vValue)) {
+                // 横向合并单元格
+                $sheet->mergeCells($vKey . $this->headRow . ':' . $vKey . $this->headRow);
+                foreach ($value as $k => $v) {
+                    // 设置标题区域格式
+                    $sheet->setCellValue($vKey . $k, $vValue);
+                }
+            } else {
+                // 纵向合并单元格
+                $sheet->mergeCells($vKey . $this->headRow . ':' . $vKey . $this->headRow + 1);
+                // 设置标题区域格式
+                $sheet->setCellValue($vKey . $this->headRow, $vValue);
+            }
         }
+        P(array_keys($arr));
         $this->setHeadCellStyle(array_keys($arr), $this->headRow, $this->headRow);
         unset($arr, $header, $keys);
     }
 
     /**
-     * 创建头部(普通报表)
+     * 创建头部(订阅报表)
      *
      * @param $header
      * @param $keys
      *
      * @return array
-     * @throws PHPExcel_Exception
+     * @throws \PHPExcel_Exception
      */
     private function createReportHeader($header, $keys)
     {
@@ -474,13 +517,12 @@ class YP_PHPExcel
         //组合数据
         $arr     = [];
         $headers = array_values($header['row']);
-        $oldRow  = 1;
-        $bb      = 1;
+        $oldRow  = $bb = 1;
         foreach ($headers as $key => $vo) {
-            $voNum   = count($vo);
+            $voNum = count($vo);
             $oldRow *= $voNum;
-            $arr[]   = $this->CombinedHeader($vo, $rowColNames, $key + 1, $oldRow, $bb);
-            $bb     *= $voNum;
+            $arr[] = $this->CombinedHeader($vo, $rowColNames, $key + 1, $oldRow, $bb);
+            $bb *= $voNum;
         }
         $count = count($arr);
         // 获得数据开始行
@@ -488,9 +530,8 @@ class YP_PHPExcel
         // 获得纵向数据需要的列名
         $portraitColNames = array_slice($keys, 0, $portraitTitleNum);
         $colData          = $this->getColData($portraitColNames, $count, $header['col'][0]);
-        $cellData         = [];
+        $cellData         = $tArr = [];
         $row              = 0;
-        $tArr             = [];
         foreach ($arr as $k => $v) {
             $row = $k + $this->headRow;
             foreach ($v as $vKey => $vValue) {
@@ -518,19 +559,19 @@ class YP_PHPExcel
      * @param $startRow
      * @param $endRow
      *
-     * @internal param $row
+     * @throws \PHPExcel_Exception
      */
     private function setDataCellStyle($celName, $startRow, $endRow)
     {
         $range      = reset($celName) . $startRow . ':' . end($celName) . ($endRow - 1);
         $styleArray = [
-                       'borders' => [
-                                     'allborders' => [
-                                                      'style' => \PHPExcel_Style_Border::BORDER_THIN,//细边框
-                                                      'color' => ['argb' => '00000000'],
-                                                     ],
-                                    ],
-                      ];
+            'borders' => [
+                'allborders' => [
+                    'style' => \PHPExcel_Style_Border::BORDER_THIN,//细边框
+                    'color' => ['argb' => '00000000'],
+                ],
+            ],
+        ];
         $sheet      = $this->excelObj->setActiveSheetIndex($this->sheet);
         foreach ($celName as $value) {
             $sheet->getColumnDimension($value)->setWidth($this->width);
@@ -545,34 +586,36 @@ class YP_PHPExcel
     /**
      * 设置数据区域格式
      *
-     * @param $celName  列名
-     * @param $startRow
-     * @param $endRow
+     * @param array $celName  列名
+     * @param int   $startRow 开始行
+     * @param int   $endRow   结束行
      *
-     * @internal param 行号 $row
+     * @throws \PHPExcel_Exception
      */
-    private function setHeadCellStyle($celName, $startRow, $endRow)
+    private function setHeadCellStyle($celName, $startRow = 1, $endRow = 1)
     {
-        $range      = reset($celName) . $startRow . ':' . end($celName) . $endRow;
+        $range = reset($celName) . $startRow . ':' . end($celName) . $endRow;
+        //        P($range);
+        //        die;
         $styleArray = [
-                       'font'    => [
-                                     'name'  => '微软雅黑',
-                                     'bold'  => true,
-                                     'size'  => '9',
-                                     'color' => ['rgb' => 'ffffff'],
-                                    ],
-                       'borders' => [
-                                     'allborders' => [
-                                                      'style' => \PHPExcel_Style_Border::BORDER_THIN,//细边框
-                                                      'color' => ['rgb' => '000000'],
-                                                     ],
-                                    ],
-                       'fill'    => [
-                                     'type'       => \PHPExcel_Style_Fill::FILL_SOLID,
-                                     'startcolor' => ['rgb' => '4196CB'],
-                                     'endcolor'   => ['rgb' => '4196CB'],
-                                    ],
-                      ];
+            'font'    => [
+                'name'  => '微软雅黑',
+                'bold'  => true,
+                'size'  => '9',
+                'color' => ['rgb' => 'ffffff'],
+            ],
+            'borders' => [
+                'allborders' => [
+                    'style' => \PHPExcel_Style_Border::BORDER_THIN,//细边框
+                    'color' => ['rgb' => '000000'],
+                ],
+            ],
+            'fill'    => [
+                'type'       => \PHPExcel_Style_Fill::FILL_SOLID,
+                'startcolor' => ['rgb' => '4196CB'],
+                'endcolor'   => ['rgb' => '4196CB'],
+            ],
+        ];
         $objStyle   = $this->excelObj->setActiveSheetIndex($this->sheet)->getStyle($range);
         $sheet      = $this->excelObj->setActiveSheetIndex($this->sheet);
         foreach ($celName as $value) {
@@ -590,29 +633,29 @@ class YP_PHPExcel
      * @param $celName 列名
      * @param $row     行号
      *
-     * @throws PHPExcel_Exception
+     * @throws \PHPExcel_Exception
      */
     private function createBlankCell($celName, $row)
     {
         $range      = reset($celName) . '1:' . end($celName) . ($row - 1);
         $styleArray = [
-                       'font'      => [
-                                       'name'  => '微软雅黑',
-                                       'bold'  => true,
-                                       'size'  => '9',
-                                       'color' => ['rgb' => '373737'],
-                                      ],
-                       'alignment' => [
-                                       'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
-                                       'vertical'   => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
-                                      ],
-                       'borders'   => [
-                                       'allborders' => [
-                                                        'style' => \PHPExcel_Style_Border::BORDER_THIN,//细边框
-                                                        'color' => ['rgb' => 'ffffff'],
-                                                       ],
-                                      ],
-                      ];
+            'font'      => [
+                'name'  => '微软雅黑',
+                'bold'  => true,
+                'size'  => '9',
+                'color' => ['rgb' => '373737'],
+            ],
+            'alignment' => [
+                'horizontal' => \PHPExcel_Style_Alignment::HORIZONTAL_LEFT,
+                'vertical'   => \PHPExcel_Style_Alignment::VERTICAL_CENTER,
+            ],
+            'borders'   => [
+                'allborders' => [
+                    'style' => \PHPExcel_Style_Border::BORDER_THIN,//细边框
+                    'color' => ['rgb' => 'ffffff'],
+                ],
+            ],
+        ];
         $this->excelObj->setActiveSheetIndex($this->sheet)->getStyle($range)->applyFromArray($styleArray);
         $sheet = $this->excelObj->setActiveSheetIndex($this->sheet);
         $sheet->getRowDimension(1)->setRowHeight(12);
@@ -670,7 +713,7 @@ class YP_PHPExcel
         $result = [];
         foreach ($vo as $key => $value) {
             for ($f = 0; $f < $num; $f++) {
-                $result[] = $vo[$key];
+                array_push($result, $vo[$key]);
             }
         }
 
@@ -683,7 +726,7 @@ class YP_PHPExcel
      * @param $startCell
      * @param $endCell
      *
-     * @throws PHPExcel_Exception
+     * @throws \PHPExcel_Exception
      */
     public function mergeCells($startCell, $endCell)
     {
@@ -703,20 +746,26 @@ class YP_PHPExcel
 
             return;
         }
-        $num = 1;
         if ($reportType) {
-            $this->column = count($header);
+            foreach ($header as $key => $value) {
+                if (is_array($value)) {
+                    $this->column += count($value);
+                } else {
+                    $this->column += 1;
+                }
+            }
         } else {
-            if (! empty($header['row'])) {
+            $num = 1;
+            if (!empty($header['row'])) {
                 foreach ($header['row'] as $key => $value) {
                     $valueNum = count($value);
-                    $num     *= $valueNum;
+                    $num *= $valueNum;
                 }
             }
             $colNumber    = isset($header['col'][0]) ? count($header['col'][0]) : 0;
             $this->column = $colNumber + $num;
+            unset($valueNum, $num, $colNumber);
         }
-        unset($valueNum, $num, $colNum);
     }
 
     /**
@@ -748,138 +797,138 @@ class YP_PHPExcel
     {
         $keys = [];
         $ch   = [
-                 'AA',
-                 'AB',
-                 'AC',
-                 'AD',
-                 'AE',
-                 'AF',
-                 'AG',
-                 'AH',
-                 'AI',
-                 'AJ',
-                 'AK',
-                 'AL',
-                 'AM',
-                 'AN',
-                 'AO',
-                 'AP',
-                 'AQ',
-                 'AR',
-                 'AS',
-                 'AT',
-                 'AU',
-                 'AV',
-                 'AW',
-                 'AX',
-                 'AY',
-                 'AZ',
-                 'BA',
-                 'BB',
-                 'BC',
-                 'BD',
-                 'BE',
-                 'BF',
-                 'BG',
-                 'BH',
-                 'BI',
-                 'BJ',
-                 'BK',
-                 'BL',
-                 'BM',
-                 'BN',
-                 'BO',
-                 'BP',
-                 'BQ',
-                 'BR',
-                 'BS',
-                 'BT',
-                 'BU',
-                 'BV',
-                 'BW',
-                 'BX',
-                 'BY',
-                 'BZ',
-                 'CA',
-                 'CB',
-                 'CC',
-                 'CD',
-                 'CE',
-                 'CF',
-                 'CG',
-                 'CH',
-                 'CI',
-                 'CJ',
-                 'CK',
-                 'CL',
-                 'CM',
-                 'CN',
-                 'CO',
-                 'CP',
-                 'CQ',
-                 'CR',
-                 'CS',
-                 'CT',
-                 'CU',
-                 'CV',
-                 'CW',
-                 'CX',
-                 'CY',
-                 'CZ',
-                 'DA',
-                 'DB',
-                 'DC',
-                 'DD',
-                 'DE',
-                 'DF',
-                 'DG',
-                 'DH',
-                 'DI',
-                 'DJ',
-                 'DK',
-                 'DL',
-                 'DM',
-                 'DN',
-                 'DO',
-                 'DP',
-                 'DQ',
-                 'DR',
-                 'DS',
-                 'DT',
-                 'DU',
-                 'DV',
-                 'DW',
-                 'DX',
-                 'DY',
-                 'DZ',
-                 'EA',
-                 'EB',
-                 'EC',
-                 'ED',
-                 'EE',
-                 'EF',
-                 'EG',
-                 'EH',
-                 'EI',
-                 'EJ',
-                 'EK',
-                 'EL',
-                 'EM',
-                 'EN',
-                 'EO',
-                 'EP',
-                 'EQ',
-                 'ER',
-                 'ES',
-                 'ET',
-                 'EU',
-                 'EV',
-                 'EW',
-                 'EX',
-                 'EY',
-                 'EZ',
-                ];
-        for ($number    = 1; $number <= $colNumber; $number++) {
+            'AA',
+            'AB',
+            'AC',
+            'AD',
+            'AE',
+            'AF',
+            'AG',
+            'AH',
+            'AI',
+            'AJ',
+            'AK',
+            'AL',
+            'AM',
+            'AN',
+            'AO',
+            'AP',
+            'AQ',
+            'AR',
+            'AS',
+            'AT',
+            'AU',
+            'AV',
+            'AW',
+            'AX',
+            'AY',
+            'AZ',
+            'BA',
+            'BB',
+            'BC',
+            'BD',
+            'BE',
+            'BF',
+            'BG',
+            'BH',
+            'BI',
+            'BJ',
+            'BK',
+            'BL',
+            'BM',
+            'BN',
+            'BO',
+            'BP',
+            'BQ',
+            'BR',
+            'BS',
+            'BT',
+            'BU',
+            'BV',
+            'BW',
+            'BX',
+            'BY',
+            'BZ',
+            'CA',
+            'CB',
+            'CC',
+            'CD',
+            'CE',
+            'CF',
+            'CG',
+            'CH',
+            'CI',
+            'CJ',
+            'CK',
+            'CL',
+            'CM',
+            'CN',
+            'CO',
+            'CP',
+            'CQ',
+            'CR',
+            'CS',
+            'CT',
+            'CU',
+            'CV',
+            'CW',
+            'CX',
+            'CY',
+            'CZ',
+            'DA',
+            'DB',
+            'DC',
+            'DD',
+            'DE',
+            'DF',
+            'DG',
+            'DH',
+            'DI',
+            'DJ',
+            'DK',
+            'DL',
+            'DM',
+            'DN',
+            'DO',
+            'DP',
+            'DQ',
+            'DR',
+            'DS',
+            'DT',
+            'DU',
+            'DV',
+            'DW',
+            'DX',
+            'DY',
+            'DZ',
+            'EA',
+            'EB',
+            'EC',
+            'ED',
+            'EE',
+            'EF',
+            'EG',
+            'EH',
+            'EI',
+            'EJ',
+            'EK',
+            'EL',
+            'EM',
+            'EN',
+            'EO',
+            'EP',
+            'EQ',
+            'ER',
+            'ES',
+            'ET',
+            'EU',
+            'EV',
+            'EW',
+            'EX',
+            'EY',
+            'EZ',
+        ];
+        for ($number = 1; $number <= $colNumber; $number++) {
             $divisor = intval($number / 26.01);
             $char    = chr(64 + $number % 26);
             $charNum = ($char == '@') ? 'Z' : $char;
@@ -890,7 +939,7 @@ class YP_PHPExcel
                 $charNumber = $divisor - 27;
                 $char       = $ch[$charNumber] . $charNum;
             }
-            $keys[] = $char;
+            array_push($keys, $char);
         }
 
         return $keys;
@@ -905,9 +954,9 @@ class YP_PHPExcel
      */
     private function unsetNull($result)
     {
-        if (! empty($result)) {
+        if (!empty($result)) {
             foreach ($result as $key => $value) {
-                $status      = is_array($value) && ! empty($value);
+                $status      = is_array($value) && !empty($value);
                 $statusValue = is_null($value) || empty($value);
                 if ($status) {
                     $result[$key] = $this->unsetNull($value);
@@ -965,7 +1014,7 @@ class YP_PHPExcel
     /**
      * 获取excel对象
      *
-     * @return PHPExcel
+     * @return PHPExcel|\PHPExcel
      */
     public function getObject()
     {

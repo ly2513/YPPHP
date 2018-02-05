@@ -159,9 +159,6 @@ class YP
         if (!isset($_SESSION)) {
             $session->start();
         }
-        if (YP_DEBUG) {
-            require_once SYSTEM_PATH . 'ThirdParty/Kint/Kint.class.php';
-        }
     }
 
     /**
@@ -402,13 +399,13 @@ class YP
             } else {
                 // 尝试自动加载当前这个类
                 if (!class_exists($this->controller, true) || $this->method[0] === '_') {
-                    throw new \RuntimeException('Controller or its method is not found.');
+                    throw new \RuntimeException('Controller or its method is not found. The current Controller is ' . $this->controller . ' , the current method is ' . $this->method[0] . ' .');
                 } elseif (!method_exists($this->controller, '_remap') && !is_callable([
                         $this->controller,
                         $this->method,
                     ], false)
                 ) {
-                    throw new \RuntimeException('Controller method is not found.');
+                    throw new \RuntimeException('Controller method is not found. The current Controller is ' . $this->controller . ' , the current method is ' . $this->method . ' .');
                 }
             }
         }

@@ -162,7 +162,7 @@ final class YP_Data
         if (! is_array($data) || empty($data)) {
             return [];
         }
-        $arr = \YP_Data::channelList($data, 0, '', $fieldPri, $fieldPid);
+        $arr = self::channelList($data, 0, '', $fieldPri, $fieldPid);
         foreach ($arr as $k => $v) {
             $str = "";
             if ($v['_level'] > 2) {

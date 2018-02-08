@@ -238,6 +238,14 @@ class YP_Controller
         $tempFile = $this->directory . $this->controller . DIRECTORY_SEPARATOR . $templateName . $this->extension;
         // 模板路径
         $htmlPath     = $this->tempPath . $this->directory . $this->controller;
+        // 自定义模板
+        if (strpos($htmlFile, '/')) {
+            $dirName = explode('/', $htmlFile);
+            array_pop($dirName);
+            $dirName  = implode('/', $dirName);
+            $tempFile = rtrim($htmlFile, '/') . $this->extension;
+            $htmlPath = $this->tempPath . ltrim($dirName, '/');
+        }
         $tempFilePath = $this->tempPath . $tempFile;
         // 穿件模板目录
         is_dir($htmlPath) or mkdir($htmlPath, 0777, true);

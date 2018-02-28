@@ -6,7 +6,6 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-
 // 报告所有的PHP报错信息
 error_reporting(-1);
 // 开启显示报错信息

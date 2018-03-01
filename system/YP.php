@@ -160,7 +160,7 @@ class YP
             $session->start();
         }
         if (YP_DEBUG) {
-            require_once SYSTEM_PATH . 'ThirdParty/Kint/Kint.class.php';
+            // require_once SYSTEM_PATH . 'ThirdParty/Kint/Kint.class.php';
         }
     }
 

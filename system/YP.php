@@ -317,7 +317,7 @@ class YP
      */
     protected function detectEnvironment()
     {
-        if (getenv('YP_ENV') !== 'test') {
+        if (getenv('YP') !== false) {
             define('ENVIRONMENT', 'test');
         } else {
             define('ENVIRONMENT', isset($_SERVER['YP_ENV']) ? $_SERVER['YP_ENV'] : 'dev');

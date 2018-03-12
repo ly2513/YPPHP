@@ -8,12 +8,14 @@
  */
 namespace App\Controllers;
 
+use YP\Config\Services;
 use YP\Core\YP_Controller as Controller;
 
 class Welcome extends Controller {
 
     public function index()
     {
+        Services::log()->alert();
         p($_SERVER);
     }
     

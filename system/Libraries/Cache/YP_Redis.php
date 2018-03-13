@@ -188,6 +188,7 @@ class YP_Redis
         return self::$_redis_r;
     }
 
+    // ------------ string 命令 ------------
     /**
      * get命令
      *
@@ -217,6 +218,32 @@ class YP_Redis
         }
 
         return $isTrue;
+    }
+
+    /**
+     * 将 key 所储存的值加上增量 increment
+     *
+     * @param     $key
+     * @param int $num
+     *
+     * @return mixed
+     */
+    public function incrBy($key, $num = 1)
+    {
+        return $this->getWriteRedis()->incrBy($this->_key($key), intval($num));
+    }
+
+    /**
+     * 将 key 所储存的值减去减量 decrement
+     *
+     * @param     $key
+     * @param int $num
+     *
+     * @return mixed
+     */
+    public function decrBy($key, $num = 1)
+    {
+        return $this->getWriteRedis()->decrBy($this->_key($key), $num);
     }
 
     /**
@@ -263,6 +290,7 @@ class YP_Redis
         $this->getWriteRedis()->delete($keys);
     }
 
+    // ------------ hash 命令 ------------
     /**
      * 批量添加哈希TABLE值
      *
@@ -315,26 +343,37 @@ class YP_Redis
         return $this->getWriteRedis()->hdel($this->_key($key, $id), $fields);
     }
 
+    /**
+     * 为哈希表 key 中的域 field 的值加上增量 increment
+     *
+     * @param     $key
+     * @param     $id
+     * @param     $field
+     * @param int $num
+     *
+     * @return mixed
+     */
     public function hIncrBy($key, $id, $field, $num = 1)
     {
         return $this->getWriteRedis()->hIncrBy($this->_key($key, $id), $field, intval($num));
     }
 
+    /**
+     * 为哈希表 key 中的域 field 加上浮点数增量 increment
+     *
+     * @param     $key
+     * @param     $id
+     * @param     $field
+     * @param int $num
+     *
+     * @return mixed
+     */
     public function hIncrByFloat($key, $id, $field, $num = 1)
     {
         return $this->getWriteRedis()->hIncrByFloat($this->_key($key, $id), $field, floatval($num));
     }
 
-    public function incrBy($key, $num = 1)
-    {
-        return $this->getWriteRedis()->incrBy($this->_key($key), intval($num));
-    }
-
-    public function decrBy($key, $num = 1)
-    {
-        return $this->getWriteRedis()->decrBy($this->_key($key), $num);
-    }
-
+    // ------------ list 命令 ------------
     /**
      * 获得某个key的长度
      *
@@ -348,16 +387,46 @@ class YP_Redis
         return $this->getReadRedis()->llen($this->_key($key, $id));
     }
 
+    /**
+     * 返回列表 key 中指定区间内的元素，区间以偏移量 start 和 stop 指定
+     *
+     * @param $key
+     * @param $id
+     * @param $start
+     * @param $stop
+     *
+     * @return mixed
+     */
     public function lrange($key, $id, $start, $stop)
     {
         return $this->getReadRedis()->lrange($this->_key($key, $id), intval($start), intval($stop));
     }
 
+    /**
+     * 根据参数 count 的值，移除列表中与参数 value 相等的元素
+     *
+     * @param $key
+     * @param $id
+     * @param $count
+     * @param $value
+     *
+     * @return mixed
+     */
     public function lrem($key, $id, $count, $value)
     {
         return $this->getReadRedis()->lrem($this->_key($key, $id), intval($count), $value);
     }
 
+    /**
+     * 将一个或多个值 value 插入到列表 key 的表尾(最右边)
+     *
+     * @param       $key
+     * @param       $id
+     * @param array $arr
+     * @param int   $period
+     *
+     * @return bool
+     */
     public function rpush($key, $id, $arr = [], $period = 0)
     {
         $redis = $this->getWriteRedis();
@@ -371,19 +440,16 @@ class YP_Redis
         return true;
     }
 
-    public function sadd($key, $id, $arr = [], $period = 0)
-    {
-        $redis = $this->getWriteRedis();
-        foreach ($arr as $v) {
-            $redis->sadd($this->_key($key, $id), $v);
-        }
-        if (intval($period)) {
-            $redis->expire($this->_key($key, $id), intval($period));
-        }
-
-        return true;
-    }
-
+    /**
+     * 将一个或多个值 value 插入到列表 key 的表头
+     *
+     * @param       $key
+     * @param       $id
+     * @param array $arr
+     * @param int   $period
+     *
+     * @return bool
+     */
     public function lpush($key, $id, $arr = [], $period = 0)
     {
         $redis = $this->getWriteRedis();
@@ -397,21 +463,75 @@ class YP_Redis
         return true;
     }
 
+    /**
+     * 对一个列表进行修剪(trim)，就是说，让列表只保留指定区间内的元素，不在指定区间之内的元素都将被删除
+     *
+     * @param $key
+     * @param $id
+     * @param $start
+     * @param $stop
+     *
+     * @return mixed
+     */
     public function ltrim($key, $id, $start, $stop)
     {
         return $this->getWriteRedis()->ltrim($this->_key($key, $id), intval($start), intval($stop));
     }
 
+    // ----------------- 有序集合 命令 ---------------
+    /**
+     * 将一个或多个 member 元素加入到集合 key 当中，已经存在于集合的 member 元素将被忽略
+     *
+     * @param       $key
+     * @param       $id
+     * @param array $arr
+     * @param int   $period
+     *
+     * @return bool
+     */
+    public function sadd($key, $id, $arr = [], $period = 0)
+    {
+        $redis = $this->getWriteRedis();
+        foreach ($arr as $v) {
+            $redis->sadd($this->_key($key, $id), $v);
+        }
+        if (intval($period)) {
+            $redis->expire($this->_key($key, $id), intval($period));
+        }
+
+        return true;
+    }
+
+    /**
+     * 返回集合 key 中的所有成员
+     *
+     * @param $key
+     * @param $id
+     *
+     * @return mixed
+     */
     public function smembers($key, $id)
     {
         return $this->getReadRedis()->sMembers($this->_key($key, $id));
     }
 
+    /**
+     * 清空当前数据库中的所有 key
+     *
+     * @return mixed
+     */
     public function clear()
     {
         return $this->getWriteRedis()->flushDB();
     }
 
+    /**
+     * 标记一个事务块的开始
+     *
+     * @param string $rw
+     *
+     * @return mixed
+     */
     public function pipeline($rw = 'r')
     {
         if ($rw == 'w') {
@@ -425,6 +545,11 @@ class YP_Redis
         }
     }
 
+    /**
+     * 标记一个事务块的开始
+     *
+     * @return mixed
+     */
     public function multi()
     {
         self::$_multi = 1;
@@ -432,6 +557,11 @@ class YP_Redis
         return $this->getWriteRedis()->multi(\Redis::MULTI);
     }
 
+    /**
+     * 执行所有事务块内的命令
+     *
+     * @return mixed
+     */
     public function exec()
     {
         if (self::$_multi == 1) {
@@ -444,18 +574,29 @@ class YP_Redis
         return $rs;
     }
 
+    /**
+     * 设置master Redis
+     */
     public function master()
     {
         self::$_master = 1;
     }
 
+    /**
+     * 设置key
+     *
+     * @param        $key
+     * @param string $id
+     *
+     * @return string
+     */
     private function _key($key, $id = '')
     {
         return self::$_prefix . $key . (($id !== '') ? (':' . $id) : '');
     }
 
     /**
-     * 是否支持
+     * 是否支持 redis
      *
      * @return bool
      */

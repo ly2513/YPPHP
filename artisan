@@ -89,7 +89,7 @@ $artisans = [
 //    new \Console\Database\RollbackCommand(),
 //    new \Console\Database\StatusCommand(),
     // 队列命令
-    new \Console\Queue\CreateJobCommand(),
+    new \Console\Queue\CreateCommand(),
     new \Console\Queue\ListenCommand(),
     new \Console\Queue\ListFailedCommand(),
     new \Console\Queue\WorkQueueCommand(),

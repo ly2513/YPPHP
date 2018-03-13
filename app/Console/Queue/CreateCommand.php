@@ -22,7 +22,7 @@ use RedisQueue\ReQueue\QueueException;
  *
  * @package Console
  */
-class CreateJobCommand extends QueueCommand
+class CreateCommand extends QueueCommand
 {
     /**
      * 日志对象
@@ -112,7 +112,6 @@ class CreateJobCommand extends QueueCommand
                 return false;
             }
         }
-
     }
 
     /**

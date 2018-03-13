@@ -30,11 +30,11 @@ class Log
      * 6 = Warnings            - Exceptional occurrences that are not errors.
      * 7 = Notices             - Normal but significant events.
      * 8 = Info                - Interesting events, like user logging in, etc.
-     * 9 = All Messages
      *
      * @var int
      */
     public $threshold = [
+        0,
         1,
         2,
         3,

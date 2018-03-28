@@ -5,7 +5,7 @@
  * Date: 2018/3/23
  * Time: 下午5:14
  */
-namespace App\Controllers;
+namespace App\Libraries;
 
 class SensitiveMap
 {

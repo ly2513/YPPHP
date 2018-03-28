@@ -92,23 +92,31 @@ class Home extends Controller
             '@'
         ];
         $content     = str_replace($punctuation, '', $content);
-//                $example->mapList2();
+        //                $example->mapList2();
         $example->mapList();
+
+        echo '<pre>';
+//        var_dump($example->getSensitiveFilter());
+//        die;
+
+//        print_r($example->getSensitiveFilter());
         //        $result            = $example->searchFromMap($content); //敏感词处理
         //        $result2           = $example->searchFromMap2($content);
         $result3 = $example->searchFromMap3($content);
+
         //        $data['match_num'] = count($result);
         //        $data['data']      = $result;
-        echo '<pre>';
+
         //        print_r($result);
         //        print_r($result2);
-        print_r($result3);
+//        print_r($result3);
         $e_time = microtime(true);
-        echo 'time : ' . ($e_time - $s_time);
+        echo 'time : ' . ($e_time - $s_time) . PHP_EOL;
+        $content = str_replace($result3['result'], $result3['replace'], $content);
+        echo $content;
+        $e1_time  = microtime(true);
+        echo 'time : ' . ($e1_time - $s_time) . PHP_EOL;
         die;
-        $content = str_replace($result['result'], $result['replace'], $content);
-        $e_time  = microtime(true);
-        echo 'time : ' . ($e_time - $s_time);
         call_back(0, $content);
     }
 }

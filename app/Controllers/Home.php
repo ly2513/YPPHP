@@ -111,6 +111,7 @@ class Home extends Controller
         //        print_r($result2);
 //        print_r($result3);
         $e_time = microtime(true);
+        
         echo 'time : ' . ($e_time - $s_time) . PHP_EOL;
         $content = str_replace($result3['result'], $result3['replace'], $content);
         echo $content;

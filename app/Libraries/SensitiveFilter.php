@@ -14,15 +14,38 @@ class SensitiveFilter
      *
      * @var null
      */
-    public $map = null;
-//        public $map = [];
-    /**
-     * SensitiveFilter constructor.
-     */
-    public function __construct()
-    {
-        $this->setSensitiveFilter();
-    }
+    public $map = [];
+
+    // 匹配过滤的特殊字符
+    public $disturbList = [
+        '&',
+        '*',
+        '!',
+        '@',
+        ' ',
+        '$',
+        '%',
+        '^',
+        '(',
+        ')',
+        '-',
+        '+',
+        '?',
+        '.',
+        '|',
+        '/',
+        ',',
+        '<',
+        '>',
+        '（',
+        '）',
+        '~',
+        '`',
+        '[',
+        ']',
+        ':',
+        ';'
+    ];
 
     /**
      * 添加敏感词
@@ -32,137 +55,58 @@ class SensitiveFilter
     public function addWordToMap($word)
     {
         $len = mb_strlen($word);
-                $tmp = $this->map;
-                for ($i = 0; $i < $len; $i++) {
-                    $nowWord = mb_substr($word, $i, 1, 'UTF-8');
-                    $nowMap  = $this->map->get($nowWord);
-                    if (!is_null($nowMap)) {
-                        $this->map = $nowMap;
-                    } else {
-                        $newMap = new SensitiveMap();
-                        $newMap->put('isEnd', 0);
-                        $this->map->put($nowWord, $newMap);
-                        $this->map = $newMap;
-                    }
-                    $i == ($len - 1) and $this->map->put('isEnd', 1);
-                }
-                $this->map = $tmp;
         // 传址
-//        $map = &$this->map;
-//        for ($i = 0; $i < $len; $i++) {
-//            $strWord = mb_substr($word, $i, 1, 'UTF-8');
-//            // 已存在
-//            if (isset($map[$strWord])) {
-//                $i == ($len - 1) ? $map[$strWord]['end'] = 1 : '';
-//            } else {
-//                // 不存在
-//                $map[$strWord]['end'] = $i == ($len - 1) ? 1 : 0;
-//            }
-//            // 传址
-//            $map = &$map[$strWord];
-//        }
+        $map = &$this->map;
+        for ($i = 0; $i < $len; $i++) {
+            $strWord = mb_substr($word, $i, 1, 'UTF-8');
+            // 已存在
+            if (isset($map[$strWord])) {
+                $i == ($len - 1) ? $map[$strWord]['end'] = 1 : '';
+            } else {
+                // 不存在
+                $map[$strWord]['end'] = $i == ($len - 1) ? 1 : 0;
+            }
+            // 传址
+            $map = &$map[$strWord];
+        }
     }
 
     /**
-     * @param $strWord
+     * 检索词用标记的符号替换
+     *
+     * @param        $strWord
+     * @param string $mark
      *
      * @return array
      */
-    public function searchFromMap3($strWord)
+    public function searchFromMap3($strWord, $mark = '*')
     {
-
-        $len       = mb_strlen($strWord);
-        $tmp       = $map = $this->map;
-        $str       = '';
-        $result    = $replace = [];
-        $st = $rep_str = $ret_str = '';
+        $len    = mb_strlen($strWord, 'UTF-8');
+        $map    = $this->map;
+        $str    = $rep_str = '';
+        $result = $replace = [];
         for ($i = 0; $i < $len; $i++) {
-            $nowWord = mb_substr($strWord, $i, 1);
-            $nowMap  = $map->get($nowWord);
-            if (!is_null($nowMap)) {
-                $st .= $nowWord;
-                $rep_str .= '*';
-                $str .= $nowWord;
-                if ($nowMap->get('isEnd')) {
-                    $ret_str .= $rep_str;
+            $word = mb_substr($strWord, $i, 1, 'UTF-8');
+            if (!isset($map[$word])) {
+                // reset hashmap
+                $map = $this->map;
+                $str ? $i-- : '';
+                $str = $rep_str = '';
+            } else {
+                $rep_str .= $mark;
+                $str .= $word;
+                if ($map[$word]['end']) {
                     array_push($result, $str);
-                    $str2 = str_repeat('*', mb_strlen($str, 'UTF-8'));
+                    $str2 = str_repeat($mark, mb_strlen($str, 'UTF-8'));
                     array_push($replace, $str2);
                     $str = '';
-                    $map = $tmp;
+                    $map = $this->map;
                 } else {
-                    $map = $nowMap;
+                    $map = $map[$word];
                 }
-            } else {
-                //                if ($words) {
-                //                    $ret_str .= $words;
-                //                } else {
-                $ret_str .= $nowWord;
-                //                }
-                $rep_str = '';
-                $st      = '';
-                $str     = '';
-                $map     = $tmp;
             }
         }
-        return ['result' => $result, 'replace' => $replace];
-
-//        $len    = mb_strlen($strWord);
-//        $tmp    = $map = $this->map;
-//        $str    = '';
-//        $result = $replace = [];
-//        for ($i = 0; $i < $len; $i++) {
-//            $nowWord = mb_substr($strWord, $i, 1);
-//            $nowMap  = $map->get($nowWord);
-//            if (!is_null($nowMap)) {
-//                $str .= $nowWord;
-//                if ($nowMap->get('isEnd')) {
-//                    array_push($result, $str);
-//                    $str  = '';
-//                    $map  = $tmp;
-//                    $str2 = str_repeat('*', mb_strlen($str, 'UTF-8'));
-//                    array_push($replace, $str2);
-//                } else {
-//                    $map = $nowMap;
-//                }
-//            } else {
-//                if (!empty($str)) {
-//                    $i--;
-//                }
-//                $str = '';
-//                $map = $tmp;
-//            }
-//        }
-//        return ['result' => $result, 'replace' => $replace];
-
-//        $len = mb_strlen($strWord, 'UTF-8');
-//        $tmp = $map = $this->map;
-//        $str    = '';
-//        $result = $replace = [];
-//        for ($i = 0; $i < $len; $i++) {
-//            $word = mb_substr($strWord, $i, 1, 'UTF-8');
-//            if (!isset($map[$word])) {
-//                // reset hashmap
-////                $map = $this->map;
-//                $str ? $i-- : '';
-//                $str = '';
-//                $map = $tmp;
-////                continue;
-//            }
-//            $str .= $word;
-//
-//            if ($map[$word]['end']) {
-//                array_push($result, $str);
-//                $str  = '';
-//                $map  = $tmp;
-//                $str2 = str_repeat('*', mb_strlen($str, 'UTF-8'));
-//                array_push($replace, $str2);
-////                return true;
-//            }
-//            $map = $map[$word];
-//        }
-//        return ['result' => $result, 'replace' => $replace];
-//        return false;
+        return ['sensitive' => $result, 'replace' => $replace];
     }
 
     /**
@@ -183,28 +127,12 @@ class SensitiveFilter
      */
     public function mapList()
     {
-        $s_time = microtime(true);
         $data   = \BlackModel::select('word')->where('id', '>', 0)->get()->toArray();
         $data   = array_column($data, 'word');
-        $e_time = microtime(true);
-        echo '<pre>';
-        echo 'time : ' . ($e_time - $s_time) . PHP_EOL;
         foreach ($data as $v) {
             $str = trim($v);
             $this->addWordToMap($str);
         }
-    }
-
-    /**
-     * 设置map
-     */
-    public function setSensitiveFilter()
-    {
-        if (is_null($this->map)) {
-            $this->map = new SensitiveMap();
-            $this->map->put('isEnd', 0);
-        }
-        return true;
     }
 
     /**
@@ -216,4 +144,200 @@ class SensitiveFilter
     {
         return $this->map;
     }
+
+    /**
+     * 从词库中查询敏感词
+     *
+     * @param        $string
+     * @param string $mark
+     *
+     * @return array
+     */
+    public function searchFromMap($string, $mark = '*')
+    {
+        $string .= 'i';
+        $len         = mb_strlen($string);
+        $tmp         = $map = $this->map;
+        $str         = ''; // 可疑敏感词
+        $rep_str     = ''; // 替换字符
+        $ret_str     = ''; // 返回结果
+        $sensitive   = []; // 敏感词
+        $open_filter = 0; // 开启特殊字符
+        $special_str = 'T"\'~`!！#￥$%%^……&*（（）)()_——--;；《<>》?？【】{}|\@,，.。、/9⃣️ ';
+        for ($i = 0; $i < $len; $i++) {
+            $nowWord = mb_substr($string, $i, 1);
+            $nowMap  = $map->get($nowWord);
+            // 过滤特殊字符
+            if (strpos($special_str, $nowWord) !== false) {
+                if ($open_filter) {
+                    $rep_str .= $mark;
+                    continue;
+                } else {
+                    $rep_str .= $nowWord;
+                }
+            }
+            if (!is_null($nowMap)) {
+                $open_filter = 1; // 开启特殊字符
+                $rep_str .= $mark; // 字符替换
+                $str .= $nowWord;
+                if ($nowMap->get('isEnd')) {
+                    $ret_str .= $rep_str;
+                    $rep_str = '';
+                    array_push($sensitive, $str);// 匹配到的敏感词
+                    if (count((array)$nowMap) == 1) {
+                        $map         = $tmp;
+                        $str         = '';
+                        $open_filter = 0;
+                    }
+                } else {
+                    $map = $nowMap;
+                }
+            } else {
+                $ret_str .= $str ? $str : '';
+                $map    = $tmp;
+                $nowMap = $map->get($nowWord);
+                if (!is_null($nowMap)) {
+                    $open_filter = 1; //开启特殊字符
+                    $rep_str     = $mark; //字符替换
+                    $str         = $nowWord;
+                    $map         = $nowMap;
+                } else {
+                    $ret_str .= $nowWord;
+                    $rep_str     = $str = '';
+                    $open_filter = 0;
+                }
+            }
+        }
+        unset($tmp, $map);
+        return ['sensitive' => $sensitive, 'content' => $ret_str];
+    }
+
+    /**
+     * 依据dfa算法及特殊字符，找出敏感词进行特殊标记
+     *
+     * @param $sensitive
+     * @param $content
+     *
+     * @author duke.wang
+     * @return mixed
+     */
+    public function getSensitiveReplaceWords($sensitive, $content)
+    {
+        $wordObj = new SensitiveTrieTree($this->disturbList);
+        $wordObj->addWords($sensitive);
+        $words = $wordObj->search($content);
+        foreach ($words as $key => $w) {
+            $content = str_replace($w, '<span style="color:red;border:1px;">' . $w . '</span>&nbsp;', $content);
+        }
+        return $content;
+    }
+
+    /**
+     * @param        $string
+     * @param string $mark
+     *
+     * @return array
+     */
+    public function signFromMap($string, $mark = '*')
+    {
+        $specialStr = 'T"\'~`!！#￥$%%^……&*（（）)()_——--;；《<>》?？【】{}|\@,，.。、/9⃣️ ';
+        $string .= 'i';
+        $len         = mb_strlen($string);
+        $tmp         = $this->map;
+        $map         = $this->map;
+        $str         = ''; //可疑敏感词
+        $rep_str     = ''; //替换字符
+        $sensitive   = []; //敏感词
+        $open_filter = 0; //开启特殊字符
+        $sign        = [];
+        $sign_key    = 0;
+        for ($i = 0; $i < $len; $i++) {
+            $nowWord = mb_substr($string, $i, 1);
+            $nowMap  = $map->get($nowWord);
+            //过滤特殊字符
+            if (strpos($specialStr, $nowWord) !== false) {
+                if ($open_filter) {
+                    $rep_str .= $mark;
+                    continue;
+                } else {
+                    $rep_str .= $nowWord;
+                }
+            }
+            if (!is_null($nowMap)) {
+                if (empty($sign[$sign_key])) {
+                    $sign[$sign_key][] = $i;
+                }
+                $open_filter = 1; //开启特殊字符
+                $rep_str .= $mark; //字符替换
+                $str .= $nowWord;
+                if ($nowMap->get('isEnd')) {
+                    $sign[$sign_key][] = $i;
+                    $sign_key++;
+                    $rep_str     = '';
+                    $sensitive[] = $str; //匹配到的敏感词
+                    if (count((array)$nowMap) == 1) {
+                        $map         = $tmp;
+                        $str         = '';
+                        $open_filter = 0;
+                    }
+                } else {
+                    $map = $nowMap;
+                }
+            } else {
+                if (!empty($sign[$sign_key])) {
+                    unset($sign[$sign_key]);
+                }
+
+                $map    = $tmp;
+                $nowMap = $map->get($nowWord);
+                if (!is_null($nowMap)) {
+                    $open_filter = 1; //开启特殊字符
+                    $rep_str     = $mark; //字符替换
+                    $str         = $nowWord;
+                    $map         = $nowMap;
+                } else {
+                    $rep_str     = '';
+                    $str         = '';
+                    $open_filter = 0;
+                }
+            }
+        }
+        $sign_point = $this->signArray($sign);
+        $sensitive  = array_values(array_unique($sensitive));
+        $string     = substr($string, 0, -1);
+        //配合特殊字符
+        $rep_content = $this->getSensitiveReplaceWords($sensitive, $string);
+        return ['sensitive' => $sensitive, 'content' => $string, 'sign' => $sign_point, 'rs_data' => $rep_content];
+    }
+
+    /**
+     *
+     *
+     * @param $array
+     *
+     * @return array
+     */
+    public function signArray($array)
+    {
+        $ret = [];
+        if (empty($array)) {
+            return $ret;
+        }
+        $i = 0;
+        foreach ($array as $v) {
+            if (count($v) != 2) {
+                continue;;
+            }
+            if ($v[0] == $v[1]) {
+                $key          = count($ret);
+                $ret[$key][1] = $v[0];
+                $i            = $key + 1;
+            } else {
+                $ret[$i] = $v;
+                $i++;
+            }
+        }
+        return $ret;
+    }
+    
 }

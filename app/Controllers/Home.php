@@ -275,6 +275,7 @@ class Home extends Controller
             $resultCode = App_RetCode::PARAM_ERROR;
             echo self::getReturnJson($resultCode, App_RetCode::retArr($resultCode));
         }
+        
     }
 
 }

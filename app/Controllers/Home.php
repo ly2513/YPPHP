@@ -276,5 +276,4 @@ class Home extends Controller
             echo self::getReturnJson($resultCode, App_RetCode::retArr($resultCode));
         }
     }
-
 }

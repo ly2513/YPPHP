@@ -22,7 +22,7 @@ if (!function_exists('call_back')) {
         $msg         = $msg ??  $errorResult[$errCode];
         $data        = [
             'code' => $errCode,
-            'data' => $data,
+            'data' => $data ?? [],
             'msg'  => $msg,
         ];
         echo json_encode($data);

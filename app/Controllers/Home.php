@@ -68,11 +68,14 @@ class Home extends Controller
             }
             $wordDst = strtr(strtolower($content), $replaceArr);
             $example = new SensitiveFilter();
-            $example->mapList();
-            $sensitive = $example->searchFromMap3($content); //敏感词处理
+            $example->mapList1();
+            $sensitive = $example->searchFromMap1($content); //敏感词处理
+            P($sensitive);
+
             $rtnData   = ['content' => $wordDst, 'sensitive' => $sensitive['sensitive']];
             call_back(0, $rtnData);
         } else if (isset($param['content'])) {
+
             if (!$content) {
                 $rtnData['match_num'] = 0;
                 call_back(0, $rtnData);
@@ -222,59 +225,49 @@ class Home extends Controller
     public function getString()
     {
         $str = '{"ret":0,"msg":"","data":{"content":"共(产%党共产党党党货操）￥你妈哈哈哈","sensitive":["共产","共产党","操你"],"sign":"","rs_data":"%3Cspan+style%3D%22color%3Ared%3Bborder%3A1px%3B%22%3E%E5%85%B1%28%E4%BA%A7%25%E5%85%9A%3C%2Fspan%3E%26nbsp%3B%3Cspan+style%3D%22color%3Ared%3Bborder%3A1px%3B%22%3E%E5%85%B1%E4%BA%A7%E5%85%9A%E5%85%9A%E5%85%9A%3C%2Fspan%3E%26nbsp%3B%E8%B4%A7%E6%93%8D%EF%BC%89%EF%BF%A5%E4%BD%A0%E5%A6%88%E5%93%88%E5%93%88%E5%93%88"}}';
-        $a = json_decode($str, true);
+        $a   = json_decode($str, true);
         //        P($a);
         P($a['data']['rs_data']);
     }
 
     public function getCheck()
     {
-        $data = self::getArgs();
-        App_Log::save(__METHOD__, ['data' => $data]);
-        $content          = App_Func::escapeStr($data['content']);
-        $content          = str_replace(PHP_EOL, ' ', $content);
-        $rtn              = (int)$data['rtn'];
-        $redis_connet_key = App_Config::$REDIS_AP_PREFIX . 'DB_CONNET:Panel';
-        $words            = App_Redis::getPushInstance()->get($redis_connet_key);
-        //避免频繁查库，设置缓存，10分钟查一次
-        if (!$words) {
-            $words = Model_PanelBlack::getBlackArr();
-            $words = array_filter($words);
-            $words = Lib_Func::jsonEncode($words);
-            App_Redis::getPushInstance()->setex($redis_connet_key, $words, 1 * 60); //设置缓存，10分钟失效
-        }
-        $content    = (new Model_Trans())->t2c($content); //繁转简
-        $resultCode = 0;
+        $param   = file_get_contents('php://input');
+        $param   = json_decode($param, true);
+        $content = $param['content'];
+        $rtn     = intval($param['rtn']);
         if ($rtn) {
-            $redis_content_key = App_Config::$REDIS_AP_PREFIX . md5($content);
-            $example = new Model_SensitiveFilter();
+            $example = new SensitiveFilter();
             $example->mapList();
             $sensitive = $example->signFromMap($content); //敏感词处理
             $wordDst   = $sensitive['content'];
-            App_Redis::getPushInstance()->setex($redis_content_key, $wordDst, 1);
-            $rtnData = [
+            echo '<pre>';
+            echo $sensitive['rs_data'];
+            $rtnData   = [
                 'content'   => $wordDst,
                 'sensitive' => $sensitive['sensitive'],
                 'sign'      => '',//$sensitive['sign'],
                 'rs_data'   => urlencode($sensitive['rs_data'])
             ];
-            echo self::getReturnJson($resultCode, '', $rtnData);
+//            echo PHP_EOL;
+//            $a = '%3Cspan+style%3D%22color%3Ared%3Bborder%3A1px%3B%22%3E%E5%85%B1%28%E4%BA%A7%25%E5%85%9A%3C%2Fspan%3E%26nbsp%3B%3Cspan+style%3D%22color%3Ared%3Bborder%3A1px%3B%22%3E%E5%85%B1%E4%BA%A7%E5%85%9A%E5%85%9A%E5%85%9A%3C%2Fspan%3E%26nbsp%3B%E8%B4%A7%E6%93%8D%EF%BC%89%EF%BF%A5%E4%BD%A0%E5%A6%88%E5%93%88%E5%93%88%E5%93%88';
+//            echo PHP_EOL;
+//            echo urldecode($a);
+            call_back(0, $rtnData);
         } else if (isset($data['content'])) {
             if (!$content) {
                 $rtnData['match_num'] = 0;
-                echo self::getReturnJson($resultCode, '', $rtnData);
+                call_back(0, $rtnData);
             } else {
-                $example = new Model_SensitiveFilter();
+                $example = new SensitiveFilter();
                 $example->mapList();
-                $content = $example->searchFromMap($content); //敏感词处理
+                $content              = $example->searchFromMap($content); //敏感词处理
                 $rtnData['match_num'] = count($content['sensitive']);
-                echo self::getReturnJson($resultCode, '', $rtnData);
-                App_Log::save(__METHOD__, ['input' => $_REQUEST, 'output' => $rtnData, 'code' => $resultCode]);
+                call_back(0, $rtnData);
             }
         } else {
-            $resultCode = App_RetCode::PARAM_ERROR;
-            echo self::getReturnJson($resultCode, App_RetCode::retArr($resultCode));
+            call_back(1, '', '参数有误！');
         }
-        
     }
+
 }

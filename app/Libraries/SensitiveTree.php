@@ -11,7 +11,7 @@
  * Date: 2018/3/19
  * Time: 下午6:29
  */
-
+namespace App\Libraries;
 /**
  * @date       : 2018-02-28
  * @description:
@@ -34,7 +34,7 @@
  *       ],
  *   ];
  */
-class SensitiveTrieTree
+class SensitiveTree
 {
     /**
      * 替换码

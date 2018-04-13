@@ -8,7 +8,7 @@
  */
 namespace YP\Debug\Toolbar\Collectors;
 
-use CodeIgniter\Services;
+use Config\Services;
 
 /**
  * Routes collector
@@ -49,7 +49,7 @@ class Routes extends BaseCollector {
 	 */
 	public function display(): string
 	{
-		$parser = \Config\Services::parser();
+		$parser = Services::parser(SYSTEM_PATH . 'Debug/Toolbar/Views/');
 
 		$rawRoutes = Services::routes(TRUE);
 		$router    = Services::router(NULL, TRUE);
@@ -102,7 +102,7 @@ class Routes extends BaseCollector {
                                  'matchedRoute' => $matchedRoute,
                                  'routes'       => $routes,
                                 ])
-			->render('CodeIgniter\Debug\Toolbar\Views\_routes.tpl');
+			->render('_routes.tpl');
 	}
 
 	//--------------------------------------------------------------------

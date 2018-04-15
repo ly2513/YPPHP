@@ -84,6 +84,7 @@ class Cache
      */
     public function __construct()
     {
+        new Redis();
         self::$redis = Redis::$redis;
     }
 }

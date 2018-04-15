@@ -7,3 +7,5 @@ cache/Session/
 cache/Twig/
 app/Views/Twig/
 .DS_Store
+app/Libraries/SensitiveFilter.php
+app/Libraries/SensitiveMap.php

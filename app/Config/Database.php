@@ -31,9 +31,9 @@ class Database
         $this->db['default'] = [
                                 'driver'    => 'mysql',             // 数据库驱动
                                 'host'      => '127.0.0.1',         // 数据库主机
-                                'database'  => 'zhubao',            // 数据库名称
+                                'database'  => 'black',             // 数据库名称
                                 'username'  => 'root',              // 用户名
-                                'password'  => 'root',              // 密码
+                                'password'  => '',              // 密码
                                 'charset'   => 'utf8',              // 字符编码
                                 'collation' => 'utf8_general_ci',   // 排序规则
                                 'prefix'    => '',                  // 表的前缀

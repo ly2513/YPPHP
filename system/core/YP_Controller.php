@@ -143,8 +143,8 @@ class YP_Controller
             $this->forceHTTPS($this->forceHTTPS);
         }
         // TODO 暂时注释 加载jsonSchema
-        // $this->setJsonSchema();
-        // $this->setInput();
+         $this->setJsonSchema();
+         $this->setInput();
         $this->initTwig();
         // 初始化子类构造方法
         $this->initialization();

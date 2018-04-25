@@ -8,11 +8,8 @@
  */
 namespace App\Controllers;
 
-use App\Libraries\SensitiveFilter;
 use YP\Core\YP_Controller as Controller;
-use YP\Config\Services;
-use YP\Libraries\Thrift\YP_ThriftClient;
-use Illuminate\Database\Capsule\Manager as DB;
+use Elasticsearch\ClientBuilder;
 
 /**
  * 框架默认控制器
@@ -44,8 +41,5 @@ class Home extends Controller
         //        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
         $this->display();
     }
-    
-    
-    
 
 }

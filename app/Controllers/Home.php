@@ -9,9 +9,6 @@
 namespace App\Controllers;
 
 use YP\Core\YP_Controller as Controller;
-use YP\Config\Services;
-use YP\Libraries\Thrift\YP_ThriftClient;
-use Illuminate\Database\Capsule\Manager as DB;
 
 /**
  * 框架默认控制器

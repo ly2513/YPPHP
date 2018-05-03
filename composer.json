@@ -14,7 +14,9 @@
         "packaged/thrift": "0.10.*",
         "php-amqplib/php-amqplib": "2.6.*",
         "ly2513/yp-queue": "dev-master",
-        "elasticsearch/elasticsearch": "~5.3"
+        "elasticsearch/elasticsearch": "~5.3",
+        "fukuball/jieba-php": "0.33",
+        "php-ai/php-ml": "0.6.*"
     },
     "authors": [
         {

@@ -44,7 +44,6 @@ class AutoloadConfig
         // 设置框架初始化需自动加载的类
         $this->classMap = [
                            'YP\YP'                    => SYSTEM_PATH . 'YP.php',
-                           'YP\CLI\CLI'               => SYSTEM_PATH . 'CLI/CLI.php',
                            'YP\Loader'                => SYSTEM_PATH . 'Loader.php',
                            'YP\Config\AutoloadConfig' => SYSTEM_PATH . 'Config/AutoloadConfig.php',
                            'YP\Config\Config'         => SYSTEM_PATH . 'Config/Config.php',

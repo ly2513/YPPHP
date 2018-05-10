@@ -9,6 +9,7 @@
 namespace Console\Database;
 
 use YP\Libraries\Migrations\YP_MigrationRepositoryInterface;
+use YP\Libraries\Migrations\YP_DatabaseMigrationRepository;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -3,8 +3,8 @@
  * User: yongli
  * Date: 17/4/19
  * Time: 16:38
- * Email: yong.li@szypwl.com
- * Copyright: 深圳优品未来科技有限公司
+ * Email: 626375290@qq.com
+ * Copyright: 川雪工作室
  */
 namespace YP\Core;
 

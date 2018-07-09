@@ -3,16 +3,19 @@
  * User: yongli
  * Date: 17/4/26
  * Time: 14:36
- * Email: yong.li@szypwl.com
- * Copyright: 深圳优品未来科技有限公司
+ * Email: 626375290@qq.com
+ * Copyright: 川雪工作室
  */
 namespace App\Libraries;
 
 use Config\Email;
 
 /**
+ * 邮件处理类
+ *
  * Class YP_Email
  *
+ * @package App\Libraries
  */
 class YP_Email
 {
@@ -44,7 +47,7 @@ class YP_Email
     {
         // 邮件配置
         $this->mailConf = new Email();
-        $this->mailConf = (array) $this->mailConf;
+        $this->mailConf = (array)$this->mailConf;
         $this->initMailer();
     }
 
@@ -69,14 +72,13 @@ class YP_Email
         $this->mail->FromName = $this->mailConf['name'];
         $this->mail->addCC('');
         $this->mail->addBCC('');
-
         $this->mail->errorInfo = null;
     }
 
     /**
      * 发送邮件
      *
-     * @param $message
+     * @param        $message
      * @param array  $user
      * @param string $title
      *
@@ -86,16 +88,13 @@ class YP_Email
     {
         //循环处理用户
         $this->mail->clearAddresses();
-
         foreach ($user as $val) {
             $this->mail->addAddress($val);
         }
-
         $this->mail->Subject = $title;
         $this->mail->Body    = $message;
-
         try {
-            if (! $this->mail->send()) {
+            if (!$this->mail->send()) {
                 $this->errorInfo = $this->mail->ErrorInfo;
                 return false;
             }

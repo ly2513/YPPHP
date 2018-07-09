@@ -3,8 +3,8 @@
  * User: yongli
  * Date: 17/4/19
  * Time: 16:37
- * Email: yong.li@szypwl.com
- * Copyright: 深圳优品未来科技有限公司
+ * Email: 626375290@qq.com
+ * Copyright: 川雪工作室
  */
 namespace YP\Core;
 
@@ -75,7 +75,7 @@ class YP_Exceptions
         $line    = $exception->getLine();
         $trace   = $exception->getTrace();
         $title   = $type;
-        if (! $message) {
+        if (!$message) {
             $message = '(null)';
         }
         // 设置模板
@@ -125,16 +125,11 @@ class YP_Exceptions
     {
         $error = error_get_last();
         // 如果我们有一个没有显示的错误，然后转换或异常，并使用异常处理程序显示它到用户。
-        if (! is_null($error)) {
+        if (!is_null($error)) {
             // 致命错误
             if (in_array($error['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR, E_PARSE])) {
-                $this->exceptionHandler(new \ErrorException(
-                    $error['message'],
-                    $error['type'],
-                    0,
-                    $error['file'],
-                    $error['line']
-                ));
+                $this->exceptionHandler(new \ErrorException($error['message'], $error['type'], 0, $error['file'],
+                    $error['line']));
             }
         }
     }
@@ -162,7 +157,6 @@ class YP_Exceptions
         elseif (is_file($template_path . 'error_' . $exception->getCode() . '.php')) {
             return 'error_' . $exception->getCode() . '.php';
         }
-
         return $view;
     }
 
@@ -185,11 +179,7 @@ class YP_Exceptions
         } else {
             $exitStatus = 1; // EXIT_ERROR
         }
-
-        return [
-                $statusCode ?? 500,
-                $exitStatus,
-               ];
+        return [$statusCode ?? 500, $exitStatus];
     }
 
     /**
@@ -203,12 +193,11 @@ class YP_Exceptions
     {
         if (strpos($file, APP_PATH) === 0) {
             $file = APP_PATH . substr($file, strlen(APP_PATH));
-        } elseif (strpos($file, SYSTEM_PATH) === 0) {
+        } else if (strpos($file, SYSTEM_PATH) === 0) {
             $file = SYSTEM_PATH . substr($file, strlen(SYSTEM_PATH));
-        } elseif (strpos($file, FRONT_PATH) === 0) {
+        } else if (strpos($file, FRONT_PATH) === 0) {
             $file = FRONT_PATH . substr($file, strlen(FRONT_PATH));
         }
-
         return $file;
     }
 
@@ -224,25 +213,25 @@ class YP_Exceptions
     {
         if ($bytes < 1024) {
             return $bytes . 'B';
-        } elseif ($bytes < 1048576) {
+        } else if ($bytes < 1048576) {
             return round($bytes / 1024, 2) . 'KB';
+        } else {
+            return round($bytes / 1048576, 2) . 'MB';
         }
-
-        return round($bytes / 1048576, 2) . 'MB';
     }
 
     /**
      * 创建PHP文件的语法高亮版本
      *
-     * @param $file
-     * @param $lineNumber
+     * @param     $file
+     * @param     $lineNumber
      * @param int $lines
      *
      * @return bool|string
      */
     public static function highlightFile($file, $lineNumber, $lines = 15)
     {
-        if (empty($file) || ! is_readable($file)) {
+        if (empty($file) || !is_readable($file)) {
             return false;
         }
         // 设置高亮颜色值
@@ -263,7 +252,7 @@ class YP_Exceptions
         $source = str_replace('<br />', "\n", $source[1]);
         $source = explode("\n", str_replace("\r\n", "\n", $source));
         // 显示获取的部分
-        $start = $lineNumber - (int) round($lines / 2);
+        $start = $lineNumber - (int)round($lines / 2);
         $start = $start < 0 ? 0 : $start;
         // 获得我们需要显示的线条，同时保留行号
         $source = array_splice($source, $start, $lines, true);
@@ -274,25 +263,17 @@ class YP_Exceptions
         $spans = 1;
         foreach ($source as $n => $row) {
             $spans += substr_count($row, '<span') - substr_count($row, '</span');
-            $row    = str_replace(["\r", "\n"], ['', ''], $row);
+            $row = str_replace(["\r", "\n"], ['', ''], $row);
             if (($n + $start + 1) == $lineNumber) {
                 preg_match_all('#<[^>]+>#', $row, $tags);
-                $out .= sprintf(
-                    "<span class='line highlight'><span class='number'>{$format}</span> %s\n</span>%s",
-                    $n + $start + 1,
-                    strip_tags($row),
-                    implode('', $tags[0])
-                );
+                $out .= sprintf("<span class='line highlight'><span class='number'>{$format}</span> %s\n</span>%s",
+                    $n + $start + 1, strip_tags($row), implode('', $tags[0]));
             } else {
-                $out .= sprintf(
-                    '<span class="line"><span class="number">' . $format . '</span> %s',
-                    $n + $start + 1,
-                    $row
-                ) . "\n";
+                $out .= sprintf('<span class="line"><span class="number">' . $format . '</span> %s', $n + $start + 1,
+                        $row) . "\n";
             }
         }
         $out .= str_repeat('</span>', $spans);
-
         return '<pre><code>' . $out . '</code></pre>';
     }
 }

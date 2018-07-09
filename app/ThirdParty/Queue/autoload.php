@@ -1,10 +1,10 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
  * User: yongli
  * Date: 16/9/29
  * Time: 下午1:56
- * Email: liyong@addnewer.com
+ * Email: 626375290@qq.com
+ * Copyright: 川雪工作室
  */
 if (!defined('ROOT_PATH')) {
     die('Access Denied');

@@ -1,9 +1,10 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
  * User: yongli
  * Date: 2018/3/29
  * Time: 下午4:27
+ * Email: 626375290@qq.com
+ * Copyright: 川雪工作室
  */
 /**
  * Created by IntelliJ IDEA.
@@ -12,7 +13,9 @@
  * Time: 下午6:29
  */
 namespace App\Libraries;
+
 /**
+ *
  * @date       : 2018-02-28
  * @description:
  * 敏感词过滤类
@@ -33,6 +36,10 @@ namespace App\Libraries;
  *           ],
  *       ],
  *   ];
+ *
+ * Class SensitiveTree
+ *
+ * @package    App\Libraries
  */
 class SensitiveTree
 {

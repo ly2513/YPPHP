@@ -4,8 +4,8 @@
  * User: yongli
  * Date: 17/9/28
  * Time: 13:46
- * Email: yong.li@szypwl.com
- * Copyright: 深圳优品未来科技有限公司
+ * Email: 626375290@qq.com
+ * Copyright: 川雪工作室
  */
 namespace App\Libraries;
 
@@ -24,7 +24,7 @@ class YP_Zookeeper
      *
      * @var Zookeeper
      */
-    private $zookeeper;
+    private $zookeeper = null;
 
     /**
      * Callback container

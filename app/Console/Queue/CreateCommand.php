@@ -1,10 +1,10 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
  * User: yongli
  * Date: 16/9/28
  * Time: 下午12:43
- * Email: liyong@addnewer.com
+ * Email: 626375290@qq.com
+ * Copyright: 川雪工作室
  */
 namespace Console\Queue;
 

@@ -186,9 +186,6 @@ class YP
             // 处理请求
             $this->handleRequest($routes, $cacheConfig);
         }
-            //        catch (\RuntimeException $e) {
-            //            $this->display404errors($e);
-            //        }
         catch (\Exception $e) {
             // 日志记录异常错误
             $logger = Config\Services::log();

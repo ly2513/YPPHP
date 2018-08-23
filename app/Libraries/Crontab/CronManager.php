@@ -622,7 +622,7 @@ class CronManager
     public static function log($tag, $message)
     {
         $datetime = date('Y-m-d H:i:s');
-        $template = "$datetime PID:%d [%s] %s\n";
+        $template = $datetime . " PID:%d [%s] %s\n";
         file_put_contents(static::$logFile, sprintf($template, getmypid(), $tag, $message), FILE_APPEND);
     }
 }

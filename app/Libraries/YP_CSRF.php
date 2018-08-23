@@ -1,6 +1,6 @@
 <?php
 /**
- * User: yongli
+ * User: yong.li
  * Date: 17/4/23
  * Time: 00:12
  * Email: 626375290@qq.com

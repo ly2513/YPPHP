@@ -66,8 +66,8 @@ if (file_exists(COMPOSER_PATH)) {
 require APP_PATH . 'Functions/Function.php';
 
 // 加载Eloquent
-//Config\Services::eloquent();
-new \YP\Libraries\YP_Eloquent();
+Config\Services::eloquent();
+//new \YP\Libraries\YP_Eloquent();
 
 // 启动应用加载框架
 $app = new  \YP\YP(new \Config\App());

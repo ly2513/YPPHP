@@ -8,7 +8,6 @@
  */
 use YP\Core\YP_Request as Request;
 use YP\Core\YP_Response as Response;
-//use CodeIgniter\HTTP\RedirectException;
 use YP\Config\Services;
 
 if (! function_exists('P')) {

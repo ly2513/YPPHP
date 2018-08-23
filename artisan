@@ -9,7 +9,6 @@
  */
 /**
  * YP框架的系统工具包,注意此工具包需要 Symfony2/Console、Doctrine2支持
- *
  */
 // 拒绝运行时调用php-cgi
 if (substr(php_sapi_name(), 0, 3) == 'cgi') {
@@ -41,9 +40,7 @@ require ROOT_PATH . 'vendor/autoload.php';
 function do_doctrine_load($className) {
     $className = str_replace('\\', '/', $className);
     $path = APP_PATH . 'ThirdParty/Doctrine/Entity/' . $className . '.php';
-    if (!file_exists($path)) { // 加载配置文件
-        $path = APP_PATH  . $className . '.php';
-    }
+    $path = !file_exists($path) ? APP_PATH  . $className . '.php' : $path;
   
     // 加载文件
     if (file_exists($path)) {
@@ -94,6 +91,8 @@ $artisans = [
     new \Console\Queue\ListenCommand(),
     new \Console\Queue\ListFailedCommand(),
     new \Console\Queue\WorkQueueCommand(),
+    // 定时任务
+    new \Console\Crontab\CrontabCommand(),
 ];
 $app->addCommands($artisans);
 $app->run();

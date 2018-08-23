@@ -40,7 +40,7 @@ class YP_Hooks
      *
      * @var
      */
-    protected static $eventsFile;
+    protected static $hooksFile;
 
     /**
      * 初始化钩子,确保已经准备了一个钩子文件
@@ -50,14 +50,14 @@ class YP_Hooks
     public static function initialize(string $file = null)
     {
         // 不要复写任何东西
-        if (! empty(self::$eventsFile)) {
+        if (! empty(self::$hooksFile)) {
             return;
         }
         // 钩子事件默认路径
         if (empty($file)) {
             $file = APP_PATH . 'Config/Events.php';
         }
-        self::$eventsFile = $file;
+        self::$hooksFile = $file;
     }
 
     /**
@@ -101,8 +101,8 @@ class YP_Hooks
         // 从配置文件Config/Hooks中读取所有的钩子事件
         if (! self::$haveReadFromFile) {
             self::initialize();
-            if (is_file(self::$eventsFile)) {
-                include self::$eventsFile;
+            if (is_file(self::$hooksFile)) {
+                include self::$hooksFile;
             }
             self::$haveReadFromFile = true;
         }
@@ -157,8 +157,7 @@ class YP_Hooks
         }
         foreach (self::$listeners[$event_name][2] as $index => $check) {
             if ($check === $listener) {
-                unset(self::$listeners[$event_name][1][$index]);
-                unset(self::$listeners[$event_name][2][$index]);
+                unset(self::$listeners[$event_name][1][$index], self::$listeners[$event_name][2][$index]);
 
                 return true;
             }
@@ -189,6 +188,6 @@ class YP_Hooks
      */
     public function setFile(string $path)
     {
-        self::$eventsFile = $path;
+        self::$hooksFile = $path;
     }
 }

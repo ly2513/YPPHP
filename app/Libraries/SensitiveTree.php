@@ -1,16 +1,10 @@
 <?php
 /**
- * User: yongli
+ * User: yong.li
  * Date: 2018/3/29
  * Time: 下午4:27
  * Email: 626375290@qq.com
  * Copyright: 川雪工作室
- */
-/**
- * Created by IntelliJ IDEA.
- * User: Dylan.li
- * Date: 2018/3/19
- * Time: 下午6:29
  */
 namespace App\Libraries;
 

@@ -6,10 +6,10 @@
  * Email: 626375290@qq.com
  * Copyright: 川雪工作室
  */
-namespace App\Libraries\Crontab;
+namespace Libraries\Crontab;
 
-use App\Libraries\Crontab\Interfaces\WorkerInterface;
-use App\Libraries\Crontab\Interfaces\MiddlewareInterface;
+use Libraries\Crontab\Interfaces\WorkerInterface;
+use Libraries\Crontab\Interfaces\MiddlewareInterface;
 
 class Worker implements WorkerInterface
 {

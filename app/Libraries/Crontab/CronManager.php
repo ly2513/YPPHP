@@ -9,6 +9,8 @@
 namespace Libraries\Crontab;
 
 use Libraries\Crontab\Middlewares\IpcMessageQueue;
+use Libraries\Crontab\ConsoleManager;
+use Libraries\Crontab\Worker;
 
 /**
  * 定时任务调度类
@@ -59,7 +61,7 @@ class CronManager
     /**
      * 默认中间件
      */
-    const DEFAULT_MIDDLEWARE = "App\\Libraries\\Crontab\\Middlewares\\IpcMessageQueue";
+    const DEFAULT_MIDDLEWARE = "Libraries\\Crontab\\Middlewares\\IpcMessageQueue";
 
     /**
      * 日志文件
@@ -378,7 +380,7 @@ class CronManager
                     $worker->loop();
                     break;
                 default:
-                    static::log('debug', "[$pid] 创建worker成功");
+                    static::log('debug', '[' . $pid . '] 创建worker成功');
                     $this->workers[$pid] = [];
                     break;
             }
@@ -455,9 +457,9 @@ class CronManager
                     }
                 }
             };
-            static::log('debug', "接收到任务指令: $command");
+            static::log('debug', '接收到任务指令: ' . $command);
             if (strpos($command, ':') === false) {
-                return static::log('debug', "无法解析任务指令: $command");
+                return static::log('debug', '无法解析任务指令: ' . $command);
             }
             list($tag, $taskIds) = explode(':', $command);
             $taskIds = explode(',', $taskIds);
@@ -482,7 +484,7 @@ class CronManager
                     }
                     break;
                 default:
-                    static::log('debug', "无法解析任务指令: $command");
+                    static::log('debug', '无法解析任务指令: ' . $command);
                     break;
             }
 
@@ -507,7 +509,7 @@ class CronManager
                     $queueStr = '列队待处理任务数: ' . $queueNum;
                     // 扩容
                     if ($queueNum >= 5) {
-                        $queueStr .= " 满足条件: [自动扩容]";
+                        $queueStr .= ' 满足条件: [自动扩容]';
                         $this->forkWorker();
                     }
                     static::log('debug', $queueStr);
@@ -541,11 +543,11 @@ class CronManager
                     $exit = pcntl_wexitstatus($status);
                     // 重启worker
                     if ($exit == $this->signalSupport['restart']) {
-                        static::log('debug', "[$pid] 退出重启");
+                        static::log('debug', '[' . $pid . '] 退出重启');
                         $this->forkWorker();
                         $this->status = static::MASTER_STATUS_RUN;
                     } else {
-                        static::log('debug', "[$pid] 退出");
+                        static::log('debug', '[' . $pid . '] 退出');
                     }
                 }
             }

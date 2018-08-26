@@ -17,6 +17,13 @@ use Libraries\Crontab\CronManager;
 class CrontabCommand extends Command
 {
     /**
+     * 定时任务日志目录
+     *
+     * @var string
+     */
+    private $logPath = CACHE_PATH . 'Logs/Crontab/';
+
+    /**
      * 命令配置
      */
     protected function configure()
@@ -40,8 +47,8 @@ class CrontabCommand extends Command
         // 守护进程方式启动
         $manager->daemon = true;
         $manager->argv = $input->getOption('param');
-
-        $log = CACHE_PATH . '/Logs/cron_' . date('Y-m-d', time()) . '.log';
+        is_dir($this->logPath) OR mkdir($this->logPath, 0755, true);
+        $log = $this->logPath . date('Y-m-d', time()) . '.log';
         is_file($log) || touch($log);
         // 设置输出重定向,守护进程模式才生效
         $manager->output = $log;

@@ -6,7 +6,7 @@
  * Email: 626375290@qq.com
  * Copyright: 川雪工作室
  */
-namespace App\Libraries\Crontab;
+namespace Libraries\Crontab;
 
 class ConsoleManager
 {
@@ -73,7 +73,7 @@ class ConsoleManager
         $table = new \Console_Table();
         $table->setHeaders(static::$_checkHeader);
         $extensions = get_loaded_extensions();
-        if (version_compare(PHP_VERSION, '5.4', ">=")) {
+        if (version_compare(PHP_VERSION, '5.4', '>=')) {
             $row = ['php>=5.4', '[OK]'];
         } else {
             $row = ['php>=5.4', '[ERR]', '请升级PHP版本'];

@@ -38,8 +38,12 @@ class Home extends Controller
         //        include_once $XHPROF_ROOT . "xhprof_lib.php";
         //        include_once $XHPROF_ROOT . "xhprof_runs.php";
         //        $xhprof_runs = new \XHProfRuns_Default();
-        //        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
+        //        $run_id = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
         $this->display();
     }
 
+    public function testOpenCv()
+    {
+        phpinfo();
+    }
 }

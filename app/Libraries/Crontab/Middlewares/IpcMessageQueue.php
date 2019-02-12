@@ -27,7 +27,8 @@ class IpcMessageQueue implements MiddlewareInterface
     public $readSize = 65535;
 
     /**
-     * 是否阻塞
+     * 是否阻塞 $blocking 为true: 等待另一个进程读取并释放足够的空间以方便发送消息；
+     * false: 消息队列太大，发送消息失败，重试。可有效解决阻塞问题
      *
      * @var boolean
      */

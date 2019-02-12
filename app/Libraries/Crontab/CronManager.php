@@ -211,7 +211,6 @@ class CronManager
             static::$logFile = $this->managerDir . $prefix . '.log';
         }
         if (!$this->middleware) {
-            print_r(ftok($requireFile, 'a'));
             $this->middleware = new IpcMessageQueue(ftok($requireFile, 'a'));
         }
         $this->status = static::MASTER_STATUS_RUN;

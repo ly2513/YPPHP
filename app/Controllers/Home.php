@@ -37,11 +37,11 @@ class Home extends Controller
         $this->assign('elapsed_time', $elapsed_time);
         $this->assign('version', VERSION);
         $this->assign('doc_url', 'https://ly2513.gitbooks.io/youpin/content/');
-        $xhprof_data = xhprof_disable();
-        include_once $XHPROF_ROOT . "xhprof_lib.php";
-        include_once $XHPROF_ROOT . "xhprof_runs.php";
-        $xhprof_runs = new \XHProfRuns_Default();
-        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
+//        $xhprof_data = xhprof_disable();
+//        include_once $XHPROF_ROOT . "xhprof_lib.php";
+//        include_once $XHPROF_ROOT . "xhprof_runs.php";
+//        $xhprof_runs = new \XHProfRuns_Default();
+//        $run_id      = $xhprof_runs->save_run($xhprof_data, "xhprof_foo");
 
 
         $this->display();

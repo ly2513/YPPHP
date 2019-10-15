@@ -127,12 +127,12 @@ class YP_Request extends Message implements YP_RequestInterface
                             for ($j = 0; $j < 8; $j++) {
                                 $ip[$j] = intval($ip[$j], 16);
                             }
-                            $sprintf = '%016b%016b%016b%016b%016b%016b%016b%016b';
+                            $str_print = '%016b%016b%016b%016b%016b%016b%016b%016b';
                         } else {
                             $ip      = explode('.', $this->ipAddress);
-                            $sprintf = '%08b%08b%08b%08b';
+                            $str_print = '%08b%08b%08b%08b';
                         }
-                        $ip = vsprintf($sprintf, $ip);
+                        $ip = vsprintf($str_print, $ip);
                     }
                     // 网络地址
                     $netAddress = '';
@@ -153,7 +153,7 @@ class YP_Request extends Message implements YP_RequestInterface
                         $netAddress = explode('.', $netAddress);
                     }
                     // 转换为二进制进行比较
-                    if (strncmp($ip, vsprintf($sprintf, $netAddress), $maskLen) === 0) {
+                    if (strncmp($ip, vsprintf($str_print, $netAddress), $maskLen) === 0) {
                         $this->ipAddress = $spoof;
                         break;
                     }

@@ -150,7 +150,7 @@ class YP_Exceptions
     protected function determineView(\Throwable $exception, string $template_path): string
     {
         // 线上环境应该设置一个自定义异常文件
-        $view          = 'prod.php';
+        $view          = 'error_exception.php';
         $template_path = rtrim($template_path, '/ ') . '/';
         if (str_ireplace(['off', 'none', 'no', 'false', 'null'], '', ini_get('display_errors'))) {
             $view = 'error_exception.php';

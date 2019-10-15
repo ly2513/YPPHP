@@ -6,7 +6,7 @@
  * Time: 下午1:04
  * Email: liyong@addnewer.com
  */
-namespace Cli\Console\Queue;
+namespace Console\Queue;
 
 use Symfony\Component\Console\Command\Command;
 use Config\Queue;

@@ -6,7 +6,7 @@
  * Email: yong.li@szypwl.com
  * Copyright: 深圳优品未来科技有限公司
  */
-namespace Cli\Console\Redis;
+namespace Console\Redis;
 
 use App\Controllers\Shell\UpdateRedis;
 use Symfony\Component\Console\Command\Command;

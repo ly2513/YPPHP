@@ -135,19 +135,19 @@ class YP_Controller
      */
     public function __construct(YP_RequestInterface $request, YP_Response $response, YP_Log $logger = null)
     {
-        $this->request  = $request;
+        $this->request  = is_cli() ?  $request : Services::request();
         $this->response = $response;
         $this->logger   = is_null($logger) ? Services::log(true) : $logger;
         $this->logger->info('Controller "' . get_class($this) . '" loaded.');
         if ($this->forceHTTPS > 0) {
             $this->forceHTTPS($this->forceHTTPS);
         }
-        // 加载jsonSchema
+        // TODO 暂时注释 加载jsonSchema
         // $this->setJsonSchema();
         // $this->setInput();
+        $this->initTwig();
         // 初始化子类构造方法
         $this->initialization();
-        $this->initTwig();
         $this->url = $this->_getCurrentUrl();
     }
 

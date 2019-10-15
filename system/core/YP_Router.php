@@ -284,18 +284,14 @@ class YP_Router
                     // 从匹配的数组中删除原始字符串
                     array_shift($matches);
                     $this->params       = $matches;
-                    $this->matchedRoute = [
-                                           $key,
-                                           $val,
-                                          ];
-
+                    $this->matchedRoute = [$key, $val];
                     return true;
                 } else { // 使用默认的方法来引用
                     // 支持子目录功能资源路由,如$routes->resource('Admin/Admins');
                     if (strpos($val, '$') !== false && strpos($key, '(') !== false && strpos($key, '/') !== false) {
-                        $replacekey = str_replace('/(.*)', '', $key);
+                        $replaceKey = str_replace('/(.*)', '', $key);
                         $val        = preg_replace('#^' . $key . '$#', $val, $uri);
-                        $val        = str_replace($replacekey, str_replace("/", "\\", $replacekey), $val);
+                        $val        = str_replace($replaceKey, str_replace("/", "\\", $replaceKey), $val);
                     } elseif (strpos($val, '$') !== false && strpos($key, '(') !== false) {
                         $val = preg_replace('#^' . $key . '$#', $val, $uri);
                     } elseif (strpos($key, '/') !== false) {
@@ -307,10 +303,7 @@ class YP_Router
                     throw new \Exception($val, $this->collection->getRedirectCode($key));
                 }
                 $this->setRequest(explode('/', $val));
-                $this->matchedRoute = [
-                                       $key,
-                                       $val,
-                                      ];
+                $this->matchedRoute = [$key, $val];
 
                 return true;
             }

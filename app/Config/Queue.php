@@ -91,7 +91,7 @@ class Queue
      *
      * @var string
      */
-    public static $logPath = CACHE_PATH . 'Log/';
+    public static $logPath = CACHE_PATH . 'Logs/';
 
     /**
      * 设置如果失败将执行的次数
@@ -112,7 +112,7 @@ class Queue
      *
      * @var string
      */
-    public static $jobPath = APP_PATH . 'ThirdParty/Queue/';
+    public static $jobPath = APP_PATH . 'ThirdParty/Queue/Job/';
 
     /**
      * 配置数组

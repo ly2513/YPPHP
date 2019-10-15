@@ -205,7 +205,7 @@
                 </tr>
                 <tr>
                     <td style="width: 10em">Is AJAX Request?</td>
-                    <td><?= $request->isAJAX() ? 'yes' : 'no' ?></td>
+                    <td><?= $request->isAjax() ? 'yes' : 'no' ?></td>
                 </tr>
                 <tr>
                     <td>Is CLI Request?</td>

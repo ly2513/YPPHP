@@ -6,7 +6,7 @@
  * Time: 下午12:43
  * Email: liyong@addnewer.com
  */
-namespace Cli\Console\Queue;
+namespace Console\Queue;
 
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
